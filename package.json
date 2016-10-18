@@ -1,0 +1,36 @@
+{
+  "name": "express-architect-mongoose-api-template",
+  "version": "1.0.0",
+  "description": "Online news transmitter using RSS feeds and crawler",
+  "main": "core/bootstrap",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apostolidhs/wiregoose.git"
+  },
+  "keywords": [
+    "news",
+    "rss",
+    "crawler"
+  ],
+  "author": "John Apostolidis <john.apostolidi@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/apostolidhs/wiregoose/issues"
+  },
+  "homepage": "https://github.com/apostolidhs/wiregoose#readme",
+  "dependencies": {
+    "architect": "^0.1.11",
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "express-validator": "^2.20.10",
+    "glob": "^7.1.1",
+    "lodash": "^4.16.4",
+    "mongoose": "^4.6.4",
+    "morgan": "^1.7.0",
+    "serve-favicon": "^2.3.0"
+  }
+}
