@@ -12,8 +12,19 @@ eamModule(module, 'middlewareCrudController', (dbMongooseBinders) => {
     delete: deleteCtrl
   };
 
-  function createCtrl() {
-
+  function createCtrl(model) {
+    return (req, res, next) => {
+      const record = res.locals.params[model.modelName];
+      dbMongooseBinders.create(model, record)
+        .then(newRecord => {
+          res.locals.data = newRecord;
+          next();
+        })
+        .catch(reason => {
+          res.locals.errors.add('DB_ERROR', reason);
+          next(true);
+        });      
+    };   
   }
 
   function updateCtrl() {
@@ -29,7 +40,7 @@ eamModule(module, 'middlewareCrudController', (dbMongooseBinders) => {
           next();
         })
         .catch(reason => {
-          res.locals.errors.add('DB_ERROR');
+          res.locals.errors.add('DB_ERROR', reason);
           next(true);
         });
     };

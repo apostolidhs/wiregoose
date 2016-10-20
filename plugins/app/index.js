@@ -14,7 +14,8 @@ eamModule(module, 'app', (
   $mongoose,
   router,
   dbMongooseConnector, 
-  middlewareInitiateResponseParams
+  middlewareInitiateResponseParams,
+  middlewareResponse
 ) => {
   
   init();
@@ -28,15 +29,19 @@ eamModule(module, 'app', (
 
   function createApp() {
     const app = $express();
+    
+    app.use(middlewareInitiateResponseParams);
+    
     app.use($morgan('dev'));
     app.use($bodyParser.json());
     app.use($bodyParser.urlencoded({ extended: false }));
     app.use($expressValidator());
     app.use($cookieParser());
     app.use($express.static($path.join(__dirname, 'public')));
-
-    app.use(middlewareInitiateResponseParams);
+    
     app.use(router);
+
+    app.use(middlewareResponse.fail);
 
     return app;
   }

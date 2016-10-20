@@ -20,6 +20,7 @@ eamModule(module, 'crudGenerator', (
     if (!opts.model) {
       throw new Error('invalid model argument');
     }
+
     app.get(crudGeneratorUrls.retrieve(opts.model.modelName), [
       middlewareParameterValidator.crud.retrieve(),
       middlewarePermissions.check('ADMIN'),
@@ -27,6 +28,14 @@ eamModule(module, 'crudGenerator', (
       middlewareResponse.success,
       middlewareResponse.fail
     ]);
+
+    app.post(crudGeneratorUrls.create(opts.model.modelName), [
+      middlewareParameterValidator.crud.create(opts.model),
+      middlewarePermissions.check('ADMIN'),
+      middlewareCrudController.create(opts.model),
+      middlewareResponse.success,
+      middlewareResponse.fail
+    ]);    
   }
 
 });

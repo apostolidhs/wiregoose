@@ -17,7 +17,8 @@ eamModule(module, 'parameterValidator', ($_, $expressValidator, logger) => {
   return {
     apply,
     validations,
-    checkForErrors
+    checkForErrors,
+    checkForMongoValidationErrors
   };
 
   function apply(req, heads) {
@@ -61,6 +62,17 @@ eamModule(module, 'parameterValidator', ($_, $expressValidator, logger) => {
 
     res.locals.params = params;
     next();
+  }
+
+  function checkForMongoValidationErrors(req, res, onFail, onSuccess) {
+      return err => {
+        if (err) {
+          res.locals.errors.add('INVALID_PARAMS', err && err.errors || err);
+          return onFail(true);
+        } else {
+          return onSuccess();
+        }
+      }
   }
 
 });
