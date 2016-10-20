@@ -13,7 +13,7 @@ eamModule(module, 'middlewareParameterValidator', (parameterValidator) => {
   function crudRetrieveValidator() {
     return (req, res, next) => {
       const params = {};
-      params.id = parameterValidator.vaidations.paramId(req);
+      params.id = parameterValidator.validations.paramId(req);
       parameterValidator.checkForErrors(params, req, res, next);
     }
   }
