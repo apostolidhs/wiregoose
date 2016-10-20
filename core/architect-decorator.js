@@ -30,13 +30,13 @@ function decorate(amd, moduleName, controller) {
   function setup(options, imports, register) {    
     const addArgument = (args, dependence) => {      
       if (_.startsWith(dependence, '$')) {
-        let normilizedDependency = dependence.substr(1);
-        normilizedDependency = toKebabCaseOnlyCharacters(normilizedDependency);
-        const aliasDependency = moduleAlias[normilizedDependency];
+        let normalizedDependency = dependence.substr(1);
+        normalizedDependency = toKebabCaseOnlyCharacters(normalizedDependency);
+        const aliasDependency = moduleAlias[normalizedDependency];
         if (aliasDependency) {
-          normilizedDependency = aliasDependency;
+          normalizedDependency = aliasDependency;
         }
-        args.push(require(normilizedDependency));
+        args.push(require(normalizedDependency));
       } else {
         args.push(imports[dependence])
       }

@@ -12,11 +12,11 @@ eamModule(module, 'parameterValidator', ($_, $expressValidator, logger) => {
     console.log('test', str);
   };
 
-  const vaidations = getValidations();
+  const validations = getValidations();
 
   return {
     apply,
-    vaidations,
+    validations,
     checkForErrors
   };
 
@@ -26,7 +26,7 @@ eamModule(module, 'parameterValidator', ($_, $expressValidator, logger) => {
     }
 
     return $_.transform(heads, (vals, head) => {
-      const validator = vaidations[head.name];
+      const validator = validations[head.name];
       if (validator === undefined) {
         logger.error(`parameter (${head.name}) does not have validator`);
       }
