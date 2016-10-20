@@ -13,7 +13,7 @@ eamModule(module, 'middlewareInitiateResponseParams', ($_, logger, errors, confi
 
     res.locals.errors = errors.build();
     res.locals.data = undefined;
-    res.locals.params = undefined;
+    res.locals.params = {};
     res.locals.meta = {
       name: config.NAME,
       version: config.API_VERSION,

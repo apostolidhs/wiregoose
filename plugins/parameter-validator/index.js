@@ -4,52 +4,59 @@
 
 eamModule(module, 'parameterValidator', ($_, $expressValidator, logger) => {
 
-  $expressValidator.validator.toMongoSafeString = function(input) {
-    const str = this.toString(input);
-    if ($_.indexOf(str, '$') !== -1) {
+  // $expressValidator.validator.toMongoSafeString = function(input) {
+  //   const str = this.toString(input);
+  //   if ($_.indexOf(str, '$') !== -1) {
 
-    }
-    console.log('test', str);
-  };
-
-  const validations = getValidations();
+  //   }
+  //   console.log('test', str);
+  // };
 
   return {
-    apply,
-    validations,
+    validations: getValidations(),
+    partialValidations: getValidations,
     checkForErrors,
     checkForMongoValidationErrors
   };
 
-  function apply(req, heads) {
-    if (!req || !$_.isArray(heads)) {
-      logger.error(`invalid arguments`);
-    }
-
-    return $_.transform(heads, (vals, head) => {
-      const validator = validations[head.name];
-      if (validator === undefined) {
-        logger.error(`parameter (${head.name}) does not have validator`);
-      }
-      vals[head.name] = validator(req);
-    }, {});
-  }
-
-  function getValidations() {
+  function getValidations(rootReq) {
     return {
-      email: (req) => {
-        req.checkBody('email').isEmail();
-        return req.sanitize('email').normalizeEmail();
-      },
-      username: (req) => {
-        req.checkBody('username').notEmpty().isAlpha().isLength({max: 32});
-        req.sanitize('username').toMongoSafeString();
-        return req.sanitize('username').toString();
-      },
+      // temporary for example
+      // email: (req) => {
+      //   req.checkBody('email').isEmail();
+      //   return req.sanitize('email').normalizeEmail();
+      // },
+      // username: (req) => {
+      //   req.checkBody('username').notEmpty().isAlpha().isLength({max: 32});
+      //   req.sanitize('username').toMongoSafeString();
+      //   return req.sanitize('username').toString();
+      // },
+
       paramId: (req) => {
+        req = rootReq || req;
         req.checkParams('id').isMongoId();
-        return req.sanitize('id').toString();
-      }
+        return req.sanitizeParams('id').toString();
+      },
+
+      queryPage: (req) => {
+        req = rootReq || req;
+        req.checkQuery('page').optional().isInt({min: 0});
+        return req.sanitizeQuery('page').toInt();
+      },
+      queryCount: (req) => {
+        req = rootReq || req;
+        req.checkQuery('count').optional().isInt({min: 1});
+        return req.sanitizeQuery('count').toInt();
+      },
+      querySortBy: (req) => {
+        req = rootReq || req;
+        req.checkQuery('sortBy').optional().isAlpha();
+        return req.sanitizeQuery('sortBy').toString();
+      },  
+      queryAsc: (req) => {
+        req = rootReq || req;
+        return $_.has(req.query, 'asc') && req.query.asc !== 'false';
+      }    
     };
   }
 
