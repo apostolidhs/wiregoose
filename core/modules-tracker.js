@@ -10,7 +10,10 @@ const _ = require('lodash');
 module.exports = modulesTracker;
 
 function modulesTracker() {
-  let pluginsPath = path.join(__dirname, '../', 'plugins');
-  pluginsPath += '/**/index.js';
-  return glob.sync(pluginsPath);
+  const pluginsPath = path.join(__dirname, '../', 'plugins');
+  const modules = pluginsPath + '/**/index.js';
+  const subModules = pluginsPath + '/**/*.module.js';
+
+  return glob.sync(modules)
+    .concat(glob.sync(subModules));
 }
