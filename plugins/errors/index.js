@@ -42,7 +42,8 @@ eamModule(module, 'errors', (logger) => {
     return {
       UNEXPECTED: [1001, 'unexpected'],
       NOT_FOUND: [1002, 'not found'],
-      INVALID_PARAMS: [1003, 'invalid params']
+      INVALID_PARAMS: [1003, 'invalid params'],
+      DB_ERROR: [1004, 'database error']
     };
   }
 

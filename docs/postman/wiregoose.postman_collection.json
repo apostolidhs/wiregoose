@@ -1,0 +1,25 @@
+{
+	"variables": [],
+	"info": {
+		"name": "wiregoose",
+		"_postman_id": "94ec80b6-8511-8fdb-65b5-acc1bdb527d2",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "localhost:3000/api/v1/category/58085fd38160d8a73b4b50c2",
+			"request": {
+				"url": "localhost:3000/api/v1/category/58085fd38160d8a73b4b50c2",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": "Crud-Retrieve Category"
+			},
+			"response": []
+		}
+	]
+}

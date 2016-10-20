@@ -5,21 +5,18 @@
 eamModule(module, 'middlewarePermissions', (logger) => {
 
   return {
-    create
+    check
   };
 
-  function create(permission) {
+  function check(permission) {
     if (permission !== 'FREE' &&
         permission !== 'USER' &&
         permission !== 'ADMIN') {
       logger.error(`unsupported permission (${permission})`);
     }
     return (req, res, next) => {
-      if (permission === 'FREE') {
-        return next();
-      }
-
-      logger.error('not implemented yet');
+      // permitions are free until phase 4 (user roles, access tokens)
+      return next();
     };
   }
 
