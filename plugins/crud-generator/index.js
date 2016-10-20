@@ -2,7 +2,15 @@
 
 'use strict';
 
-eamModule(module, 'crudGenerator', (config, app, middlewareParameterValidator, middlewareResponse) => {
+eamModule(module, 'crudGenerator', (
+  config, 
+  app, 
+  middlewareParameterValidator, 
+  middlewarePermissions, 
+  middlewareCrudController,
+  middlewareResponse, 
+  crudGeneratorUrls
+) => {
 
   return {
     create
@@ -12,10 +20,10 @@ eamModule(module, 'crudGenerator', (config, app, middlewareParameterValidator, m
     if (!opts.model) {
       throw new Error('invalid model argument');
     }
-    app.get(`/${config.API_URL_PREFIX}/${opts.model.modelName.toLowerCase()}/:id`, [
+    app.get(crudGeneratorUrls.retrieve(opts.model.modelName), [
       middlewareParameterValidator.crud.retrieve(),
-      // middlewarePermissions.check('ADMIN'),
-      // middlewareCrudController.retrieve(opts.model)
+      middlewarePermissions.check('ADMIN'),
+      middlewareCrudController.retrieve(opts.model),
       middlewareResponse.success,
       middlewareResponse.fail
     ]);

@@ -3,6 +3,7 @@
 'use strict';
 
 eamModule(module, 'app', (
+  $q,
   $express,
   $path,
   $serveFavicon,
@@ -10,22 +11,49 @@ eamModule(module, 'app', (
   $bodyParser,
   $cookieParser,
   $morgan,
+  $mongoose,
   router,
-  mongooseConnector, 
+  dbMongooseConnector, 
   middlewareInitiateResponseParams
 ) => {
-  const app = $express();
-  app.use($morgan('dev'));
-  app.use($bodyParser.json());
-  app.use($bodyParser.urlencoded({ extended: false }));
-  app.use($expressValidator());
-  app.use($cookieParser());
-  app.use($express.static($path.join(__dirname, 'public')));
+  
+  init();
 
-  app.use(middlewareInitiateResponseParams);
-  app.use(router);
+  return createApp();
 
-  mongooseConnector.connect();
+  function init() {
+    extendPromise();
+    dbMongooseConnector.connect();
+  }
 
-  return app;
+  function createApp() {
+    const app = $express();
+    app.use($morgan('dev'));
+    app.use($bodyParser.json());
+    app.use($bodyParser.urlencoded({ extended: false }));
+    app.use($expressValidator());
+    app.use($cookieParser());
+    app.use($express.static($path.join(__dirname, 'public')));
+
+    app.use(middlewareInitiateResponseParams);
+    app.use(router);
+
+    return app;
+  }
+
+  function extendPromise() {
+    $q.promisify = (ctx) => {
+      const deferred = $q.defer();
+      ctx().exec((err, record) => {
+          if (err) {
+            deferred.reject(err);
+          } else {
+            deferred.resolve(record);
+          }
+      });
+      return deferred.promise;
+    };
+
+    $mongoose.Promise = $q.Promise;
+  }
 });
