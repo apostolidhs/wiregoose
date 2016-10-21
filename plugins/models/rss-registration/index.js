@@ -2,18 +2,26 @@
 
 'use strict';
 
-eamModule(module, 'modelsRssRegistration', ($mongoose, $mongooseIdValidator) => {
+eamModule(module, 'modelsRssRegistration', (
+  $mongoose, 
+  $mongooseIdValidator, 
+  $mongooseAutopopulate,
+  $mongooseTypeUrl, 
+  config, 
+  rssTranslator
+) => {
 
   const ObjectId = $mongoose.Schema.Types.ObjectId;
   const schema = new $mongoose.Schema({
-    category: {type: ObjectId, ref: 'Category', required: true},	
-    link: { type: String, required: true },
-    conversionPolicy: { type: ObjectId, ref: 'RssConversionPolicy', required: true },
-    lang: { type: ObjectId, ref: 'Language', required: true },
-    provider: { type: ObjectId, ref: 'RssProvider', required: true }
+    category: {type: ObjectId, ref: 'Category', required: true, autopopulate: true},	
+    link: {type: $mongoose.SchemaTypes.Url, required: true},
+    conversionPolicy: {type: String, enum: rssTranslator.supportedConversionPolicies, required: true},
+    lang: {type: String, enum: config.SUPPORTED_LANGUAGES, required: true},
+    provider: {type: ObjectId, ref: 'RssProvider', required: true, autopopulate: true}
   });
 
-  schema.plugin($mongooseIdValidator);
+  schema.plugin($mongooseAutopopulate);
+  schema.plugin($mongooseIdValidator);  
   
   return $mongoose.model('RssRegistration', schema);
 

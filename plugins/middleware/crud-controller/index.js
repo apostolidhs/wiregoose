@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'middlewareCrudController', (dbMongooseBinders) => {
+eamModule(module, 'middlewareCrudController', ($q, dbMongooseBinders) => {
 
   return {
     create: createCtrl,
@@ -40,7 +40,23 @@ eamModule(module, 'middlewareCrudController', (dbMongooseBinders) => {
       const findOpts = {
         pagination
       };
-      performAndResponse(() => dbMongooseBinders.find(model, findOpts), res, next);     
+
+      $q.all([
+        dbMongooseBinders.find(model, findOpts),
+        dbMongooseBinders.count(model)
+      ])
+      .then(resolvedPromises => {
+        const data = {};
+        data.content = resolvedPromises[0];
+        data.count = resolvedPromises[1];
+        res.locals.data = data;
+
+        next();
+      })
+      .catch(reason => {
+        res.locals.errors.add('DB_ERROR', reason);
+        next(true);
+      });      
     };
   }
 

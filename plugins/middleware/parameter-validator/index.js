@@ -6,7 +6,7 @@ eamModule(module, 'middlewareParameterValidator', ($_, parameterValidator) => {
 
   const defaultPagination = {
     page: 0,
-    count: 10
+    count: 50
   };
 
   return {
