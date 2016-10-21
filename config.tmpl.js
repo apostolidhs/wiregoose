@@ -15,6 +15,7 @@ config.MONGODB_PASS = ''; // 'MongoDB password, undefined if not credentials';
 config.MONGODB_USER = ''; // 'MongoDB username, undefined if not credentials';
 config.MONGODB_DOMAIN = ''; // 'MongoDB domain';
 config.MONGODB_DATABASE_NAME = ''; // 'MongoDB database name';
+config.MONGODB_MOCK_DATABASE_NAME = ''; // 'MongoDB mock database name, for unit tests';
 
 config.SUPPORTED_LANGUAGES = [
   'en',

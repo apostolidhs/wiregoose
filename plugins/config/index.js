@@ -10,7 +10,8 @@ eamModule(module, 'config', (logger) => {
   }
 
   const credentials = config.MONGODB_USER ? `${config.MONGODB_USER}:${config.MONGODB_PASS}@` : '';
-  config.MONGODB_URL = `mongodb://${credentials}${config.MONGODB_DOMAIN}/${config.MONGODB_DATABASE_NAME}`;
+  const dbName = process.env.UNIT_TEST ? config.MONGODB_MOCK_DATABASE_NAME : config.MONGODB_DATABASE_NAME;
+  config.MONGODB_URL = `mongodb://${credentials}${config.MONGODB_DOMAIN}/${dbName}`;
 
   return config;
 });
