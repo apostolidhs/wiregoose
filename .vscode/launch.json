@@ -25,11 +25,9 @@
       "name": "LaunchTest",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceRoot}/core/bootstrap.js",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/mocha",
       "stopOnEntry": false,
-      "args": [
-        "--test"
-      ],
+      "args": [],
       "cwd": "${workspaceRoot}",
       "preLaunchTask": null,
       "runtimeExecutable": null,
@@ -42,7 +40,7 @@
       "console": "internalConsole",
       "sourceMaps": false,
       "outFiles": []
-    },    
+    },        
     {
       "name": "Attach",
       "type": "node",

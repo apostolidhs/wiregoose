@@ -4,6 +4,6 @@
 
 eamModule(module, 'rssTranslator', () => {
   return {
-    supportedConversionPolicies: [] 
+    supportedConversionPolicies: ['normal'] 
   };
 });

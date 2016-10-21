@@ -18,7 +18,7 @@ eamModule(module, 'testsApp', ($supertest, $chai, $_, app, config, dbMongooseCon
   $$dbMongooseConnector = dbMongooseConnector;
 });
 
-describe('Testing the CRUD functionality of a simple model', function() {
+describe('Testing the CRUD functionality of a simple model', () => {
 
   before(done => {
     $$dbMongooseConnector.dropDatabase(done);
@@ -29,7 +29,7 @@ describe('Testing the CRUD functionality of a simple model', function() {
   };
   let createCategory;
 
-  it('Create one record', function(done) {
+  it('Create one record', (done) => {
     $$supertest($$app)
       .post('/' + $$config.API_URL_PREFIX + '/category')
       .send({
@@ -45,7 +45,7 @@ describe('Testing the CRUD functionality of a simple model', function() {
       .end(done);
   });
 
-  it('Retrieve one record', function(done) {
+  it('Retrieve one record', (done) => {
     $$supertest($$app)
       .get('/' + $$config.API_URL_PREFIX + '/category/' + createCategory._id)
       .set('Accept', 'application/json')
@@ -58,7 +58,7 @@ describe('Testing the CRUD functionality of a simple model', function() {
       .end(done);
   });
 
-  it('Retrieve all records', function(done) {
+  it('Retrieve all records', (done) => {
     $$supertest($$app)
       .get('/' + $$config.API_URL_PREFIX + '/category')
       .set('Accept', 'application/json')
@@ -74,7 +74,7 @@ describe('Testing the CRUD functionality of a simple model', function() {
       .end(done);
   });
 
-  it('Update one record', function(done) {
+  it('Update one record', (done) => {
     category.name = 'CNN';
 
     $$supertest($$app)
@@ -93,7 +93,7 @@ describe('Testing the CRUD functionality of a simple model', function() {
       .end(done);
   });  
 
-  it('Delete one record', function(done) {
+  it('Delete one record', (done) => {
     $$supertest($$app)
       .delete('/' + $$config.API_URL_PREFIX + '/category/' + createCategory._id)
       .set('Accept', 'application/json')
@@ -107,7 +107,7 @@ describe('Testing the CRUD functionality of a simple model', function() {
       .end(done);
   });
 
-  it('Retrieve all records, no records after delete', function(done) {
+  it('Retrieve all records, no records after delete', (done) => {
     $$supertest($$app)
       .get('/' + $$config.API_URL_PREFIX + '/category')
       .set('Accept', 'application/json')
