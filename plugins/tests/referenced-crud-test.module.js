@@ -47,7 +47,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
   let newProvider;
   let newRssRegistration;
 
-  it('Create invalid referenced record', (done) => {
+  it('Should create invalid referenced record', (done) => {
     // random mongo ids
     rssRegistration.category = '580a2b318160d8a73b4c0b36';
     rssRegistration.provider = '580a2b318160d8a73b4c0b36';
@@ -67,7 +67,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .end(done); 
   });
 
-  it('Create 2 records and attach them on one referenced record', (done) => {
+  it('Should create 2 records and attach them on one referenced record', (done) => {
     createCategory(() => {
       createProvider(() => {
         createRssRegistration(done);
@@ -75,7 +75,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
     });
   });
 
-  it('Update invalid referenced record', (done) => {
+  it('Should update invalid referenced record', (done) => {
     // random mongo ids
     rssRegistration.category = '580a2b318160d8a73b4c0b36';
 
@@ -91,6 +91,18 @@ describe('Testing the CRUD functionality of a referenced model', () => {
           res.body.errors[0].msg.should.have.property('category'); 
       })
       .end(done); 
+  });  
+
+  it('Should retrieve and populate the record', (done) => {
+    $$supertest($$app)
+      .get('/' + $$config.API_URL_PREFIX + '/rssRegistration/' + newRssRegistration._id)
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .expect(res => {
+        expect($$_.isEqual(res.body.data.provider, newProvider)).to.equal(true);               
+      })
+      .end(done);
   });  
 
 

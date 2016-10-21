@@ -29,7 +29,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
   };
   let createCategory;
 
-  it('Create one record', (done) => {
+  it('Should create one record', (done) => {
     $$supertest($$app)
       .post('/' + $$config.API_URL_PREFIX + '/category')
       .send({
@@ -45,7 +45,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .end(done);
   });
 
-  it('Retrieve one record', (done) => {
+  it('Should retrieve one record', (done) => {
     $$supertest($$app)
       .get('/' + $$config.API_URL_PREFIX + '/category/' + createCategory._id)
       .set('Accept', 'application/json')
@@ -58,7 +58,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .end(done);
   });
 
-  it('Retrieve all records', (done) => {
+  it('Should retrieve all records', (done) => {
     $$supertest($$app)
       .get('/' + $$config.API_URL_PREFIX + '/category')
       .set('Accept', 'application/json')
@@ -74,7 +74,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .end(done);
   });
 
-  it('Update one record', (done) => {
+  it('Should update one record', (done) => {
     category.name = 'CNN';
 
     $$supertest($$app)
@@ -93,7 +93,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .end(done);
   });  
 
-  it('Delete one record', (done) => {
+  it('Should delete one record', (done) => {
     $$supertest($$app)
       .delete('/' + $$config.API_URL_PREFIX + '/category/' + createCategory._id)
       .set('Accept', 'application/json')
@@ -107,7 +107,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .end(done);
   });
 
-  it('Retrieve all records, no records after delete', (done) => {
+  it('Should retrieve all records, no records after delete', (done) => {
     $$supertest($$app)
       .get('/' + $$config.API_URL_PREFIX + '/category')
       .set('Accept', 'application/json')

@@ -9,7 +9,7 @@ Online news transmitter using RSS feeds and crawler.
 ## Dependencies
 
 * Node.js
-* npm
+* Npm
 * Mongo Server
 
 ## Build And Run

@@ -15,7 +15,7 @@ eamModule(module, 'testsApp', ($supertest, $chai, $_, app) => {
 });
 
 describe('GET /info', function() {
-  it('respond with application info', function(done) {
+  it('Should respond with application info', function(done) {
     $$supertest($$app)
       .get('/info')
       .set('Accept', 'application/json')

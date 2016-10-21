@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'modelsFetchReport', ($mongoose, $mongooseIdValidator) => {
+eamModule(module, 'modelsFetchReport', ($mongoose, $mongooseIdValidator, $mongooseAutopopulate) => {
 
   const schema = new $mongoose.Schema({
     success: {type: Boolean, required: true},
@@ -13,10 +13,11 @@ eamModule(module, 'modelsFetchReport', ($mongoose, $mongooseIdValidator) => {
     log: {type: String},
     failedFetchesLog: [
       {type: String, required: true},
-      {type: $mongoose.Schema.Types.ObjectId, ref: 'RssRegistration', required: true}
+      {type: $mongoose.Schema.Types.ObjectId, ref: 'RssRegistration', required: true, autopopulate: true}
     ]
   });
 
+  schema.plugin($mongooseAutopopulate);
   schema.plugin($mongooseIdValidator);
 
   return $mongoose.model('FetchReport', schema);
