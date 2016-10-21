@@ -3,6 +3,7 @@
 'use strict';
 
 eamModule(module, 'crudGenerator', (
+  $_,
   config, 
   app, 
   middlewareParameterValidator, 
@@ -16,14 +17,15 @@ eamModule(module, 'crudGenerator', (
     create
   };
 
-  function create(opts) {
+  function create(customOpts) {
+    const opts = $_.defaultsDeep(customOpts, getDefaultOptions());    
     const model = opts.model; 
     if (!model) {
       throw new Error('invalid model argument');
     }
 
     app.get(crudGeneratorUrls.retrieve(model.modelName), [
-      middlewarePermissions.check('ADMIN'),
+      middlewarePermissions.check(opts.retrieve.permissions),
       middlewareParameterValidator.crud.retrieve(),      
       middlewareCrudController.retrieve(model),
       middlewareResponse.success,
@@ -31,7 +33,7 @@ eamModule(module, 'crudGenerator', (
     ]);
 
     app.get(crudGeneratorUrls.retrieveAll(model.modelName), [
-      middlewarePermissions.check('ADMIN'),
+      middlewarePermissions.check(opts.retrieveAll.permissions),
       middlewareParameterValidator.crud.retrieveAll(),
       middlewareCrudController.retrieveAll(model),
       middlewareResponse.success,
@@ -39,7 +41,7 @@ eamModule(module, 'crudGenerator', (
     ]);    
 
     app.post(crudGeneratorUrls.create(model.modelName), [
-      middlewarePermissions.check('ADMIN'),
+      middlewarePermissions.check(opts.create.permissions),
       middlewareParameterValidator.crud.create(model),      
       middlewareCrudController.create(model),
       middlewareResponse.success,
@@ -47,7 +49,7 @@ eamModule(module, 'crudGenerator', (
     ]);  
 
     app.put(crudGeneratorUrls.update(model.modelName), [
-      middlewarePermissions.check('ADMIN'),
+      middlewarePermissions.check(opts.update.permissions),
       middlewareParameterValidator.crud.update(model),      
       middlewareCrudController.update(model),
       middlewareResponse.success,
@@ -55,12 +57,32 @@ eamModule(module, 'crudGenerator', (
     ]);      
 
     app.delete(crudGeneratorUrls.delete(model.modelName), [
-      middlewarePermissions.check('ADMIN'),
+      middlewarePermissions.check(opts.delete.permissions),
       middlewareParameterValidator.crud.delete(model),      
       middlewareCrudController.delete(model),
       middlewareResponse.success,
       middlewareResponse.fail
     ]);      
+  }
+
+  function getDefaultOptions() {
+    return {
+      retrieveAll: {
+        permissions: 'ADMIN'
+      },
+      retrieve: {
+        permissions: 'ADMIN'
+      },
+      create: {
+        permissions: 'ADMIN'
+      },
+      update: {
+        permissions: 'ADMIN'
+      },
+      delete: {
+        permissions: 'ADMIN'
+      }
+    };
   }
 
 });

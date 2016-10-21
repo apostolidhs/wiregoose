@@ -5,7 +5,13 @@
 eamModule(module, 'routesCategory', (crudGenerator, modelsCategory) => {
 
   const crudOpts = {
-    model: modelsCategory
+    model: modelsCategory,
+    retrieveAll: {
+      permissions: 'FREE'
+    },
+    retrieve: {
+      permissions: 'FREE'
+    }
   };
   crudGenerator.create(crudOpts);
 

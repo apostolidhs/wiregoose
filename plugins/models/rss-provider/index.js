@@ -2,11 +2,11 @@
 
 'use strict';
 
-eamModule(module, 'modelsProvider', ($mongoose) => {
+eamModule(module, 'modelsProvider', ($mongoose, $mongooseTypeUrl) => {
 
   const schema = new $mongoose.Schema({
-    name: { type: String, required: true, unique: true },
-    link: { type: String, required: true}
+    name: {type: String, required: true, index: true, unique: true, maxlength: [64]},
+    link: {type: $mongoose.SchemaTypes.Url, required: true}
   });
 
   return $mongoose.model('Provider', schema);
