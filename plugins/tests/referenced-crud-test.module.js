@@ -39,7 +39,6 @@ describe('Testing the CRUD functionality of a referenced model', () => {
   const rssRegistration = {
     category: undefined, // id after creation
     link: 'http://www.bbc.com/mock',
-    conversionPolicy: 'normal',
     lang: 'gr',
     provider: undefined // id after creation
   };

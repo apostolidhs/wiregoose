@@ -12,9 +12,9 @@ eamModule(module, 'modelsEntry', ($mongoose, $mongooseTypeUrl) => {
   };
 
   function getByCategory(categoryName, lang) {
-    return $mongoose.model( 
-      "Category_" + categoryName + "_lang_" + lang, 
-      schema 
+    return $mongoose.model(
+      "Category_" + categoryName + "_lang_" + lang,
+      schema
     );
   }
 
@@ -25,10 +25,10 @@ eamModule(module, 'modelsEntry', ($mongoose, $mongooseTypeUrl) => {
       description: {type: String, required: true, maxlength: [512]},
       published: {type: Date, required: true},
       link: {type: $mongoose.SchemaTypes.Url, required: true},
-
+      author: {type: String, maxlength: [128]},
       // this should be {type: ObjectId, ref: 'RssProvider', required: true}
       // but we really need the speed :)
-      provider: {type: String, required: true} 
+      provider: {type: String, required: true}
     });
   }
 });
