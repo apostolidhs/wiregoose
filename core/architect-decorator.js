@@ -27,8 +27,8 @@ function decorate(amd, moduleName, controller) {
   const dependencies = getParameterNames(controller);
   const innerDependencies = _.filter(dependencies, d => !_.startsWith(d, '$'));
 
-  function setup(options, imports, register) {    
-    const addArgument = (args, dependence) => {      
+  function setup(options, imports, register) {
+    const addArgument = (dependence) => {
       if (_.startsWith(dependence, '$')) {
         let normalizedDependency = dependence.substr(1);
         normalizedDependency = toKebabCaseOnlyCharacters(normalizedDependency);
@@ -36,12 +36,12 @@ function decorate(amd, moduleName, controller) {
         if (aliasDependency) {
           normalizedDependency = aliasDependency;
         }
-        args.push(require(normalizedDependency));
+        return require(normalizedDependency);
       } else {
-        args.push(imports[dependence])
+        return imports[dependence];
       }
     };
-    const args = _.transform(dependencies, addArgument, []);
+    const args = _.map(dependencies, addArgument);
     const exportVals = controller.apply(undefined, args);
 
     const registerVal = {};
@@ -72,7 +72,7 @@ function toKebabCaseOnlyCharacters(str) {
   let kebab = '';
   _.each(str, (c, idx) => {
     const nextChar = str[idx + 1];
-    kebab += c.toLowerCase();    
+    kebab += c.toLowerCase();
     if (isAlphaNumericUpperCase(nextChar)) {
       kebab += '-';
     }
@@ -81,5 +81,5 @@ function toKebabCaseOnlyCharacters(str) {
 }
 
 function isAlphaNumericUpperCase(c) {
-  return c && /^[a-z0-9]+$/i.test(c) && c === c.toUpperCase();  
+  return c && /^[a-z0-9]+$/i.test(c) && c === c.toUpperCase();
 }

@@ -14,8 +14,8 @@ eamModule(module, 'testsApp', ($supertest, $chai, $_, app, config, dbMongooseCon
   $$supertest = $supertest;
   $$app = app;
   $$_ = $_;
-  expect = $chai.expect; 
-  should = $chai.should(); 
+  expect = $chai.expect;
+  should = $chai.should();
   $$config = config;
   $$dbMongooseConnector = dbMongooseConnector;
 });
@@ -23,7 +23,8 @@ eamModule(module, 'testsApp', ($supertest, $chai, $_, app, config, dbMongooseCon
 describe('Testing the CRUD functionality of a referenced model', () => {
 
   before(done => {
-    $$dbMongooseConnector.dropDatabase(done);
+    $$dbMongooseConnector.dropDatabase()
+      .then(() => done());
   });
 
   const category = {
@@ -59,12 +60,12 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       })
       .set('Accept', 'application/json')
       .expect(400)
-      .expect(res => {        
+      .expect(res => {
           expect(res.body.errors.length).to.equal(1);
-          res.body.errors[0].msg.should.have.property('category'); 
-          res.body.errors[0].msg.should.have.property('provider');  
+          res.body.errors[0].msg.should.have.property('category');
+          res.body.errors[0].msg.should.have.property('provider');
       })
-      .end(done); 
+      .end(done);
   });
 
   it('Should create 2 records and attach them on one referenced record', (done) => {
@@ -86,12 +87,12 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       })
       .set('Accept', 'application/json')
       .expect(400)
-      .expect(res => {        
+      .expect(res => {
           expect(res.body.errors.length).to.equal(1);
-          res.body.errors[0].msg.should.have.property('category'); 
+          res.body.errors[0].msg.should.have.property('category');
       })
-      .end(done); 
-  });  
+      .end(done);
+  });
 
   it('Should retrieve and populate the record', (done) => {
     $$supertest($$app)
@@ -100,10 +101,10 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .expect(res => {
-        expect($$_.isEqual(res.body.data.provider, newProvider)).to.equal(true);               
+        expect($$_.isEqual(res.body.data.provider, newProvider)).to.equal(true);
       })
       .end(done);
-  });  
+  });
 
 
   function createCategory(done) {
@@ -115,7 +116,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .set('Accept', 'application/json')
       .expect(200)
       .expect(res => {
-          newCategory = res.body.data;      
+          newCategory = res.body.data;
       })
       .end(done);
   }
@@ -129,9 +130,9 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .set('Accept', 'application/json')
       .expect(200)
       .expect(res => {
-          newProvider = res.body.data;      
+          newProvider = res.body.data;
       })
-      .end(done);   
+      .end(done);
   }
 
   function createRssRegistration(done) {
@@ -146,9 +147,9 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .set('Accept', 'application/json')
       .expect(200)
       .expect(res => {
-          newRssRegistration = res.body.data;      
+          newRssRegistration = res.body.data;
       })
-      .end(done); 
+      .end(done);
   }
 
 });
