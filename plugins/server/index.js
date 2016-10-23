@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'app', ($http, config, app, logger) => {
+eamModule(module, 'server', ($http, config, app, logger) => {
 
   /**
    * Get port from environment and store in Express.

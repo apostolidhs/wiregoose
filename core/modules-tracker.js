@@ -18,16 +18,25 @@ function modulesTracker() {
   const subModules = `${pluginsPath}/**/*.module.js`;
   const testModules = `${pluginsPath}/**/*-test.module.js`;
   const serverStartModule = `${pluginsPath}/server/index.js`;
+  const scriptModules = `${pluginsPath}/scripts`;
 
   const srcPaths = [
     modules,
     subModules
   ];
 
-  if (process.env.UNIT_TEST) {
+  const script = argv.script;
+  if (script) {
+    const scriptPath = `${pluginsPath}/scripts/${script}.js`;
+    srcPaths.push(scriptPath);
     srcPaths.push(`!${serverStartModule}`);
+    srcPaths.push(`!${testModules}`);
+  } else if (process.env.UNIT_TEST) {
+    srcPaths.push(`!${serverStartModule}`);
+    srcPaths.push(`!${scriptModules}`);
   } else {
     srcPaths.push(`!${testModules}`);
+    srcPaths.push(`!${scriptModules}`);
   }
 
   const appModules = globby.sync(srcPaths);

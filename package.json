@@ -5,7 +5,8 @@
   "main": "core/bootstrap",
   "scripts": {
     "start": "node core/bootstrap.js",
-    "test": "node node_modules/mocha/bin/mocha"
+    "test": "node node_modules/mocha/bin/mocha",
+    "initialize-db": "node core/bootstrap.js --script=initialize-db"
   },
   "repository": {
     "type": "git",
