@@ -3,21 +3,24 @@
 'use strict';
 
 eamModule(module, 'app', (
+  $_,
   $q,
   $express,
   $path,
   $serveFavicon,
-  $expressValidator, 
+  $expressValidator,
   $bodyParser,
   $cookieParser,
   $morgan,
   $mongoose,
   router,
-  dbMongooseConnector, 
+  dbMongooseConnector,
   middlewareInitiateResponseParams,
-  middlewareResponse
+  middlewareResponse,
+  routesRssFeedFetchRssFeed,
+  routesCrud
 ) => {
-  
+
   init();
 
   return createApp();
@@ -29,21 +32,30 @@ eamModule(module, 'app', (
 
   function createApp() {
     const app = $express();
-    
+
     app.use(middlewareInitiateResponseParams);
-    
+
     app.use($morgan('dev'));
     app.use($bodyParser.json());
     app.use($bodyParser.urlencoded({ extended: false }));
     app.use($expressValidator());
     app.use($cookieParser());
     app.use($express.static($path.join(__dirname, 'public')));
-    
+
+    registerRoutes(app);
+
     app.use(router);
 
     app.use(middlewareResponse.fail);
 
     return app;
+  }
+
+  function registerRoutes(app) {
+    $_.each([
+      routesRssFeedFetchRssFeed,
+      routesCrud
+    ], route => route.register(app));
   }
 
   function extendPromise() {
@@ -58,7 +70,5 @@ eamModule(module, 'app', (
       });
       return deferred.promise;
     };
-
-    $mongoose.Promise = $q.Promise;
   }
 });

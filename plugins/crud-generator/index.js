@@ -4,12 +4,11 @@
 
 eamModule(module, 'crudGenerator', (
   $_,
-  config, 
-  app, 
-  middlewareParameterValidator, 
-  middlewarePermissions, 
+  config,
+  middlewareParameterValidator,
+  middlewarePermissions,
   middlewareCrudController,
-  middlewareResponse, 
+  middlewareResponse,
   crudGeneratorUrls
 ) => {
 
@@ -17,16 +16,16 @@ eamModule(module, 'crudGenerator', (
     create
   };
 
-  function create(customOpts) {
-    const opts = $_.defaultsDeep(customOpts, getDefaultOptions());    
-    const model = opts.model; 
+  function create(app, customOpts) {
+    const opts = $_.defaultsDeep(customOpts, getDefaultOptions());
+    const model = opts.model;
     if (!model) {
       throw new Error('invalid model argument');
     }
 
     app.get(crudGeneratorUrls.retrieve(model.modelName), [
       middlewarePermissions.check(opts.retrieve.permissions),
-      middlewareParameterValidator.crud.retrieve(),      
+      middlewareParameterValidator.crud.retrieve(),
       middlewareCrudController.retrieve(model),
       middlewareResponse.success,
       middlewareResponse.fail
@@ -38,31 +37,31 @@ eamModule(module, 'crudGenerator', (
       middlewareCrudController.retrieveAll(model),
       middlewareResponse.success,
       middlewareResponse.fail
-    ]);    
+    ]);
 
     app.post(crudGeneratorUrls.create(model.modelName), [
       middlewarePermissions.check(opts.create.permissions),
-      middlewareParameterValidator.crud.create(model),      
+      middlewareParameterValidator.crud.create(model),
       middlewareCrudController.create(model),
       middlewareResponse.success,
       middlewareResponse.fail
-    ]);  
+    ]);
 
     app.put(crudGeneratorUrls.update(model.modelName), [
       middlewarePermissions.check(opts.update.permissions),
-      middlewareParameterValidator.crud.update(model),      
+      middlewareParameterValidator.crud.update(model),
       middlewareCrudController.update(model),
       middlewareResponse.success,
       middlewareResponse.fail
-    ]);      
+    ]);
 
     app.delete(crudGeneratorUrls.delete(model.modelName), [
       middlewarePermissions.check(opts.delete.permissions),
-      middlewareParameterValidator.crud.delete(model),      
+      middlewareParameterValidator.crud.delete(model),
       middlewareCrudController.delete(model),
       middlewareResponse.success,
       middlewareResponse.fail
-    ]);      
+    ]);
   }
 
   function getDefaultOptions() {
