@@ -43,7 +43,10 @@ eamModule(module, 'errors', (logger) => {
       UNEXPECTED: [1001, 'unexpected'],
       NOT_FOUND: [1002, 'not found'],
       INVALID_PARAMS: [1003, 'invalid params'],
-      DB_ERROR: [1004, 'database error']
+
+      DB_ERROR: [2001, 'database error'],
+
+      RSS_FEED_FETCH_FAIL: [3001, 'rss feed fetch failed']
     };
   }
 
