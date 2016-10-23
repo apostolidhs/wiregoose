@@ -1,0 +1,110 @@
+[
+  {
+      "category" : "World",
+      "link" : "http://rss.cnn.com/rss/cnn_world.rss",
+      "lang" : "en",
+      "provider" : "cnn"
+  },
+  {
+      "category" : "Economy",
+      "link" : "http://rss.cnn.com/rss/money_latest.rss",
+      "lang" : "en",
+      "provider" : "cnn"
+  },
+  {
+      "category" : "Politics",
+      "link" : "http://rss.cnn.com/rss/cnn_allpolitics.rss",
+      "lang" : "en",
+      "provider" : "cnn"
+  },
+  {
+      "category" : "Technology",
+      "link" : "http://rss.cnn.com/rss/cnn_tech.rss",
+      "lang" : "en",
+      "provider" : "cnn"
+  },
+  {
+      "category" : "Travel",
+      "link" : "http://rss.cnn.com/rss/cnn_travel.rss",
+      "lang" : "en",
+      "provider" : "cnn"
+  },
+  {
+      "category" : "Science",
+      "link" : "http://rss.cnn.com/rss/cnn_health.rss",
+      "alias" : "health",
+      "lang" : "en",
+      "provider" : "cnn"
+  },
+  {
+      "category" : "Lifestyle",
+      "link" : "http://rss.cnn.com/rss/money_lifestyle.rss",
+      "lang" : "en",
+      "provider" : "cnn"
+  },
+
+
+
+
+
+
+
+  {
+      "category" : "Country",
+      "link" : "http://feeds.bbci.co.uk/news/uk/rss.xml",
+      "lang" : "en",
+      "provider" : "bbc"
+  },
+  {
+      "category" : "Technology",
+      "link" : "http://feeds.bbci.co.uk/news/technology/rss.xml",
+      "lang" : "en",
+      "provider" : "bbc"
+  },
+  {
+      "category" : "World",
+      "link" : "http://feeds.bbci.co.uk/news/world/rss.xml",
+      "lang" : "en",
+      "provider" : "bbc"
+  },
+  {
+      "category" : "Economy",
+      "link" : "http://feeds.bbci.co.uk/news/business/rss.xml",
+      "lang" : "en",
+      "provider" : "bbc"
+  },
+  {
+      "category" : "Politics",
+      "link" : "http://feeds.bbci.co.uk/news/politics/rss.xml",
+      "lang" : "en",
+      "provider" : "bbc"
+  },
+  {
+      "category" : "Science",
+      "alias" : "health",
+      "link" : "http://feeds.bbci.co.uk/news/health/rss.xml",
+      "lang" : "en",
+      "provider" : "bbc"
+  },
+  {
+      "category" : "Country",
+      "alias" : "education",
+      "link" : "http://feeds.bbci.co.uk/news/education/rss.xml",
+      "lang" : "en",
+      "provider" : "bbc"
+  },
+  {
+      "category" : "Science",
+      "alias" : "science_and_environment",
+      "link" : "http://feeds.bbci.co.uk/news/science_and_environment/rss.xml",
+      "lang" : "en",
+      "provider" : "bbc"
+  },
+  {
+      "category" : "Lifestyle",
+      "alias" : "entertainment_and_arts",
+      "link" : "http://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml",
+      "lang" : "en",
+      "provider" : "bbc"
+  }
+]
