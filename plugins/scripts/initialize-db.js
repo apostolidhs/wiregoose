@@ -13,23 +13,28 @@ eamModule(module, 'scriptsInitializeDb', (
   modelsRssRegistration
 ) => {
 
-  let categories;
-  let providers;
+  let categoriesByName;
+  let providersByName;
 
   dbMongooseConnector.connect()
     .then(() => dbMongooseConnector.dropDatabase())
     .then(() => importSimpleData('categories.json', modelsCategory, (data) => ({
       name: data
     })))
-    .then((newCategories) => categories = newCategories)
+    .then((newCategories) => categoriesByName = $_.keyBy(newCategories, 'name'))
     .then(() => logger.info('categories imported'))
     .then(() => importSimpleData('providers.json', modelsRssProvider, (data) => ({
       name: data.name,
       link: data.link
     })))
-    .then((newProviders) => providers = newProviders)
+    .then((newProviders) => providersByName = $_.keyBy(newProviders, 'name'))
     .then(() => logger.info('providers imported'))
-    .then(() => importRssFeedRegistrations())
+    .then(() => importSimpleData('rss-feed-registrations.json', modelsRssRegistration, (data) => ({
+      category: categoriesByName[data.category]._id,
+      link: data.link,
+      lang: data.lang,
+      provider: providersByName[data.provider]._id
+    })))    
     .then(() => logger.info('rssFeedRegistrations imported'))
     .then(() => process.exit(0))
     .catch((reason) => {
@@ -46,25 +51,6 @@ eamModule(module, 'scriptsInitializeDb', (
     );
 
     return $q.all(promiseOfData);
-  }
-
-  function importRssFeedRegistrations() {
-    const categoriesByName = $_.keyBy(categories, 'name');
-    const providersByName = $_.keyBy(providers, 'name');
-
-    const rssFeedRegistrationsData = require('../../rss-feed-sources/rss-feed-registrations.json');
-
-    const promiseOfCategories = $_.map(
-      rssFeedRegistrationsData,
-      rssFeedRegistrationData => dbMongooseBinders.create(modelsRssRegistration, {
-        category: categoriesByName[rssFeedRegistrationData.category]._id,
-        link: rssFeedRegistrationData.link,
-        lang: rssFeedRegistrationData.lang,
-        provider: providersByName[rssFeedRegistrationData.provider]._id
-      }
-    ));
-
-    return $q.all(promiseOfCategories);
   }
 
 });
