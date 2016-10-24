@@ -18,6 +18,7 @@ eamModule(module, 'app', (
   middlewareInitiateResponseParams,
   middlewareResponse,
   routesRssFeedFetchRssFeed,
+  routesRssFeedFetchRssRegistrations,
   routesCrud
 ) => {
 
@@ -53,6 +54,7 @@ eamModule(module, 'app', (
 
   function registerRoutes(app) {
     $_.each([
+      routesRssFeedFetchRssRegistrations,
       routesRssFeedFetchRssFeed,
       routesCrud
     ], route => route.register(app));
