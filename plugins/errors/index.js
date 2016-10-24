@@ -46,7 +46,8 @@ eamModule(module, 'errors', (logger) => {
 
       DB_ERROR: [2001, 'database error'],
 
-      RSS_FEED_FETCH_FAIL: [3001, 'rss feed fetch failed']
+      RSS_FEED_FETCH_FAIL: [3001, 'rss feed fetch failed'],
+      RSS_REGISTRATIONS_FETCH_FAIL: [3002, 'rss registrations fetch failed']
     };
   }
 
