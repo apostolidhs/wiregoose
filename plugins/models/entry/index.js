@@ -8,10 +8,10 @@ eamModule(module, 'modelsEntry', ($mongoose, $mongooseTypeUrl) => {
 
   return {
     model: $mongoose.model('Entry', schema),
-    getByCategory
+    getByCategoryLang
   };
 
-  function getByCategory(categoryName, lang) {
+  function getByCategoryLang(categoryName, lang) {
     return $mongoose.model(
       "Category_" + categoryName + "_lang_" + lang,
       schema

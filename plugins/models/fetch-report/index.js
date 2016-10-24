@@ -11,9 +11,9 @@ eamModule(module, 'modelsFetchReport', ($mongoose, $mongooseIdValidator, $mongoo
     started: {type: Date, required: true},
     finished: {type: Date, required: true},
     log: {type: String},
-    failedFetchesLog: [
-      {type: String, required: true},
-      {type: $mongoose.Schema.Types.ObjectId, ref: 'RssRegistration', required: true, autopopulate: true}
+    failedFetches: [
+      {error: {type: $mongoose.Schema.Types.Mixed, required: true}},
+      {rssRegistration: {type: $mongoose.Schema.Types.ObjectId, ref: 'RssRegistration', required: true, autopopulate: true}}
     ]
   });
 
