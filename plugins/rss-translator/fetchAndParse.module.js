@@ -47,7 +47,7 @@ eamModule(module, 'rssTranslatorFetchAndParse', ($fs, $q, $request, $feedparser,
       }
 
       function createRequest(url) {
-        const req = $request(url, {timeout: 10000});
+        const req = $request(url, {timeout: 100000});
         req.setHeader('user-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36');
         req.setHeader('accept', 'text/html,application/xhtml+xml');
 

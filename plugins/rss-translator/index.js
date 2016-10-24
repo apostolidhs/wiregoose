@@ -10,7 +10,6 @@ eamModule(module, 'rssTranslator', (
   modelsEntry,
   rssTranslatorFetchAndParse
 ) => {
-  const HEALTHY_PERCENTAL_THRESSHOLD = 0.75;
 
   return {
     translateFromUrl,
@@ -42,10 +41,14 @@ eamModule(module, 'rssTranslator', (
   }
 
   // critical speed part, avoid using promises
-  function translateItem(item, providerName, done) {
-    if (!$_.isObject(item)) {
+  function translateItem(rawItem, providerName, done) {
+    
+    if (!$_.isObject(rawItem)) {
       return;
     }
+
+    const item = filterItemFields(rawItem);
+
     const title = sanitizeString(item.title, 'title');
 
     let description = sanitizeString(item.summary, 'description')
@@ -87,7 +90,11 @@ eamModule(module, 'rssTranslator', (
 
     const errors = entry.validateSync();
     if (errors) {
-      return done(errors);
+      const errorReport = {
+        item,
+        reason: errors        
+      };
+      return done(errorReport);
     } else {
       return done(undefined, entry);
     }
@@ -131,6 +138,19 @@ eamModule(module, 'rssTranslator', (
 
   function sanitizeDate(published) {
     return $_.isDate(published) ? published : undefined;
+  }
+
+  function filterItemFields(item) {
+    return $_.pick(item, [
+      'title',
+      'summary',
+      'description',
+      'pubdate',
+      'link',
+      'author',
+      'enclosures',
+      'image'
+    ]);
   }
 
 });
