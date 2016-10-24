@@ -27,16 +27,18 @@ eamModule(module, 'dbMongooseBinders', ($_, $mongoose, logger) => {
   }
 
   function find(model, opts) {
-    const pagination = opts.pagination;
+    const pagination = opts && opts.pagination;
 
     const cursor = model.find();
-    if (pagination.page) {
-      logger.assert(pagination.count > 0);
-      cursor.skip(pagination.page * pagination.count)
-        .limit(pagination.count);
-    }
-    if (pagination.sortBy) {
-      cursor.sort($_.fromPairs([[pagination.sortBy, pagination.asc ? 1 : -1]]));
+    if (pagination) {
+      if (pagination.page) {
+        logger.assert(pagination.count > 0);
+        cursor.skip(pagination.page * pagination.count)
+          .limit(pagination.count);
+      }
+      if (pagination.sortBy) {
+        cursor.sort($_.fromPairs([[pagination.sortBy, pagination.asc ? 1 : -1]]));
+      }
     }
 
     return cursor;
