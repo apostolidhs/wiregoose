@@ -88,16 +88,26 @@ eamModule(module, 'rssTranslator', (
       provider,
     });
 
-    const errors = entry.validateSync();
-    if (errors) {
+    const error = entry.validateSync();
+    if ($_.isEmpty(error)) {
+      return done(undefined, entry);
+    } else {
       const errorReport = {
         item,
-        reason: errors        
+        reason: summaryValidationError(error)        
       };
       return done(errorReport);
-    } else {
-      return done(undefined, entry);
     }
+  }
+
+  function summaryValidationError(error) {
+    if (error.message && !$_.isEmpty(error.errors)) {
+      return {
+        msg: error.message,
+        fields: $_.keys(error.errors)
+      };
+    }
+    return error;
   }
 
   function getImage(item) {
