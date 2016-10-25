@@ -50,15 +50,15 @@ eamModule(module, 'rssRegistrationsFetcher', (
                                     && registrationEntry.entriesResp.errors;
         const error = majorError || translationErrors;
 
-        if (error) {
+        if (!$_.isEmpty(error)) {
           const failedFetch = {
             error,
-            rssRegistration: rssRegistration._id
+            rssRegistration: rssRegistration.id
           };
           fetchReport.failedFetches.push(failedFetch);
         }
 
-        if (majorError) {
+        if (!$_.isEmpty(majorError)) {
           return $q.when();
         }
 
@@ -75,7 +75,8 @@ eamModule(module, 'rssRegistrationsFetcher', (
           return $q.when();
         }
 
-        return dbMongooseBinders.create(entryModel, entries);              
+        return entryModel.saveAvoidingDuplications(entries)
+          .then(savedEntries => fetchReport.entriesStored += $_.size(savedEntries))           
       });
 
       return $q.all(promiseOfEntries);
@@ -99,6 +100,7 @@ eamModule(module, 'rssRegistrationsFetcher', (
       success: false,
       totalFetches: 0,
       succeededFetches: 0,
+      entriesStored: 0,
       started: new Date(),
       finished: undefined,
       log: '',
