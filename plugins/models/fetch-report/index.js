@@ -8,6 +8,7 @@ eamModule(module, 'modelsFetchReport', ($mongoose, $mongooseIdValidator, $mongoo
     success: {type: Boolean, required: true},
     totalFetches: {type: Number, required: true, min: 0 },
     succeededFetches: {type: Number, required: true, min: 0 },
+    entriesStored: {type: Number, required: true, min: 0 },
     started: {type: Date, required: true},
     finished: {type: Date, required: true},
     log: {type: String},

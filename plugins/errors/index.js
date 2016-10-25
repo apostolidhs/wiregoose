@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'errors', (logger) => {
+eamModule(module, 'errors', ($_, logger) => {
 
   return {
     build
@@ -23,9 +23,15 @@ eamModule(module, 'errors', (logger) => {
       if (!errorDescr) {
         logger.error(`unexpected error code (${errorId})`);
       }
+
+      msg = msg || errorDescr[1]; 
+         
       errors.push({
         code: errorDescr[0],
-        msg: msg || errorDescr[1]
+        msg: $_.isError(msg) ? {
+          msg: msg.message,
+          stack: msg.stack
+        } : msg
       });
     }
 
