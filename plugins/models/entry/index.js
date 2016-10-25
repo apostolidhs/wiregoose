@@ -2,9 +2,13 @@
 
 'use strict';
 
-eamModule(module, 'modelsEntry', ($mongoose, $mongooseTypeUrl) => {
+eamModule(module, 'modelsEntry', ($_, $q, $moment, $mongoose, $mongooseTypeUrl) => {
 
   const schema = getSchema();
+
+  schema.methods.findLatestEntryByProvider = findLatestEntryByProvider; 
+  schema.methods.findDuplicateEntry = findDuplicateEntry;
+  schema.statics.saveAvoidingDuplications = saveAvoidingDuplications;
 
   return {
     model: $mongoose.model('Entry', schema),
@@ -31,4 +35,33 @@ eamModule(module, 'modelsEntry', ($mongoose, $mongooseTypeUrl) => {
       provider: {type: String, required: true}
     });
   }
+
+  function findLatestEntryByProvider(model) {
+    return model.find({provider: this.provider}).sort({published : -1}).limit(1).then($_.first);
+  }
+
+  function findDuplicateEntry(model, fromDate) {
+    const q = {
+      published: {
+        $gte: fromDate
+      },
+      title: this.title
+    };
+    return model.find(q).limit(1);
+  }
+
+  function saveAvoidingDuplications(entries) {
+    const olderEntry = $_.minBy(entries, entry => entry.published.getTime());
+    const promiseOfDuplicateFind = $_.map(entries, entry => entry.findDuplicateEntry(this, olderEntry.published));
+
+    return $q.all(promiseOfDuplicateFind)
+      .then(duplications => $_.map(duplications, (duplication, idx) => {
+        if ($_.isEmpty(duplication)) {
+          return this.create(entries[idx]);
+        }
+      }))
+      .then(duplications => $_.compact(duplications));     
+
+  }
+
 });
