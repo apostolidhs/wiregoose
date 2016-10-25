@@ -13,6 +13,7 @@ eamModule(module, 'app', (
   $cookieParser,
   $morgan,
   $mongoose,
+  promiseExtension,
   router,
   dbMongooseConnector,
   middlewareInitiateResponseParams,
@@ -27,7 +28,7 @@ eamModule(module, 'app', (
   return createApp();
 
   function init() {
-    extendPromise();
+    promiseExtension.extend($q);
     dbMongooseConnector.connect();
   }
 
@@ -60,17 +61,4 @@ eamModule(module, 'app', (
     ], route => route.register(app));
   }
 
-  function extendPromise() {
-    $q.promisify = (ctx) => {
-      const deferred = $q.defer();
-      ctx().exec((err, record) => {
-          if (err) {
-            deferred.reject(err);
-          } else {
-            deferred.resolve(record);
-          }
-      });
-      return deferred.promise;
-    };
-  }
 });
