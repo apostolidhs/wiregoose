@@ -47,7 +47,7 @@ eamModule(module, 'promiseExtension', ($_) => {
         }
         const chunk = chunks[sliceIdx];
         const promisesOfChuck = $_.map(chunk, item => opts.promiseTransformator(item, listIdx++));
-        const promisesOfChuckResolver = opts.isSettled ? q.allSettled(promisesOfChuck) : q.all(promisesOfChuck);
+        const promisesOfChuckResolver = q[opts.policy](promisesOfChuck);
         return promisesOfChuckResolver
           .then(resolvedChucks => result = result.concat(resolvedChucks))
           .then(() => 
@@ -60,7 +60,7 @@ eamModule(module, 'promiseExtension', ($_) => {
         return {
           slices: 5, 
           timeout: 10, 
-          isSettled: false
+          policy: 'all'
         };
       }
     }

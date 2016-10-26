@@ -64,7 +64,7 @@ eamModule(module, 'rssRegistrationsFetcherIterationFetch', (
     return $q.throttle({
       list: iteration, 
       promiseTransformator: rssRegistration => rssTranslator.translateFromUrl(rssRegistration.link, rssRegistration.provider.name),
-      isSettled: true
+      policy: 'allSettled'
     });
   }
 
