@@ -5,6 +5,7 @@
 eamModule(module, 'rssRegistrationsFetcherIterationFetch', (
   $_,
   $q,
+  modelsEntry,
   rssTranslator
 ) => {
 
@@ -32,12 +33,17 @@ eamModule(module, 'rssRegistrationsFetcherIterationFetch', (
 
   function handleFetchResult(batchOfEntries, iteration, onIterationFetchFinished) {
     const registrationEntries = $_.map(batchOfEntries, (resolvedPromise, idx) => {
+      const rssRegistration = iteration[idx];
       const registrationEntry = {
-        rssRegistration: iteration[idx]
+        rssRegistration
       };
+      
+      const entryModel = modelsEntry.getByCategoryLang(rssRegistration.category.name, rssRegistration.lang);
 
       if (resolvedPromise.state === 'fulfilled') {
-        registrationEntry.entriesResp = resolvedPromise.value;        
+        const entriesResp = resolvedPromise.value;
+        entriesResp.entries = $_.map(entriesResp.entries, entry => new entryModel(entry));
+        registrationEntry.entriesResp = entriesResp;        
       } else {
         registrationEntry.error = resolvedPromise.reason; 
       }
@@ -55,11 +61,11 @@ eamModule(module, 'rssRegistrationsFetcherIterationFetch', (
   }
 
   function performFetch(iteration) {
-    const promisesOfEntries = $_.map(
-      iteration, 
-      rssRegistration => rssTranslator.translateFromUrl(rssRegistration.link, rssRegistration.provider.name)
-    );
-    return $q.allSettled(promisesOfEntries);
+    return $q.throttle({
+      list: iteration, 
+      promiseTransformator: rssRegistration => rssTranslator.translateFromUrl(rssRegistration.link, rssRegistration.provider.name),
+      isSettled: true
+    });
   }
 
 });

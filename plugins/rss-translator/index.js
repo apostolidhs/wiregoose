@@ -79,25 +79,28 @@ eamModule(module, 'rssTranslator', (
     const author = sanitizeString(item.author, 'author');
     const provider = providerName;
 
-    const entry = new modelsEntry.model({
+    const data = {
       title,
       image,
       description,
       published,
       link,
       provider,
-    });
+    };
+
+    const entry = new modelsEntry.model(data);
 
     const error = entry.validateSync();
     if ($_.isEmpty(error)) {
-      return done(undefined, entry);
-    } else {
-      const errorReport = {
-        item,
-        reason: summaryValidationError(error)        
-      };
-      return done(errorReport);
+      return done(undefined, data);
     }
+
+    const errorReport = {
+      item,
+      reason: summaryValidationError(error)        
+    };
+    return done(errorReport);
+    
   }
 
   function summaryValidationError(error) {
@@ -147,7 +150,11 @@ eamModule(module, 'rssTranslator', (
   }
 
   function sanitizeDate(published) {
-    return $_.isDate(published) ? published : undefined;
+    if (!$_.isDate(published)) {
+      return;
+    }
+
+    return $_.isNaN(published.getTime()) ? undefined : published;
   }
 
   function filterItemFields(item) {

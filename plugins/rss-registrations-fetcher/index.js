@@ -13,11 +13,18 @@ eamModule(module, 'rssRegistrationsFetcher', (
   rssRegistrationsFetcherIterationFetch
 ) => {
 
+  let isFetching = false;
+
   return {
     fetch
-  };
+  };  
 
   function fetch() {
+    if (isFetching) {
+      return $q.reject('already fetching');
+    }
+    isFetching = true;
+
     const finishedDefer = $q.defer();
     
     const fetchReport = createFetchReport();
@@ -25,7 +32,10 @@ eamModule(module, 'rssRegistrationsFetcher', (
     fetchRegistrations()
       .then(startRssRegistrationFetch);
 
-    return finishedDefer.promise;
+    const promise = finishedDefer.promise;
+    promise.finally(() => isFetching = false);
+
+    return promise;
 
     function fetchRegistrations() {
       return dbMongooseBinders.find(modelsRssRegistration)
@@ -41,7 +51,13 @@ eamModule(module, 'rssRegistrationsFetcher', (
     }
 
     function onIterationFetchFinished(registrationEntries) {
-      const promiseOfEntries = $_.map(registrationEntries, registrationEntry => {
+      return $q.throttle({
+        list: registrationEntries, 
+        promiseTransformator: handleRegistrationEntry,
+        slices: 1
+      })
+
+      function handleRegistrationEntry(registrationEntry) {
         const rssRegistration = registrationEntry.rssRegistration;
         logger.assert(rssRegistration, 'rssRegistration always exist');
 
@@ -63,8 +79,8 @@ eamModule(module, 'rssRegistrationsFetcher', (
         }
 
         const entryModel = modelsEntry.getByCategoryLang(
-          rssRegistration.lang,
-          rssRegistration.category.name
+          rssRegistration.category.name,
+          rssRegistration.lang
         );        
 
         const entries = registrationEntry.entriesResp.entries;
@@ -76,10 +92,8 @@ eamModule(module, 'rssRegistrationsFetcher', (
         }
 
         return entryModel.saveAvoidingDuplications(entries)
-          .then(savedEntries => fetchReport.entriesStored += $_.size(savedEntries))           
-      });
-
-      return $q.all(promiseOfEntries);
+          .then(savedEntries => fetchReport.entriesStored += $_.size(savedEntries)) 
+      }
     }
 
     function onFinish(error) {

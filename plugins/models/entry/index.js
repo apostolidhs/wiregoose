@@ -52,16 +52,16 @@ eamModule(module, 'modelsEntry', ($_, $q, $moment, $mongoose, $mongooseTypeUrl) 
 
   function saveAvoidingDuplications(entries) {
     const olderEntry = $_.minBy(entries, entry => entry.published.getTime());
-    const promiseOfDuplicateFind = $_.map(entries, entry => entry.findDuplicateEntry(this, olderEntry.published));
 
-    return $q.all(promiseOfDuplicateFind)
-      .then(duplications => $_.map(duplications, (duplication, idx) => {
-        if ($_.isEmpty(duplication)) {
-          return this.create(entries[idx]);
-        }
-      }))
-      .then(duplications => $_.compact(duplications));     
-
+    return $q.throttle({
+      list: entries, 
+      promiseTransformator: entry => entry.findDuplicateEntry(this, olderEntry.published)
+    })
+    .then(duplications => $q.throttle({
+      list: duplications, 
+      promiseTransformator: (duplication, idx) => $_.isEmpty(duplication) && entries[idx].save()
+    }))
+    .then(savedEntries => $_.compact(savedEntries));     
   }
 
 });
