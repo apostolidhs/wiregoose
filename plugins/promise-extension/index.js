@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'promiseExtension', () => {
+eamModule(module, 'promiseExtension', ($_) => {
 
   return {
     extend
@@ -11,28 +11,57 @@ eamModule(module, 'promiseExtension', () => {
   function extend(q) {
 
     q.promisify = promisify;
-    q.throttledResolve = throttledResolve;
+    q.throttle = throttle;
 
     function promisify(ctx) {
       const deferred = q.defer();
       ctx().exec((err, record) => {
-          if (err) {
-            deferred.reject(err);
-          } else {
-            deferred.resolve(record);
-          }
+        if (err) {
+          deferred.reject(err);
+        } else {
+          deferred.resolve(record);
+        }
       });
       return deferred.promise;
     }
 
-    function throttledResolve(collection, promiseTransformator, slices, timeout) {
-      const iterations = Math.floor(collection.length / slices);
-      let from = 0;
-      let to =       
-      innerThrottledResolve(from, to);
+    function throttle(opts) {
+      if (!(opts && opts.list && opts.promiseTransformator)) {
+        throw new Error('invalid arguments');
+      }
 
-      function innerThrottledResolve(from, to) {
-        return q.all(collection.slice(0, n).map(promiseTransformator));
+      $_.defaultsDeep(opts, getDefaultValues());
+
+      const deferred = q.defer();
+      const chunks = $_.chunk(opts.list, opts.slices);
+      const chunksLen = chunks.length; 
+      let result = [];
+      
+      innerThrottledResolve(0, 0);
+
+      return deferred.promise;
+
+      function innerThrottledResolve(sliceIdx, listIdx) {
+        if (sliceIdx >= chunksLen) {
+          return deferred.resolve(result);
+        }
+        const chunk = chunks[sliceIdx];
+        const promisesOfChuck = $_.map(chunk, item => opts.promiseTransformator(item, listIdx++));
+        const promisesOfChuckResolver = opts.isSettled ? q.allSettled(promisesOfChuck) : q.all(promisesOfChuck);
+        return promisesOfChuckResolver
+          .then(resolvedChucks => result = result.concat(resolvedChucks))
+          .then(() => 
+              $_.delay(() => innerThrottledResolve(++sliceIdx, listIdx), opts.timeout)
+            )
+          .catch(reason => deferred.reject(reason));
+      }
+
+      function getDefaultValues() {
+        return {
+          slices: 5, 
+          timeout: 10, 
+          isSettled: false
+        };
       }
     }
   }
