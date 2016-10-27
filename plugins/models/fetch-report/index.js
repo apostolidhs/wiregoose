@@ -5,15 +5,15 @@
 eamModule(module, 'modelsFetchReport', ($mongoose, $mongooseIdValidator, $mongooseAutopopulate) => {
 
   const schema = new $mongoose.Schema({
-    success: {type: Boolean, required: true},
     totalFetches: {type: Number, required: true, min: 0 },
     succeededFetches: {type: Number, required: true, min: 0 },
+    entriesStored: {type: Number, required: true, min: 0 },
     started: {type: Date, required: true},
     finished: {type: Date, required: true},
     log: {type: String},
-    failedFetchesLog: [
-      {type: String, required: true},
-      {type: $mongoose.Schema.Types.ObjectId, ref: 'RssRegistration', required: true, autopopulate: true}
+    failedFetches: [
+      {error: {type: $mongoose.Schema.Types.Mixed, required: true}},
+      {rssRegistration: {type: $mongoose.Schema.Types.ObjectId, ref: 'RssRegistration', required: true, autopopulate: true}}
     ]
   });
 

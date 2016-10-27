@@ -8,7 +8,8 @@ eamModule(module, 'logger', (router) => {
     log,
     info,
     warn,
-    error
+    error,
+    assert
   };
 
   function log() {
@@ -25,6 +26,12 @@ eamModule(module, 'logger', (router) => {
 
   function error() {
     console.error.apply(console, arguments);
+  }
+
+  function assert(cond, msg) {
+    if (!cond) {
+      throw new Error(msg);
+    }
   }
 
 });

@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'errors', (logger) => {
+eamModule(module, 'errors', ($_, logger) => {
 
   return {
     build
@@ -23,9 +23,15 @@ eamModule(module, 'errors', (logger) => {
       if (!errorDescr) {
         logger.error(`unexpected error code (${errorId})`);
       }
+
+      msg = msg || errorDescr[1]; 
+         
       errors.push({
         code: errorDescr[0],
-        msg: msg || errorDescr[1]
+        msg: $_.isError(msg) ? {
+          msg: msg.message,
+          stack: msg.stack
+        } : msg
       });
     }
 
@@ -43,7 +49,11 @@ eamModule(module, 'errors', (logger) => {
       UNEXPECTED: [1001, 'unexpected'],
       NOT_FOUND: [1002, 'not found'],
       INVALID_PARAMS: [1003, 'invalid params'],
-      DB_ERROR: [1004, 'database error']
+
+      DB_ERROR: [2001, 'database error'],
+
+      RSS_FEED_FETCH_FAIL: [3001, 'rss feed fetch failed'],
+      RSS_REGISTRATIONS_FETCH_FAIL: [3002, 'rss registrations fetch failed']
     };
   }
 

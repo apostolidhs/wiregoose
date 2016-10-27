@@ -32,6 +32,12 @@ eamModule(module, 'parameterValidator', ($_, $expressValidator, logger) => {
       //   return req.sanitize('username').toString();
       // },
 
+      paramUrlQuery: (req) => {
+        req = rootReq || req;
+        req.checkQuery('q').isURL();
+        return req.sanitizeQuery('q').toString();
+      },
+
       paramId: (req) => {
         req = rootReq || req;
         req.checkParams('id').isMongoId();
@@ -52,11 +58,11 @@ eamModule(module, 'parameterValidator', ($_, $expressValidator, logger) => {
         req = rootReq || req;
         req.checkQuery('sortBy').optional().isAlpha();
         return req.sanitizeQuery('sortBy').toString();
-      },  
+      },
       queryAsc: (req) => {
         req = rootReq || req;
         return $_.has(req.query, 'asc') && req.query.asc !== 'false';
-      }    
+      }
     };
   }
 

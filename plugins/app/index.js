@@ -3,42 +3,54 @@
 'use strict';
 
 eamModule(module, 'app', (
+  $_,
   $q,
   $express,
   $path,
   $serveFavicon,
-  $expressValidator, 
+  $expressValidator,
   $bodyParser,
   $cookieParser,
   $morgan,
   $mongoose,
+  config,
+  promiseExtension,
   router,
-  dbMongooseConnector, 
+  dbMongooseConnector,
   middlewareInitiateResponseParams,
-  middlewareResponse
+  middlewareResponse,
+  rssRegistrationsFetcher,
+  routesRssFeedFetchRssFeed,
+  routesRssFeedFetchRssRegistrations,
+  routesCrud
 ) => {
-  
-  init();
 
-  return createApp();
+  return {
+    create
+  };
 
-  function init() {
-    extendPromise();
+  function create() {
+    promiseExtension.extend($q);
     dbMongooseConnector.connect();
+
+    return createApp();
   }
 
   function createApp() {
     const app = $express();
-    
+
     app.use(middlewareInitiateResponseParams);
-    
+
     app.use($morgan('dev'));
     app.use($bodyParser.json());
     app.use($bodyParser.urlencoded({ extended: false }));
     app.use($expressValidator());
     app.use($cookieParser());
     app.use($express.static($path.join(__dirname, 'public')));
-    
+
+    registerRoutes(app);
+    startPeriodicalProcesses();
+
     app.use(router);
 
     app.use(middlewareResponse.fail);
@@ -46,19 +58,18 @@ eamModule(module, 'app', (
     return app;
   }
 
-  function extendPromise() {
-    $q.promisify = (ctx) => {
-      const deferred = $q.defer();
-      ctx().exec((err, record) => {
-          if (err) {
-            deferred.reject(err);
-          } else {
-            deferred.resolve(record);
-          }
-      });
-      return deferred.promise;
-    };
-
-    $mongoose.Promise = $q.Promise;
+  function registerRoutes(app) {
+    $_.each([
+      routesRssFeedFetchRssRegistrations,
+      routesRssFeedFetchRssFeed,
+      routesCrud
+    ], route => route.register(app));
   }
+
+  function startPeriodicalProcesses() {
+    if (config.ENABLE_RSS_REGISTRATIONS_FETCH) {
+      rssRegistrationsFetcher.startPeriodicalFetchProcess(); 
+    }    
+  }
+
 });

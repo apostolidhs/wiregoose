@@ -4,35 +4,49 @@
 
 eamModule(module, 'routesCrud', (
   $_,
-  crudGenerator, 
+  crudGenerator,
   modelsArticle,
   modelsCategory,
   modelsEntry,
   modelsFetchReport,
   modelsRssProvider,
-  modelsRssRegistration
+  modelsRssRegistration,
+  modelsApp
 ) => {
 
-  const models = [
-    modelsArticle,
-    modelsCategory,
-    modelsEntry.model,
-    modelsFetchReport,
-    modelsRssProvider,
-    modelsRssRegistration    
-  ];
+  return {
+    register
+  };
 
-  $_.each(models, model => {
-    const crudOpts = {
-      model,
-      retrieveAll: {
-        permissions: 'FREE'
-      },
+  function register(app) {
+    const models = [
+      modelsArticle,
+      modelsCategory,
+      modelsEntry.model,
+      modelsFetchReport,
+      modelsRssProvider,
+      modelsRssRegistration
+    ];
+
+    $_.each(models, model => {
+      const crudOpts = {
+        model,
+        retrieveAll: {
+          permissions: 'FREE'
+        },
+        retrieve: {
+          permissions: 'FREE'
+        }
+      };
+      crudGenerator.create(app, crudOpts);
+    });
+    
+    crudGenerator.createSingle(app, {
+      model: modelsApp,
       retrieve: {
         permissions: 'FREE'
       }
-    };
-    crudGenerator.create(crudOpts);
-  });
+    });
+  }
 
 });

@@ -11,9 +11,9 @@ let $$dbMongooseConnector;
 
 eamModule(module, 'testsApp', ($supertest, $chai, $_, app, config, dbMongooseConnector) => {
   $$supertest = $supertest;
-  $$app = app;
+  $$app = app.create();
   $$_ = $_;
-  expect = $chai.expect;  
+  expect = $chai.expect;
   $$config = config;
   $$dbMongooseConnector = dbMongooseConnector;
 });
@@ -21,7 +21,9 @@ eamModule(module, 'testsApp', ($supertest, $chai, $_, app, config, dbMongooseCon
 describe('Testing the CRUD functionality of a simple model', () => {
 
   before(done => {
-    $$dbMongooseConnector.dropDatabase(done);
+    $$dbMongooseConnector.connect()
+      .then(() => $$dbMongooseConnector.dropDatabase())
+      .then(() => done());
   });
 
   const category = {
@@ -40,7 +42,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .expect(200)
       .expect(res => {
           createCategory = res.body.data;
-          expect(createCategory.name).to.equal(category.name);       
+          expect(createCategory.name).to.equal(category.name);
       })
       .end(done);
   });
@@ -53,7 +55,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .expect(200)
       .expect(res => {
           const respCategory = res.body.data;
-          expect($$_.isEqual(createCategory, respCategory)).to.equal(true);       
+          expect($$_.isEqual(createCategory, respCategory)).to.equal(true);
       })
       .end(done);
   });
@@ -68,8 +70,8 @@ describe('Testing the CRUD functionality of a simple model', () => {
           const respCategories = res.body.data.content;
           const respCount = res.body.data.count;
           expect(respCategories.length).to.equal(1);
-          expect($$_.isEqual(createCategory, respCategories[0])).to.equal(true);      
-          expect(respCount).to.equal(1);     
+          expect($$_.isEqual(createCategory, respCategories[0])).to.equal(true);
+          expect(respCount).to.equal(1);
       })
       .end(done);
   });
@@ -81,17 +83,17 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .put('/' + $$config.API_URL_PREFIX + '/category/' + createCategory._id)
       .send({
         Category: category
-      })      
+      })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
       .expect(res => {
           const respCategory = res.body.data;
           expect(category.name).to.equal(respCategory.name);
-          expect(createCategory._id).to.equal(respCategory._id);       
+          expect(createCategory._id).to.equal(respCategory._id);
       })
       .end(done);
-  });  
+  });
 
   it('Should delete one record', (done) => {
     $$supertest($$app)
@@ -102,7 +104,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .expect(res => {
           const data = res.body.data;
           expect(data.ok).to.equal(1);
-          expect(data.n).to.equal(1);       
+          expect(data.n).to.equal(1);
       })
       .end(done);
   });
@@ -116,10 +118,10 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .expect(res => {
           const respCategories = res.body.data.content;
           const respCount = res.body.data.count;
-          expect(respCategories.length).to.equal(0);     
-          expect(respCount).to.equal(0);     
+          expect(respCategories.length).to.equal(0);
+          expect(respCount).to.equal(0);
       })
       .end(done);
-  });  
+  });
 
 });

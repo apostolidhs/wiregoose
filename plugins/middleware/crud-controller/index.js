@@ -2,14 +2,17 @@
 
 'use strict';
 
-eamModule(module, 'middlewareCrudController', ($q, dbMongooseBinders) => {
+eamModule(module, 'middlewareCrudController', ($_, $q, dbMongooseBinders) => {
 
   return {
     create: createCtrl,
     update: updateCtrl,
     retrieve: retrieveCtrl,
     retrieveAll: retrieveAllCtrl,
-    delete: deleteCtrl
+    delete: deleteCtrl,
+    
+    singleRetrieve: singleRetrieveCtrl,
+    singleUpdate: singleUpdateCtrl 
   };
 
   function createCtrl(model) {
@@ -64,6 +67,26 @@ eamModule(module, 'middlewareCrudController', ($q, dbMongooseBinders) => {
     return (req, res, next) => {
       const id = res.locals.params.id;
       performAndResponse(() => dbMongooseBinders.remove(model, id), res, next); 
+    };
+  }
+
+  function singleRetrieveCtrl(model) {
+    return (req, res, next) => {
+      const ctx = () => dbMongooseBinders
+                          .find(model)
+                          .then($_.first);
+      performAndResponse(ctx, res, next);
+    };
+  }
+
+  function singleUpdateCtrl(model) {
+    return (req, res, next) => {
+      const updatedRecord = res.locals.params[model.modelName];
+      const ctx = () => dbMongooseBinders
+        .find(model)
+        .then($_.first)
+        .then((record) => dbMongooseBinders.findByIdAndUpdate(model, record._id, updatedRecord));
+      performAndResponse(ctx, res, next);
     };
   }
 
