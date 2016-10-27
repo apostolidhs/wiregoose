@@ -4,18 +4,20 @@
 
 eamModule(module, 'server', ($http, config, app, logger) => {
 
+  const appInstance = app.create();
+
   /**
    * Get port from environment and store in Express.
    */
 
   var port = normalizePort(config.PORT || process.env.PORT || '3000');
-  app.set('port', port);
+  appInstance.set('port', port);
 
   /**
    * Create HTTP server.
    */
 
-  var server = $http.createServer(app);
+  var server = $http.createServer(appInstance);
 
   /**
    * Listen on provided port, on all network interfaces.

@@ -9,7 +9,9 @@ eamModule(module, 'crudGeneratorUrls', (config) => {
     update: urlWithId,
     retrieve: urlWithId,
     retrieveAll: urlWithoutId,
-    delete: urlWithId
+    delete: urlWithId,
+    urlWithId,
+    urlWithoutId
   };
 
   function urlWithId(name) {

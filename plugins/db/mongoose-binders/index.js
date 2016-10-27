@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'dbMongooseBinders', ($_, $mongoose, logger) => {
+eamModule(module, 'dbMongooseBinders', ($_, $mongoose, logger, modelsApp) => {
 
   return {
     create,
@@ -10,8 +10,20 @@ eamModule(module, 'dbMongooseBinders', ($_, $mongoose, logger) => {
     findById,
     find,
     count,
-    remove
+    remove,
+
+    getAppInfo,
+    updateAppInfo
   };
+
+  function getAppInfo() {
+    return find(modelsApp).then($_.first);
+  }
+
+  function updateAppInfo(data) {
+    return getAppInfo()
+            .then(appInfo => findByIdAndUpdate(modelsApp, appInfo._id, data));
+  }
 
   function create(model, record) {
     return model.create(record);

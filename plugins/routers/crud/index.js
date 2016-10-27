@@ -10,7 +10,8 @@ eamModule(module, 'routesCrud', (
   modelsEntry,
   modelsFetchReport,
   modelsRssProvider,
-  modelsRssRegistration
+  modelsRssRegistration,
+  modelsApp
 ) => {
 
   return {
@@ -38,6 +39,13 @@ eamModule(module, 'routesCrud', (
         }
       };
       crudGenerator.create(app, crudOpts);
+    });
+    
+    crudGenerator.createSingle(app, {
+      model: modelsApp,
+      retrieve: {
+        permissions: 'FREE'
+      }
     });
   }
 

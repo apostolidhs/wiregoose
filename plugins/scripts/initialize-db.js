@@ -10,7 +10,8 @@ eamModule(module, 'scriptsInitializeDb', (
   dbMongooseBinders,
   modelsCategory,
   modelsRssProvider,
-  modelsRssRegistration
+  modelsRssRegistration,
+  modelsApp
 ) => {
 
   let categoriesByName;
@@ -36,6 +37,8 @@ eamModule(module, 'scriptsInitializeDb', (
       provider: providersByName[data.provider]._id
     })))    
     .then(() => logger.info('rssFeedRegistrations imported'))
+    .then(() => createAppInfo())
+    .then(() => logger.info('appInfo created'))
     .then(() => process.exit(0))
     .catch((reason) => {
       logger.error('script failed', reason);
@@ -51,6 +54,14 @@ eamModule(module, 'scriptsInitializeDb', (
     );
 
     return $q.all(promiseOfData);
+  }
+
+  function createAppInfo() {
+    const appInfo = {
+      lastRssRegistrationFetch: new Date(0)
+    };
+
+    return dbMongooseBinders.create(modelsApp, appInfo);
   }
 
 });

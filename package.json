@@ -44,6 +44,7 @@
     "q": "^1.4.1",
     "request": "^2.75.0",
     "serve-favicon": "^2.3.0",
+    "single-line-log": "^1.1.2",
     "yargs": "^6.3.0"
   },
   "devDependencies": {

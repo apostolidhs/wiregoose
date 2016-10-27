@@ -13,7 +13,8 @@ eamModule(module, 'crudGenerator', (
 ) => {
 
   return {
-    create
+    create,
+    createSingle
   };
 
   function create(app, customOpts) {
@@ -62,6 +63,30 @@ eamModule(module, 'crudGenerator', (
       middlewareResponse.success,
       middlewareResponse.fail
     ]);
+  }
+
+  function createSingle(app, customOpts) {
+    const opts = $_.defaultsDeep(customOpts, getDefaultOptions());
+    const model = opts.model;
+    if (!model) {
+      throw new Error('invalid model argument');
+    }
+
+    app.get(crudGeneratorUrls.urlWithoutId(model.modelName), [
+      middlewarePermissions.check(opts.retrieve.permissions),
+      // there is nothing to validate :)
+      middlewareCrudController.singleRetrieve(model),
+      middlewareResponse.success,
+      middlewareResponse.fail
+    ]);
+
+    app.put(crudGeneratorUrls.urlWithoutId(model.modelName), [
+      middlewarePermissions.check(opts.retrieve.permissions),
+      (req, res, next) => middlewareParameterValidator.modelValidator(model, req, res, next),
+      middlewareCrudController.singleUpdate(model),
+      middlewareResponse.success,
+      middlewareResponse.fail
+    ]);    
   }
 
   function getDefaultOptions() {

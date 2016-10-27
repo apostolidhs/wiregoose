@@ -5,6 +5,9 @@
 eamModule(module, 'rssRegistrationsFetcher', (
   $_,
   $q,
+  $moment,
+  $singleLineLog,
+  config,
   logger,
   modelsEntry,
   dbMongooseBinders,
@@ -13,13 +16,18 @@ eamModule(module, 'rssRegistrationsFetcher', (
   rssRegistrationsFetcherIterationFetch
 ) => {
 
+  const tryToFetchFrequent = Math.max(Math.floor(config.RSS_REGISTRATIONS_FETCH_FREQUENT / 8), 20 * 60 * 1000);
   let isFetching = false;
 
   return {
-    fetch
+    fetch,
+    startPeriodicalFetchProcess
   };  
 
-  function fetch() {
+  function fetch(onFetchStartOpt, onNextChunkOpt) {
+    const onFetchStart = onFetchStartOpt || $_.noop;
+    const onNextChunk = onNextChunkOpt || $_.noop;
+
     if (isFetching) {
       return $q.reject('already fetching');
     }
@@ -30,7 +38,8 @@ eamModule(module, 'rssRegistrationsFetcher', (
     const fetchReport = createFetchReport();
     
     fetchRegistrations()
-      .then(startRssRegistrationFetch);
+      .then(startRssRegistrationFetch)
+      .catch(reason => finishedDefer.reject(reason));
 
     const promise = finishedDefer.promise;
     promise.finally(() => isFetching = false);
@@ -43,6 +52,7 @@ eamModule(module, 'rssRegistrationsFetcher', (
     }
 
     function startRssRegistrationFetch(registrationsResp) {
+      onFetchStart(registrationsResp);
       rssRegistrationsFetcherIterationFetch.fetch(
         registrationsResp, 
         onIterationFetchFinished, 
@@ -92,7 +102,8 @@ eamModule(module, 'rssRegistrationsFetcher', (
         }
 
         return entryModel.saveAvoidingDuplications(entries)
-          .then(savedEntries => fetchReport.entriesStored += $_.size(savedEntries)) 
+          .then(savedEntries => fetchReport.entriesStored += $_.size(savedEntries))
+          .then(() => onNextChunk(rssRegistration));
       }
     }
 
@@ -111,7 +122,6 @@ eamModule(module, 'rssRegistrationsFetcher', (
 
   function createFetchReport() {
     return {
-      success: false,
       totalFetches: 0,
       succeededFetches: 0,
       entriesStored: 0,
@@ -120,6 +130,74 @@ eamModule(module, 'rssRegistrationsFetcher', (
       log: '',
       failedFetches: []
     };
+  }
+
+  function startPeriodicalFetchProcess() {    
+    tryToFetch();
+    setInterval(tryToFetch, tryToFetchFrequent);
+
+    function tryToFetch() {
+      dbMongooseBinders.getAppInfo()
+        .catch(reason => logger.error(reason))
+        .then(appInfoFetched)
+        .then(saveLastFetchTime)
+        .catch(reason => logger.error(reason));
+    }
+
+    function saveLastFetchTime() {
+      return dbMongooseBinders.updateAppInfo({
+        lastRssRegistrationFetch: new Date()
+      });
+    }
+
+    function appInfoFetched(appInfo) {
+      let totalRegistrations;
+      let resolvedRegistrations;
+
+      const lastTime = appInfo.lastRssRegistrationFetch.getTime();
+      if (lastTime + config.RSS_REGISTRATIONS_FETCH_FREQUENT > $_.now()) {
+        return;
+      }
+
+      return fetch(onFetchStart, onNextChunk)
+        .then(logSuccessFetch)
+        .catch(reason => logger.error(reason));      
+
+      function onFetchStart(rssRegistrations) {
+        totalRegistrations = rssRegistrations.length;
+        resolvedRegistrations = 0;
+      }
+
+      function onNextChunk(rssRegistration) { 
+        ++resolvedRegistrations; 
+        const msg = `resolving registrations (${resolvedRegistrations}/${totalRegistrations})...${rssRegistration.link}`;      
+        $singleLineLog.stdout(msg);
+      }
+    }
+
+    function logSuccessFetch(fetchReport) {
+      const dateFormat = 'MM/DD/YYYY HH:mm:ss';
+
+      const duration = $moment.utc(
+        $moment(fetchReport.finished, dateFormat)
+          .diff($moment(fetchReport.started, dateFormat))
+      ).format('HH:mm:ss');
+      
+      const msgs = [
+        '',
+        'Rss registrations fetch finished successfully.',
+        `Started: ${$moment(fetchReport.started).format(dateFormat)}`,
+        `Finished: ${$moment(fetchReport.finished).format(dateFormat)}`,
+        `Duration: ${duration}`,
+        `Total fetched: ${fetchReport.totalFetches}`,
+        `Total Stored: ${fetchReport.entriesStored}`,
+        `Report id: ${fetchReport._id}`,
+        ''
+      ].join('\n');
+
+      logger.info('');
+      logger.info(msgs);
+    }
   }
 
 });

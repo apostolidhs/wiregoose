@@ -13,5 +13,7 @@ eamModule(module, 'config', (logger) => {
   const dbName = process.env.UNIT_TEST ? config.MONGODB_MOCK_DATABASE_NAME : config.MONGODB_DATABASE_NAME;
   config.MONGODB_URL = `mongodb://${credentials}${config.MONGODB_DOMAIN}/${dbName}`;
 
+  config.ENABLE_RSS_REGISTRATIONS_FETCH = process.env.UNIT_TEST ? false : config.ENABLE_RSS_REGISTRATIONS_FETCH; 
+
   return config;
 });

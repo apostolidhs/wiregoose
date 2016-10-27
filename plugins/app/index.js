@@ -13,23 +13,27 @@ eamModule(module, 'app', (
   $cookieParser,
   $morgan,
   $mongoose,
+  config,
   promiseExtension,
   router,
   dbMongooseConnector,
   middlewareInitiateResponseParams,
   middlewareResponse,
+  rssRegistrationsFetcher,
   routesRssFeedFetchRssFeed,
   routesRssFeedFetchRssRegistrations,
   routesCrud
 ) => {
 
-  init();
+  return {
+    create
+  };
 
-  return createApp();
-
-  function init() {
+  function create() {
     promiseExtension.extend($q);
     dbMongooseConnector.connect();
+
+    return createApp();
   }
 
   function createApp() {
@@ -45,6 +49,7 @@ eamModule(module, 'app', (
     app.use($express.static($path.join(__dirname, 'public')));
 
     registerRoutes(app);
+    startPeriodicalProcesses();
 
     app.use(router);
 
@@ -59,6 +64,12 @@ eamModule(module, 'app', (
       routesRssFeedFetchRssFeed,
       routesCrud
     ], route => route.register(app));
+  }
+
+  function startPeriodicalProcesses() {
+    if (config.ENABLE_RSS_REGISTRATIONS_FETCH) {
+      rssRegistrationsFetcher.startPeriodicalFetchProcess(); 
+    }    
   }
 
 });

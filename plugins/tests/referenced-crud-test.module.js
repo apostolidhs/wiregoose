@@ -12,7 +12,7 @@ let $$dbMongooseConnector;
 
 eamModule(module, 'testsApp', ($supertest, $chai, $_, app, config, dbMongooseConnector) => {
   $$supertest = $supertest;
-  $$app = app;
+  $$app = app.create();
   $$_ = $_;
   expect = $chai.expect;
   should = $chai.should();
@@ -23,10 +23,11 @@ eamModule(module, 'testsApp', ($supertest, $chai, $_, app, config, dbMongooseCon
 describe('Testing the CRUD functionality of a referenced model', () => {
 
   before(done => {
-    $$dbMongooseConnector.dropDatabase()
+    $$dbMongooseConnector.connect()
+      .then(() => $$dbMongooseConnector.dropDatabase())
       .then(() => done());
   });
-
+  
   const category = {
     name: 'Tech'
   };

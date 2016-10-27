@@ -9,7 +9,7 @@ let $$_;
 
 eamModule(module, 'testsApp', ($supertest, $chai, $_, app) => {
   $$supertest = $supertest;
-  $$app = app;
+  $$app = app.create();
   $$_ = $_;
   expect = $chai.expect;  
 });

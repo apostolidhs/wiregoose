@@ -17,7 +17,8 @@ eamModule(module, 'middlewareParameterValidator', ($_, parameterValidator) => {
       update: crudUpdateValidator,
       delete: crudDeleteValidator
     },
-    paginationValidator
+    paginationValidator,
+    modelValidator
   };
 
   function crudRetrieveValidator() {
