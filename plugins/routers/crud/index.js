@@ -5,6 +5,7 @@
 eamModule(module, 'routesCrud', (
   $_,
   crudGenerator,
+  modelsUser,
   modelsArticle,
   modelsCategory,
   modelsEntry,
@@ -19,7 +20,7 @@ eamModule(module, 'routesCrud', (
   };
 
   function register(app) {
-    const models = [
+    const models = [      
       modelsArticle,
       modelsCategory,
       modelsEntry.model,
@@ -39,6 +40,10 @@ eamModule(module, 'routesCrud', (
         }
       };
       crudGenerator.create(app, crudOpts);
+    });
+
+    crudGenerator.create(app, {
+      model: modelsUser
     });
     
     crudGenerator.createSingle(app, {
