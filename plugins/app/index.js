@@ -13,8 +13,10 @@ eamModule(module, 'app', (
   $cookieParser,
   $morgan,
   $mongoose,
+  $passport,
   config,
   promiseExtension,
+  middlewareAuthorizeStrategy,
   router,
   dbMongooseConnector,
   middlewareInitiateResponseParams,
@@ -22,7 +24,8 @@ eamModule(module, 'app', (
   rssRegistrationsFetcher,
   routesRssFeedFetchRssFeed,
   routesRssFeedFetchRssRegistrations,
-  routesCrud
+  routesCrud,
+  routesAuthorize
 ) => {
 
   return {
@@ -32,12 +35,13 @@ eamModule(module, 'app', (
   function create() {
     promiseExtension.extend($q);
     dbMongooseConnector.connect();
+    middlewareAuthorizeStrategy.register($passport);
 
     return createApp();
   }
 
   function createApp() {
-    const app = $express();
+    const app = $express();    
 
     app.use(middlewareInitiateResponseParams);
 
@@ -62,7 +66,8 @@ eamModule(module, 'app', (
     $_.each([
       routesRssFeedFetchRssRegistrations,
       routesRssFeedFetchRssFeed,
-      routesCrud
+      routesCrud,
+      routesAuthorize
     ], route => route.register(app));
   }
 

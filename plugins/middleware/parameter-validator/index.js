@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'middlewareParameterValidator', ($_, parameterValidator) => {
+eamModule(module, 'middlewareParameterValidator', ($q, $_, parameterValidator) => {
 
   const defaultPagination = {
     page: 0,

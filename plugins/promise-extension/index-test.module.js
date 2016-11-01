@@ -16,11 +16,23 @@ eamModule(module, 'promiseExtensionTest', ($supertest, $chai, $_, $q, promiseExt
   expect = $chai.expect;
 });
 
-describe('rssTranslator', function() {
+describe('promiseExtension', () => {
 
   before(() => $$promiseExtension.extend($$q));
 
-  it('Should resolve the promises by throttling them', function(done) {
+  it('Should resolve promisify failed function', (done) => {
+    $$q.promisify(cb => cb(true))
+      .catch(reason => expect(reason).to.equal(true))
+      .finally(() => done());
+  });
+
+  it('Should resolve promisify correctly function', (done) => {
+    $$q.promisify(cb => cb(null, true))
+      .then(value => expect(value).to.equal(true))
+      .finally(() => done());
+  });
+
+  it('Should resolve the promises by throttling them', (done) => {
     const list = $$_.times(50);
     let sequence = 0;
     const start = $$_.now();

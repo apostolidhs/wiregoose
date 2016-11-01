@@ -7,22 +7,25 @@ let $$app;
 let expect;
 let $$_;
 let $$config;
-let $$dbMongooseConnector;
+let $$testsPrepareDb;
 
-eamModule(module, 'testsApp', ($supertest, $chai, $_, app, config, dbMongooseConnector) => {
+eamModule(module, 'testsApp', ($supertest, $chai, $_, logger, app, config, testsPrepareDb) => {
   $$supertest = $supertest;
   $$app = app.create();
   $$_ = $_;
   expect = $chai.expect;
   $$config = config;
-  $$dbMongooseConnector = dbMongooseConnector;
+  $$testsPrepareDb = testsPrepareDb;
 });
 
 describe('Testing the CRUD functionality of a simple model', () => {
 
-  before(done => {
-    $$dbMongooseConnector.connect()
-      .then(() => $$dbMongooseConnector.dropDatabase())
+  let jwtToken;
+
+  before(function(done) {
+    this.timeout(5000);
+    $$testsPrepareDb.prepare()
+      .then(pallet => jwtToken = pallet.token)
       .then(() => done());
   });
 
@@ -33,11 +36,12 @@ describe('Testing the CRUD functionality of a simple model', () => {
 
   it('Should create one record', (done) => {
     $$supertest($$app)
-      .post('/' + $$config.API_URL_PREFIX + '/category')
+      .post('/' + $$config.API_URL_PREFIX + '/category')      
       .send({
         Category: category
       })
       .set('Accept', 'application/json')
+      .set('authorization', jwtToken)
       .expect('Content-Type', /json/)
       .expect(200)
       .expect(res => {
@@ -84,6 +88,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .send({
         Category: category
       })
+      .set('authorization', jwtToken)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
@@ -98,6 +103,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
   it('Should delete one record', (done) => {
     $$supertest($$app)
       .delete('/' + $$config.API_URL_PREFIX + '/category/' + createCategory._id)
+      .set('authorization', jwtToken)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)

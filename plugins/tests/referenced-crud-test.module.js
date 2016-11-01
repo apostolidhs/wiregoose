@@ -8,23 +8,26 @@ let expect;
 let should;
 let $$_;
 let $$config;
-let $$dbMongooseConnector;
+let $$testsPrepareDb;
 
-eamModule(module, 'testsApp', ($supertest, $chai, $_, app, config, dbMongooseConnector) => {
+eamModule(module, 'testsApp', ($supertest, $chai, $_, app, config, testsPrepareDb) => {
   $$supertest = $supertest;
   $$app = app.create();
   $$_ = $_;
   expect = $chai.expect;
   should = $chai.should();
   $$config = config;
-  $$dbMongooseConnector = dbMongooseConnector;
+  $$testsPrepareDb = testsPrepareDb;
 });
 
 describe('Testing the CRUD functionality of a referenced model', () => {
 
-  before(done => {
-    $$dbMongooseConnector.connect()
-      .then(() => $$dbMongooseConnector.dropDatabase())
+  let jwtToken;
+
+  before(function(done) {
+    this.timeout(5000);
+    $$testsPrepareDb.prepare()
+      .then(pallet => jwtToken = pallet.token)
       .then(() => done());
   });
   
@@ -58,6 +61,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .send({
         RssRegistration: rssRegistration
       })
+      .set('authorization', jwtToken)
       .set('Accept', 'application/json')
       .expect(400)
       .expect(res => {
@@ -85,6 +89,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .send({
         RssRegistration: rssRegistration
       })
+      .set('authorization', jwtToken)
       .set('Accept', 'application/json')
       .expect(400)
       .expect(res => {
@@ -97,6 +102,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
   it('Should retrieve and populate the record', (done) => {
     $$supertest($$app)
       .get('/' + $$config.API_URL_PREFIX + '/rssRegistration/' + newRssRegistration._id)
+      .set('authorization', jwtToken)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
@@ -113,6 +119,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .send({
         Category: category
       })
+      .set('authorization', jwtToken)
       .set('Accept', 'application/json')
       .expect(200)
       .expect(res => {
@@ -127,6 +134,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .send({
         RssProvider: provider
       })
+      .set('authorization', jwtToken)
       .set('Accept', 'application/json')
       .expect(200)
       .expect(res => {
@@ -144,6 +152,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .send({
         RssRegistration: rssRegistration
       })
+      .set('authorization', jwtToken)
       .set('Accept', 'application/json')
       .expect(200)
       .expect(res => {

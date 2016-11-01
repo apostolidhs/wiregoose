@@ -5,9 +5,13 @@
 eamModule(module, 'scriptsInitializeDb', (
   $_,
   $q,
+  promiseExtension,
+  config,
   logger,
+  generatorsCreateUser,
   dbMongooseConnector,
   dbMongooseBinders,
+  modelsUser,
   modelsCategory,
   modelsRssProvider,
   modelsRssRegistration,
@@ -16,6 +20,8 @@ eamModule(module, 'scriptsInitializeDb', (
 
   let categoriesByName;
   let providersByName;
+
+  promiseExtension.extend($q);
 
   dbMongooseConnector.connect()
     .then(() => dbMongooseConnector.dropDatabase())
@@ -39,6 +45,8 @@ eamModule(module, 'scriptsInitializeDb', (
     .then(() => logger.info('rssFeedRegistrations imported'))
     .then(() => createAppInfo())
     .then(() => logger.info('appInfo created'))
+    .then(() => generatorsCreateUser.admin())
+    .then(() => logger.info('admin created'))
     .then(() => process.exit(0))
     .catch((reason) => {
       logger.error('script failed', reason);

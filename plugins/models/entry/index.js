@@ -17,7 +17,7 @@ eamModule(module, 'modelsEntry', ($_, $q, $moment, $mongoose, $mongooseTypeUrl) 
 
   function getByCategoryLang(categoryName, lang) {
     return $mongoose.model(
-      "Category_" + categoryName + "_lang_" + lang,
+      `Category_${categoryName}_lang_${lang}`,
       schema
     );
   }
