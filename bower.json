@@ -1,0 +1,40 @@
+{
+  "name": "wiregoose",
+  "description": "Online news transmitter using RSS feeds and crawler",
+  "main": "core/bootstrap",
+  "authors": [
+    "John Apostolidis <john.apostolidi@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "news",
+    "rss",
+    "crawler"
+  ],
+  "homepage": "https://github.com/apostolidhs/wiregoose",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.1.1",
+    "ng-table": "^1.0.0",
+    "font-awesome": "^4.7.0",
+    "angular-busy": "^4.1.3",
+    "angular-toastr": "^2.1.1",
+    "load-awesome": "^1.1.0",
+    "angular": "^1.5.8",
+    "angular-ui-router": "^0.3.1",
+    "angular-sanitize": "^1.5.8",
+    "angular-bootstrap": "^2.2.0",
+    "lodash": "^4.16.6"
+  },
+  "resolutions": {
+    "angular": "^1.5.8"
+  }
+}
