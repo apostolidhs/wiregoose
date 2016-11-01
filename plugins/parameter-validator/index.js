@@ -2,36 +2,18 @@
 
 'use strict';
 
-eamModule(module, 'parameterValidator', ($_, $expressValidator, logger) => {
-
-  // $expressValidator.validator.toMongoSafeString = function(input) {
-  //   const str = this.toString(input);
-  //   if ($_.indexOf(str, '$') !== -1) {
-
-  //   }
-  //   console.log('test', str);
-  // };
+eamModule(module, 'parameterValidator', ($q, $_, $expressValidator, logger) => {
 
   return {
     validations: getValidations(),
     partialValidations: getValidations,
     checkForErrors,
-    checkForMongoValidationErrors
+    checkForMongoValidationErrors,
+    modelPartialValidator
   };
 
   function getValidations(rootReq) {
     return {
-      // temporary for example
-      // email: (req) => {
-      //   req.checkBody('email').isEmail();
-      //   return req.sanitize('email').normalizeEmail();
-      // },
-      // username: (req) => {
-      //   req.checkBody('username').notEmpty().isAlpha().isLength({max: 32});
-      //   req.sanitize('username').toMongoSafeString();
-      //   return req.sanitize('username').toString();
-      // },
-
       paramUrlQuery: (req) => {
         req = rootReq || req;
         req.checkQuery('q').isURL();
@@ -87,5 +69,28 @@ eamModule(module, 'parameterValidator', ($_, $expressValidator, logger) => {
         }
       }
   }
+
+  // {path: 'a.b', value}
+  function modelPartialValidator(model, opts) {
+    const errors = $_.chain(opts)
+      .map(opt => {
+        const validators = model.schema.path(opt.path).validators;
+        const isInvalid = $_.find(validators, validatorModel => !validatorModel.validator(opt.value));
+
+        if (isInvalid) {
+          return isInvalid.message.replace('{PATH}', opt.path);
+        } else {
+          opt.isValid(opt.value);
+        }
+      })
+      .compact()
+      .value();
+
+    if ($_.isEmpty(errors)) {
+      return $q.when();
+    } else {
+      return $q.reject(errors);
+    }
+  }  
 
 });
