@@ -15,15 +15,21 @@ eamModule(module, 'promiseExtension', ($_) => {
 
     function promisify(ctx) {
       const deferred = q.defer();
-      ctx().exec((err, record) => {
-        if (err) {
-          deferred.reject(err);
-        } else {
-          deferred.resolve(record);
+      
+      // in case that callback is not asynchronous
+      setTimeout(
+        () => ctx((err, value) => {
+          if (err) {
+            deferred.reject(err);
+          } else {
+            deferred.resolve(value);
+          }
         }
-      });
+      ), 0);
+      
       return deferred.promise;
     }
+
 
     function throttle(opts) {
       if (!(opts && opts.list && opts.promiseTransformator)) {
