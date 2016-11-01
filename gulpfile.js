@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var mustache = require('gulp-mustache');
+var babel = require('gulp-babel');
 var _ = require('lodash');
 var globby = require('globby');
 var sourcemaps = require('gulp-sourcemaps');
@@ -20,13 +21,24 @@ var NG_SUFFIXES = [
   'provider'
 ];
 
+gulp.task('compile-js', () => {
+  return gulp.src(getAppScripts())
+    // .pipe(sourcemaps.init())
+    .pipe(babel({
+        presets: ['es2015']
+    }))
+    .pipe(concat('wiregoose.js'))
+    // .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('frontend/app/'));
+});
+
 gulp.task('compile-less', function () {
   return gulp.src('frontend/app/less/app.less')
     .pipe(sourcemaps.init())
     .pipe(less({
-      paths: ['frontend/app/bower_components/', 'frontend/app/less']
+      paths: ['frontend/app/bower_components/', 'frontend/app/less', 'frontend/app']
     }))
-    .pipe(concat('app.css'))
+    .pipe(concat('wiregoose.css'))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('frontend/app/'));
 });
@@ -38,7 +50,7 @@ gulp.task('compile-index', function () {
 });
 
 gulp.task('compile', function (cb) {
-  runSequence(['compile-less', 'compile-index'], cb);
+  runSequence(['compile-js', 'compile-less', 'compile-index'], cb);
 });
 
 gulp.task('serve-dev', ['compile'], function() {
@@ -54,13 +66,16 @@ gulp.task('serve-dev', ['compile'], function() {
     cb();
   });
 
-  gulp.watch(['app/**/*.js', 'app/**/*.html'], ['reload']);
-  gulp.watch('app/**/*.less', ['compile-less']);
-  gulp.watch('app/app.css', function () {
-    gulp.src('app/app.css')
+  gulp.watch('frontend/app/**/*.less', ['compile-less']);
+  gulp.watch('frontend/app/**/*.js', ['compile-js']);
+
+  gulp.watch(['frontend/app/wiregoose.js', 'frontend/app/**/*.html'], ['reload']);
+  
+  gulp.watch('frontend/app/wiregoose.css', function () {
+    gulp.src('frontend/app/wiregoose.css')
       .pipe(browserSync.reload({stream: true}));
   });
-  gulp.watch('app/index.mustache', ['compile-index']);
+  gulp.watch('frontend/app/index.mustache', ['compile-index']);
 });
 
 gulp.task('default', ['compile']);
@@ -70,8 +85,8 @@ function getIndexArgs() {
     stripBase: _.constant(stripBase),
     thirdPartyScripts: THIRD_PARTY_SCRIPT_INFO.map(_.property('path')),
     thirdPartyCss: THIRD_PARTY_CSS_INFO.map(_.property('path')),
-    appCss: 'app.css',
-    appScripts: getAppScripts(),
+    appCss: 'wiregoose.css',
+    appScript: 'wiregoose.js',
     config: CONFIG 
   };
   return indexArgs;
@@ -92,10 +107,10 @@ function getAppScripts() {
   return globby.sync([
     '{frontend/app,frontend/app/!(bower_components)/**}/*.js',
     '!{frontend/app,frontend/app/!(bower_components)/**}/*{' + NG_SUFFIXES.join(',') + '}.js',
-    '!frontend/app/main.js'
+    '!frontend/app/wiregoose.js'
   ])
   .concat(globby.sync([
     '{frontend/app,frontend/app/!(bower_components)/**}/*{' + NG_SUFFIXES.join(',') + '}.js',
-    '!frontend/app/main.js'
+    '!frontend/app/wiregoose.js'
   ]));
 }

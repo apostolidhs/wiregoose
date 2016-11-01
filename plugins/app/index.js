@@ -51,6 +51,7 @@ eamModule(module, 'app', (
     app.use($expressValidator());
     app.use($cookieParser());
     app.use($express.static($path.join(__dirname, '../../', 'public')));
+    app.use(allowCrossDomain);
 
     registerRoutes(app);
     startPeriodicalProcesses();
@@ -61,6 +62,14 @@ eamModule(module, 'app', (
 
     return app;
   }
+
+  function allowCrossDomain(req, res, next) {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH');
+      res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+      next();
+  }  
 
   function registerRoutes(app) {
     $_.each([

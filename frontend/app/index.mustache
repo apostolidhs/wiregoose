@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app="wg.app" lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,19 +12,33 @@
     {{/thirdPartyCss}}
     <link rel="stylesheet" href="{{{appCss}}}"/>
 
+    <script>
+      (function(global){
+        global.wg = global.wg || {};
+        
+        var config = {};
+        config.APP_URL = '{{{config.APP_URL}}}/{{{config.API_URL_PREFIX}}}';
+        config.NAME = '{{config.NAME}}'; 
+        config.SUPPORTED_LANGUAGES = '{{config.SUPPORTED_LANGUAGES}}'; 
+
+        global.wg.config = config;
+      })(window);
+    </script>
+
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body>
+  <body ng-controller="AppController as appCtrl">
     <h1>Hello, world!</h1>
+
+    <wg-crud-all crud-model="appCtrl.crudModel"></wg-crud-all>
 
     {{#thirdPartyScripts}}
       <script src="{{#stripBase}}{{{.}}}{{/stripBase}}"></script>
     {{/thirdPartyScripts}}
-    {{#appScripts}}
-      <script src="{{#stripBase}}{{{.}}}{{/stripBase}}"></script>
-    {{/appScripts}}
+    <script src="{{{appScript}}}"></script>
+     
   </body>
 </html>

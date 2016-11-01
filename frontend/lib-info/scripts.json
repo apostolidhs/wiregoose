@@ -30,5 +30,25 @@
   {
     "name": "angular-table",
     "path": "frontend/app/bower_components/ng-table/dist/ng-table.js"
-  }  
+  },
+  {
+    "name": "angular-animate",
+    "path": "frontend/app/bower_components/angular-animate/angular-animate.js"
+  },
+  {
+    "name": "angular-toastr",
+    "path": "frontend/app/bower_components/angular-toastr/dist/angular-toastr.js"
+  },
+  {
+    "name": "angular-toastr-tpls",
+    "path": "frontend/app/bower_components/angular-toastr/dist/angular-toastr.tpls.js"
+  },
+  {
+    "name": "angular-busy",
+    "path": "frontend/app/bower_components/angular-busy/angular-busy.js"
+  },
+  {
+    "name": "jwt-decode",
+    "path": "frontend/app/bower_components/jwt-decode/build/jwt-decode.js"
+  }
 ]
