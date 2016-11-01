@@ -10,9 +10,11 @@ eamModule(module, 'middlewareResponse', ($_, config) => {
   };
 
   function success(req, res, next) {
+    if (res.locals.redirect) {
+      return res.redirect(res.locals.redirect);
+    }
     return response(res);
   }
-
 
   function fail(err, req, res, next) {
     if (err !== true) {
@@ -26,7 +28,8 @@ eamModule(module, 'middlewareResponse', ($_, config) => {
       res.locals.errors.add('UNEXPECTED', msg);
       res.status(500);
     } else {
-      res.status(400);
+      const code = res.locals.errors.isUnauthorized() ? 401 : 400;
+      res.status(code);
     }
 
     return response(res);
