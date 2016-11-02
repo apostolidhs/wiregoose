@@ -34,7 +34,7 @@ eamModule(module, 'crudGenerator', (
 
     app.get(crudGeneratorUrls.retrieveAll(model.modelName), [
       middlewarePermissions.check(opts.retrieveAll.permissions),
-      middlewareParameterValidator.crud.retrieveAll(),
+      middlewareParameterValidator.crud.retrieveAll(model),
       middlewareCrudController.retrieveAll(model),
       middlewareResponse.success,
       middlewareResponse.fail

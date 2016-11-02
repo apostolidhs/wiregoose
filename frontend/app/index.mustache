@@ -33,7 +33,7 @@
   <body ng-controller="AppController as appCtrl">
     <h1>Hello, world!</h1>
 
-    <wg-crud-all crud-model="appCtrl.crudModel"></wg-crud-all>
+    <wg-crud-all ng-if="appCtrl.session" crud-model="appCtrl.crudModel"></wg-crud-all>
 
     {{#thirdPartyScripts}}
       <script src="{{#stripBase}}{{{.}}}{{/stripBase}}"></script>

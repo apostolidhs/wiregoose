@@ -40,12 +40,23 @@ eamModule(module, 'dbMongooseBinders', ($_, $mongoose, logger, modelsApp) => {
 
   function find(model, opts) {
     const pagination = opts && opts.pagination;
+    const filters = opts && opts.filters;
 
-    const cursor = model.find();
+    let q;
+    if (filters) {
+      q = $_.transform(filters, (result, value, key) => {
+        if (!($_.isNil(value) || ($_.isString(value) && !value))) {
+          result[key] = valueToFilter(value);
+        }
+      }, {});
+    }
+
+    const cursor = model.find(q);
+
     if (pagination) {
       if (pagination.page) {
         logger.assert(pagination.count > 0);
-        cursor.skip(pagination.page * pagination.count)
+        cursor.skip((pagination.page - 1) * pagination.count)
           .limit(pagination.count);
       }
       if (pagination.sortBy) {
@@ -64,5 +75,18 @@ eamModule(module, 'dbMongooseBinders', ($_, $mongoose, logger, modelsApp) => {
     return model.remove({_id: id});
   }
 
-
+  function valueToFilter(value) {
+    if ($_.isString(value)) {
+      return new RegExp(value, "i");
+    } else if ($_.isNumber(value) || $_.isBoolean(value)) {
+      return value;
+    } else if ($_.isDate(value)) {
+      return {
+        $lte: new Date(value.getTime() + 7 * 24 * 60 * 60 * 1000), // 1 week range
+        $gte: value
+      };
+    } else {
+      logger.assert(false, `Unsupported value type: ${value}`);
+    }
+  }
 });

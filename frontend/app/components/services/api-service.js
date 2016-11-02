@@ -15,11 +15,11 @@ return {
     login
   },
   crud: {
-    crudCreate,
-    crudRetrieve,
-    crudRetrieveAll,
-    crudUpdate,
-    crudDelete
+    create: crudCreate,
+    retrieve: crudRetrieve,
+    retrieveAll: crudRetrieveAll,
+    update: crudUpdate,
+    delete: crudDelete
   }
 };
 
@@ -42,7 +42,8 @@ function login(email, password) {
   return $.ajax({
     url: `${wgConfig.APP_URL}/authorize/login`,
     method: 'POST',
-    data: {email, password},
+    data: JSON.stringify({email, password}),
+    contentType: 'application/json',
     dataType: 'json'
   })
   .then(session => {
@@ -61,16 +62,20 @@ function crudRetrieve() {
 
 }
 
-function crudRetrieveAll(model) {
-  return $resource(`${wgConfig.APP_URL}/${model.name}`, {}, {
-    query: {
-      method: 'GET',
-      responseType: 'json',
-      headers: {
-        'Authorization': 'token'
-      }
-    }
-  })
+function crudRetrieveAll(model, opts) {
+  const params = {};
+  _.assignIn(params, opts.pagination, opts.filters);
+  const urlParams = $.param(params);
+
+  return $.ajax({
+    url: `${wgConfig.APP_URL}/${model.name}?${urlParams}`,
+    method: 'GET',    
+    headers: {
+      'Authorization': jwtToken
+    },
+    contentType: 'application/json',
+    dataType: 'json'    
+  });
 }
 
 function crudUpdate() {

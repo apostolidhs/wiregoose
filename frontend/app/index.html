@@ -35,7 +35,7 @@
   <body ng-controller="AppController as appCtrl">
     <h1>Hello, world!</h1>
 
-    <wg-crud-all crud-model="appCtrl.crudModel"></wg-crud-all>
+    <wg-crud-all ng-if="appCtrl.session" crud-model="appCtrl.crudModel"></wg-crud-all>
 
       <script src="bower_components/lodash/dist/lodash.js"></script>
       <script src="bower_components/jquery/dist/jquery.js"></script>

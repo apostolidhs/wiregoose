@@ -72,7 +72,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .expect(200)
       .expect(res => {
           const respCategories = res.body.data.content;
-          const respCount = res.body.data.count;
+          const respCount = res.body.data.total;
           expect(respCategories.length).to.equal(1);
           expect($$_.isEqual(createCategory, respCategories[0])).to.equal(true);
           expect(respCount).to.equal(1);
@@ -123,7 +123,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .expect(200)
       .expect(res => {
           const respCategories = res.body.data.content;
-          const respCount = res.body.data.count;
+          const respCount = res.body.data.total;
           expect(respCategories.length).to.equal(0);
           expect(respCount).to.equal(0);
       })

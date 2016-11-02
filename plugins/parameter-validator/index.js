@@ -70,7 +70,7 @@ eamModule(module, 'parameterValidator', ($q, $_, $expressValidator, logger) => {
       }
   }
 
-  // {path: 'a.b', value}
+  // {path: 'v', value: v, isValid: v => v = v},
   function modelPartialValidator(model, opts) {
     const errors = $_.chain(opts)
       .map(opt => {
@@ -80,7 +80,7 @@ eamModule(module, 'parameterValidator', ($q, $_, $expressValidator, logger) => {
         if (isInvalid) {
           return isInvalid.message.replace('{PATH}', opt.path);
         } else {
-          opt.isValid(opt.value);
+          opt.onValidate(opt.value);
         }
       })
       .compact()

@@ -39,9 +39,9 @@ eamModule(module, 'middlewareCrudController', ($_, $q, dbMongooseBinders) => {
 
   function retrieveAllCtrl(model) {
     return (req, res, next) => {
-      const pagination = res.locals.params.pagination;
       const findOpts = {
-        pagination
+        pagination: res.locals.params.pagination,
+        filters: res.locals.params.filters
       };
 
       $q.all([
@@ -51,7 +51,7 @@ eamModule(module, 'middlewareCrudController', ($_, $q, dbMongooseBinders) => {
       .then(resolvedPromises => {
         const data = {};
         data.content = resolvedPromises[0];
-        data.count = resolvedPromises[1];
+        data.total = resolvedPromises[1];
         res.locals.data = data;
 
         next();

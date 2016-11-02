@@ -1,1 +1,11 @@
 adasdasd
+
+<table ng-show="crudAllCtrl.ngTableCrud" 
+  ng-table-dynamic="crudAllCtrl.ngTableCrud with crudAllCtrl.ngTableCols" 
+  class="table table-condensed table-bordered table-striped">
+  <tr ng-repeat="row in $data">
+    <tr ng-repeat="row in $data track by row._id">
+      <td ng-repeat="col in $columns">{{::row[col.field]}}</td>
+    </tr>
+  </tr>
+</table>

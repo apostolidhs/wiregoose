@@ -46,7 +46,7 @@ eamModule(module, 'routesAuthorize', (
 
     function middlewareVerifyAccountParameterValidator(req, res, next) {
       const validationOpts = [
-        {path: 'validationToken', value: req.query.token, isValid: v => res.locals.params.token = v}
+        {path: 'validationToken', value: req.query.token, onValidate: v => res.locals.params.token = v}
       ];
       parameterValidator.modelPartialValidator(modelsUser, validationOpts)
         .then(() => next())
@@ -59,8 +59,8 @@ eamModule(module, 'routesAuthorize', (
     function middlewareUserAndPassParameterValidator(req, res, next) {
 
       const validationOpts = [
-        {path: 'email', value: req.body.email, isValid: v => res.locals.params.email = v},
-        {path: 'password', value: req.body.password, isValid: v => res.locals.params.password = v},
+        {path: 'email', value: req.body.email, onValidate: v => res.locals.params.email = v},
+        {path: 'password', value: req.body.password, onValidate: v => res.locals.params.password = v},
       ];
       parameterValidator.modelPartialValidator(modelsUser, validationOpts)
         .then(() => next())

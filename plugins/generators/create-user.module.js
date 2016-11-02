@@ -13,9 +13,12 @@ eamModule(module, 'generatorsCreateUser', ($mongoose, config, modelsUser) => {
       email: config.ADMIN_EMAIL,
       password: config.ADMIN_PASSWORD,
       role: 'ADMIN',
-      preferences: {}        
+      preferences: {},
+      validationToken: 'mockValidationToken'
     });   
-    return user.save();
+    return user.save()
+      .then(user => modelsUser.verifyAccount('mockValidationToken')
+        .then(() => user));
   }
 
 });

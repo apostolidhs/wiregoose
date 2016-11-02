@@ -23,12 +23,12 @@ var NG_SUFFIXES = [
 
 gulp.task('compile-js', () => {
   return gulp.src(getAppScripts())
-    // .pipe(sourcemaps.init())
+    .pipe(sourcemaps.init())
     .pipe(babel({
         presets: ['es2015']
     }))
     .pipe(concat('wiregoose.js'))
-    // .pipe(sourcemaps.write('.'))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('frontend/app/'));
 });
 

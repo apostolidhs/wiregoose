@@ -7,10 +7,21 @@ wg.component('wg.app.components.crud.all', 'crudAll', {
   scope: {
     crudModel: '='
   }
-}, function($scope) {
+}, function($scope, wgServicesApi, wgNgTableFactory) {
 
+const ctrl = this;
 
+ctrl.ngTableCrud = undefined;
+ctrl.ngTableCols = undefined;
 
-});
+$scope.$watch(
+  () => this.crudModel,
+  (val) => val && updateCrudTable(val)
+);
 
-})();
+function updateCrudTable(model) {
+  ctrl.ngTableCrud = wgNgTableFactory.dynamicCrud(model);  
+  ctrl.ngTableCols = wgNgTableFactory.dynamicCrudCols(model);
+}
+
+})})();

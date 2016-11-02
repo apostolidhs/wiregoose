@@ -5,7 +5,7 @@
 eamModule(module, 'middlewareParameterValidator', ($q, $_, parameterValidator) => {
 
   const defaultPagination = {
-    page: 0,
+    page: 1,
     count: 50
   };
 
@@ -25,11 +25,41 @@ eamModule(module, 'middlewareParameterValidator', ($q, $_, parameterValidator) =
     return idValidator
   }
 
-  function crudRetrieveAllValidator() {
+  function crudRetrieveAllValidator(model) {
     return (req, res, next) => {
       const params = paginationValidator(req);
-      parameterValidator.checkForErrors(params, req, res, next);
+      parameterValidator.checkForErrors(params, req, res, (hasError) => {
+        if (hasError) {
+          return next(hasError);
+        }
+
+        checkPossibleModelQueryParameters(model, req, res)
+          .then(() => next())
+          .catch(reason => {
+            res.locals.errors.add('INVALID_PARAMS', reason);
+            next(true);
+          })
+      });
     }
+  }
+
+  function checkPossibleModelQueryParameters(model, req, res) {
+    const pathnames = [];
+    model.schema.eachPath(pathname => {
+      if (pathname.indexOf('.') === -1 && req.query[pathname]) {
+        pathnames.push(pathname);
+      }
+    });
+
+    const filters = {};
+    const partialValidations = $_.map(pathnames, pathname => ({
+      path: pathname,
+      value: req.query[pathname],
+      onValidate: v => filters[pathname] = v
+    }));
+    res.locals.params.filters = filters;
+
+    return parameterValidator.modelPartialValidator(model, partialValidations)
   }
 
   function crudCreateValidator(model) {
