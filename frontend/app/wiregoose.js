@@ -4,7 +4,7 @@
 
   'use strict';
 
-  angular.module('wg.app', ['ngAnimate', 'toastr', 'ngSanitize', 'ngTable', 'cgBusy', 'ui.router', 'wg.app.components.config', 'wg.app.components.ngTableFactory', 'wg.app.components.crud.all', 'wg.app.components.models', 'wg.app.components.services']).run(function () {
+  angular.module('wg.app', ['ngAnimate', 'toastr', 'ngSanitize', 'ngTable', 'cgBusy', 'ui.router', 'wg.app.components.config', 'wg.app.components.ngTableFactory', 'wg.app.components.crud.all', 'wg.app.components.models', 'wg.app.components.services', 'wg.app.sections.admin', 'wg.app.sections.admin.crud']).run(function () {
     return (window.wg = window.wg || {}).assert = function (cond, msg) {
       return console.assert(cond, msg);
     };
@@ -15,9 +15,11 @@
     // $urlRouterProvider.otherwise('/mixedItems');
   }).controller('AppController', AppController);
 
-  function AppController($scope, wgModelsCategory, wgServicesApi) {
+  function AppController($scope, $state, wgModelsCategory, wgServicesApi) {
     var ctrl = this;
     ctrl.crudModel = wgModelsCategory;
+
+    $state.transitionTo('admin.crudAll');
 
     wgServicesApi.authorize.login('john.apostolidi@gmail.com', '123456789').then(function (session) {
       ctrl.session = session;
@@ -103,6 +105,23 @@
     angular.module(moduleName).factory(prefixedServiceName, controller);
   }
 })(window);
+'use strict';
+
+angular.module('wg.app.sections.admin', []).config(function ($stateProvider) {
+  $stateProvider.state('admin', {
+    abstract: true,
+    url: '/admin',
+    templateUrl: 'sections/admin/admin.html'
+  });
+});
+'use strict';
+
+angular.module('wg.app.sections.admin.crud', []).config(function ($stateProvider) {
+  $stateProvider.state('admin.crudAll', {
+    url: '/admin/crudAll',
+    templateUrl: 'sections/admin/crud/crud-all.html'
+  });
+});
 'use strict';
 
 (function () {

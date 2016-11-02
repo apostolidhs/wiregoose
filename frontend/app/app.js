@@ -13,7 +13,9 @@ angular.module('wg.app', [
   'wg.app.components.ngTableFactory',
   'wg.app.components.crud.all',
   'wg.app.components.models',
-  'wg.app.components.services'  
+  'wg.app.components.services',
+  'wg.app.sections.admin',
+  'wg.app.sections.admin.crud' 
 ])
 
 .run(() => (window.wg = window.wg || {}).assert = (cond, msg) => console.assert(cond, msg))
@@ -29,11 +31,12 @@ angular.module('wg.app', [
 
 .controller('AppController', AppController);
 
-function AppController($scope, wgModelsCategory, wgServicesApi) {
+function AppController($scope, $state, wgModelsCategory, wgServicesApi) {
   const ctrl = this;
   ctrl.crudModel = wgModelsCategory;
 
-  
+  $state.transitionTo('admin.crudAll');
+
   wgServicesApi.authorize.login('john.apostolidi@gmail.com', '123456789')
     .then((session) => {
       ctrl.session = session;
