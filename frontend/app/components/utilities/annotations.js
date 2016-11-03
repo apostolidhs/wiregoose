@@ -4,15 +4,16 @@
 
 global.wg = global.wg || {}; 
 
-global.wg.component = createComponent;
+global.wg.directive = createDirective;
+global.wg.controller = createController;
 global.wg.service = createService;
 
-function createComponent(moduleName, directiveName, options, controller) {
+function createDirective(moduleName, directiveName, options, controller) {
   const ctrl = controller || options;
   const opts = controller ? options : {};
 
   const prefixedDirectiveName = 'wg' + _.upperFirst(directiveName);
-  const controllerAsName = directiveName + 'Ctrl';
+  const controllerAsName = `${directiveName}Ctrl`;
   const defaultDirectiveParams = {
     controller: ctrl,
     restrict: 'E',
@@ -25,6 +26,11 @@ function createComponent(moduleName, directiveName, options, controller) {
 
   angular.module(moduleName)
     .directive(prefixedDirectiveName, () => defaultDirectiveParams);
+}
+
+function createController(moduleName, controllerName, controller) {
+  angular.module(moduleName)
+    .controller(`${controllerName}Controller`, controller);
 }
 
 function createService(moduleName, serviceName, controller) {

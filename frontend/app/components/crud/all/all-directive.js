@@ -2,7 +2,7 @@
 
 'use strict';
 
-wg.component('wg.app.components.crud.all', 'crudAll', {
+wg.directive('wg.app.components.crud.all', 'crudAll', {
   templateUrl: 'components/crud/all/all.html',
   scope: {
     crudModel: '='

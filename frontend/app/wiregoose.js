@@ -15,15 +15,15 @@
     // $urlRouterProvider.otherwise('/mixedItems');
   }).controller('AppController', AppController);
 
-  function AppController($scope, $state, wgModelsCategory, wgServicesApi) {
+  function AppController($scope, $state, wgModelsCategory, wgModelsUser, wgServicesApi, wgModelsHolder) {
     var ctrl = this;
-    ctrl.crudModel = wgModelsCategory;
 
-    $state.transitionTo('admin.crudAll');
+    var allCrudModels = wgModelsHolder.getAll();
 
     wgServicesApi.authorize.login('john.apostolidi@gmail.com', '123456789').then(function (session) {
       ctrl.session = session;
       $scope.$digest();
+      $state.go('admin.crudAll', { crudModelName: allCrudModels.name });
     });
   }
 })();
@@ -75,10 +75,11 @@
 
   global.wg = global.wg || {};
 
-  global.wg.component = createComponent;
+  global.wg.directive = createDirective;
+  global.wg.controller = createController;
   global.wg.service = createService;
 
-  function createComponent(moduleName, directiveName, options, controller) {
+  function createDirective(moduleName, directiveName, options, controller) {
     var ctrl = controller || options;
     var opts = controller ? options : {};
 
@@ -97,6 +98,10 @@
     angular.module(moduleName).directive(prefixedDirectiveName, function () {
       return defaultDirectiveParams;
     });
+  }
+
+  function createController(moduleName, controllerName, controller) {
+    angular.module(moduleName).controller(controllerName + 'Controller', controller);
   }
 
   function createService(moduleName, serviceName, controller) {
@@ -118,7 +123,7 @@ angular.module('wg.app.sections.admin', []).config(function ($stateProvider) {
 
 angular.module('wg.app.sections.admin.crud', []).config(function ($stateProvider) {
   $stateProvider.state('admin.crudAll', {
-    url: '/admin/crudAll',
+    url: '/crudAll?crudModelName',
     templateUrl: 'sections/admin/crud/crud-all.html'
   });
 });
@@ -141,7 +146,7 @@ angular.module('wg.app.sections.admin.crud', []).config(function ($stateProvider
 
   'use strict';
 
-  wg.component('wg.app.components.crud.all', 'crudAll', {
+  wg.directive('wg.app.components.crud.all', 'crudAll', {
     templateUrl: 'components/crud/all/all.html',
     scope: {
       crudModel: '='
@@ -172,14 +177,74 @@ angular.module('wg.app.sections.admin.crud', []).config(function ($stateProvider
 
   'use strict';
 
-  wg.service('wg.app.components.models', 'modelsCategory', function () {
+  wg.service('wg.app.components.models', 'modelsCategory', function (wgModelsHolder) {
 
-    return {
+    var model = {
       schema: {
         name: { type: 'String', required: true, unique: true, index: true, maxlength: [64] }
       },
       name: 'category'
     };
+
+    wgModelsHolder.register(model);
+
+    return model;
+  });
+})();
+'use strict';
+
+(function () {
+
+  'use strict';
+
+  wg.service('wg.app.components.models', 'modelsHolder', function () {
+
+    var models = {};
+
+    return {
+      register: register,
+      get: get,
+      getAll: getAll
+    };
+
+    function register(model) {
+      models[model.name] = model;
+    }
+
+    function get(name) {
+      return models[name];
+    }
+
+    function getAll() {
+      return _.values(models);
+    }
+  });
+})();
+'use strict';
+
+(function () {
+
+  'use strict';
+
+  wg.service('wg.app.components.models', 'modelsUser', function (wgModelsHolder) {
+
+    var model = {
+      schema: {
+        email: { type: 'Email', required: true, unique: true },
+        lastLogin: { type: 'Date', required: true, default: Date.now },
+        validationExpiresAt: { type: 'Date', default: Date.now },
+        totalLogins: { type: 'Number', required: true, min: 0, default: 0 },
+        role: { type: 'String', enum: 'userRoles', required: true }
+        // preferences: {
+        //   language: {type: 'String', enum: 'supportedLanguages'}
+        // }
+      },
+      name: 'user'
+    };
+
+    wgModelsHolder.register(model);
+
+    return model;
   });
 })();
 'use strict';
@@ -244,8 +309,12 @@ angular.module('wg.app.sections.admin.crud', []).config(function ($stateProvider
           field: name,
           title: name
         };
-        if (opts.type === 'String') {
+        if (opts.type === 'String' || opts.type === 'Email') {
           col.sortable = name;
+          col.filter = _.fromPairs([[name, 'text']]);
+        } else if (opts.type === 'Number') {
+          col.filter = _.fromPairs([[name, 'number']]);
+        } else if (opts.type === 'Date') {
           col.filter = _.fromPairs([[name, 'text']]);
         } else {
           wg.assert(false, 'unsupported content type: ' + opts.type);
@@ -348,6 +417,43 @@ angular.module('wg.app.sections.admin.crud', []).config(function ($stateProvider
     function crudUpdate() {}
 
     function crudDelete() {}
+  });
+})();
+'use strict';
+
+(function () {
+
+  'use strict';
+
+  wg.controller('wg.app.sections.admin.crud', 'adminCrud', function ($scope, $stateParams, wgModelsHolder) {
+
+    var ctrl = this;
+
+    ctrl.crudModels = wgModelsHolder.getAll();
+  });
+})();
+'use strict';
+
+(function () {
+
+  'use strict';
+
+  wg.controller('wg.app.sections.admin.crud', 'adminCrudAll', function ($scope, $stateParams, wgModelsHolder) {
+
+    var ctrl = this;
+
+    ctrl.crudModel = undefined;
+
+    $scope.$watch(function () {
+      return $stateParams.crudModelName;
+    }, function (val) {
+      return val && updateCrudModel(val);
+    });
+
+    function updateCrudModel(val) {
+      var model = wgModelsHolder.get(val || 'category');
+      ctrl.crudModel = model;
+    }
   });
 })();
 //# sourceMappingURL=wiregoose.js.map

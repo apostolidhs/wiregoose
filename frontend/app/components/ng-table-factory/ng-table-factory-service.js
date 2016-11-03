@@ -59,9 +59,13 @@ wg.service('wg.app.components.ngTableFactory', 'ngTableFactory', (NgTableParams,
         field: name,
         title: name
       };
-      if (opts.type === 'String') {
+      if (opts.type === 'String' || opts.type === 'Email') {
         col.sortable = name;
         col.filter = _.fromPairs([[name, 'text']]);
+      } else if (opts.type === 'Number') {
+        col.filter = _.fromPairs([[name, 'number']]);
+      } else if (opts.type === 'Date') {
+        col.filter = _.fromPairs([[name, 'text']])
       } else {
         wg.assert(false, `unsupported content type: ${opts.type}`);
       }
@@ -83,7 +87,4 @@ wg.service('wg.app.components.ngTableFactory', 'ngTableFactory', (NgTableParams,
     return value;
   }
 
-})
-
-
-})();
+})})();
