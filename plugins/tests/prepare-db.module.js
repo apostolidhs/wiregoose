@@ -9,7 +9,7 @@ KlarkModule(module, 'testsPrepareDb', (krkDbMongooseConnector, krkGeneratorsCrea
   };
 
   function prepare() {
-    return krkDbMongooseConnector.connect()
+    return krkDbMongooseConnector.connect($$config.MONGODB_URL)
       .then(() => krkDbMongooseConnector.dropDatabase())
       .then(() => krkGeneratorsCreateUser.admin())
       .then(user => krkGeneratorsLogin.login(user))

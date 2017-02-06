@@ -23,7 +23,7 @@ KlarkModule(module, 'scriptsInitializeDb', (
 
   krkPromiseExtension.extend(q);
 
-  krkDbMongooseConnector.connect()
+  krkDbMongooseConnector.connect($$config.MONGODB_URL)
     .then(() => krkDbMongooseConnector.dropDatabase())
     .then(() => importSimpleData('categories.json', modelsCategory, (data) => ({
       name: data

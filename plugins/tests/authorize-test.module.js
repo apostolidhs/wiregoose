@@ -19,12 +19,13 @@ KlarkModule(module, 'routesAuthorizeTest', ($supertest, $chai, krkDbMongooseConn
 });
 
 describe('routesAuthorize', function() {
-
-  before(done => {
-    $$krkDbMongooseConnector.connect()
+  const initDb = done => {
+    $$krkDbMongooseConnector.connect($$config.MONGODB_URL)
       .then(() => $$krkDbMongooseConnector.dropDatabase())
       .then(() => done());
-  });
+  };
+  before(initDb);
+  after(initDb);
 
   const userCredential = {
     email: 'test@test.test',
