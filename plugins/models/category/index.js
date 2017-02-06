@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'modelsCategory', ($mongoose) => {
+KlarkModule(module, 'modelsCategory', ($mongoose) => {
 
   const schema = new $mongoose.Schema({
     name: {type: String, required: true, unique: true, index: true, maxlength: [64]}

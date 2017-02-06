@@ -4,9 +4,9 @@
   "description": "Online news transmitter using RSS feeds and crawler",
   "main": "core/bootstrap",
   "scripts": {
-    "start": "node core/bootstrap.js",
+    "start": "node index.js",
     "test": "node node_modules/mocha/bin/mocha",
-    "initialize-db": "node core/bootstrap.js --script=initialize-db"
+    "initialize-db": "node index.js --script=initialize-db"
   },
   "repository": {
     "type": "git",
@@ -43,8 +43,10 @@
     "gulp-sourcemaps": "^2.2.0",
     "is-url": "^1.2.2",
     "jwt-simple": "^0.5.0",
+    "klark-js": "^1.2.2",
+    "klark-js-plugins": "^1.0.6",
     "lodash": "^4.16.6",
-    "moment": "^2.15.2",
+    "moment": "^2.17.1",
     "mongoose": "^4.6.4",
     "mongoose-autopopulate": "^0.4.0",
     "mongoose-createdmodified": "0.0.2",
@@ -52,6 +54,7 @@
     "mongoose-type-email": "^1.0.2",
     "mongoose-type-url": "^1.0.2",
     "morgan": "^1.7.0",
+    "multer": "^1.3.0",
     "node-feedparser": "^1.0.1",
     "nodemailer": "^2.6.4",
     "passport": "^0.3.2",

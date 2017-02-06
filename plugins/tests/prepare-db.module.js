@@ -2,19 +2,19 @@
 
 'use strict';
 
-eamModule(module, 'testsPrepareDb', (dbMongooseConnector, generatorsCreateUser, generatorsLogin, logger) => {
+KlarkModule(module, 'testsPrepareDb', (krkDbMongooseConnector, krkGeneratorsCreateUser, krkGeneratorsLogin, krkLogger) => {
 
   return {
     prepare
   };
 
   function prepare() {
-    return dbMongooseConnector.connect()
-      .then(() => dbMongooseConnector.dropDatabase())
-      .then(() => generatorsCreateUser.admin())
-      .then(user => generatorsLogin.login(user))
+    return krkDbMongooseConnector.connect()
+      .then(() => krkDbMongooseConnector.dropDatabase())
+      .then(() => krkGeneratorsCreateUser.admin())
+      .then(user => krkGeneratorsLogin.login(user))
       .then((token) => ({token}))
-      .catch(reason => logger(reason));
+      .catch(reason => krkLogger(reason));
   }
 
 });

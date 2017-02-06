@@ -5,13 +5,13 @@
 let $$supertest;
 let $$app;
 let expect;
-let $$_;
+let $_;
 
-eamModule(module, 'testsApp', ($supertest, $chai, $_, app) => {
+KlarkModule(module, 'testsApp', ($supertest, $chai, _, app) => {
   $$supertest = $supertest;
   $$app = app.create();
-  $$_ = $_;
-  expect = $chai.expect;  
+  $_ = _;
+  expect = $chai.expect;
 });
 
 describe('GET /info', function() {
@@ -22,7 +22,7 @@ describe('GET /info', function() {
       .expect('Content-Type', /json/)
       .expect(200)
       .expect(res => {
-        expect($$_.isString(res.body.data.currentVersion)).to.equal(true);       
+        expect($_.isString(res.body.data.currentVersion)).to.equal(true);
       })
       .end(done);
   });

@@ -2,15 +2,15 @@
 
 'use strict';
 
-eamModule(module, 'rssRegistrationsFetcher', (
-  $_,
-  $q,
+KlarkModule(module, 'rssRegistrationsFetcher', (
+  _,
+  q,
   $moment,
   $singleLineLog,
+  krkDbMongooseBinders,
+  krkLogger,
   config,
-  logger,
   modelsEntry,
-  dbMongooseBinders,
   modelsRssRegistration,
   modelsFetchReport,
   rssRegistrationsFetcherIterationFetch
@@ -22,21 +22,21 @@ eamModule(module, 'rssRegistrationsFetcher', (
   return {
     fetch,
     startPeriodicalFetchProcess
-  };  
+  };
 
   function fetch(onFetchStartOpt, onNextChunkOpt) {
-    const onFetchStart = onFetchStartOpt || $_.noop;
-    const onNextChunk = onNextChunkOpt || $_.noop;
+    const onFetchStart = onFetchStartOpt || _.noop;
+    const onNextChunk = onNextChunkOpt || _.noop;
 
     if (isFetching) {
-      return $q.reject('already fetching');
+      return q.reject('already fetching');
     }
     isFetching = true;
 
-    const finishedDefer = $q.defer();
-    
+    const finishedDefer = q.defer();
+
     const fetchReport = createFetchReport();
-    
+
     fetchRegistrations()
       .then(startRssRegistrationFetch)
       .catch(reason => finishedDefer.reject(reason));
@@ -47,36 +47,36 @@ eamModule(module, 'rssRegistrationsFetcher', (
     return promise;
 
     function fetchRegistrations() {
-      return dbMongooseBinders.find(modelsRssRegistration)
+      return krkDbMongooseBinders.find(modelsRssRegistration)
         .catch(reason => finishedDefer.reject(reason))
     }
 
     function startRssRegistrationFetch(registrationsResp) {
       onFetchStart(registrationsResp);
       rssRegistrationsFetcherIterationFetch.fetch(
-        registrationsResp, 
-        onIterationFetchFinished, 
+        registrationsResp,
+        onIterationFetchFinished,
         onFinish
       );
     }
 
     function onIterationFetchFinished(registrationEntries) {
-      return $q.throttle({
-        list: registrationEntries, 
+      return q.throttle({
+        list: registrationEntries,
         promiseTransformator: handleRegistrationEntry,
         slices: 1
       })
 
       function handleRegistrationEntry(registrationEntry) {
         const rssRegistration = registrationEntry.rssRegistration;
-        logger.assert(rssRegistration, 'rssRegistration always exist');
+        krkLogger.assert(rssRegistration, 'rssRegistration always exist');
 
         const majorError = registrationEntry.error;
-        const translationErrors = registrationEntry.entriesResp 
+        const translationErrors = registrationEntry.entriesResp
                                     && registrationEntry.entriesResp.errors;
         const error = majorError || translationErrors;
 
-        if (!$_.isEmpty(error)) {
+        if (!_.isEmpty(error)) {
           const failedFetch = {
             error,
             rssRegistration: rssRegistration.id
@@ -84,25 +84,25 @@ eamModule(module, 'rssRegistrationsFetcher', (
           fetchReport.failedFetches.push(failedFetch);
         }
 
-        if (!$_.isEmpty(majorError)) {
-          return $q.when();
+        if (!_.isEmpty(majorError)) {
+          return q.when();
         }
 
         const entryModel = modelsEntry.getByCategoryLang(
           rssRegistration.category.name,
           rssRegistration.lang
-        );        
+        );
 
         const entries = registrationEntry.entriesResp.entries;
-        fetchReport.succeededFetches += $_.size(entries);
-        fetchReport.totalFetches += $_.size(translationErrors) + $_.size(entries);
+        fetchReport.succeededFetches += _.size(entries);
+        fetchReport.totalFetches += _.size(translationErrors) + _.size(entries);
 
-        if ($_.isEmpty(entries)) {
-          return $q.when();
+        if (_.isEmpty(entries)) {
+          return q.when();
         }
 
         return entryModel.saveAvoidingDuplications(entries)
-          .then(savedEntries => fetchReport.entriesStored += $_.size(savedEntries))
+          .then(savedEntries => fetchReport.entriesStored += _.size(savedEntries))
           .then(() => onNextChunk(rssRegistration));
       }
     }
@@ -114,10 +114,10 @@ eamModule(module, 'rssRegistrationsFetcher', (
 
       fetchReport.finished = new Date();
 
-      dbMongooseBinders.create(modelsFetchReport, fetchReport)
+      krkDbMongooseBinders.create(modelsFetchReport, fetchReport)
         .then(newFetchReport => finishedDefer.resolve(newFetchReport))
         .catch(reason => finishedDefer.reject(reason))
-    }      
+    }
   }
 
   function createFetchReport() {
@@ -132,20 +132,20 @@ eamModule(module, 'rssRegistrationsFetcher', (
     };
   }
 
-  function startPeriodicalFetchProcess() {    
+  function startPeriodicalFetchProcess() {
     tryToFetch();
     setInterval(tryToFetch, tryToFetchFrequent);
 
     function tryToFetch() {
-      dbMongooseBinders.getAppInfo()
-        .catch(reason => logger.error(reason))
+      krkDbMongooseBinders.getAppInfo()
+        .catch(reason => krkLogger.error(reason))
         .then(appInfoFetched)
         .then(saveLastFetchTime)
-        .catch(reason => logger.error(reason));
+        .catch(reason => krkLogger.error(reason));
     }
 
     function saveLastFetchTime() {
-      return dbMongooseBinders.updateAppInfo({
+      return krkDbMongooseBinders.updateAppInfo({
         lastRssRegistrationFetch: new Date()
       });
     }
@@ -155,22 +155,22 @@ eamModule(module, 'rssRegistrationsFetcher', (
       let resolvedRegistrations;
 
       const lastTime = appInfo.lastRssRegistrationFetch.getTime();
-      if (lastTime + config.RSS_REGISTRATIONS_FETCH_FREQUENT > $_.now()) {
+      if (lastTime + config.RSS_REGISTRATIONS_FETCH_FREQUENT > _.now()) {
         return;
       }
 
       return fetch(onFetchStart, onNextChunk)
         .then(logSuccessFetch)
-        .catch(reason => logger.error(reason));      
+        .catch(reason => krkLogger.error(reason));
 
       function onFetchStart(rssRegistrations) {
         totalRegistrations = rssRegistrations.length;
         resolvedRegistrations = 0;
       }
 
-      function onNextChunk(rssRegistration) { 
-        ++resolvedRegistrations; 
-        const msg = `resolving registrations (${resolvedRegistrations}/${totalRegistrations})...${rssRegistration.link}`;      
+      function onNextChunk(rssRegistration) {
+        ++resolvedRegistrations;
+        const msg = `resolving registrations (${resolvedRegistrations}/${totalRegistrations})...${rssRegistration.link}`;
         $singleLineLog.stdout(msg);
       }
     }
@@ -182,7 +182,7 @@ eamModule(module, 'rssRegistrationsFetcher', (
         $moment(fetchReport.finished, dateFormat)
           .diff($moment(fetchReport.started, dateFormat))
       ).format('HH:mm:ss');
-      
+
       const msgs = [
         '',
         'Rss registrations fetch finished successfully.',
@@ -195,8 +195,8 @@ eamModule(module, 'rssRegistrationsFetcher', (
         ''
       ].join('\n');
 
-      logger.info('');
-      logger.info(msgs);
+      krkLogger.info('');
+      krkLogger.info(msgs);
     }
   }
 

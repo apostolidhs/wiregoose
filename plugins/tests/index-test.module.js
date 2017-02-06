@@ -4,37 +4,38 @@
 
 let $$supertest;
 let $$app;
-let $$dbMongooseConnector;
+let $$krkDbMongooseConnector;
 let $$config;
-let $$modelsUser;
+let $$krkModelsUser;
 let expect;
 
-eamModule(module, 'routesAuthorizeTest', ($supertest, $chai, config, dbMongooseConnector, app, modelsUser) => {
+KlarkModule(module, 'routesAuthorizeTest', ($supertest, $chai, krkDbMongooseConnector, krkModelsUser, config, app) => {
   $$supertest = $supertest;
   $$app = app.create();
   expect = $chai.expect;
-  $$dbMongooseConnector = dbMongooseConnector;
+  $$krkDbMongooseConnector = krkDbMongooseConnector;
   $$config = config;
-  $$modelsUser = modelsUser;
+  $$krkModelsUser = krkModelsUser;
 });
 
 describe('routesAuthorize', function() {
 
   before(done => {
-    $$dbMongooseConnector.connect()
-      .then(() => $$dbMongooseConnector.dropDatabase())
+    $$krkDbMongooseConnector.connect()
+      .then(() => $$krkDbMongooseConnector.dropDatabase())
       .then(() => done());
   });
 
   const userCredential = {
     email: 'test@test.test',
-    password: '1a@wsasd123'
+    password: '111',
+    name: 'test'
   };
 
   let user;
   let jwtToken;
 
-  it('Should sign up a user', (done) => {
+  it('Should sign up a user', done => {
 
     $$supertest($$app)
       .post(`/${$$config.API_URL_PREFIX}/authorize/signup`)
@@ -49,21 +50,21 @@ describe('routesAuthorize', function() {
       .end(done);
   }).timeout(5000);
 
-  it('Should not allow to login if user does not validate', (done) => {
+  it('Should not allow to login if user does not validate', done => {
     $$supertest($$app)
       .post(`/${$$config.API_URL_PREFIX}/authorize/login`)
       .send(userCredential)
       .set('Accept', 'application/json')
       .expect(400)
-      .expect(res => {          
+      .expect(res => {
           expect(res.body.errors.length).to.equal(1);
-          expect(res.body.errors[0].code).to.equal(4002);          
+          expect(res.body.errors[0].code).to.equal(4002);
       })
       .end(done);
   }).timeout(5000);
 
-  it('Should validate the user correctly', (done) => {
-   $$modelsUser.findOne({_id: user._id})
+  it('Should validate the user correctly', done => {
+   $$krkModelsUser.findOne({_id: user._id})
       .then((user) => {
         $$supertest($$app)
           .get(`/${$$config.API_URL_PREFIX}/authorize/verifyAccount?token=${user.validationToken}`)
@@ -71,17 +72,17 @@ describe('routesAuthorize', function() {
           .expect(302)
           .end(done);
       });
-  }).timeout(5000);  
+  }).timeout(5000);
 
-  it('Should allow to login if user is validated', (done) => {
+  it('Should allow to login if user is validated', done => {
     $$supertest($$app)
       .post(`/${$$config.API_URL_PREFIX}/authorize/login`)
       .send(userCredential)
       .set('Accept', 'application/json')
       .expect(200)
-      .expect(res => {          
-          jwtToken = res.body.data;   
-          expect(!!jwtToken).to.equal(true);       
+      .expect(res => {
+          jwtToken = res.body.data;
+          expect(!!jwtToken).to.equal(true);
       })
       .end(done);
   }).timeout(5000);

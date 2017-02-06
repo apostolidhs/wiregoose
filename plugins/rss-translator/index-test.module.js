@@ -7,7 +7,7 @@ let $$supertest;
 let $$app;
 let expect;
 
-eamModule(module, 'rssTranslatorTest', ($supertest, $chai, app, rssTranslator) => {
+KlarkModule(module, 'rssTranslatorTest', ($supertest, $chai, app, rssTranslator) => {
   $$supertest = $supertest;
   $$app = app;
   $$rssTranslator = rssTranslator;

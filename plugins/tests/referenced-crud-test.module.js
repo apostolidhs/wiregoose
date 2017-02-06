@@ -6,14 +6,14 @@ let $$supertest;
 let $$app;
 let expect;
 let should;
-let $$_;
+let $_;
 let $$config;
 let $$testsPrepareDb;
 
-eamModule(module, 'testsApp', ($supertest, $chai, $_, app, config, testsPrepareDb) => {
+KlarkModule(module, 'testReferenceCrud', ($supertest, $chai, _, app, config, testsPrepareDb) => {
   $$supertest = $supertest;
   $$app = app.create();
-  $$_ = $_;
+  $_ = _;
   expect = $chai.expect;
   should = $chai.should();
   $$config = config;
@@ -30,7 +30,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .then(pallet => jwtToken = pallet.token)
       .then(() => done());
   });
-  
+
   const category = {
     name: 'Tech'
   };
@@ -107,7 +107,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .expect(res => {
-        expect($$_.isEqual(res.body.data.provider, newProvider)).to.equal(true);
+        expect($_.isEqual(res.body.data.provider, newProvider)).to.equal(true);
       })
       .end(done);
   });

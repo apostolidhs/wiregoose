@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'modelsRssRegistration', (
+KlarkModule(module, 'modelsRssRegistration', (
   $mongoose,
   $mongooseIdValidator,
   $mongooseAutopopulate,

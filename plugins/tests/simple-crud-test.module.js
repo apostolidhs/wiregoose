@@ -5,14 +5,14 @@
 let $$supertest;
 let $$app;
 let expect;
-let $$_;
+let $_;
 let $$config;
 let $$testsPrepareDb;
 
-eamModule(module, 'testsApp', ($supertest, $chai, $_, logger, app, config, testsPrepareDb) => {
+KlarkModule(module, 'testsSimpleCrud', ($supertest, $chai, _, app, config, testsPrepareDb) => {
   $$supertest = $supertest;
   $$app = app.create();
-  $$_ = $_;
+  $_ = _;
   expect = $chai.expect;
   $$config = config;
   $$testsPrepareDb = testsPrepareDb;
@@ -36,7 +36,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
 
   it('Should create one record', (done) => {
     $$supertest($$app)
-      .post('/' + $$config.API_URL_PREFIX + '/category')      
+      .post('/' + $$config.API_URL_PREFIX + '/category')
       .send({
         Category: category
       })
@@ -59,7 +59,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
       .expect(200)
       .expect(res => {
           const respCategory = res.body.data;
-          expect($$_.isEqual(createCategory, respCategory)).to.equal(true);
+          expect($_.isEqual(createCategory, respCategory)).to.equal(true);
       })
       .end(done);
   });
@@ -74,7 +74,7 @@ describe('Testing the CRUD functionality of a simple model', () => {
           const respCategories = res.body.data.content;
           const respCount = res.body.data.count;
           expect(respCategories.length).to.equal(1);
-          expect($$_.isEqual(createCategory, respCategories[0])).to.equal(true);
+          expect($_.isEqual(createCategory, respCategories[0])).to.equal(true);
           expect(respCount).to.equal(1);
       })
       .end(done);

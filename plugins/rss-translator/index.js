@@ -2,9 +2,9 @@
 
 'use strict';
 
-eamModule(module, 'rssTranslator', (
-  $q,
-  $_,
+KlarkModule(module, 'rssTranslator', (
+  q,
+  _,
   $isUrl,
   $cheerio,
   modelsEntry,
@@ -29,7 +29,7 @@ eamModule(module, 'rssTranslator', (
   function translateItems(items, providerName) {
     const entries = [];
     const errors = [];
-    $_.each(items, item => translateItem(item, providerName, (error, entry) => {
+    _.each(items, item => translateItem(item, providerName, (error, entry) => {
       if (error) {
         errors.push(error);
       } else {
@@ -42,8 +42,8 @@ eamModule(module, 'rssTranslator', (
 
   // critical speed part, avoid using promises
   function translateItem(rawItem, providerName, done) {
-    
-    if (!$_.isObject(rawItem)) {
+
+    if (!_.isObject(rawItem)) {
       return;
     }
 
@@ -91,23 +91,23 @@ eamModule(module, 'rssTranslator', (
     const entry = new modelsEntry.model(data);
 
     const error = entry.validateSync();
-    if ($_.isEmpty(error)) {
+    if (_.isEmpty(error)) {
       return done(undefined, data);
     }
 
     const errorReport = {
       item,
-      reason: summaryValidationError(error)        
+      reason: summaryValidationError(error)
     };
     return done(errorReport);
-    
+
   }
 
   function summaryValidationError(error) {
-    if (error.message && !$_.isEmpty(error.errors)) {
+    if (error.message && !_.isEmpty(error.errors)) {
       return {
         msg: error.message,
-        fields: $_.keys(error.errors)
+        fields: _.keys(error.errors)
       };
     }
     return error;
@@ -115,16 +115,16 @@ eamModule(module, 'rssTranslator', (
 
   function getImage(item) {
     let img;
-    if ($_.isObject(item.image)) {
+    if (_.isObject(item.image)) {
       img = item.image.url || item.image.link;
     }
     if (img) {
       return img;
     }
-    if ($_.isArray(item.enclosures)) {
-      const imgEnclosure = $_.find(
+    if (_.isArray(item.enclosures)) {
+      const imgEnclosure = _.find(
         item.enclosures,
-        enclosure => enclosure && $_.startsWith(enclosure.type, 'image/')
+        enclosure => enclosure && _.startsWith(enclosure.type, 'image/')
       );
       if (imgEnclosure) {
         return imgEnclosure.url;
@@ -134,31 +134,31 @@ eamModule(module, 'rssTranslator', (
 
   function sanitizeString(str, path) {
     const validators = modelsEntry.model.schema.path(path).validators;
-    const maxLengthValidator = $_.find(validators, {type: 'maxlength'});
-    if ($_.isString(str) && str) {
+    const maxLengthValidator = _.find(validators, {type: 'maxlength'});
+    if (_.isString(str) && str) {
       let escapedStr = $cheerio.load(str).text() || '';
-      escapedStr = $_.trim(escapedStr.replace(/(\r\n|\n|\r)/gm, ''));
+      escapedStr = _.trim(escapedStr.replace(/(\r\n|\n|\r)/gm, ''));
       return escapedStr ? escapedStr.substr(0, maxLengthValidator.maxlength) : undefined;
     }
   }
 
   function sanitizeUrl(img) {
-    if ($_.isString(img)) {
+    if (_.isString(img)) {
       img = img.trim().replace(/ /g, '%20');
       return $isUrl(img) ? img : undefined;
     }
   }
 
   function sanitizeDate(published) {
-    if (!$_.isDate(published)) {
+    if (!_.isDate(published)) {
       return;
     }
 
-    return $_.isNaN(published.getTime()) ? undefined : published;
+    return _.isNaN(published.getTime()) ? undefined : published;
   }
 
   function filterItemFields(item) {
-    return $_.pick(item, [
+    return _.pick(item, [
       'title',
       'summary',
       'description',

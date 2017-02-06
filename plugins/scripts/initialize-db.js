@@ -2,16 +2,16 @@
 
 'use strict';
 
-eamModule(module, 'scriptsInitializeDb', (
-  $_,
-  $q,
-  promiseExtension,
+KlarkModule(module, 'scriptsInitializeDb', (
+  _,
+  q,
+  krkPromiseExtension,
+  krkLogger,
+  krkGeneratorsCreateUser,
+  krkDbMongooseConnector,
+  krkDbMongooseBinders,
+  krkModelsUser,
   config,
-  logger,
-  generatorsCreateUser,
-  dbMongooseConnector,
-  dbMongooseBinders,
-  modelsUser,
   modelsCategory,
   modelsRssProvider,
   modelsRssRegistration,
@@ -21,47 +21,47 @@ eamModule(module, 'scriptsInitializeDb', (
   let categoriesByName;
   let providersByName;
 
-  promiseExtension.extend($q);
+  krkPromiseExtension.extend(q);
 
-  dbMongooseConnector.connect()
-    .then(() => dbMongooseConnector.dropDatabase())
+  krkDbMongooseConnector.connect()
+    .then(() => krkDbMongooseConnector.dropDatabase())
     .then(() => importSimpleData('categories.json', modelsCategory, (data) => ({
       name: data
     })))
-    .then((newCategories) => categoriesByName = $_.keyBy(newCategories, 'name'))
-    .then(() => logger.info('categories imported'))
+    .then((newCategories) => categoriesByName = _.keyBy(newCategories, 'name'))
+    .then(() => krkLogger.info('categories imported'))
     .then(() => importSimpleData('providers.json', modelsRssProvider, (data) => ({
       name: data.name,
       link: data.link
     })))
-    .then((newProviders) => providersByName = $_.keyBy(newProviders, 'name'))
-    .then(() => logger.info('providers imported'))
+    .then((newProviders) => providersByName = _.keyBy(newProviders, 'name'))
+    .then(() => krkLogger.info('providers imported'))
     .then(() => importSimpleData('rss-feed-registrations.json', modelsRssRegistration, (data) => ({
       category: categoriesByName[data.category]._id,
       link: data.link,
       lang: data.lang,
       provider: providersByName[data.provider]._id
-    })))    
-    .then(() => logger.info('rssFeedRegistrations imported'))
+    })))
+    .then(() => krkLogger.info('rssFeedRegistrations imported'))
     .then(() => createAppInfo())
-    .then(() => logger.info('appInfo created'))
-    .then(() => generatorsCreateUser.admin())
-    .then(() => logger.info('admin created'))
+    .then(() => krkLogger.info('appInfo created'))
+    .then(() => krkGeneratorsCreateUser.admin())
+    .then(() => krkLogger.info('admin created'))
     .then(() => process.exit(0))
     .catch((reason) => {
-      logger.error('script failed', reason);
+      krkLogger.error('script failed', reason);
       process.exit(1);
     })
 
   function importSimpleData(filepath, model, getterFunc) {
     const simpleData = require(`../../rss-feed-sources/${filepath}`);
 
-    const promiseOfData = $_.map(
+    const promiseOfData = _.map(
       simpleData,
-      data => dbMongooseBinders.create(model, getterFunc(data))
+      data => krkDbMongooseBinders.create(model, getterFunc(data))
     );
 
-    return $q.all(promiseOfData);
+    return q.all(promiseOfData);
   }
 
   function createAppInfo() {
@@ -69,7 +69,7 @@ eamModule(module, 'scriptsInitializeDb', (
       lastRssRegistrationFetch: new Date(0)
     };
 
-    return dbMongooseBinders.create(modelsApp, appInfo);
+    return krkDbMongooseBinders.create(modelsApp, appInfo);
   }
 
 });
