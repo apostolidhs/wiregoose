@@ -84,7 +84,8 @@ KlarkModule(module, 'app', (
       name: config.NAME,
       EMAIL_SMTP: config.EMAIL_SMTP,
       EMAIL_NAME: config.EMAIL_NAME,
-      EMAIL_ADDRESS: config.EMAIL_ADDRESS
+      EMAIL_ADDRESS: config.EMAIL_ADDRESS,
+      adminValidationOnSignup: false
     });
     krkRoutesUsers.register(app, {
       apiUrlPrefix: config.API_URL_PREFIX,

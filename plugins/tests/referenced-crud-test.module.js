@@ -2,33 +2,32 @@
 
 'use strict';
 
-let $$supertest;
-let $$app;
+let $supertest;
+let app;
 let expect;
 let should;
-let $_;
-let $$config;
-let $$testsPrepareDb;
+let _;
+let config;
+let testsPrepareDb;
 
-KlarkModule(module, 'testReferenceCrud', ($supertest, $chai, _, app, config, testsPrepareDb) => {
-  $$supertest = $supertest;
-  $$app = app.create();
-  $_ = _;
+KlarkModule(module, 'testReferenceCrud', (_$supertest_, $chai, ___, _app_, _config_, _testsPrepareDb_) => {
+  $supertest = _$supertest_;
+  app = _app_.create();
+  _ = ___;
   expect = $chai.expect;
   should = $chai.should();
-  $$config = config;
-  $$testsPrepareDb = testsPrepareDb;
+  config = _config_;
+  testsPrepareDb = _testsPrepareDb_;
 });
 
 describe('Testing the CRUD functionality of a referenced model', () => {
 
   let jwtToken;
 
-  before(function(done) {
+  before(function() {
     this.timeout(5000);
-    $$testsPrepareDb.prepare()
-      .then(pallet => jwtToken = pallet.token)
-      .then(() => done());
+    return testsPrepareDb.connectWithAdmin()
+      .then(pallet => jwtToken = pallet.token);
   });
 
   const category = {
@@ -56,8 +55,8 @@ describe('Testing the CRUD functionality of a referenced model', () => {
     rssRegistration.category = '580a2b318160d8a73b4c0b36';
     rssRegistration.provider = '580a2b318160d8a73b4c0b36';
 
-    $$supertest($$app)
-      .post('/' + $$config.API_URL_PREFIX + '/rssRegistration')
+    $supertest(app)
+      .post('/' + config.API_URL_PREFIX + '/rssRegistration')
       .send({
         RssRegistration: rssRegistration
       })
@@ -84,8 +83,8 @@ describe('Testing the CRUD functionality of a referenced model', () => {
     // random mongo ids
     rssRegistration.category = '580a2b318160d8a73b4c0b36';
 
-    $$supertest($$app)
-      .put('/' + $$config.API_URL_PREFIX + '/rssRegistration/' + newRssRegistration._id)
+    $supertest(app)
+      .put('/' + config.API_URL_PREFIX + '/rssRegistration/' + newRssRegistration._id)
       .send({
         RssRegistration: rssRegistration
       })
@@ -100,22 +99,22 @@ describe('Testing the CRUD functionality of a referenced model', () => {
   });
 
   it('Should retrieve and populate the record', (done) => {
-    $$supertest($$app)
-      .get('/' + $$config.API_URL_PREFIX + '/rssRegistration/' + newRssRegistration._id)
+    $supertest(app)
+      .get('/' + config.API_URL_PREFIX + '/rssRegistration/' + newRssRegistration._id)
       .set('authorization', jwtToken)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
       .expect(res => {
-        expect($_.isEqual(res.body.data.provider, newProvider)).to.equal(true);
+        expect(_.isEqual(res.body.data.provider, newProvider)).to.equal(true);
       })
       .end(done);
   });
 
 
   function createCategory(done) {
-    $$supertest($$app)
-      .post('/' + $$config.API_URL_PREFIX + '/category')
+    $supertest(app)
+      .post('/' + config.API_URL_PREFIX + '/category')
       .send({
         Category: category
       })
@@ -129,8 +128,8 @@ describe('Testing the CRUD functionality of a referenced model', () => {
   }
 
   function createProvider(done) {
-    $$supertest($$app)
-      .post('/' + $$config.API_URL_PREFIX + '/rssProvider')
+    $supertest(app)
+      .post('/' + config.API_URL_PREFIX + '/rssProvider')
       .send({
         RssProvider: provider
       })
@@ -147,8 +146,8 @@ describe('Testing the CRUD functionality of a referenced model', () => {
     rssRegistration.category = newCategory._id;
     rssRegistration.provider = newProvider._id;
 
-    $$supertest($$app)
-      .post('/' + $$config.API_URL_PREFIX + '/rssRegistration')
+    $supertest(app)
+      .post('/' + config.API_URL_PREFIX + '/rssRegistration')
       .send({
         RssRegistration: rssRegistration
       })
