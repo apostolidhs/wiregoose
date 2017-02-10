@@ -2,13 +2,13 @@
 
 'use strict';
 
-eamModule(module, 'routesRssFeedFetchRssFeed', (
-  $_,
+KlarkModule(module, 'routesRssFeedFetchRssFeed', (
+  _,
+  krkParameterValidator,
+  krkMiddlewarePermissions,
+  krkMiddlewareResponse,
   config,
-  parameterValidator,
-  rssTranslator,
-  middlewarePermissions,
-  middlewareResponse
+  rssTranslator
 ) => {
 
   return {
@@ -17,16 +17,16 @@ eamModule(module, 'routesRssFeedFetchRssFeed', (
 
   function register(app) {
     app.get(`/${config.API_URL_PREFIX}/rssFeed/fetch`, [
-      middlewarePermissions.check('ADMIN'),
+      krkMiddlewarePermissions.check('ADMIN'),
       middlewareParameterValidator,
       middlewareController,
-      middlewareResponse.success,
-      middlewareResponse.fail
+      krkMiddlewareResponse.success,
+      krkMiddlewareResponse.fail
     ]);
 
     function middlewareParameterValidator(req, res, next) {
-      res.locals.params.q = parameterValidator.validations.paramUrlQuery(req);
-      parameterValidator.checkForErrors(res.locals.params, req, res, next);
+      res.locals.params.q = krkParameterValidator.validations.paramUrlQuery(req);
+      krkParameterValidator.checkForErrors(res.locals.params, req, res, next);
     }
 
     function middlewareController(req, res, next) {

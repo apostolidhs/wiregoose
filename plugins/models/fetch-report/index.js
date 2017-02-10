@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'modelsFetchReport', ($mongoose, $mongooseIdValidator, $mongooseAutopopulate) => {
+KlarkModule(module, 'modelsFetchReport', ($mongoose, $mongooseIdValidator, $mongooseAutopopulate) => {
 
   const schema = new $mongoose.Schema({
     totalFetches: {type: Number, required: true, min: 0 },

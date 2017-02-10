@@ -2,11 +2,11 @@
 
 'use strict';
 
-eamModule(module, 'routesRssFeedFetchRssRegistrations', (
-  $_,
+KlarkModule(module, 'routesRssFeedFetchRssRegistrations', (
+  _,
+  krkMiddlewarePermissions,
+  krkMiddlewareResponse,
   config,
-  middlewarePermissions,
-  middlewareResponse,
   rssRegistrationsFetcher
 ) => {
 
@@ -16,11 +16,11 @@ eamModule(module, 'routesRssFeedFetchRssRegistrations', (
 
   function register(app) {
     app.post(`/${config.API_URL_PREFIX}/rssFeed/fetchRegistrations`, [
-      middlewarePermissions.check('ADMIN'),
+      krkMiddlewarePermissions.check('ADMIN'),
       middlewareParameterValidator,
       middlewareController,
-      middlewareResponse.success,
-      middlewareResponse.fail
+      krkMiddlewareResponse.success,
+      krkMiddlewareResponse.fail
     ]);
 
     function middlewareParameterValidator(req, res, next) {
@@ -34,7 +34,7 @@ eamModule(module, 'routesRssFeedFetchRssRegistrations', (
         .catch(reason => {
           res.locals.errors.add('RSS_REGISTRATIONS_FETCH_FAIL', reason);
           next(true);
-        });      
+        });
     }
   }
 

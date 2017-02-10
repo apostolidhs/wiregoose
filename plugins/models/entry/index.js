@@ -2,11 +2,11 @@
 
 'use strict';
 
-eamModule(module, 'modelsEntry', ($_, $q, $moment, $mongoose, $mongooseTypeUrl) => {
+KlarkModule(module, 'modelsEntry', (_, q, $moment, $mongoose, $mongooseTypeUrl) => {
 
   const schema = getSchema();
 
-  schema.methods.findLatestEntryByProvider = findLatestEntryByProvider; 
+  schema.methods.findLatestEntryByProvider = findLatestEntryByProvider;
   schema.methods.findDuplicateEntry = findDuplicateEntry;
   schema.statics.saveAvoidingDuplications = saveAvoidingDuplications;
 
@@ -37,7 +37,7 @@ eamModule(module, 'modelsEntry', ($_, $q, $moment, $mongoose, $mongooseTypeUrl) 
   }
 
   function findLatestEntryByProvider(model) {
-    return model.find({provider: this.provider}).sort({published : -1}).limit(1).then($_.first);
+    return model.find({provider: this.provider}).sort({published : -1}).limit(1).then(_.first);
   }
 
   function findDuplicateEntry(model, fromDate) {
@@ -51,17 +51,17 @@ eamModule(module, 'modelsEntry', ($_, $q, $moment, $mongoose, $mongooseTypeUrl) 
   }
 
   function saveAvoidingDuplications(entries) {
-    const olderEntry = $_.minBy(entries, entry => entry.published.getTime());
+    const olderEntry = _.minBy(entries, entry => entry.published.getTime());
 
-    return $q.throttle({
-      list: entries, 
+    return q.throttle({
+      list: entries,
       promiseTransformator: entry => entry.findDuplicateEntry(this, olderEntry.published)
     })
-    .then(duplications => $q.throttle({
-      list: duplications, 
-      promiseTransformator: (duplication, idx) => $_.isEmpty(duplication) && entries[idx].save()
+    .then(duplications => q.throttle({
+      list: duplications,
+      promiseTransformator: (duplication, idx) => _.isEmpty(duplication) && entries[idx].save()
     }))
-    .then(savedEntries => $_.compact(savedEntries));     
+    .then(savedEntries => _.compact(savedEntries));
   }
 
 });

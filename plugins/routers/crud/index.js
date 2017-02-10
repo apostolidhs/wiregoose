@@ -2,10 +2,10 @@
 
 'use strict';
 
-eamModule(module, 'routesCrud', (
-  $_,
-  crudGenerator,
-  modelsUser,
+KlarkModule(module, 'routesCrud', (
+  _,
+  krkCrudGenerator,
+  config,
   modelsArticle,
   modelsCategory,
   modelsEntry,
@@ -20,7 +20,7 @@ eamModule(module, 'routesCrud', (
   };
 
   function register(app) {
-    const models = [      
+    const models = [
       modelsArticle,
       modelsCategory,
       modelsEntry.model,
@@ -29,9 +29,10 @@ eamModule(module, 'routesCrud', (
       modelsRssRegistration
     ];
 
-    $_.each(models, model => {
+    _.each(models, model => {
       const crudOpts = {
         model,
+        apiUrlPrefix: config.API_URL_PREFIX,
         retrieveAll: {
           permissions: 'FREE'
         },
@@ -39,15 +40,12 @@ eamModule(module, 'routesCrud', (
           permissions: 'FREE'
         }
       };
-      crudGenerator.create(app, crudOpts);
+      krkCrudGenerator.create(app, crudOpts);
     });
 
-    crudGenerator.create(app, {
-      model: modelsUser
-    });
-    
-    crudGenerator.createSingle(app, {
+    krkCrudGenerator.createSingle(app, {
       model: modelsApp,
+      apiUrlPrefix: config.API_URL_PREFIX,
       retrieve: {
         permissions: 'FREE'
       }

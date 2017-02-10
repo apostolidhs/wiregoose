@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'modelsRssProvider', ($mongoose, $mongooseTypeUrl) => {
+KlarkModule(module, 'modelsRssProvider', ($mongoose, $mongooseTypeUrl) => {
 
   const schema = new $mongoose.Schema({
     name: {type: String, required: true, index: true, unique: true, maxlength: [64]},

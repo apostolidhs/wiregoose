@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'modelsApp', ($mongoose) => {
+KlarkModule(module, 'modelsApp', ($mongoose) => {
 
   const schema = new $mongoose.Schema({
     lastRssRegistrationFetch: {type: Date, required: true}
@@ -11,3 +11,14 @@ eamModule(module, 'modelsApp', ($mongoose) => {
   return $mongoose.model('App', schema);
 
 });
+
+  // function getAppInfo() {
+  //   return find(krkModelsApp).then(_.first);
+  // }
+
+  // function updateAppInfo(data) {
+  //   return getAppInfo()
+  //           .then(function(appInfo) {
+  //             return findByIdAndUpdate(krkModelsApp, appInfo._id, data);
+  //           });
+  // }

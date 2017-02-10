@@ -2,7 +2,7 @@
 
 'use strict';
 
-eamModule(module, 'rssTranslatorFetchAndParse', ($fs, $q, $request, $feedparser, logger) => {
+KlarkModule(module, 'rssTranslatorFetchAndParse', ($fs, q, $request, $feedparser, krkLogger) => {
   return {
     fromUrl: createStream('url'),
     fromFile: createStream('file')
@@ -11,7 +11,7 @@ eamModule(module, 'rssTranslatorFetchAndParse', ($fs, $q, $request, $feedparser,
   function createStream(sourceType) {
     return (source) => {
       let errorOccured = false;
-      const deferred = $q.defer();
+      const deferred = q.defer();
       const feedparser = new $feedparser({addmeta: false});
       const items = [];
 
@@ -24,7 +24,7 @@ eamModule(module, 'rssTranslatorFetchAndParse', ($fs, $q, $request, $feedparser,
       } else if (sourceType === 'file') {
         fromFile(source);
       } else {
-        logger.assert(false, `sourceType ${sourceType} is not supported`);
+        krkLogger.assert(false, `sourceType ${sourceType} is not supported`);
       }
 
       return deferred.promise;

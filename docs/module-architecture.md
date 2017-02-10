@@ -12,48 +12,48 @@ It is working quite similar to the dependency injection logic. The main idea is 
 
 #### Module registration
 
-The module registration is as minimal as possible, the following example depicts the registration process. `eamModule` is just an example (*acronym of Express Architect Mongoose*), you can use your own name.
+The module registration is as minimal as possible, the following example depicts the registration process. `KlarkModule` is just an example (*acronym of Express Architect Mongoose*), you can use your own name.
 
 ```Javascript
 
 // module-1/index.js
-eamModule(module, 'module1', () => {
+KlarkModule(module, 'module1', () => {
     return {
         hello: () => console.log('hello world')
     };
 });
 
 // module-2/index.js
-eamModule(module, 'module2', (module1) => {
+KlarkModule(module, 'module2', (module1) => {
     module1.hello(); // prints 'hello world'
 });
 
 ```
 
-The signature of `eamModule` is the following:
+The signature of `KlarkModule` is the following:
 
-`eamModule(module, 'moduleName', controller);`
+`KlarkModule(module, 'moduleName', controller);`
 
 * module (object), is the node.js global variable.
 * moduleName (string), is the name of the module.
 * controller (Function), is the controller of the module. The arguments of this function could be other modules. This is the magic, you just have to use the same name of the modules as argument names and the module will automatically matched and set as argument.
-* return value (any), what does the module exports. 
+* return value (any), what does the module exports.
 
 **controller**
 
-If you want to use a module from the node_modules (external module) you can prefix the module 
+If you want to use a module from the node_modules (external module) you can prefix the module
 name with a `$` and write the name in `camel case`.
-For instance, the following function requires the external module `body-parser`, 
+For instance, the following function requires the external module `body-parser`,
 and the internal module `logger`.
 
 **Alias**
 
-If you have the need to use an alias name for argument, you can write it on `core/module-alias.js`. 
-For instace, we require the module `$_` that resolves to `_`, in `core/module-alias.js` the is a mapping from `_` to `lodash`.
-So, the argument `$_` finally resolves to `lodash`.
+If you have the need to use an alias name for argument, you can write it on `core/module-alias.js`.
+For instace, we require the module `_` that resolves to `_`, in `core/module-alias.js` the is a mapping from `_` to `lodash`.
+So, the argument `_` finally resolves to `lodash`.
 
 ```Javascript
-eamModule(module, 'app', ($bodyParser, logger) => {
+KlarkModule(module, 'app', ($bodyParser, logger) => {
 
   app.use(bodyParser.json());
   ...
@@ -66,7 +66,7 @@ eamModule(module, 'app', ($bodyParser, logger) => {
 During the initialization of the application, our extension over the architect will:
 
 * find all the index.js files under the plugins folder and set them as architect plugins
-* parse the `eamModule` functions
+* parse the `KlarkModule` functions
 * extract the controller arguments and set them as module dependencies (`consumes`)
 * use the controller's return value as exported value (`provides`)
 
@@ -77,9 +77,9 @@ All the other code located under the `/plugins` folder.
 
 ### Plugin Architecture
 
-The main idea under this file structure is that everything are plugins. So, we support that if we have the basic logic that composes the plugins `/code`, all the other are plugin modules. 
+The main idea under this file structure is that everything are plugins. So, we support that if we have the basic logic that composes the plugins `/code`, all the other are plugin modules.
 Hence, the express.js initialization is a plugin, see `plugins/app/index.js`.
-Our custom logging method is a plugin, see `plugins/logger/index.js`. 
+Our custom logging method is a plugin, see `plugins/logger/index.js`.
 Even, the server initialization is a plugin, see `server/app/index.js`
 
 ## Issues for Windows
@@ -101,4 +101,4 @@ while (base && prevBase !== base) {
     prevBase = base;
     base = resolve(base, '..');
 }
-``` 
+```
