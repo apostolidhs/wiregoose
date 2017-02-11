@@ -26,7 +26,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
 
   before(function() {
     this.timeout(5000);
-    return testsPrepareDb.connectWithAdmin()
+    return testsPrepareDb.connectWithAdmin(true)
       .then(pallet => jwtToken = pallet.token);
   });
 

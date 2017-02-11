@@ -30,7 +30,7 @@ KlarkModule(module, 'routesAuthorizeTest', (
 
 describe('routesAuthorize', function() {
 
-  before(() => testsPrepareDb.connect());
+  before(() => testsPrepareDb.connect(true));
 
   const userCredential = {
     email: 'test@test.test',

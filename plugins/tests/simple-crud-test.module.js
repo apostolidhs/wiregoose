@@ -21,12 +21,9 @@ KlarkModule(module, 'testsSimpleCrud', (_$supertest_, $chai, ___, _app_, _config
 describe('Testing the CRUD functionality of a simple model', () => {
 
   let jwtToken;
-
-  before(function() {
-    this.timeout(5000);
-    return testsPrepareDb.connectWithAdmin()
-      .then(pallet => jwtToken = pallet.token);
-  });
+  before(() => testsPrepareDb.connectWithAdmin(true)
+                .then(pallet => jwtToken = pallet.token)
+  );
 
   const category = {
     name: 'BBC'
