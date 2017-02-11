@@ -42,12 +42,12 @@ KlarkModule(module, 'rssTranslator', (
 
   // critical speed part, avoid using promises
   function translateItem(rawItem, providerName, done) {
-
     if (!_.isObject(rawItem)) {
       return;
     }
 
     const item = filterItemFields(rawItem);
+    item.author = item.author || _.get(rawItem, "['atom:author']['name']['#']");
 
     const title = sanitizeString(item.title, 'title');
 

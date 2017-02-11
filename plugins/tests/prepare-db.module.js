@@ -14,25 +14,37 @@ KlarkModule(module, 'testsPrepareDb', (
 ) => {
 
   return {
+    connectWithUser,
     connectWithAdmin,
     connect
   };
 
-  function connect() {
+  function connect(dropDb) {
     return krkDbMongooseConnector.connect(config.MONGODB_URL)
-      .then(() => krkDbMongooseConnector.dropDatabase())
+      .then(() => dropDb && krkDbMongooseConnector.dropDatabase())
       .then(() => ensureIndexes());
   }
 
-  function connectWithAdmin() {
-    return connect()
+  function connectWithUser(dropDb, user) {
+    return connect(dropDb)
+      .then(() => krkGeneratorsLogin.login(user))
+      .then((token) => ({token, user}))
+      .catch(reason => krkLogger.error(reason));
+  }
+
+  function connectWithAdmin(dropDb) {
+    let user;
+    return connect(dropDb)
       .then(() => krkGeneratorsCreateUser.admin({
         name: config.ADMIN_NAME,
         email: config.ADMIN_EMAIL,
         password:  config.ADMIN_PASSWORD
       }))
-      .then(user => krkGeneratorsLogin.login(user))
-      .then((token) => ({token}))
+      .then(_user => {
+        user = _user;
+        return krkGeneratorsLogin.login(_user);
+      })
+      .then((token) => ({token, user}))
       .catch(reason => krkLogger.error(reason));
   }
 
