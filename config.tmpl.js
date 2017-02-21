@@ -21,11 +21,12 @@ config.MONGODB_DOMAIN = ''; // 'MongoDB domain';
 config.MONGODB_DATABASE_NAME = ''; // 'MongoDB database name';
 config.MONGODB_MOCK_DATABASE_NAME = ''; // 'MongoDB mock database name, for unit tests';
 
-config.USER_ACCOUNT_VALIDATION_PERIOD = 10; // seconds, after signup of the account, how long will the user remain until it will be validated 
+config.USER_ACCOUNT_VALIDATION_PERIOD = 10; // seconds, after signup of the account, how long will the user remain until it will be validated
 
 config.JWT_SECRET = ''; // secret key for jwt encode
 config.JWT_EXPIRATION_PERIOD = 4 * 24 * 60 * 60 * 1000; // ms, jwt expiration period
 
+config.ADMIN_NAME = ''; // initial admin name
 config.ADMIN_EMAIL = ''; // initial admin email address
 config.ADMIN_PASSWORD = ''; // initial admin password
 

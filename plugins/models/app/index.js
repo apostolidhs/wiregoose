@@ -2,23 +2,24 @@
 
 'use strict';
 
-KlarkModule(module, 'modelsApp', ($mongoose) => {
+KlarkModule(module, 'modelsApp', ($mongoose, _) => {
 
   const schema = new $mongoose.Schema({
     lastRssRegistrationFetch: {type: Date, required: true}
   });
 
+  schema.statics.getAppInfo = getAppInfo;
+  schema.statics.updateAppInfo = updateAppInfo;
+
   return $mongoose.model('App', schema);
 
+  function getAppInfo() {
+    return this.find().then(_.first);
+  }
+
+  function updateAppInfo(data) {
+    return this.getAppInfo()
+            .then((appInfo) => this.findByIdAndUpdate(appInfo._id, data));
+  }
+
 });
-
-  // function getAppInfo() {
-  //   return find(krkModelsApp).then(_.first);
-  // }
-
-  // function updateAppInfo(data) {
-  //   return getAppInfo()
-  //           .then(function(appInfo) {
-  //             return findByIdAndUpdate(krkModelsApp, appInfo._id, data);
-  //           });
-  // }

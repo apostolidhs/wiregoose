@@ -2,3 +2,5 @@
 /db
 /config.js
 /frontend/app/bower_components
+/frontend/app/**/*.map
+

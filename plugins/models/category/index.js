@@ -1,5 +1,3 @@
-/* jshint esversion:6, node:true  */
-
 'use strict';
 
 KlarkModule(module, 'modelsCategory', ($mongoose) => {

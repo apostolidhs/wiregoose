@@ -6,7 +6,8 @@ const subModules = `plugins/**/*.module.js`;
 const testModules = `plugins/**/*-test.module.js`;
 const serverStartModule = `plugins/server/index.js`;
 const scriptModules = `plugins/scripts`;
-const klarkPlugins = `../../Gitlab/klark-plugins/plugins/**/*.js`;
+const klarkPlugins = `node_modules/klark-js-plugins/plugins/**/*.js`;
+// const klarkPlugins = `../../Gitlab/klark-plugins/plugins/**/*.js`;
 // const exceptModelsApp = `!node_modules/klark-js-plugins/plugins/models/app/**`;
 
 const srcPaths = [
@@ -20,7 +21,7 @@ const srcPaths = [
 const script = argv.script;
 const isTestEnv = process.env.UNIT_TEST;
 if (script) {
-  const scriptPath = `${pluginsPath}/scripts/${script}.js`;
+  const scriptPath = `plugins/scripts/${script}.js`;
   srcPaths.push(scriptPath);
   srcPaths.push(`!${serverStartModule}`);
   srcPaths.push(`!${testModules}`);

@@ -23,7 +23,7 @@ KlarkModule(module, 'scriptsInitializeDb', (
 
   krkPromiseExtension.extend(q);
 
-  krkDbMongooseConnector.connect($$config.MONGODB_URL)
+  krkDbMongooseConnector.connect(config.MONGODB_URL)
     .then(() => krkDbMongooseConnector.dropDatabase())
     .then(() => importSimpleData('categories.json', modelsCategory, (data) => ({
       name: data
@@ -45,7 +45,11 @@ KlarkModule(module, 'scriptsInitializeDb', (
     .then(() => krkLogger.info('rssFeedRegistrations imported'))
     .then(() => createAppInfo())
     .then(() => krkLogger.info('appInfo created'))
-    .then(() => krkGeneratorsCreateUser.admin())
+    .then(() => krkGeneratorsCreateUser.admin({
+      name: config.ADMIN_NAME,
+      email: config.ADMIN_EMAIL,
+      password: config.ADMIN_PASSWORD
+    }))
     .then(() => krkLogger.info('admin created'))
     .then(() => process.exit(0))
     .catch((reason) => {

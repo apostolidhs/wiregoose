@@ -86,6 +86,7 @@ KlarkModule(module, 'rssTranslator', (
       published,
       link,
       provider,
+      author
     };
 
     const entry = new modelsEntry.model(data);

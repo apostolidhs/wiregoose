@@ -10,7 +10,9 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
   krkDbMongooseBinders,
   krkLogger,
   config,
+  modelsApp,
   modelsEntry,
+  modelsAuthor,
   modelsRssRegistration,
   modelsFetchReport,
   rssRegistrationsFetcherIterationFetch
@@ -101,7 +103,13 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
           return q.when();
         }
 
-        return entryModel.saveAvoidingDuplications(entries)
+        const authors = _(entries)
+          .filter(entry => entry.author)
+          .map(entry => ({name: entry.author}))
+          .value();
+
+        return (_.isEmpty(authors) ? q.resolve() : modelsAuthor.saveManyIfNotExist(authors))
+          .then(() => entryModel.saveAvoidingDuplications(entries))
           .then(savedEntries => fetchReport.entriesStored += _.size(savedEntries))
           .then(() => onNextChunk(rssRegistration));
       }
@@ -137,7 +145,7 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
     setInterval(tryToFetch, tryToFetchFrequent);
 
     function tryToFetch() {
-      krkDbMongooseBinders.getAppInfo()
+      modelsApp.getAppInfo()
         .catch(reason => krkLogger.error(reason))
         .then(appInfoFetched)
         .then(saveLastFetchTime)
@@ -145,7 +153,7 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
     }
 
     function saveLastFetchTime() {
-      return krkDbMongooseBinders.updateAppInfo({
+      return modelsApp.updateAppInfo({
         lastRssRegistrationFetch: new Date()
       });
     }
