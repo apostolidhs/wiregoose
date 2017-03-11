@@ -18,7 +18,10 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
   rssRegistrationsFetcherIterationFetch
 ) => {
 
-  const tryToFetchFrequent = Math.max(Math.floor(config.RSS_REGISTRATIONS_FETCH_FREQUENT / 8), 20 * 60 * 1000);
+  const tryToFetchFrequent = Math.max(
+    Math.floor(config.RSS_REGISTRATIONS_FETCH_FREQUENT / 8),
+    20 * 60 * 1000
+  );
   let isFetching = false;
 
   return {

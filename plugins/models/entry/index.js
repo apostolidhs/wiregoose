@@ -29,11 +29,11 @@ KlarkModule(module, 'modelsEntry', (_, q, $moment, $mongoose, $mongooseTypeUrl) 
       description: {type: String, required: true, maxlength: [512]},
       published: {type: Date, required: true},
       link: {type: $mongoose.SchemaTypes.Url, required: true},
-      // this should be {type: ObjectId, ref: 'Author', required: true}
-      // but we really need the speed :)
+      // this should be {type: ObjectId, ref: 'Author'}
+      // but we really need the speed, part 1 :)
       author: {type: String, maxlength: [128]},
       // this should be {type: ObjectId, ref: 'RssProvider', required: true}
-      // but we really need the speed :)
+      // but we really need the speed, part 2 :)
       provider: {type: String, required: true}
     });
   }
