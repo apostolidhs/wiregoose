@@ -7,7 +7,6 @@ KlarkModule(module, 'routesCrud', (
   krkCrudGenerator,
   config,
   modelsArticle,
-  modelsCategory,
   modelsAuthor,
   modelsEntry,
   modelsFetchReport,
@@ -23,7 +22,6 @@ KlarkModule(module, 'routesCrud', (
   function register(app) {
     const models = [
       modelsArticle,
-      modelsCategory,
       modelsAuthor,
       modelsEntry.model,
       modelsFetchReport,

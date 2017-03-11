@@ -25,78 +25,79 @@ describe('Testing the CRUD functionality of a simple model', () => {
                 .then(pallet => jwtToken = pallet.token)
   );
 
-  const category = {
-    name: 'BBC'
+  const rssProvider = {
+    name: 'BBC',
+    link: 'http://www.bbc.com'
   };
-  let createCategory;
+  let createRssProvider;
 
   it('Should create one record', (done) => {
     $supertest(app)
-      .post('/' + config.API_URL_PREFIX + '/category')
+      .post('/' + config.API_URL_PREFIX + '/rssprovider')
       .send({
-        Category: category
+        RssProvider: rssProvider
       })
       .set('Accept', 'application/json')
       .set('authorization', jwtToken)
       .expect('Content-Type', /json/)
       .expect(200)
       .expect(res => {
-        createCategory = res.body.data;
-        expect(createCategory.name).to.equal(category.name);
+        createRssProvider = res.body.data;
+        expect(createRssProvider.name).to.equal(rssProvider.name);
       })
       .end(done);
   });
 
   it('Should retrieve one record', (done) => {
     $supertest(app)
-      .get('/' + config.API_URL_PREFIX + '/category/' + createCategory._id)
+      .get('/' + config.API_URL_PREFIX + '/rssprovider/' + createRssProvider._id)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
       .expect(res => {
-          const respCategory = res.body.data;
-          expect(_.isEqual(createCategory, respCategory)).to.equal(true);
+          const respRssProvider = res.body.data;
+          expect(_.isEqual(createRssProvider, respRssProvider)).to.equal(true);
       })
       .end(done);
   });
 
   it('Should retrieve all records', (done) => {
     $supertest(app)
-      .get('/' + config.API_URL_PREFIX + '/category')
+      .get('/' + config.API_URL_PREFIX + '/rssprovider')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
       .expect(res => {
-          const respCategories = res.body.data.content;
-          expect(respCategories.length).to.equal(1);
-          expect(_.isEqual(createCategory, respCategories[0])).to.equal(true);
+          const respRssProvider = res.body.data.content;
+          expect(respRssProvider.length).to.equal(1);
+          expect(_.isEqual(createRssProvider, respRssProvider[0])).to.equal(true);
           expect(res.body.data.total).to.equal(1);
       })
       .end(done);
   });
 
   it('Should update one record', (done) => {
-    category.name = 'CNN';
+    rssProvider.name = 'CNN';
     $supertest(app)
-      .put('/' + config.API_URL_PREFIX + '/category/' + createCategory._id)
+      .put('/' + config.API_URL_PREFIX + '/rssprovider/' + createRssProvider._id)
       .send({
-        Category: category
+        RssProvider: rssProvider
       })
       .set('authorization', jwtToken)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
       .expect(res => {
-          const respCategory = res.body.data;
-          expect(category.name).to.equal(respCategory.name);
-          expect(createCategory._id).to.equal(respCategory._id);
+          const respRssProvider = res.body.data;
+          expect(rssProvider.name).to.equal(respRssProvider.name);
+          expect(createRssProvider._id).to.equal(respRssProvider._id);
       })
       .end(done);
   });
 
   it('Should delete one record', (done) => {
     $supertest(app)
-      .delete('/' + config.API_URL_PREFIX + '/category/' + createCategory._id)
+      .delete('/' + config.API_URL_PREFIX + '/rssprovider/' + createRssProvider._id)
       .set('authorization', jwtToken)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -111,13 +112,13 @@ describe('Testing the CRUD functionality of a simple model', () => {
 
   it('Should retrieve all records, no records after delete', (done) => {
     $supertest(app)
-      .get('/' + config.API_URL_PREFIX + '/category')
+      .get('/' + config.API_URL_PREFIX + '/rssprovider')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
       .expect(res => {
-          const respCategories = res.body.data.content;
-          expect(respCategories.length).to.equal(0);
+          const respRssProvider = res.body.data.content;
+          expect(respRssProvider.length).to.equal(0);
           expect(res.body.data.total).to.equal(0);
       })
       .end(done);

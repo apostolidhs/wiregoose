@@ -30,10 +30,6 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .then(pallet => jwtToken = pallet.token);
   });
 
-  const category = {
-    name: 'Tech'
-  };
-
   const provider = {
     name: 'BBC',
     link: 'http://www.bbc.com'
@@ -46,13 +42,12 @@ describe('Testing the CRUD functionality of a referenced model', () => {
     provider: undefined // id after creation
   };
 
-  let newCategory;
   let newProvider;
   let newRssRegistration;
 
   it('Should create invalid referenced record', (done) => {
     // random mongo ids
-    rssRegistration.category = '580a2b318160d8a73b4c0b36';
+    rssRegistration.category = 'aa';
     rssRegistration.provider = '580a2b318160d8a73b4c0b36';
 
     $supertest(app)
@@ -72,16 +67,14 @@ describe('Testing the CRUD functionality of a referenced model', () => {
   });
 
   it('Should create 2 records and attach them on one referenced record', (done) => {
-    createCategory(() => {
-      createProvider(() => {
-        createRssRegistration(done);
-      });
+    createProvider(() => {
+      createRssRegistration(done);
     });
   });
 
   it('Should update invalid referenced record', (done) => {
     // random mongo ids
-    rssRegistration.category = '580a2b318160d8a73b4c0b36';
+    rssRegistration.category = 'aaa';
 
     $supertest(app)
       .put('/' + config.API_URL_PREFIX + '/rssRegistration/' + newRssRegistration._id)
@@ -111,22 +104,6 @@ describe('Testing the CRUD functionality of a referenced model', () => {
       .end(done);
   });
 
-
-  function createCategory(done) {
-    $supertest(app)
-      .post('/' + config.API_URL_PREFIX + '/category')
-      .send({
-        Category: category
-      })
-      .set('authorization', jwtToken)
-      .set('Accept', 'application/json')
-      .expect(200)
-      .expect(res => {
-          newCategory = res.body.data;
-      })
-      .end(done);
-  }
-
   function createProvider(done) {
     $supertest(app)
       .post('/' + config.API_URL_PREFIX + '/rssProvider')
@@ -143,7 +120,7 @@ describe('Testing the CRUD functionality of a referenced model', () => {
   }
 
   function createRssRegistration(done) {
-    rssRegistration.category = newCategory._id;
+    rssRegistration.category = 'world';
     rssRegistration.provider = newProvider._id;
 
     $supertest(app)

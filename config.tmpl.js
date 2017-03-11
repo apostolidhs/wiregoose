@@ -39,4 +39,15 @@ config.SUPPORTED_LANGUAGES = [
   'gr'
 ];
 
+config.CATEGORIES = [
+  "World",
+  "Economy",
+  "Politics",
+  "Technology",
+  "Travel",
+  "Science",
+  "Lifestyle",
+  "Country"
+];
+
 module.exports = config;

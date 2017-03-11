@@ -13,7 +13,7 @@ KlarkModule(module, 'modelsRssRegistration', (
 
   const ObjectId = $mongoose.Schema.Types.ObjectId;
   const schema = new $mongoose.Schema({
-    category: {type: ObjectId, ref: 'Category', required: true, autopopulate: true},
+    category: {type: String, enum: config.CATEGORIES, required: true},
     link: {type: $mongoose.SchemaTypes.Url, required: true},
     lang: {type: String, enum: config.SUPPORTED_LANGUAGES, required: true},
     provider: {type: ObjectId, ref: 'RssProvider', required: true, autopopulate: true}

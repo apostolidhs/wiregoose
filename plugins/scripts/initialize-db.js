@@ -18,17 +18,12 @@ KlarkModule(module, 'scriptsInitializeDb', (
   modelsApp
 ) => {
 
-  let categoriesByName;
   let providersByName;
 
   krkPromiseExtension.extend(q);
 
   krkDbMongooseConnector.connect(config.MONGODB_URL)
     .then(() => krkDbMongooseConnector.dropDatabase())
-    .then(() => importSimpleData('categories.json', modelsCategory, (data) => ({
-      name: data
-    })))
-    .then((newCategories) => categoriesByName = _.keyBy(newCategories, 'name'))
     .then(() => krkLogger.info('categories imported'))
     .then(() => importSimpleData('providers.json', modelsRssProvider, (data) => ({
       name: data.name,
@@ -37,7 +32,7 @@ KlarkModule(module, 'scriptsInitializeDb', (
     .then((newProviders) => providersByName = _.keyBy(newProviders, 'name'))
     .then(() => krkLogger.info('providers imported'))
     .then(() => importSimpleData('rss-feed-registrations.json', modelsRssRegistration, (data) => ({
-      category: categoriesByName[data.category]._id,
+      category: data.category,
       link: data.link,
       lang: data.lang,
       provider: providersByName[data.provider]._id
