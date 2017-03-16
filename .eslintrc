@@ -1,0 +1,8 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "rules": {
+    "max-len": ["error", 80],
+    "import/extensions": 0
+  }
+}
