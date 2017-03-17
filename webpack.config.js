@@ -28,7 +28,22 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        loader: ['style-loader', 'css-loader', 'less-loader'],
+        include: /frontend\/app\/less/,
+        loader: [
+          'style-loader',
+          'css-loader',
+          'less-loader',
+        ],
+      },
+      {
+        test: /\.less$/,
+        exclude: /frontend\/app\/less/,
+        loader: [
+          'style-loader',
+          'css-loader?modules&importLoaders=1'
+            + '&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
+          'less-loader',
+        ],
       },
       {
         test: /\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,

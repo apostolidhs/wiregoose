@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../less/index.less';
 import Header from '../header/Header.jsx';
 import ComponentsGallery
   from '../../sections/components-gallery/ComponentsGallery.jsx';
