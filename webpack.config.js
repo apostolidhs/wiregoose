@@ -28,7 +28,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        include: /frontend\/app\/less/,
+        include: /frontend\\app\\less/,
         loader: [
           'style-loader',
           'css-loader',
@@ -37,7 +37,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        exclude: /frontend\/app\/less/,
+        exclude: /frontend\\app\\less/,
         loader: [
           'style-loader',
           'css-loader?modules&importLoaders=1'

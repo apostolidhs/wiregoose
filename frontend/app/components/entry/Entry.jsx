@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import validateURL from 'react-proptypes-url-validator';
 import FontAwesome from 'react-fontawesome';
 import TimeAgo from 'react-timeago';
-import TimeAgoEnglishStrings from 'react-timeago/lib/language-strings/en';
-import TimeAgoBuildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+// import TimeAgoEnglishStrings from 'react-timeago/lib/language-strings/en';
+// import TimeAgoBuildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 
 import CSSModules from 'react-css-modules';
 import styles from './entry.less';
+import EclipsesText from '../eclipses-text/EclipsesText.jsx';
 
 @CSSModules(styles)
 export default class Entry extends Component {
@@ -42,7 +43,16 @@ export default class Entry extends Component {
   constructor() {
     super();
     this.state = {};
-    this.timeAgoFormatter = TimeAgoBuildFormatter(TimeAgoEnglishStrings);
+    this.timeAgoFormatter = (value, unit, suffix) => {
+      let normalizedUnit = unit;
+      if (unit === 'second') {
+        return 'now';
+      } else if (unit === 'minute') {
+        normalizedUnit = 'mins';
+      }
+
+      return `${value} ${normalizedUnit} ${suffix}`;
+    };
   }
 
   render() {
@@ -56,24 +66,55 @@ export default class Entry extends Component {
             </section>
             <section styleName="head-content" className="pull-left">
               <h3 styleName="title">
-                {entry.title}
+                <EclipsesText text={entry.title} size={115} />
               </h3>
-              <div styleName="info">
+              {/*styleName="provider"*/}
+              <div styleName="info" className="text-muted">
+                <a
+
+                  className="btn"
+                  href="/"
+                  role="button"
+                  title="Author"
+                >
+                  {entry.provider}
+                </a>
+                {/*<span styleName="provider">{entry.provider}</span>*/}
                 <TimeAgo
+                  styleName="time"
                   date={entry.published}
                   minPeriod={1}
                   formatter={this.timeAgoFormatter}
                 />
-                <span className="provider">{entry.provider}</span>
               </div>
             </section>
           </header>
           <section className="body">
-            <p className="author">
-              {entry.author}
-            </p>
-            <p className="body-content">
-              {entry.description}
+            {
+              (() => {
+                if (entry.author) {
+                  return (
+                    <p styleName="author">
+                      <a
+                        styleName="author-btn"
+                        className="btn btn-link"
+                        href="/"
+                        role="button"
+                        title="Author"
+                      >
+                        <span>@</span>
+                        {entry.author}
+                      </a>
+                    </p>
+                  );
+                }
+              })()
+            }
+            <p
+              styleName="body-content"
+              style={{ paddingTop: entry.author || '7px' }}
+            >
+              <EclipsesText text={entry.description} size={300} />
             </p>
           </section>
           <footer className="footer">

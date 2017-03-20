@@ -20,7 +20,26 @@
 }
 .info {
   position: absolute;
-  bottom: 0;
+  bottom: -1px;
+}
+.time::before {
+  content: '\002022';
+  margin: 0px 4px;
+}
+.author {
+  margin: 0px;
+}
+.author-btn {
+  padding-left: 0px;
+  span {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 2px;
+  }
+}
+.body-content {
+  font-size: 18px;
 }
 .social-share {
   width: 40px;
