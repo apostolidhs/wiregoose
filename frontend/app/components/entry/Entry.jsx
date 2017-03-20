@@ -69,10 +69,9 @@ export default class Entry extends Component {
                 <EclipsesText text={entry.title} size={115} />
               </h3>
               {/*styleName="provider"*/}
-              <div styleName="info" className="text-muted">
+              <div styleName="info">
                 <a
-
-                  className="btn"
+                  className="btn btn-link-muted"
                   href="/"
                   role="button"
                   title="Author"
@@ -81,6 +80,7 @@ export default class Entry extends Component {
                 </a>
                 {/*<span styleName="provider">{entry.provider}</span>*/}
                 <TimeAgo
+                  className="text-muted"
                   styleName="time"
                   date={entry.published}
                   minPeriod={1}
