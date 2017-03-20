@@ -36,6 +36,7 @@ export default class Entry extends Component {
       provider: undefined,
       category: undefined,
     },
+    className: '',
   }
 
   constructor() {
@@ -108,4 +109,6 @@ export default class Entry extends Component {
       </article>
     );
   }
+
+
 }
