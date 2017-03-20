@@ -1,19 +1,27 @@
-// .panel:global {
-//   @import "../../less/index.less";
-// }
-
-.panel {
-  @import "~bootstrap/less/bootstrap";
-}
+@header-height: 120px;
+@header-image-width: 145px;
 
 .image {
-  width: 100px;
-
+  width: @header-image-width;
+  height: @header-height;
   img {
+    height: 100%;
     width: 100%;
   }
 }
-
+.head-content {
+  height: @header-height;
+  width: calc(~"100% - "@header-image-width);
+  padding-left: 7px;
+  position: relative;
+}
+.title {
+  margin: 0px;
+}
+.info {
+  position: absolute;
+  bottom: 0;
+}
 .social-share {
-  opacity: 1;
+  width: 40px;
 }

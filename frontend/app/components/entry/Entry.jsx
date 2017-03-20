@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import CSSModules from 'react-css-modules';
-import styles from './entry.less';
-
 import validateURL from 'react-proptypes-url-validator';
 import FontAwesome from 'react-fontawesome';
 import TimeAgo from 'react-timeago';
 import TimeAgoEnglishStrings from 'react-timeago/lib/language-strings/en';
 import TimeAgoBuildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 
-@CSSModules(styles, { allowMultiple: true })
+import CSSModules from 'react-css-modules';
+import styles from './entry.less';
+
+@CSSModules(styles)
 export default class Entry extends Component {
 
   static propTypes = {
@@ -22,6 +22,7 @@ export default class Entry extends Component {
       provider: React.PropTypes.string,
       category: React.PropTypes.string,
     }),
+    className: React.PropTypes.string,
   }
 
   static defaultProps = {
@@ -46,17 +47,17 @@ export default class Entry extends Component {
   render() {
     const entry = this.props.entry;
     return (
-      <article className="panel panel-default">
+      <article className={`panel panel-default ${this.props.className}`}>
         <div className="panel-body">
-          <header className="head">
-            <section styleName="image">
+          <header className="head clearfix">
+            <section styleName="image" className="pull-left">
               <img src={entry.image} alt="" />
             </section>
-            <section className="content">
-              <h3 className="title">
+            <section styleName="head-content" className="pull-left">
+              <h3 styleName="title">
                 {entry.title}
               </h3>
-              <div className="info">
+              <div styleName="info">
                 <TimeAgo
                   date={entry.published}
                   minPeriod={1}
@@ -70,13 +71,14 @@ export default class Entry extends Component {
             <p className="author">
               {entry.author}
             </p>
-            <p className="content">
+            <p className="body-content">
               {entry.description}
             </p>
           </section>
           <footer className="footer">
             <a
-              className="social-share btn btn-default"
+              className="btn btn-default"
+              styleName="social-share"
               href="/"
               role="button"
               title="Link"
@@ -84,7 +86,8 @@ export default class Entry extends Component {
               <FontAwesome name="link" />
             </a>
             <a
-              className="social-share btn btn-default"
+              className="w-ml-7 btn btn-default"
+              styleName="social-share"
               href="/"
               role="button"
               title="Facebook"
@@ -92,7 +95,8 @@ export default class Entry extends Component {
               <FontAwesome name="facebook" />
             </a>
             <a
-              className="social-share btn btn-default"
+              className="w-ml-7 btn btn-default"
+              styleName="social-share"
               href="/"
               role="button"
               title="Twitter"

@@ -1,7 +1,10 @@
 import React from 'react';
+import CSSModules from 'react-css-modules';
 import Entry from '../../components/entry/Entry.jsx';
 import '../../assets/img/entry-sample.jpg';
+import styles from './components-gallery.less';
 
+@CSSModules(styles)
 export default class ComponentsGallery extends React.Component {
 
   defaultEntryProps = () => ({
@@ -22,7 +25,9 @@ export default class ComponentsGallery extends React.Component {
 
   render() {
     return (
-      <Entry entry={this.defaultEntryProps()} />
+      <div className="w-m">
+        <Entry entry={this.defaultEntryProps()} styleName="default-entry" />
+      </div>
     );
   }
 }
