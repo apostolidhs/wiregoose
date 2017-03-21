@@ -66,6 +66,7 @@
     "path": "^0.12.7",
     "q": "^1.4.1",
     "react": "^15.4.2",
+    "react-bootstrap": "^0.30.8",
     "react-css-modules": "^4.1.0",
     "react-dom": "^15.4.2",
     "react-fontawesome": "^1.5.0",
