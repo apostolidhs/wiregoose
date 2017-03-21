@@ -1,5 +1,10 @@
+@import (reference) "../../less/index.less";
+
 @header-height: 100px;
 @header-image-width: 145px;
+
+@header-height-sm: 85px;
+@header-image-width-sm: 95px;
 
 .image {
   width: @header-image-width;
@@ -9,6 +14,10 @@
     width: 100%;
   }
 }
+.image-sm {
+  width: @header-image-width-sm;
+  height: @header-height-sm;
+}
 .head-content {
   height: @header-height;
   width: calc(~"100% - "@header-image-width);
@@ -16,11 +25,13 @@
   position: relative;
 }
 .title {
-  margin: 0px;
+  h3 {
+    margin: 0px;
+  }
 }
 .info {
   position: absolute;
-  bottom: -1px;
+  bottom: -4px;
 }
 .time::before {
   content: '\002022';
@@ -43,4 +54,17 @@
 }
 .social-share {
   width: 40px;
+}
+.size-xxs {
+  .image {
+    width: @header-image-width-sm;
+    height: @header-height-sm;
+  }
+  .title h3{
+    font-size: 20px;
+  }
+  .head-content {
+    height: @header-height-sm;
+    width: calc(~"100% - "@header-image-width-sm);
+  }
 }

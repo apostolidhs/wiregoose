@@ -1,16 +1,23 @@
-import React, { Component } from 'react';
+import React from 'react';
 import validateURL from 'react-proptypes-url-validator';
 import FontAwesome from 'react-fontawesome';
 import TimeAgo from 'react-timeago';
-// import TimeAgoEnglishStrings from 'react-timeago/lib/language-strings/en';
-// import TimeAgoBuildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+import SizeMe from 'react-sizeme';
+// import TimeAgoEnglishStrings
+// from 'react-timeago/lib/language-strings/en';
+// import TimeAgoBuildFormatter
+// from 'react-timeago/lib/formatters/buildFormatter';
 
 import CSSModules from 'react-css-modules';
 import styles from './entry.less';
-import EclipsesText from '../eclipses-text/EclipsesText.jsx';
+import componentSize from '../responsible/component-size.js';
+import textUtilities from '../text-utilities/';
 
-@CSSModules(styles)
-export default class Entry extends Component {
+@SizeMe({ refreshRate: 500 })
+@CSSModules(styles, {
+  allowMultiple: true,
+})
+export default class Entry extends React.Component {
 
   static propTypes = {
     entry: React.PropTypes.shape({
@@ -23,6 +30,7 @@ export default class Entry extends Component {
       provider: React.PropTypes.string,
       category: React.PropTypes.string,
     }),
+    size: componentSize.propType,
     className: React.PropTypes.string,
   }
 
@@ -37,54 +45,78 @@ export default class Entry extends Component {
       provider: undefined,
       category: undefined,
     },
+    size: componentSize.defaultProps,
     className: '',
+  }
+
+  static timeAgoBuildFormatter(value, unit, suffix) {
+    let normalizedUnit = unit;
+    if (unit === 'second') {
+      return 'now';
+    } else if (unit === 'minute') {
+      normalizedUnit = 'mins';
+    }
+
+    return `${value} ${normalizedUnit} ${suffix}`;
   }
 
   constructor() {
     super();
     this.state = {};
-    this.timeAgoFormatter = (value, unit, suffix) => {
-      let normalizedUnit = unit;
-      if (unit === 'second') {
-        return 'now';
-      } else if (unit === 'minute') {
-        normalizedUnit = 'mins';
-      }
-
-      return `${value} ${normalizedUnit} ${suffix}`;
-    };
+    this.imageSizeClassBuilder = componentSize.sizeFormatter({
+      xxs: 'size-xxs',
+    }, '');
+    this.titleEllipsesSizeBuilder = componentSize.sizeFormatter({
+      xxs: 60,
+      xs: 65,
+    }, 115);
   }
 
   render() {
-    const entry = this.props.entry;
+    const {
+      entry,
+      size,
+      ...passDownProps
+    } = this.props;
+
+    const titleEllipsesSize = this.titleEllipsesSizeBuilder(size.width);
+    const imageSizeClassBuilder = this.imageSizeClassBuilder(size.width);
+
+    passDownProps.className += ' panel panel-default';
+    passDownProps.styleName = imageSizeClassBuilder;
     return (
-      <article className={`panel panel-default ${this.props.className}`}>
+      <article {...passDownProps}>
         <div className="panel-body">
           <header className="head clearfix">
             <section styleName="image" className="pull-left">
               <img src={entry.image} alt="" />
             </section>
             <section styleName="head-content" className="pull-left">
-              <h3 styleName="title">
-                <EclipsesText text={entry.title} size={115} />
-              </h3>
-              {/*styleName="provider"*/}
+              <a
+                href="/"
+                styleName="title"
+                className="blind-link"
+                title="Open Article"
+              >
+                <h3>
+                  {textUtilities.ellipsis(entry.title, titleEllipsesSize)}
+                </h3>
+              </a>
               <div styleName="info">
                 <a
-                  className="btn btn-link-muted"
+                  className="btn btn-link-muted w-p-0"
                   href="/"
                   role="button"
-                  title="Author"
+                  title="Provider"
                 >
                   {entry.provider}
                 </a>
-                {/*<span styleName="provider">{entry.provider}</span>*/}
                 <TimeAgo
                   className="text-muted"
                   styleName="time"
                   date={entry.published}
                   minPeriod={1}
-                  formatter={this.timeAgoFormatter}
+                  formatter={Entry.timeAgoBuildFormatter}
                 />
               </div>
             </section>
@@ -114,7 +146,7 @@ export default class Entry extends Component {
               styleName="body-content"
               style={{ paddingTop: entry.author || '7px' }}
             >
-              <EclipsesText text={entry.description} size={300} />
+              {textUtilities.ellipsis(entry.description, 300)}
             </p>
           </section>
           <footer className="footer">

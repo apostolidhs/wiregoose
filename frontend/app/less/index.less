@@ -1,6 +1,16 @@
 @import "~font-awesome/less/font-awesome.less";
 @import "~bootstrap/less/bootstrap";
 
+@border-radius-base:        0px;
+@border-radius-large:       0px;
+@border-radius-small:       0px;
+
+@panel-border-radius: 3px;
+
+body {
+  padding-top: 70px;
+}
+
 .inline-block {
   display: inline-block;
 }
@@ -36,6 +46,10 @@
   margin-top: 14px;
 }
 
+.w-p-0 {
+  padding: 0px;
+}
+
 p {
   font-size: 16px;
 }
@@ -45,4 +59,10 @@ p {
 }
 .btn.btn-link-muted:hover {
   text-decoration: underline;
+}
+
+.blind-link,
+.blind-link:hover {
+  text-decoration: initial;
+  color: @gray-dark;
 }

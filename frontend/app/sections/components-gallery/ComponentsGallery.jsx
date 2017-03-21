@@ -31,8 +31,11 @@ export default class ComponentsGallery extends React.Component {
     const entryDataNoAuthor = _.omit(this.defaultEntryProps(), 'author');
     return (
       <div className="w-m">
-        <Entry entry={entryData} styleName="default-entry" />
-        <Entry entry={entryDataNoAuthor} styleName="default-entry" />
+        <Entry entry={entryData} style={{ width: '320px' }} />
+        <Entry entry={entryDataNoAuthor} style={{ width: '480px' }} />
+        <Entry entry={entryDataNoAuthor} style={{ width: '768px' }} />
+        <Entry entry={entryDataNoAuthor} style={{ width: '992px' }} />
+        <Entry entry={entryDataNoAuthor} style={{ width: '1200px' }} />
       </div>
     );
   }

@@ -9,7 +9,7 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 });
 
 module.exports = {
-  entry: './frontend/app/index.js',
+  entry: './frontend/app/index.jsx',
   output: {
     path: path.resolve('dist'),
     filename: 'index-bundle.js',
@@ -28,7 +28,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        include: /frontend\\app\\less/,
+        include: new RegExp(['frontend', 'app', 'less/'].join(path.sep)),
         loader: [
           'style-loader',
           'css-loader',
@@ -37,7 +37,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        exclude: /frontend\\app\\less/,
+        exclude: new RegExp(['frontend', 'app', 'less/'].join(path.sep)),
         loader: [
           'style-loader',
           'css-loader?modules&importLoaders=1'
