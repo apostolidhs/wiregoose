@@ -6,11 +6,16 @@
     }
   },
   "extends": "airbnb",
+  "env": {
+    "browser": true
+  },
   "rules": {
     "max-len": ["error", 80],
     "import/extensions": 0,
     "linebreak-style": 0,
     "consistent-return": 0,
-    "no-use-before-define": 0
+    "no-use-before-define": 0,
+    "no-else-return": 0,
+    "react/prefer-stateless-function": 0
   }
 }

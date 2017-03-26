@@ -1,23 +1,53 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
-import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Link } from 'react-router';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Navbar, Nav, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
 
+function mapStateToProps(state) {
+  return { session: state.session };
+}
+
+@connect(mapStateToProps)
 export default class Header extends React.Component {
-  state = {}
+
+  static propTypes = {
+    session: React.PropTypes.shape({
+      user: React.PropTypes.object,
+      isRequesting: React.PropTypes.bool,
+    }).isRequired,
+  }
 
   render() {
+    const { session } = this.props;
     return (
       <Navbar collapseOnSelect fixedTop>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="/">Wiregoose</a>
+            <Link to="/">Wiregoose</Link>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav pullRight>
-            {/* <NavItem eventKey={1} href="#">Link</NavItem>
-            <NavItem eventKey={2} href="#">Link</NavItem>*/}
+            {(() => {
+              if (session && session.user) {
+                return (
+                  <NavItem eventKey={1}>
+                    session.user.email
+                  </NavItem>
+                );
+              } else {
+                return (
+                  <LinkContainer to="/login">
+                    <NavItem eventKey={1} >
+                      login
+                    </NavItem>
+                  </LinkContainer>
+                );
+              }
+            })()}
             <NavDropdown
               eventKey={3}
               title={<FontAwesome name="bars" />}

@@ -1,4 +1,5 @@
 const path = require('path');
+const os = require('os');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -8,11 +9,19 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   inject: 'body',
 });
 
+const isWin = os.platform() === 'win32';
+const globalLessPath = isWin
+    ? /frontend\\app\\less/
+    : new RegExp(path.join('frontend', 'app', 'less'));
+
 module.exports = {
   entry: './frontend/app/index.jsx',
   output: {
     path: path.resolve('dist'),
     filename: 'index-bundle.js',
+  },
+  devServer: {
+    historyApiFallback: true,
   },
   module: {
     loaders: [
@@ -28,7 +37,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        include: new RegExp(['frontend', 'app', 'less/'].join(path.sep)),
+        include: globalLessPath,
         loader: [
           'style-loader',
           'css-loader',
@@ -37,7 +46,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        exclude: new RegExp(['frontend', 'app', 'less/'].join(path.sep)),
+        exclude: globalLessPath,
         loader: [
           'style-loader',
           'css-loader?modules&importLoaders=1'
