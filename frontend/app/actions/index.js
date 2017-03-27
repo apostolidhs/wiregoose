@@ -1,4 +1,5 @@
-import axios from 'axios';
+import jwtDecode from 'jwt-decode';
+import api from './api';
 
 function performLogin(email, password) {
   return {
@@ -16,16 +17,18 @@ function loginFail(error) {
 }
 
 function loginSuccess(response) {
+  const loginInfo = jwtDecode(response.data.data);
   return {
-    type: 'SESSION_LOGIN_SUCESS',
-    session: response,
+    type: 'SESSION_LOGIN_SUCCESS',
+    session: loginInfo.session,
+    user: loginInfo.user,
   };
 }
 
 export default function login(email, password) {
   return (dispatch) => {
     dispatch(performLogin(email, password));
-    return axios.post('/login', { email, password })
+    return api(email, password)
       .then((response) => {
         return dispatch(loginSuccess(response));
       })

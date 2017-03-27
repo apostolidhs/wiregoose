@@ -1,9 +1,10 @@
 import _ from 'lodash';
-import { combineReducers } from 'redux';
+// import { combineReducers } from 'redux';
 
 const session = (
   state = {
     user: undefined,
+    session: undefined,
     isRequesting: false,
   },
   action,
@@ -13,10 +14,11 @@ const session = (
       return _.assignIn({}, state, {
         isRequesting: true,
       });
-    case 'SESSION_LOGIN_SUCESS':
+    case 'SESSION_LOGIN_SUCCESS':
       return _.assignIn({}, state, {
         isRequesting: false,
-        user: action.session,
+        user: action.user,
+        auth: action.session,
       });
     case 'SESSION_LOGIN_FAIL':
       return _.assignIn({}, state, {

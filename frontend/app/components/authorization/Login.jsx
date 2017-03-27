@@ -3,18 +3,11 @@ import React from 'react';
 import { Form, FormGroup, Col, FormControl, ControlLabel, Button }
   from 'react-bootstrap';
 
-// function mapStateToProps(state) {
-//   return { session: state.session };
-// }
-
 export default class Login extends React.Component {
 
-  // static propTypes = {
-  //   session: React.PropTypes.shape({
-  //     user: React.PropTypes.object,
-  //     isRequesting: React.PropTypes.bool,
-  //   }).isRequired,
-  // }
+  static propTypes = {
+    onLoginClicked: React.PropTypes.func.isRequired,
+  }
 
   state = {
     email: '',
@@ -25,9 +18,14 @@ export default class Login extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  handleLoginClicked = (e) => {
+    e.preventDefault();
+    this.props.onLoginClicked(this.state.email, this.state.password);
+  }
+
   render() {
     return (
-      <Form horizontal>
+      <Form horizontal onSubmit={this.handleLoginClicked}>
         <FormGroup controlId="formHorizontalEmail">
           <Col componentClass={ControlLabel} sm={2}>
             Email

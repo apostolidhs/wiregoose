@@ -6,7 +6,9 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
 
 function mapStateToProps(state) {
-  return { session: state.session };
+  return {
+    session: state.session,
+  };
 }
 
 @connect(mapStateToProps)
@@ -15,6 +17,7 @@ export default class Header extends React.Component {
   static propTypes = {
     session: React.PropTypes.shape({
       user: React.PropTypes.object,
+      auth: React.PropTypes.object,
       isRequesting: React.PropTypes.bool,
     }).isRequired,
   }
@@ -32,10 +35,10 @@ export default class Header extends React.Component {
         <Navbar.Collapse>
           <Nav pullRight>
             {(() => {
-              if (session && session.user) {
+              if (session.user) {
                 return (
                   <NavItem eventKey={1}>
-                    session.user.email
+                    {session.user.email}
                   </NavItem>
                 );
               } else {
