@@ -4,6 +4,7 @@ import FontAwesome from 'react-fontawesome';
 import { Link } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
+import { isAdmin } from '../../actions/session.js';
 
 function mapStateToProps(state) {
   return {
@@ -51,6 +52,11 @@ export default class Header extends React.Component {
                 );
               }
             })()}
+            { isAdmin(session.user) && <LinkContainer to="admin">
+              <NavItem eventKey={1} >
+                admin
+              </NavItem>
+            </LinkContainer>}
             <NavDropdown
               eventKey={3}
               title={<FontAwesome name="bars" />}

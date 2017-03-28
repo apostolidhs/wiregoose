@@ -1,10 +1,27 @@
 import axios from 'axios';
 
-export default function login(email, password) {
+const apiUrl = 'http://localhost:3000/api/v1/';
+
+export const crud = {
+  retrieveAll,
+};
+
+export function login(email, password) {
   return axios({
     method: 'post',
-    url: 'http://localhost:3000/api/v1/authorize/login',
+    url: `${apiUrl}authorize/login`,
     data: { name: email, password },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export function retrieveAll(model, params) {
+  return axios({
+    method: 'get',
+    url: `${apiUrl}${model.name}`,
+    params,
     headers: {
       'Content-Type': 'application/json',
     },

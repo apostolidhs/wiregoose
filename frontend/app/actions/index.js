@@ -28,12 +28,8 @@ function loginSuccess(response) {
 export default function login(email, password) {
   return (dispatch) => {
     dispatch(performLogin(email, password));
-    return api(email, password)
-      .then((response) => {
-        return dispatch(loginSuccess(response));
-      })
-      .catch((error) => {
-        return dispatch(loginFail(error));
-      });
+    return api.login(email, password)
+      .then(response => dispatch(loginSuccess(response)))
+      .catch(error => dispatch(loginFail(error)));
   };
 }

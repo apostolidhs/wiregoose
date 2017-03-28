@@ -1,5 +1,5 @@
 import _ from 'lodash';
-// import { combineReducers } from 'redux';
+import CrudReducer from '../components/crud-generator/reducers.js';
 
 const session = (
   state = {
@@ -31,6 +31,7 @@ const session = (
 
 const wiregooseApp = {
   session,
+  crud: CrudReducer,
 };
 
 export default wiregooseApp;
