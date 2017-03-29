@@ -32,7 +32,7 @@ export default class Login extends React.Component {
           </Col>
           <Col sm={10}>
             <FormControl
-              type="email"
+              type="text"
               name="email"
               placeholder="Email"
               onChange={this.onValueChanged}

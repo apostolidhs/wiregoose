@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { Row, Col } from 'react-bootstrap';
 import { retrieveAll } from './actions';
 import { toUppercasesWords } from '../text-utilities';
 
@@ -42,9 +44,26 @@ export default class CrudGenerator extends React.Component {
     return (
       <div>
         <h3>{toUppercasesWords(model.name)}</h3>
-        {/*<Row>
-
-        </Row>*/}
+        <Row>
+          <Col sm={12}>
+            <BootstrapTable
+              data={this.props.data}
+              remote={true}
+              pagination={true}
+              fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
+              options={{
+                sizePerPage: this.props.sizePerPage,
+                onPageChange: this.props.onPageChange,
+                sizePerPageList: [5, 10],
+                page: this.props.currentPage,
+                onSizePerPageList: this.props.onSizePerPageList
+              }}
+            >
+              <TableHeaderColumn dataField="name">Name</TableHeaderColumn>
+              <TableHeaderColumn dataField="link">Link</TableHeaderColumn>
+            </BootstrapTable>
+          </Col>
+        </Row>
       </div>
     );
   }

@@ -1,5 +1,5 @@
 import jwtDecode from 'jwt-decode';
-import api from './api';
+import * as api from './api';
 
 function performLogin(email, password) {
   return {

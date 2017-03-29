@@ -11,7 +11,7 @@ import SizeMe from 'react-sizeme';
 import CSSModules from 'react-css-modules';
 import styles from './entry.less';
 import componentSize from '../responsible/component-size.js';
-import textUtilities from '../text-utilities/';
+import { ellipsis } from '../text-utilities/';
 
 @SizeMe({ refreshRate: 500 })
 @CSSModules(styles, {
@@ -99,7 +99,7 @@ export default class Entry extends React.Component {
                 title="Open Article"
               >
                 <h3>
-                  {textUtilities.ellipsis(entry.title, titleEllipsesSize)}
+                  {ellipsis(entry.title, titleEllipsesSize)}
                 </h3>
               </a>
               <div styleName="info">
@@ -146,7 +146,7 @@ export default class Entry extends React.Component {
               styleName="body-content"
               style={{ paddingTop: entry.author || '7px' }}
             >
-              {textUtilities.ellipsis(entry.description, 300)}
+              {ellipsis(entry.description, 300)}
             </p>
           </section>
           <footer className="footer">
