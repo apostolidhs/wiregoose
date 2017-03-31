@@ -2,7 +2,7 @@ const model = {
   name: 'rssProvider',
   schema: {
     name: {
-      type: String,
+      type: 'String',
       required: true,
       index: true,
       unique: true,
@@ -11,6 +11,12 @@ const model = {
     link: {
       type: 'Url',
       required: true,
+    },
+    _id: {
+      type: 'String',
+      required: true,
+      index: true,
+      unique: true,
     },
   },
 };

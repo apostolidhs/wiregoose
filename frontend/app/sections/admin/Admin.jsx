@@ -11,7 +11,7 @@ export default class Admin extends React.Component {
   render() {
     return (
       <Row>
-        <Col md={3}>
+        <Col md={2}>
           <Nav bsStyle="pills" stacked activeKey={1}>
             <LinkContainer to="admin/rssprovider">
               <NavItem eventKey={1} title="rssProvider">
@@ -20,7 +20,7 @@ export default class Admin extends React.Component {
             </LinkContainer>
           </Nav>
         </Col>
-        <Col md={9}>
+        <Col md={10}>
           {this.props.children}
         </Col>
       </Row>

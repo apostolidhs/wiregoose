@@ -17,11 +17,13 @@ function loginFail(error) {
 }
 
 function loginSuccess(response) {
-  const loginInfo = jwtDecode(response.data.data);
+  const jwt = response.data.data;
+  const { session, user } = jwtDecode(jwt);
+  session.jwt = jwt;
   return {
     type: 'SESSION_LOGIN_SUCCESS',
-    session: loginInfo.session,
-    user: loginInfo.user,
+    session,
+    user,
   };
 }
 

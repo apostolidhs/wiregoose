@@ -46,10 +46,23 @@ export function create(model, data) {
     dispatch(performCrudOperation('CREATE', model, data));
     return crud.retrieveAll(model, data)
       .then(response => dispatch(
-          crudOperationSuccess('CREATE', model, response)),
+        crudOperationSuccess('CREATE', model, response)),
       )
       .catch(error => dispatch(
         crudOperationFail('CREATE', model, error)),
+      );
+  };
+}
+
+export function update(model, id, data) {
+  return (dispatch) => {
+    dispatch(performCrudOperation('UPDATE', model, data));
+    return crud.update(model, id, data)
+      .then(response => dispatch(
+        crudOperationSuccess('UPDATE', model, response)),
+      )
+      .catch(error => dispatch(
+        crudOperationFail('UPDATE', model, error)),
       );
   };
 }

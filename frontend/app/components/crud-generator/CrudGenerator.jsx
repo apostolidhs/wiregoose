@@ -1,19 +1,32 @@
 import React from 'react';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Row, Col } from 'react-bootstrap';
-import { retrieveAll } from './actions';
+import { retrieveAll, update } from './actions';
+import FormGenerator from '../form-generator/FormGenerator.jsx';
 import { toUppercasesWords } from '../text-utilities';
 
 function mapStateToProps(state, ownProps) {
+  const collection = state.crud[ownProps.model.name];
   return {
-    records: state.crud[ownProps.model.name],
+    records: collection ? collection.records : [],
+    total: collection && collection.total,
   };
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
   return {
     retrieveAll: () => dispatch(retrieveAll(ownProps.model)),
+    onSizePerPageList: () => dispatch(retrieveAll(ownProps.model)),
+    onPageChange: () => dispatch(retrieveAll(ownProps.model)),
+    onDeleteRow: () => dispatch(retrieveAll(ownProps.model)),
+    onSearchChange: () => dispatch(retrieveAll(ownProps.model)),
+    onSortChange: () => dispatch(retrieveAll(ownProps.model)),
+    onRecordSaved: (record) => {
+      return dispatch(update(ownProps.model, record._id, record)); // eslint-disable-line
+    },
+    onRecordDeleted: () => dispatch(retrieveAll(ownProps.model)),
   };
 }
 
@@ -25,47 +38,112 @@ export default class CrudGenerator extends React.Component {
       name: React.PropTypes.string,
     }).isRequired,
     retrieveAll: React.PropTypes.func.isRequired,
-    records: React.PropTypes.shape({
-      total: React.PropTypes.number,
-      data: React.PropTypes.array,
-    }),
+
+    total: React.PropTypes.number,
+    records: React.PropTypes.arrayOf(
+      React.PropTypes.shape(),
+    ),
+
+    onSizePerPageList: React.PropTypes.func.isRequired,
+    onPageChange: React.PropTypes.func.isRequired,
+    onDeleteRow: React.PropTypes.func.isRequired,
+    onSearchChange: React.PropTypes.func.isRequired,
+    onSortChange: React.PropTypes.func.isRequired,
+    onRecordSaved: React.PropTypes.func.isRequired,
+    onRecordDeleted: React.PropTypes.func.isRequired,
   }
 
   static defaultProps = {
-    records: undefined,
+    records: [],
+    total: undefined,
   };
 
   componentDidMount() {
     this.props.retrieveAll();
   }
 
+  expandComponent = (row) => {
+    return (
+      <div>
+        <FormGenerator
+          model={this.props.model}
+          record={row}
+          onSave={this.props.onRecordSaved}
+          onDelete={this.props.onRecordDeleted}
+          isNew={false}
+        />
+      </div>
+    );
+  }
+
   render() {
-    const { model } = this.props;
+    const {
+      model,
+      records,
+      total,
+      onSizePerPageList,
+      onPageChange,
+      onDeleteRow,
+      onSearchChange,
+      onSortChange,
+    } = this.props;
+
+    const selectRow = {
+      mode: 'checkbox',
+      cliclToSelct: true,
+      clickToExpand: true,
+    };
+
+    // function onRecordSaved() {
+
+    // }
+
+    // function onRecordDeleted() {
+
+    // }
+
+    function expandableRow() {
+      return true;
+    }
+
     return (
       <div>
         <h3>{toUppercasesWords(model.name)}</h3>
         <Row>
           <Col sm={12}>
             <BootstrapTable
-              data={this.props.data}
-              remote={true}
-              pagination={true}
-              fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
+              striped
+              hover
+              search
+              data={records}
+              keyField="_id"
+              selectRow={selectRow}
+              deleteRow
+              remote
+              pagination
+              fetchInfo={{ dataTotalSize: total }}
+              expandComponent={this.expandComponent}
+              expandableRow={expandableRow}
               options={{
-                sizePerPage: this.props.sizePerPage,
-                onPageChange: this.props.onPageChange,
+                sizePerPage: 10,
+                onPageChange,
                 sizePerPageList: [5, 10],
-                page: this.props.currentPage,
-                onSizePerPageList: this.props.onSizePerPageList
+                page: 1,
+                onSizePerPageList,
+                onDeleteRow,
+                onSearchChange,
+                onSortChange,
               }}
             >
-              <TableHeaderColumn dataField="name">Name</TableHeaderColumn>
-              <TableHeaderColumn dataField="link">Link</TableHeaderColumn>
+              {_.map(model.schema, (props, key) => (
+                <TableHeaderColumn dataField={key} key={key} dataSort>
+                  {toUppercasesWords(key)}
+                </TableHeaderColumn>
+              ))}
             </BootstrapTable>
           </Col>
         </Row>
       </div>
     );
   }
-
 }

@@ -9,6 +9,7 @@ import { syncHistoryWithStore, routerReducer, routerMiddleware }
   from 'react-router-redux';
 import './less/index.less';
 import App from './components/app/App.jsx';
+import * as Api from './actions/api.js';
 import CrudGenerator from './components/crud-generator/CrudGenerator.jsx';
 import rssProviderModel from './components/rss-provider/model.js';
 import AppReducer from './reducers/index.js';
@@ -48,6 +49,8 @@ store.subscribe(() => {
   localStorage.setItem('state', serializedState);
 });
 
+Api.setCredentialGetter(() => store.getState().session.auth.jwt);
+
 const history = syncHistoryWithStore(browserHistory, store);
 
 const routeDecorator = (el, params = {}) =>
@@ -67,7 +70,7 @@ ReactDOM.render(
             }
           />
           <Route
-            path="admin/rssprovider"
+            path="rssprovider"
             component={
               routeDecorator(CrudGenerator, { model: rssProviderModel })
             }
