@@ -1,48 +1,50 @@
 import React from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { BootstrapTable, TableHeaderColumn, Collapse } from 'react-bootstrap-table';
+import { BootstrapTable, TableHeaderColumn, Collapse }
+  from 'react-bootstrap-table';
 import { Row, Col, Button } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
-import { retrieveAll, update, remove } from './actions';
-import FormGenerator from '../form-generator/FormGenerator.jsx';
-import { toUppercasesWords } from '../text-utilities';
+import { retrieveAll, update, remove }
+  from '../../../components/crud-generator/actions';
+import Form from '../../../components/rss-provider/Form.jsx';
+import { toUppercasesWords }
+  from '../../../components/text-utilities';
 
-function mapStateToProps(state, ownProps) {
-  const collection = state.crud[ownProps.model.name];
+const modelName = 'rssProvider';
+
+function mapStateToProps(state) {
+  const collection = state.crud[modelName];
   return {
     records: collection ? collection.records : [],
     total: collection && collection.total,
   };
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
-    retrieveAll: () => dispatch(retrieveAll(ownProps.model)),
-    onSizePerPageList: () => dispatch(retrieveAll(ownProps.model)),
-    onPageChange: () => dispatch(retrieveAll(ownProps.model)),
-    onDeleteRow: () => dispatch(retrieveAll(ownProps.model)),
-    onSearchChange: () => dispatch(retrieveAll(ownProps.model)),
-    onSortChange: () => dispatch(retrieveAll(ownProps.model)),
+    retrieveAll: () => dispatch(retrieveAll(modelName)),
+    onSizePerPageList: () => dispatch(retrieveAll(modelName)),
+    onPageChange: () => dispatch(retrieveAll(modelName)),
+    onDeleteRow: () => dispatch(retrieveAll(modelName)),
+    onSearchChange: () => dispatch(retrieveAll(modelName)),
+    onSortChange: () => dispatch(retrieveAll(modelName)),
     onRecordSaved: (record) => {
-      return dispatch(update(ownProps.model, record._id, record));
+      return dispatch(update(modelName, record._id, record));
     },
     onRecordDeleted: (record) => {
-      return dispatch(remove(ownProps.model, record._id));
+      return dispatch(remove(modelName, record._id));
     },
-    onRecordSaved: (record) => {
-      return dispatch(update(ownProps.model, record._id, record));
-    },
+    // onRecordSaved: (record) => {
+    //   return dispatch(update(modelName, record._id, record));
+    // },
   };
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-export default class CrudGenerator extends React.Component {
+export default class RssProvider extends React.Component {
 
   static propTypes = {
-    model: React.PropTypes.shape({
-      name: React.PropTypes.string,
-    }).isRequired,
     retrieveAll: React.PropTypes.func.isRequired,
 
     total: React.PropTypes.number,
@@ -71,8 +73,7 @@ export default class CrudGenerator extends React.Component {
   expandComponent = (row) => {
     return (
       <div>
-        <FormGenerator
-          model={this.props.model}
+        <Form
           record={row}
           onSave={this.props.onRecordSaved}
           onDelete={this.props.onRecordDeleted}
@@ -84,7 +85,6 @@ export default class CrudGenerator extends React.Component {
 
   render() {
     const {
-      model,
       records,
       total,
       onSizePerPageList,
@@ -112,9 +112,15 @@ export default class CrudGenerator extends React.Component {
       return true;
     }
 
+    const cols = [
+      'name',
+      'link',
+      '_id',
+    ];
+
     return (
       <div>
-        <h3>{toUppercasesWords(model.name)}</h3>
+        <h3>Rss Provider</h3>
         <Row>
           <Col sm={12}>
             {/*<Button type="button" onClick={this.toggleCreationPanel}>
@@ -155,9 +161,9 @@ export default class CrudGenerator extends React.Component {
                 onSortChange,
               }}
             >
-              {_.map(model.schema, (props, key) => (
-                <TableHeaderColumn dataField={key} key={key} dataSort>
-                  {toUppercasesWords(key)}
+              {_.map(cols, col => (
+                <TableHeaderColumn dataField={col} key={col} dataSort>
+                  {toUppercasesWords(col)}
                 </TableHeaderColumn>
               ))}
             </BootstrapTable>

@@ -10,8 +10,6 @@ import { syncHistoryWithStore, routerReducer, routerMiddleware }
 import './less/index.less';
 import App from './components/app/App.jsx';
 import * as Api from './actions/api.js';
-import CrudGenerator from './components/crud-generator/CrudGenerator.jsx';
-import rssProviderModel from './components/rss-provider/model.js';
 import AppReducer from './reducers/index.js';
 import ComponentsGallery
   from './sections/components-gallery/ComponentsGallery.jsx';
@@ -19,6 +17,8 @@ import Login
   from './sections/authorization/Login.jsx';
 import Admin
   from './sections/admin/Admin.jsx';
+import RssProvider
+  from './sections/admin/rss-provider/RssProvider.jsx';
 
 const loggerMiddleware = createLogger({
   // diff: true,
@@ -53,9 +53,6 @@ Api.setCredentialGetter(() => store.getState().session.auth.jwt);
 
 const history = syncHistoryWithStore(browserHistory, store);
 
-const routeDecorator = (el, params = {}) =>
-                          () => React.createElement(el, params);
-
 ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
@@ -64,17 +61,8 @@ ReactDOM.render(
         <Route path="login" component={Login} />
         <Route path="componentsGallery" component={ComponentsGallery} />
         <Route path="admin" component={Admin}>
-          <IndexRoute
-            component={
-              routeDecorator(CrudGenerator, { model: rssProviderModel })
-            }
-          />
-          <Route
-            path="rssprovider"
-            component={
-              routeDecorator(CrudGenerator, { model: rssProviderModel })
-            }
-          />
+          <IndexRoute component={RssProvider} />
+          <Route path="rssprovider" component={RssProvider} />
         </Route>
       </Route>
     </Router>

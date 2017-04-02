@@ -1,106 +1,111 @@
 import { crud } from '../../actions/api';
 
-function performCrudOperation(method, model, params) {
+function performCrudOperation(method, modelName, params) {
   return {
     type: 'PERFORM_CRUD_OPERATION',
     method,
-    model,
+    modelName,
     params,
   };
 }
 
-function crudOperationSuccess(method, model, response) {
+function crudOperationCreateSuccess(modelName, response) {
   return {
-    type: 'CRUD_OPERATION_SUCCESS',
-    method,
-    model,
+    type: 'CRUD_OPERATION_CREATE_SUCCESS',
+    modelName,
+    record: response.data.data,
+  };
+}
+
+function crudOperationRetriveAllSuccess(modelName, response) {
+  return {
+    type: 'CRUD_OPERATION_RETRIEVEALL_SUCCESS',
+    modelName,
     records: response.data.data.content,
     total: response.data.data.total,
   };
 }
 
-function crudOperationFail(method, model, error) {
+function crudOperationUpdateSuccess(modelName, response) {
+  return {
+    type: 'CRUD_OPERATION_UPDATE_SUCCESS',
+    modelName,
+    record: response.data.data,
+  };
+}
+
+function crudOperationDeleteSuccess(modelName, response) {
+  return {
+    type: 'CRUD_OPERATION_DELETE_SUCCESS',
+    modelName,
+    record: response.data.data,
+  };
+}
+
+function crudOperationFail(method, modelName, error) {
   return {
     type: 'CRUD_OPERATION_FAIL',
     method,
-    model,
+    modelName,
     error,
   };
 }
 
-export function retrieveAll(model, params) {
+export function toggleCreationPanel(modelName) {
+  return {
+    type: 'TOGGLE_CREATION_PANEL',
+    modelName,
+  };
+}
+
+export function retrieveAll(modelName, params) {
   return (dispatch) => {
-    dispatch(performCrudOperation('RETRIEVE_ALL', model, params));
-    return crud.retrieveAll(model, params)
+    dispatch(performCrudOperation('RETRIEVE_ALL', modelName, params));
+    return crud.retrieveAll(modelName, params)
       .then(response => dispatch(
-        crudOperationSuccess('RETRIEVE_ALL', model, response)),
+        crudOperationRetriveAllSuccess(modelName, response)),
       )
       .catch(error => dispatch(
-        crudOperationFail('RETRIEVE_ALL', model, error)),
+        crudOperationFail('RETRIEVE_ALL', modelName, error)),
       );
   };
 }
 
-export function create(model, data) {
+export function create(modelName, data) {
   return (dispatch) => {
-    dispatch(performCrudOperation('CREATE', model, data));
-    return crud.retrieveAll(model, data)
+    dispatch(performCrudOperation('CREATE', modelName, data));
+    return crud.create(modelName, data)
       .then(response => dispatch(
-        crudOperationSuccess('CREATE', model, response)),
+        crudOperationCreateSuccess(modelName, response)),
       )
       .catch(error => dispatch(
-        crudOperationFail('CREATE', model, error)),
+        crudOperationFail('CREATE', modelName, error)),
       );
   };
 }
 
-export function update(model, id, data) {
+export function update(modelName, id, data) {
   return (dispatch) => {
-    dispatch(performCrudOperation('UPDATE', model, data));
-    return crud.update(model, id, data)
+    dispatch(performCrudOperation('UPDATE', modelName, data));
+    return crud.update(modelName, id, data)
       .then(response => dispatch(
-        crudOperationSuccess('UPDATE', model, response)),
+        crudOperationUpdateSuccess(modelName, response)),
       )
       .catch(error => dispatch(
-        crudOperationFail('UPDATE', model, error)),
+        crudOperationFail('UPDATE', modelName, error)),
       );
   };
 }
 
-// export function retrieveAll(model, data) {
-//   return {
-//     type: 'CRUD_RETRIEVE_ALL',
-//     model,
-//     data,
-//   };
-// }
-
-// export function create(model, data) {
-//   return {
-//     type: 'CRUD_CREATE',
-//     model,
-//     data,
-//   };
-// }
-
-// export function retrieve(model, data) {
-//   return {
-//     type: 'SESSION_LOGIN_PERFORM',
-//     model,
-//     data,
-//   };
-// }
-// export function create(model, data) {
-//   return {
-//     type: 'SESSION_LOGIN_PERFORM',
-//     model,
-//     data,
-//   };
-// }
-// export function create(model, data) {
-//   return {
-//     type: 'SESSION_LOGIN_PERFORM',
-//     model,
-//     data,
-//   };
-// }
+export function remove(modelName, id) {
+  return (dispatch) => {
+    dispatch(performCrudOperation('DELETE', modelName));
+    return crud.remove(modelName, id)
+      .then(response => dispatch(
+        crudOperationDeleteSuccess(modelName, response)),
+      )
+      .catch(error => dispatch(
+        crudOperationFail('DELETE', modelName, error)),
+      );
+  };
+}

@@ -5,8 +5,10 @@ const apiUrl = 'http://localhost:3000/api/v1/';
 let credentialGetter = _.noop;
 
 export const crud = {
+  create,
   retrieveAll,
   update,
+  remove,
 };
 
 export function setCredentialGetter(_credentialGetter) {
@@ -24,10 +26,24 @@ export function login(email, password) {
   });
 }
 
-function retrieveAll(model, params) {
+function create(modelName, params) {
+  const payload = {
+    [_.upperFirst(modelName)]: params,
+  };
+  return axios({
+    method: 'post',
+    url: `${apiUrl}${modelName}`,
+    data: payload,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+function retrieveAll(modelName, params) {
   return axios({
     method: 'get',
-    url: `${apiUrl}${model.name}`,
+    url: `${apiUrl}${modelName}`,
     params,
     headers: {
       'Content-Type': 'application/json',
@@ -35,17 +51,27 @@ function retrieveAll(model, params) {
   });
 }
 
-function update(model, id, params) {
+function update(modelName, id, params) {
   const payload = {
-    [_.upperFirst(model.name)]: params,
+    [_.upperFirst(modelName)]: params,
   };
   return axios({
     method: 'put',
-    url: `${apiUrl}${model.name}/${id}`,
+    url: `${apiUrl}${modelName}/${id}`,
     data: payload,
     headers: {
       'Content-Type': 'application/json',
       authorization: credentialGetter(),
+    },
+  });
+}
+
+function remove(modelName, id) {
+  return axios({
+    method: 'delete',
+    url: `${apiUrl}${modelName}/${id}`,
+    headers: {
+      'Content-Type': 'application/json',
     },
   });
 }
