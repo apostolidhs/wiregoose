@@ -36,6 +36,7 @@ function create(modelName, params) {
     data: payload,
     headers: {
       'Content-Type': 'application/json',
+      authorization: credentialGetter(),
     },
   });
 }
@@ -72,6 +73,7 @@ function remove(modelName, id) {
     url: `${apiUrl}${modelName}/${id}`,
     headers: {
       'Content-Type': 'application/json',
+      authorization: credentialGetter(),
     },
   });
 }

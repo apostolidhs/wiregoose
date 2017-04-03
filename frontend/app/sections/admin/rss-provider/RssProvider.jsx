@@ -1,11 +1,11 @@
 import React from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { BootstrapTable, TableHeaderColumn, Collapse }
+import { BootstrapTable, TableHeaderColumn }
   from 'react-bootstrap-table';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button, Collapse } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
-import { retrieveAll, update, remove }
+import { retrieveAll, update, remove, create, toggleCreationPanel }
   from '../../../components/crud-generator/actions';
 import Form from '../../../components/rss-provider/Form.jsx';
 import { toUppercasesWords }
@@ -14,11 +14,13 @@ import { toUppercasesWords }
 const modelName = 'rssProvider';
 
 function mapStateToProps(state) {
-  const collection = state.crud[modelName];
-  return {
-    records: collection ? collection.records : [],
-    total: collection && collection.total,
-  };
+  const collection = state.crud[modelName] || {};
+  return _.pick(collection, [
+    'records',
+    'total',
+    'isCreationPanelOpen',
+    'lastEffectedId'
+  ]);
 }
 
 function mapDispatchToProps(dispatch) {
@@ -35,9 +37,18 @@ function mapDispatchToProps(dispatch) {
     onRecordDeleted: (record) => {
       return dispatch(remove(modelName, record._id));
     },
-    // onRecordSaved: (record) => {
-    //   return dispatch(update(modelName, record._id, record));
-    // },
+    onCreationPanelClicked: () => dispatch(toggleCreationPanel(modelName)),
+    onCreateRecord: (record) => {
+      return dispatch(create(modelName, record))
+        .then((state) => {
+          switch (state.type) {
+            case 'CRUD_OPERATION_CREATE_SUCCESS':
+              return dispatch(retrieveAll(modelName));
+            default:
+              return state;
+          }
+        });
+    },
   };
 }
 
@@ -51,6 +62,7 @@ export default class RssProvider extends React.Component {
     records: React.PropTypes.arrayOf(
       React.PropTypes.shape(),
     ),
+    lastEffectedId: React.PropTypes.string,
 
     onSizePerPageList: React.PropTypes.func.isRequired,
     onPageChange: React.PropTypes.func.isRequired,
@@ -59,11 +71,16 @@ export default class RssProvider extends React.Component {
     onSortChange: React.PropTypes.func.isRequired,
     onRecordSaved: React.PropTypes.func.isRequired,
     onRecordDeleted: React.PropTypes.func.isRequired,
+    onCreationPanelClicked: React.PropTypes.func.isRequired,
+    isCreationPanelOpen: React.PropTypes.bool,
+    onCreateRecord: React.PropTypes.func.isRequired,
   }
 
   static defaultProps = {
     records: [],
     total: undefined,
+    isCreationPanelOpen: false,
+    lastEffectedId: undefined,
   };
 
   componentDidMount() {
@@ -83,6 +100,9 @@ export default class RssProvider extends React.Component {
     );
   }
 
+  isEffectedRow = record =>
+    record._id === this.props.lastEffectedId && 'success'
+
   render() {
     const {
       records,
@@ -92,6 +112,9 @@ export default class RssProvider extends React.Component {
       onDeleteRow,
       onSearchChange,
       onSortChange,
+      onCreationPanelClicked,
+      isCreationPanelOpen,
+      onCreateRecord,
     } = this.props;
 
     const selectRow = {
@@ -99,14 +122,6 @@ export default class RssProvider extends React.Component {
       cliclToSelct: true,
       clickToExpand: true,
     };
-
-    // function onRecordSaved() {
-
-    // }
-
-    // function onRecordDeleted() {
-
-    // }
 
     function expandableRow() {
       return true;
@@ -122,20 +137,16 @@ export default class RssProvider extends React.Component {
       <div>
         <h3>Rss Provider</h3>
         <Row>
-          <Col sm={12}>
-            {/*<Button type="button" onClick={this.toggleCreationPanel}>
+          <div>
+            <Button type="button" onClick={onCreationPanelClicked}>
               <FontAwesome name="plus" /> Create
             </Button>
-            <Collapse in={this.state.open}>
+            <Collapse in={isCreationPanelOpen}>
               <div>
-                <FormGenerator
-                  model={this.props.model}
-                  onSave={this.props.onRecordSaved}
-                  isNew={true}
-                />
+                <Form onSave={onCreateRecord} isNew />
               </div>
-            </Collapse>*/}
-          </Col>
+            </Collapse>
+          </div>
           <Col sm={12}>
             <BootstrapTable
               striped
@@ -150,6 +161,7 @@ export default class RssProvider extends React.Component {
               fetchInfo={{ dataTotalSize: total }}
               expandComponent={this.expandComponent}
               expandableRow={expandableRow}
+              trClassName={this.isEffectedRow}
               options={{
                 sizePerPage: 10,
                 onPageChange,

@@ -15,7 +15,7 @@ export default class FormGenerator extends React.Component {
   }
 
   static defaultProps = {
-    record: {},
+    record: { name: '', link: '' },
     onDelete: undefined,
     onSave: undefined,
     isNew: true,
@@ -36,10 +36,8 @@ export default class FormGenerator extends React.Component {
   }
 
   handleInputChange = (e) => {
-    const record = {
-      ...this.state.record,
-      [e.target.name]: e.target.value,
-    };
+    const record = this.state.record;
+    record[e.target.name] = e.target.value;
     this.setState({ record });
   }
 
