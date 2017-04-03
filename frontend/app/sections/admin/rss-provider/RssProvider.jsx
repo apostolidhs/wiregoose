@@ -19,7 +19,7 @@ function mapStateToProps(state) {
     'records',
     'total',
     'isCreationPanelOpen',
-    'lastEffectedId'
+    'lastEffectedId',
   ]);
 }
 
@@ -28,27 +28,24 @@ function mapDispatchToProps(dispatch) {
     retrieveAll: () => dispatch(retrieveAll(modelName)),
     onSizePerPageList: () => dispatch(retrieveAll(modelName)),
     onPageChange: () => dispatch(retrieveAll(modelName)),
-    onDeleteRow: () => dispatch(retrieveAll(modelName)),
+    onDeleteRow: ids => Promise.all(
+        _.map(ids, id => dispatch(remove(modelName, id))),
+      )
+      .then(() => dispatch(retrieveAll(modelName))),
     onSearchChange: () => dispatch(retrieveAll(modelName)),
-    onSortChange: () => dispatch(retrieveAll(modelName)),
-    onRecordSaved: (record) => {
-      return dispatch(update(modelName, record._id, record));
+    onSortChange: (name, sort) => {
+      //dispatch(retrieveAll(modelName))
+      // console.log(args);
+      dispatch(retrieveAll(modelName))
+      sortBy
     },
-    onRecordDeleted: (record) => {
-      return dispatch(remove(modelName, record._id));
-    },
+    onRecordSaved: record => dispatch(update(modelName, record._id, record)),
+    onRecordDeleted: record => dispatch(remove(modelName, record._id)),
     onCreationPanelClicked: () => dispatch(toggleCreationPanel(modelName)),
-    onCreateRecord: (record) => {
-      return dispatch(create(modelName, record))
-        .then((state) => {
-          switch (state.type) {
-            case 'CRUD_OPERATION_CREATE_SUCCESS':
-              return dispatch(retrieveAll(modelName));
-            default:
-              return state;
-          }
-        });
-    },
+    onCreateRecord: record =>
+      dispatch(create(modelName, record))
+        .then(action => action.type === 'CRUD_OPERATION_CREATE_SUCCESS')
+        .then(success => success && dispatch(retrieveAll(modelName))),
   };
 }
 
