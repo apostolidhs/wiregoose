@@ -15,32 +15,27 @@ const modelName = 'rssProvider';
 
 function mapStateToProps(state) {
   const collection = state.crud[modelName] || {};
-  return _.pick(collection, [
-    'records',
-    'total',
-    'isCreationPanelOpen',
-    'lastEffectedId',
-  ]);
+  return collection;
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     retrieveAll: () => dispatch(retrieveAll(modelName)),
-    onSizePerPageList: () => dispatch(retrieveAll(modelName)),
-    onPageChange: () => dispatch(retrieveAll(modelName)),
+    onSizePerPageList: (count = 5) => dispatch(retrieveAll(modelName, { count })),
+    onPageChange: (page = 1, count = 5) => dispatch(retrieveAll(modelName, { page, count })),
     onDeleteRow: ids => Promise.all(
         _.map(ids, id => dispatch(remove(modelName, id))),
       )
       .then(() => dispatch(retrieveAll(modelName))),
-    onSearchChange: () => dispatch(retrieveAll(modelName)),
+    onFilterChange: (filterObj) => {
+      const filters = _.mapValues(filterObj, 'value');
+      dispatch(retrieveAll(modelName, filters));
+    },
     onSortChange: (name, sort) => {
-      //dispatch(retrieveAll(modelName))
-      // console.log(args);
-      dispatch(retrieveAll(modelName))
-      sortBy
+      const params = { sortBy: name, asc: sort === 'asc' };
+      dispatch(retrieveAll(modelName, params));
     },
     onRecordSaved: record => dispatch(update(modelName, record._id, record)),
-    onRecordDeleted: record => dispatch(remove(modelName, record._id)),
     onCreationPanelClicked: () => dispatch(toggleCreationPanel(modelName)),
     onCreateRecord: record =>
       dispatch(create(modelName, record))
@@ -55,30 +50,28 @@ export default class RssProvider extends React.Component {
   static propTypes = {
     retrieveAll: React.PropTypes.func.isRequired,
 
-    total: React.PropTypes.number,
+    total: React.PropTypes.number.isRequired,
     records: React.PropTypes.arrayOf(
       React.PropTypes.shape(),
-    ),
-    lastEffectedId: React.PropTypes.string,
+    ).isRequired,
+    params: React.PropTypes.shape({
+      count: React.PropTypes.number,
+      page: React.PropTypes.number,
+      sortBy: React.PropTypes.string,
+      asc: React.PropTypes.bool,
+    }).isRequired,
+    lastEffectedId: React.PropTypes.string.isRequired,
 
     onSizePerPageList: React.PropTypes.func.isRequired,
     onPageChange: React.PropTypes.func.isRequired,
     onDeleteRow: React.PropTypes.func.isRequired,
-    onSearchChange: React.PropTypes.func.isRequired,
+    onFilterChange: React.PropTypes.func.isRequired,
     onSortChange: React.PropTypes.func.isRequired,
     onRecordSaved: React.PropTypes.func.isRequired,
-    onRecordDeleted: React.PropTypes.func.isRequired,
     onCreationPanelClicked: React.PropTypes.func.isRequired,
-    isCreationPanelOpen: React.PropTypes.bool,
+    isCreationPanelOpen: React.PropTypes.bool.isRequired,
     onCreateRecord: React.PropTypes.func.isRequired,
   }
-
-  static defaultProps = {
-    records: [],
-    total: undefined,
-    isCreationPanelOpen: false,
-    lastEffectedId: undefined,
-  };
 
   componentDidMount() {
     this.props.retrieveAll();
@@ -90,7 +83,7 @@ export default class RssProvider extends React.Component {
         <Form
           record={row}
           onSave={this.props.onRecordSaved}
-          onDelete={this.props.onRecordDeleted}
+          onDelete={record => this.props.onDeleteRow([record._id])}
           isNew={false}
         />
       </div>
@@ -102,12 +95,13 @@ export default class RssProvider extends React.Component {
 
   render() {
     const {
+      params,
       records,
       total,
       onSizePerPageList,
       onPageChange,
       onDeleteRow,
-      onSearchChange,
+      onFilterChange,
       onSortChange,
       onCreationPanelClicked,
       isCreationPanelOpen,
@@ -148,7 +142,6 @@ export default class RssProvider extends React.Component {
             <BootstrapTable
               striped
               hover
-              search
               data={records}
               keyField="_id"
               selectRow={selectRow}
@@ -160,18 +153,18 @@ export default class RssProvider extends React.Component {
               expandableRow={expandableRow}
               trClassName={this.isEffectedRow}
               options={{
-                sizePerPage: 10,
+                sizePerPage: params.count,
                 onPageChange,
                 sizePerPageList: [5, 10],
-                page: 1,
+                page: params.page,
                 onSizePerPageList,
                 onDeleteRow,
-                onSearchChange,
+                onFilterChange,
                 onSortChange,
               }}
             >
               {_.map(cols, col => (
-                <TableHeaderColumn dataField={col} key={col} dataSort>
+                <TableHeaderColumn dataField={col} key={col} filter={{ type: 'TextFilter' }} dataSort>
                   {toUppercasesWords(col)}
                 </TableHeaderColumn>
               ))}

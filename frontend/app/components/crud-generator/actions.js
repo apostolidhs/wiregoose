@@ -1,6 +1,16 @@
+import _ from 'lodash';
 import { crud } from '../../actions/api';
 
-function performCrudOperation(method, modelName, params) {
+function performCrudOperation(method, modelName, _params) {
+  let params = _params;
+  if (method === 'RETRIEVE_ALL') {
+    params = _.defaults(params, {
+      page: 1,
+      count: 5,
+      sortBy: undefined,
+      asc: undefined,
+    });
+  }
   return {
     type: 'PERFORM_CRUD_OPERATION',
     method,
@@ -17,12 +27,13 @@ function crudOperationCreateSuccess(modelName, response) {
   };
 }
 
-function crudOperationRetriveAllSuccess(modelName, response) {
+function crudOperationRetrieveAllSuccess(modelName, response, params) {
   return {
     type: 'CRUD_OPERATION_RETRIEVEALL_SUCCESS',
     modelName,
     records: response.data.data.content,
     total: response.data.data.total,
+    params,
   };
 }
 
@@ -34,11 +45,11 @@ function crudOperationUpdateSuccess(modelName, response) {
   };
 }
 
-function crudOperationDeleteSuccess(modelName, response) {
+function crudOperationDeleteSuccess(modelName, id) {
   return {
     type: 'CRUD_OPERATION_DELETE_SUCCESS',
     modelName,
-    record: response.data.data,
+    id,
   };
 }
 
@@ -58,12 +69,14 @@ export function toggleCreationPanel(modelName) {
   };
 }
 
-export function retrieveAll(modelName, params) {
-  return (dispatch) => {
+export function retrieveAll(modelName, params = {}) {
+  return (dispatch, getState) => {
     dispatch(performCrudOperation('RETRIEVE_ALL', modelName, params));
-    return crud.retrieveAll(modelName, params)
+    const state = getState();
+    const apiParams = _.get(state, `crud[${modelName}].params`);
+    return crud.retrieveAll(modelName, apiParams)
       .then(response => dispatch(
-        crudOperationRetriveAllSuccess(modelName, response)),
+        crudOperationRetrieveAllSuccess(modelName, response, params)),
       )
       .catch(error => dispatch(
         crudOperationFail('RETRIEVE_ALL', modelName, error)),
@@ -101,8 +114,8 @@ export function remove(modelName, id) {
   return (dispatch) => {
     dispatch(performCrudOperation('DELETE', modelName));
     return crud.remove(modelName, id)
-      .then(response => dispatch(
-        crudOperationDeleteSuccess(modelName, response)),
+      .then(() => dispatch(
+        crudOperationDeleteSuccess(modelName, id)),
       )
       .catch(error => dispatch(
         crudOperationFail('DELETE', modelName, error)),

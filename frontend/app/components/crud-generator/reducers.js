@@ -10,6 +10,9 @@ const crud = (
       crudState = _.assignIn({}, state[action.modelName], {
         isRequesting: true,
       });
+      if (action.method === 'RETRIEVE_ALL') {
+        crudState.params = _.assignIn({}, crudState.params, action.params);
+      }
       return {
         ...state,
         [action.modelName]: crudState,
@@ -20,6 +23,7 @@ const crud = (
         records: action.records,
         total: action.total,
       });
+      crudState.params = _.assignIn({}, crudState.params, action.params);
       return {
         ...state,
         [action.modelName]: crudState,
@@ -52,7 +56,8 @@ const crud = (
         isRequesting: false,
         lastEffectedId: undefined,
       });
-      _.remove(crudState.records, { _id: action.record._id });
+      crudState.records = _.filter(crudState.records, r => r._id !== action.id);
+      --crudState.total;
       return {
         ...state,
         [action.modelName]: crudState,

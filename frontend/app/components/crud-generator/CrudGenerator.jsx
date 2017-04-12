@@ -23,14 +23,14 @@ function mapDispatchToProps(dispatch, ownProps) {
     onPageChange: () => dispatch(retrieveAll(ownProps.model)),
     onDeleteRow: () => dispatch(retrieveAll(ownProps.model)),
     onSearchChange: () => dispatch(retrieveAll(ownProps.model)),
-    onSortChange: () => dispatch(retrieveAll(ownProps.model)),
+    //onSortChange: () => dispatch(retrieveAll(ownProps.model)),
     onRecordSaved: (record) => {
       return dispatch(update(ownProps.model, record._id, record));
     },
     onRecordDeleted: (record) => {
       return dispatch(remove(ownProps.model, record._id));
     },
-    onRecordSaved: (record) => {
+    onSortChange: (record) => {
       return dispatch(update(ownProps.model, record._id, record));
     },
   };
