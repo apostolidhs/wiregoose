@@ -21,8 +21,10 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     retrieveAll: () => dispatch(retrieveAll(modelName)),
-    onSizePerPageList: (count = 5) => dispatch(retrieveAll(modelName, { count })),
-    onPageChange: (page = 1, count = 5) => dispatch(retrieveAll(modelName, { page, count })),
+    onSizePerPageList: (count = 5) =>
+      dispatch(retrieveAll(modelName, { count })),
+    onPageChange: (page = 1, count = 5) =>
+      dispatch(retrieveAll(modelName, { page, count })),
     onDeleteRow: ids => Promise.all(
         _.map(ids, id => dispatch(remove(modelName, id))),
       )

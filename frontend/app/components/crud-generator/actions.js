@@ -117,8 +117,11 @@ export function remove(modelName, id) {
       .then(() => dispatch(
         crudOperationDeleteSuccess(modelName, id)),
       )
-      .catch(error => dispatch(
-        crudOperationFail('DELETE', modelName, error)),
-      );
+      .catch(error => {
+        console.log(error);
+        dispatch(
+          crudOperationFail('DELETE', modelName, error),
+        );
+      });
   };
 }

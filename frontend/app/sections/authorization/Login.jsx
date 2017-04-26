@@ -5,12 +5,12 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
 import { push } from 'react-router-redux';
 import LoginComponent from '../../components/authorization/Login.jsx';
-import Actions from '../../actions/index.js';
+import Session from '../../actions/session.js';
 
 function mapDispatchToProps(dispatch) {
   return {
     performLogin: (email, password) =>
-      dispatch(Actions(email, password))
+      dispatch(Session.login(email, password))
         .then((state) => {
           switch (state.type) {
             case 'SESSION_LOGIN_SUCCESS':
