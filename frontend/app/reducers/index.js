@@ -4,7 +4,7 @@ import CrudReducer from '../components/crud-generator/reducers.js';
 const session = (
   state = {
     user: undefined,
-    session: undefined,
+    auth: undefined,
     isRequesting: false,
   },
   action,
@@ -23,6 +23,12 @@ const session = (
     case 'SESSION_LOGIN_FAIL':
       return _.assignIn({}, state, {
         isRequesting: false,
+      });
+    case 'SESSION_LOGOUT':
+      return _.assignIn({}, state, {
+        isRequesting: false,
+        user: undefined,
+        auth: undefined,
       });
     default:
       return state;

@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { Route, Router, browserHistory, IndexRoute } from 'react-router';
+import { browserHistory } from 'react-router';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import { syncHistoryWithStore, routerReducer, routerMiddleware }
@@ -11,14 +10,6 @@ import './less/index.less';
 import App from './components/app/App.jsx';
 import * as Api from './actions/api.js';
 import AppReducer from './reducers/index.js';
-import ComponentsGallery
-  from './sections/components-gallery/ComponentsGallery.jsx';
-import Login
-  from './sections/authorization/Login.jsx';
-import Admin
-  from './sections/admin/Admin.jsx';
-import RssProvider
-  from './sections/admin/rss-provider/RssProvider.jsx';
 
 const loggerMiddleware = createLogger({
   // diff: true,
@@ -54,18 +45,6 @@ Api.setCredentialGetter(() => store.getState().session.auth.jwt);
 const history = syncHistoryWithStore(browserHistory, store);
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router history={history}>
-      <Route path="/" component={App}>
-        <IndexRoute component={ComponentsGallery} />
-        <Route path="login" component={Login} />
-        <Route path="componentsGallery" component={ComponentsGallery} />
-        <Route path="admin" component={Admin}>
-          <IndexRoute component={RssProvider} />
-          <Route path="rssprovider" component={RssProvider} />
-        </Route>
-      </Route>
-    </Router>
-  </Provider>,
+  <App store={store} history={history} />,
   document.getElementById('root'),
 );

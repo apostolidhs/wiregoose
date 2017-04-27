@@ -1,6 +1,10 @@
 import jwtDecode from 'jwt-decode';
 import * as api from './api';
 
+export function isLoggedin() {
+
+}
+
 export function hasExpired(auth) {
   return auth && auth.expiresAt < Date.now();
 }
@@ -32,6 +36,14 @@ function loginSuccess(response) {
     type: 'SESSION_LOGIN_SUCCESS',
     session,
     user,
+  };
+}
+
+export function logout() {
+  return (dispatch) => {
+    return dispatch({
+      type: 'SESSION_LOGOUT',
+    });
   };
 }
 

@@ -7,6 +7,7 @@ import { Row, Col, Button, Collapse } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 import { retrieveAll, update, remove, create, toggleCreationPanel }
   from '../../../components/crud-generator/actions';
+import { session } from '../../../actions/session.js';
 import Form from '../../../components/rss-provider/Form.jsx';
 import { toUppercasesWords }
   from '../../../components/text-utilities';
@@ -28,7 +29,19 @@ function mapDispatchToProps(dispatch) {
     onDeleteRow: ids => Promise.all(
         _.map(ids, id => dispatch(remove(modelName, id))),
       )
-      .then(() => dispatch(retrieveAll(modelName))),
+      .then((action) => {
+        if (action.type === 'CRUD_OPERATION_CREATE_SUCCESS') {
+          return dispatch(retrieveAll(modelName));
+        } else if (action.type === 'CRUD_OPERATION_FAIL') {
+          if (_.get(action, 'error.response.status') === 401) {
+            return dispatch(retrieveAll(modelName))
+              .then();
+          }
+        }
+        // session
+        // console.log('onDeleteRow', a, b);
+        // dispatch(retrieveAll(modelName));
+      }),
     onFilterChange: (filterObj) => {
       const filters = _.mapValues(filterObj, 'value');
       dispatch(retrieveAll(modelName, filters));
