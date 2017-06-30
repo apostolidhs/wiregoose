@@ -12,7 +12,6 @@ KlarkModule(module, 'scriptsInitializeDb', (
   krkDbMongooseBinders,
   krkModelsUser,
   config,
-  modelsCategory,
   modelsRssProvider,
   modelsRssRegistration,
   modelsApp
