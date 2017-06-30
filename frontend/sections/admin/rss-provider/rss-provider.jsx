@@ -93,9 +93,36 @@ export default class RssProvider extends React.Component {
     records: []
   };
 
-  retrieveAll = (params = this.state.params) => {
-    const { page, count } = params;
-    WiregooseApi.crud.retrieveAll(modelName, { page, count })
+  onSizePerPageList = (count = 5) => this.retrieveAll({ count })
+
+  onPageChange = (page = 1, count = 5) => this.retrieveAll({ page, count })
+
+  onDeleteRow = ids => Promise.all(
+      _.map(ids, id => WiregooseApi.crud.remove(modelName, id)),
+    )
+    .then(() => this.retrieveAll())
+
+  onFilterChange = (filterObj) => {
+    const filters = _.mapValues(filterObj, 'value');
+    this.retrieveAll(filters);
+  }
+
+  onSortChange = (name, sort) => {
+    const params = { sortBy: name, asc: sort === 'asc' };
+    this.retrieveAll( params);
+  }
+
+  onRecordSaved = record => WiregooseApi.crud.update(modelName, record._id, record)
+
+  onCreationPanelClicked = () => toggleCreationPanel(modelName)
+
+  onCreateRecord = record =>
+    WiregooseApi.crud.create(modelName, record)
+      .then(() => this.retrieveAll())
+
+  retrieveAll = (params = {}) => {
+    const defaultParams = _.defaults(params, this.state.params);
+    return WiregooseApi.crud.retrieveAll(modelName, defaultParams)
       .then(resp => {
         this.setState({
           total: resp.data.data.total,
@@ -126,14 +153,7 @@ export default class RssProvider extends React.Component {
 
   render() {
     const {
-      onSizePerPageList,
-      onPageChange,
-      onDeleteRow,
-      onFilterChange,
-      onSortChange,
-      onCreationPanelClicked,
       isCreationPanelOpen,
-      onCreateRecord,
     } = this.props;
 
     const {
@@ -163,12 +183,12 @@ export default class RssProvider extends React.Component {
         <h3>Rss Provider</h3>
         <Row>
           <div>
-            <Button type="button" onClick={onCreationPanelClicked}>
+            <Button type="button" onClick={this.onCreationPanelClicked}>
               <FontAwesome name="plus" /> Create
             </Button>
             <Collapse in={isCreationPanelOpen}>
               <div>
-                <Form onSave={onCreateRecord} isNew />
+                <Form onSave={this.onCreateRecord} isNew />
               </div>
             </Collapse>
           </div>
@@ -188,13 +208,13 @@ export default class RssProvider extends React.Component {
               trClassName={this.isEffectedRow}
               options={{
                 sizePerPage: params.count,
-                onPageChange,
+                onPageChange: this.onPageChange,
                 sizePerPageList: [5, 10],
                 page: params.page,
-                onSizePerPageList,
-                onDeleteRow,
-                onFilterChange,
-                onSortChange,
+                onSizePerPageList: this.onSizePerPageList,
+                onDeleteRow: this.onDeleteRow,
+                onFilterChange: this.onFilterChange,
+                onSortChange: this.onSortChange,
               }}
             >
               {_.map(cols, col => (
