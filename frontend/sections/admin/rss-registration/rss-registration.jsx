@@ -10,9 +10,9 @@ import { toUppercasesWords }
   from '../../../components/text-utilities/text-utilities.js';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 
-const modelName = 'rssProvider';
+const modelName = 'rssRegistration';
 
-export default class RssProvider extends React.Component {
+export default class RssRegistration extends React.Component {
   state = {
     params: {
       page: 1,
@@ -56,7 +56,6 @@ export default class RssProvider extends React.Component {
 
   retrieveAll = (params = {}) => {
     const defaultParams = _.defaults(params, this.state.params);
-    this.setState({ params: defaultParams });
     return WiregooseApi.crud.retrieveAll(modelName, defaultParams)
       .then(resp => {
         this.setState({
@@ -67,8 +66,6 @@ export default class RssProvider extends React.Component {
   }
 
   componentDidMount() {
-    const params = _.defaults(this.props.location.query, this.state.params);
-    this.setState({ params });
     this.retrieveAll();
   }
 
@@ -107,14 +104,16 @@ export default class RssProvider extends React.Component {
     }
 
     const cols = [
-      'name',
+      'category',
       'link',
+      'lang',
+      'provider',
       '_id',
     ];
 
     return (
       <div>
-        <h3>Rss Provider</h3>
+        <h3>Rss Registration</h3>
         <Row>
           <Col sm={12}>
             <Button className="clearfix pull-right" type="button" onClick={this.onCreationPanelClicked}>

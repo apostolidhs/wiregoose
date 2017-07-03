@@ -85,14 +85,16 @@ export default class FormGenerator extends React.Component {
           </Col>
         </FormGroup>
 
-        <Button type="submit" onClick={this.onSaveClicked}>
-          <FontAwesome name="save" /> { isNew ? 'Create' : 'Save' }
-        </Button>
-        { !isNew &&
-          <Button type="submit" onClick={this.onDeleteClicked}>
-            <FontAwesome name="trash-o" /> Delete
+        <div className="clearfix">
+          <Button className="pull-right" type="submit" onClick={this.onSaveClicked}>
+            <FontAwesome name="save" /> { isNew ? 'Create' : 'Save' }
           </Button>
-        }
+          { !isNew &&
+            <Button className="pull-right" type="submit" onClick={this.onDeleteClicked}>
+              <FontAwesome name="trash-o" /> Delete
+            </Button>
+          }
+        </div>
       </Form>
     );
   }

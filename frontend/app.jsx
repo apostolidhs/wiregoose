@@ -3,13 +3,20 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Route, Router, IndexRoute, browserHistory } from 'react-router';
 
+import 'react-bootstrap-table/css/react-bootstrap-table.css';
 import './less/index.less';
 import Header from './components/header/header.jsx';
 import * as Auth from './components/authorization/auth.js';
+import * as WiregooseApi from './components/services/wiregoose-api.js';
 import ComponentsGallery from './sections/components-gallery/components-gallery.jsx';
-import Login from './sections/authorization/login.jsx'
-import Admin from './sections/admin/admin.jsx'
-import RssProvider from './sections/admin/rss-provider/rss-provider.jsx'
+import Login from './sections/authorization/login.jsx';
+import Admin from './sections/admin/admin.jsx';
+import RssProvider from './sections/admin/rss-provider/rss-provider.jsx';
+import RssRegistration from './sections/admin/rss-registration/rss-registration.jsx';
+
+if (Auth.isAuthenticated()) {
+  WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
+}
 
 class Body extends React.Component {
 
@@ -52,8 +59,9 @@ class App extends React.Component {
           {
             Auth.isAuthenticated() &&
             <Route path="admin" component={Admin}>
-              <IndexRoute component={RssProvider} />
+              <IndexRoute component={RssRegistration} />
               <Route path="rssprovider" component={RssProvider} />
+              <Route path="rssregistration" component={RssRegistration} />
             </Route>
           }
           <Route path='*' component={NotFound} />
