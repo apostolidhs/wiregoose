@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { browserHistory } from 'react-router';
 import { BootstrapTable, TableHeaderColumn }
   from 'react-bootstrap-table';
 import { Row, Col, Button, Collapse } from 'react-bootstrap';
@@ -35,13 +36,24 @@ export default class RssProvider extends React.Component {
     .then(() => this.retrieveAll())
 
   onFilterChange = (filterObj) => {
+    const stateParams = _.pick(this.state.params, [
+      'page',
+      'count',
+      'sortBy',
+      'asc'
+    ]);
     const filters = _.mapValues(filterObj, 'value');
-    this.retrieveAll(filters);
+    const params = {
+      ...filters,
+      ...stateParams
+    }
+    this.addQuery(params);
+    this.setState({ params }, () => this.retrieveAll());
   }
 
   onSortChange = (name, sort) => {
     const params = { sortBy: name, asc: sort === 'asc' };
-    this.retrieveAll( params);
+    this.retrieveAll(params);
   }
 
   onRecordSaved = record => WiregooseApi.crud.update(modelName, record._id, record)
@@ -54,9 +66,16 @@ export default class RssProvider extends React.Component {
     WiregooseApi.crud.create(modelName, record)
       .then(() => this.retrieveAll())
 
+  addQuery = (query) => {
+    const location = Object.assign({}, browserHistory.getCurrentLocation());
+    location.query = query;
+    browserHistory.push(location);
+  };
+
   retrieveAll = (params = {}) => {
     const defaultParams = _.defaults(params, this.state.params);
     this.setState({ params: defaultParams });
+    this.addQuery(defaultParams);
     return WiregooseApi.crud.retrieveAll(modelName, defaultParams)
       .then(resp => {
         this.setState({
@@ -66,9 +85,15 @@ export default class RssProvider extends React.Component {
       });
   }
 
-  componentDidMount() {
-    const params = _.defaults(this.props.location.query, this.state.params);
+  componentWillMount() {
+    const location = browserHistory.getCurrentLocation();
+    const params = _.defaults(location.query, this.state.params);
+    params.page = +params.page;
+    params.count = +params.count;
     this.setState({ params });
+  }
+
+  componentDidMount() {
     this.retrieveAll();
   }
 
@@ -130,6 +155,7 @@ export default class RssProvider extends React.Component {
           </Col>
           <Col sm={12}>
             <BootstrapTable
+              ref="table"
               striped
               hover
               data={records}
@@ -153,11 +179,14 @@ export default class RssProvider extends React.Component {
                 onSortChange: this.onSortChange,
               }}
             >
-              {_.map(cols, col => (
-                <TableHeaderColumn dataField={col} key={col} filter={{ type: 'TextFilter' }} dataSort>
-                  {toUppercasesWords(col)}
-                </TableHeaderColumn>
-              ))}
+              {_.map(cols, col => {
+                const filter = { type: 'TextFilter', defaultValue: this.state.params[col] || '' };
+                return (
+                  <TableHeaderColumn dataField={col} key={col + filter.defaultValue} filter={filter} dataSort>
+                    {toUppercasesWords(col)}
+                  </TableHeaderColumn>
+                );
+              })}
             </BootstrapTable>
           </Col>
         </Row>

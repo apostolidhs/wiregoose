@@ -39,7 +39,7 @@
     "jwt-decode": "^2.2.0",
     "jwt-simple": "^0.5.0",
     "klark-js": "^1.2.3",
-    "klark-js-plugins": "^1.0.10",
+    "klark-js-plugins": "^1.0.21",
     "lodash": "^4.16.6",
     "moment": "^2.17.1",
     "mongoose": "^4.6.4",

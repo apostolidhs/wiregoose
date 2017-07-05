@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router'
+import { browserHistory } from 'react-router';
 // import CSSModules from 'react-css-modules';
 // import styles from './login.less';
 import { Row, Col } from 'react-bootstrap';

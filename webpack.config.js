@@ -18,10 +18,13 @@ module.exports = {
   entry: './frontend/app.jsx',
   output: {
     path: path.resolve('dist'),
-    filename: 'index-bundle.js',
+    publicPath: '/',
+    filename: 'index.js',
   },
   devServer: {
-    historyApiFallback: true,
+    historyApiFallback: {
+      index: '/dist/'
+    }
   },
   module: {
     loaders: [

@@ -14,13 +14,13 @@ export default class Admin extends React.Component {
       <Row>
         <Col md={2}>
           <Nav bsStyle="pills" stacked activeKey={1}>
-            <LinkContainer to="admin/rssprovider">
+            <LinkContainer to="/admin/rssprovider">
               <NavItem eventKey={1} title="RSS Provider">
                 RSS Provider
               </NavItem>
             </LinkContainer>
-            <LinkContainer to="admin/rssregistration">
-              <NavItem eventKey={1} title="RSS Registration">
+            <LinkContainer to="/admin/rssregistration">
+              <NavItem eventKey={2} title="RSS Registration">
                 RSS Registration
               </NavItem>
             </LinkContainer>

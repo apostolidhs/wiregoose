@@ -90,7 +90,10 @@ KlarkModule(module, 'app', (
     krkRoutesUsers.register(app, {
       apiUrlPrefix: config.API_URL_PREFIX,
       apiUrl: config.API_URL,
-      name: config.NAME
+      name: config.NAME,
+      EMAIL_SMTP: config.EMAIL_SMTP,
+      EMAIL_NAME: config.EMAIL_NAME,
+      EMAIL_ADDRESS: config.EMAIL_ADDRESS
     });
     registerRoutes(app);
 
