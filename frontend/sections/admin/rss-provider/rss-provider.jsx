@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router';
 import ListView from '../../../components/list-view/list-view.jsx';
+import Form from '../../../components/rss-provider/form.jsx';
 
 export default class RssProvider extends ListView {
   static columns = [
@@ -23,7 +24,8 @@ export default class RssProvider extends ListView {
     super({
       modelName: 'rssProvider',
       columns: RssProvider.columns,
-      title: 'Rss Providers'
+      title: 'Rss Providers',
+      form: Form
     });
   }
 }

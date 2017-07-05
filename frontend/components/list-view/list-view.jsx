@@ -6,7 +6,6 @@ import { BootstrapTable, TableHeaderColumn }
   from 'react-bootstrap-table';
 import { Row, Col, Button, Collapse } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
-import Form from '../rss-provider/form.jsx';
 import Loader from '../loader/loader.jsx';
 import { toUppercasesWords }
   from '../text-utilities/text-utilities.js';
@@ -25,11 +24,12 @@ export default class ListView extends React.Component {
     isCreationPanelOpen: false
   };
 
-  constructor({ modelName, columns, title }) {
+  constructor({ modelName, columns, title, form }) {
     super();
     this.modelName = modelName;
     this.columns = columns;
     this.title = title;
+    this.form = form;
   }
 
 
@@ -109,7 +109,7 @@ export default class ListView extends React.Component {
   expandComponent = (row) => {
     return (
       <div>
-        <Form
+        <this.form
           record={row}
           onSave={this.props.onRecordSaved}
           onDelete={record => this.props.onDeleteRow([record._id])}
@@ -148,11 +148,14 @@ export default class ListView extends React.Component {
             <Button className="clearfix pull-right" type="button" onClick={this.onCreationPanelClicked}>
               <FontAwesome name="plus" /> Create
             </Button>
+            <span className="pull-left w-mt-7 w-mr-7">
+              Total: {total}
+            </span>
           </Col>
           <Col sm={12}>
             <Collapse in={isCreationPanelOpen} className="w-mb-7 w-mt-7">
               <div>
-                <Form onSave={this.onCreateRecord} isNew />
+                <this.form onSave={this.onCreateRecord} isNew />
               </div>
             </Collapse>
           </Col>
