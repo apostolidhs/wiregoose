@@ -3,6 +3,23 @@ import _ from 'lodash';
 
 import * as config from '../../config.js';
 
+axios.interceptors.request.use(function (config) {
+    // Do something before request is sent
+    return config;
+  }, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  });
+
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+    // Do something with response data
+    return response;
+  }, function (error) {
+    // Do something with response error
+    return Promise.reject(error);
+  });
+
 let credentialGetter = _.noop;
 
 export const crud = {
@@ -17,7 +34,7 @@ export function setCredentialGetter(_credentialGetter) {
 }
 
 export function login(email, password) {
-  return axios({
+  return httpRequest({
     method: 'post',
     url: `${config.apiUrl}authorize/login`,
     data: { name: email, password },
@@ -31,7 +48,7 @@ function create(modelName, params) {
   const payload = {
     [_.upperFirst(modelName)]: params,
   };
-  return axios({
+  return httpRequest({
     method: 'post',
     url: `${config.apiUrl}${modelName}`,
     data: payload,
@@ -43,7 +60,7 @@ function create(modelName, params) {
 }
 
 function retrieveAll(modelName, params) {
-  return axios({
+  return httpRequest({
     method: 'get',
     url: `${config.apiUrl}${modelName}`,
     params,
@@ -57,7 +74,7 @@ function update(modelName, id, params) {
   const payload = {
     [_.upperFirst(modelName)]: params,
   };
-  return axios({
+  return httpRequest({
     method: 'put',
     url: `${config.apiUrl}${modelName}/${id}`,
     data: payload,
@@ -69,7 +86,7 @@ function update(modelName, id, params) {
 }
 
 function remove(modelName, id) {
-  return axios({
+  return httpRequest({
     method: 'delete',
     url: `${config.apiUrl}${modelName}/${id}`,
     headers: {
@@ -77,4 +94,13 @@ function remove(modelName, id) {
       authorization: credentialGetter(),
     },
   });
+}
+
+function httpRequest(opts) {
+  return axios(opts)
+    .then((v) => {
+      return new Promise((resolve) => {
+        _.delay(() => resolve(v), 0);
+      });
+    });
 }
