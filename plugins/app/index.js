@@ -29,7 +29,8 @@ KlarkModule(module, 'app', (
   rssRegistrationsFetcher,
   routesRssFeedFetchRssFeed,
   routesRssFeedFetchRssRegistrations,
-  routesCrud
+  routesCrud,
+  routesStatics
 ) => {
 
   return {
@@ -110,7 +111,8 @@ KlarkModule(module, 'app', (
     _.each([
       routesRssFeedFetchRssRegistrations,
       routesRssFeedFetchRssFeed,
-      routesCrud
+      routesCrud,
+      routesStatics
     ], route => route.register(app));
   }
 

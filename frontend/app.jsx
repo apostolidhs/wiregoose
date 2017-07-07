@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Route, Router, IndexRoute, browserHistory } from 'react-router';
 
+import 'react-select/dist/react-select.css';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 import './less/index.less';
 import Header from './components/header/header.jsx';

@@ -21,7 +21,7 @@ export default class ListView extends React.Component {
     },
     total: 0,
     records: [],
-    isCreationPanelOpen: false
+    isCreationPanelOpen: true
   };
 
   constructor({ modelName, columns, title, form }) {
@@ -145,8 +145,19 @@ export default class ListView extends React.Component {
         <h3>{this.title}</h3>
         <Row>
           <Col sm={12}>
-            <Button className="clearfix pull-right" type="button" onClick={this.onCreationPanelClicked}>
-              <FontAwesome name="plus" /> Create
+            <Button
+              bsStyle="primary"
+              className="clearfix pull-right"
+              bsSize="small"
+              type="button"
+              onClick={this.onCreationPanelClicked}>
+              {(() => {
+                if (isCreationPanelOpen) {
+                  return <span><FontAwesome name="minus" /> Collapse Creation</span>
+                } else {
+                  return <span><FontAwesome name="plus" /> Create</span>
+                }
+              })()}
             </Button>
             <span className="pull-left w-mt-7 w-mr-7">
               Total: {total}
@@ -174,6 +185,11 @@ export default class ListView extends React.Component {
                 fetchInfo={{ dataTotalSize: total }}
                 expandComponent={this.expandComponent}
                 expandableRow={expandableRow}
+                expandColumnOptions={{
+                  expandColumnVisible: true,
+                  expandColumnComponent: ({ isExpanded }) =>
+                    <FontAwesome name={`chevron-${isExpanded ? 'up' : 'down'}`} className="text-muted"/>
+                }}
                 trClassName={this.isEffectedRow}
                 options={{
                   sizePerPage: params.count,

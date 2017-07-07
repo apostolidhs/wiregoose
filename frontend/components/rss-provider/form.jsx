@@ -26,6 +26,12 @@ export default class FormGenerator extends React.Component {
     record: this.props.record,
   }
 
+  isInvalid = () => {
+    const { record } = this.state;
+    return !(this.validateLink() === 'success'
+      && record.name);
+  }
+
   onSaveClicked = (e) => {
     e.preventDefault();
     this.props.onSave(this.state.record);
@@ -69,6 +75,7 @@ export default class FormGenerator extends React.Component {
               name="name"
               value={this.state.record.name}
               onChange={this.handleInputChange}
+              required
             />
           </Col>
         </FormGroup>
@@ -81,16 +88,17 @@ export default class FormGenerator extends React.Component {
               name="link"
               value={this.state.record.link}
               onChange={this.handleInputChange}
+              required
             />
           </Col>
         </FormGroup>
 
         <div className="clearfix">
-          <Button className="pull-right" type="submit" onClick={this.onSaveClicked}>
+          <Button bsStyle="primary" className="pull-right" type="submit" onClick={this.onSaveClicked} disabled={this.isInvalid()}>
             <FontAwesome name="save" /> { isNew ? 'Create' : 'Save' }
           </Button>
           { !isNew &&
-            <Button className="pull-right" type="submit" onClick={this.onDeleteClicked}>
+            <Button bsStyle="warning" className="pull-right w-mr-7" type="submit" onClick={this.onDeleteClicked}>
               <FontAwesome name="trash-o" /> Delete
             </Button>
           }

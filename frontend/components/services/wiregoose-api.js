@@ -24,9 +24,15 @@ let credentialGetter = _.noop;
 
 export const crud = {
   create,
+  retrieve,
   retrieveAll,
   update,
   remove
+};
+
+export const statics = {
+  categories: _.throttle(getStaticCategories, 3000),
+  supportedLanguages: _.throttle(getStaticSupportedLanguage, 3000)
 };
 
 export function setCredentialGetter(_credentialGetter) {
@@ -44,6 +50,29 @@ export function login(email, password) {
   });
 }
 
+export function getStatic(name) {
+  return httpRequest({
+    method: 'get',
+    url: `${config.apiUrl}statics/${name}`
+  });
+}
+
+function getStaticSupportedLanguage() {
+  return getStatic('supportedLanguages')
+    .then(resp => {
+      statics.language = () => Promise.resolve(resp);
+      return resp;
+    });
+}
+
+function getStaticCategories() {
+  return getStatic('categories')
+    .then(resp => {
+      statics.categories = () => Promise.resolve(resp);
+      return resp;
+    });
+}
+
 function create(modelName, params) {
   const payload = {
     [_.upperFirst(modelName)]: params,
@@ -55,6 +84,17 @@ function create(modelName, params) {
     headers: {
       'Content-Type': 'application/json',
       authorization: credentialGetter(),
+    },
+  });
+}
+
+function retrieve(modelName, params) {
+  return httpRequest({
+    method: 'get',
+    url: `${config.apiUrl}${modelName}`,
+    params,
+    headers: {
+      'Content-Type': 'application/json',
     },
   });
 }
