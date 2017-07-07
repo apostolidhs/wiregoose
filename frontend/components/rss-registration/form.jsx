@@ -124,7 +124,7 @@ export default class FormGenerator extends React.Component {
 
           <FormGroup controlId="formIdLink" validationState={this.validateLink()}>
             <Col componentClass={ControlLabel} sm={2}>Link</Col>
-            <Col sm={10}>
+            <Col sm={8}>
               <FormControl
                 type="text"
                 name="link"
@@ -132,6 +132,15 @@ export default class FormGenerator extends React.Component {
                 onChange={this.handleInputChange}
                 required
               />
+            </Col>
+            <Col sm={2}>
+              <Button bsStyle="primary"
+                bsSize="small"
+                type="button"
+                onClick={this.performRssFeedPreview}
+                disabled={this.validateLink() !== 'success'}>
+                <FontAwesome name="picture-o" /> Preview
+              </Button>
             </Col>
           </FormGroup>
 

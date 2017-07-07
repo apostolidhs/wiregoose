@@ -30,6 +30,11 @@ export const crud = {
   remove
 };
 
+export const rssFeed = {
+  fetchRssFeed,
+  fetchRssRegistrations
+}
+
 export const statics = {
   categories: _.throttle(getStaticCategories, 3000),
   supportedLanguages: _.throttle(getStaticSupportedLanguage, 3000)
@@ -71,6 +76,30 @@ function getStaticCategories() {
       statics.categories = () => Promise.resolve(resp);
       return resp;
     });
+}
+
+function fetchRssFeed(link) {
+  return httpRequest({
+    method: 'get',
+    url: `${config.apiUrl}rssFeed/fetch`,
+    params: { q: link },
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+  });
+}
+
+function fetchRssRegistrations() {
+  return httpRequest({
+    method: 'post',
+    url: `${config.apiUrl}rssFeed/fetchRegistration`,
+    data: payload,
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+  });
 }
 
 function create(modelName, params) {
