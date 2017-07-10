@@ -1,5 +1,9 @@
-import { Form, FormGroup, Col, FormControl }
+import _ from 'lodash';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Form, FormGroup, Col, Row, FormControl, Panel, Table }
   from 'react-bootstrap';
+import ReactJson from 'react-json-view';
 
 import ArticleBox from '../article-box/article-box.jsx';
 import Loader from '../loader/loader.jsx';
@@ -16,16 +20,30 @@ export default class FetchPreview extends React.Component {
   }
 
   state = {
-    rssFeeds: []
+    rssFeeds: [],
+    errors: undefined,
+    currentLink: ''
+  }
+
+  componentWillReceiveProps = ({ link }) => {
+    if (this.state.currentLink !== link && link) {
+      this.setState({ currentLink: link }, this.fetchRssFeedSource);
+    }
   }
 
   fetchRssFeedSource = () => {
-    const link = this.state.link;
-    WiregooseApi.rssFeed.fetchRssFeed(link)
+    const { currentLink } = this.state;
+
+    this.refs.load.promise = WiregooseApi.rssFeed.fetchRssFeed(currentLink)
       .then(resp => {
-        this.pro({
-          rssFeeds: resp.data.data
-        });
+        const { link } = this.props;
+        if (currentLink === link) {
+          const data = resp.data.data;
+          this.setState({
+            rssFeeds: data.entries,
+            errors: data.errors
+          });
+        }
       });
   }
 
@@ -33,18 +51,48 @@ export default class FetchPreview extends React.Component {
 
   render() {
     const {
-      rssFeeds
+      rssFeeds,
+      errors
     } = this.state;
 
     const {
-      link
+      link,
+      ...passDownProps
     } = this.props;
 
     return (
-      <Loader ref="load">
-          <Form horizontal>
 
-            {/*<FormGroup controlId="formIdLink" validationState={this.validateLink()}>
+      <Loader ref="load" {...passDownProps}>
+        <h2>Rss Feed Fetch Report</h2>
+        <Table responsive>
+          <tbody>
+            <tr>
+              <td>Entries</td>
+              <td>{_.size(rssFeeds)}</td>
+            </tr>
+            <tr>
+              <td>Errors</td>
+              <td>{_.size(errors)}</td>
+            </tr>
+          </tbody>
+        </Table>
+
+
+        <h3>Errors</h3>
+        <ReactJson src={errors} collapsed={true} theme="monokai" />
+
+        <h3>Entries</h3>
+        <ReactJson src={rssFeeds} collapsed={true} theme="monokai" />
+
+        <h3>Preview</h3>
+        <Panel>
+          {_.map(rssFeeds, (rssFeed) =>
+            <ArticleBox entry={rssFeed} key={`${rssFeed.title}-${rssFeed.description}`} />
+          )}
+        </Panel>
+          {/*<Form horizontal>
+
+            <FormGroup controlId="formIdLink" validationState={this.validateLink()}>
               <Col componentClass={ControlLabel} sm={2}>Link</Col>
               <Col sm={10}>
                 <FormControl
@@ -55,15 +103,15 @@ export default class FetchPreview extends React.Component {
                   required
                 />
               </Col>
-            </FormGroup>*/}
+            </FormGroup>
 
             <div>
-              {(_.map(rssFeeds, (rssFeed) =>
+              {_.map(rssFeeds, (rssFeed) =>
                 <ArticleBox entry={rssFeed} />
-              )())}
+              )}
             </div>
 
-            {/*<div className="clearfix">
+            <div className="clearfix">
               <Button bsStyle="primary"
                 className="pull-right"
                 type="submit"
@@ -71,9 +119,9 @@ export default class FetchPreview extends React.Component {
                 disabled={this.validateLink() !== 'success'}>
                 <FontAwesome name="picture-o" /> Preview
               </Button>
-            </div>*/}
+            </div>
 
-          </Form>
+          </Form>*/}
 
         </Loader>
     );

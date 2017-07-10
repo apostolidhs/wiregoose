@@ -1,15 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // import _ from 'lodash';
-import { Form, FormGroup, Col, FormControl, ControlLabel, Button }
+import { Form, FormGroup, Col, FormControl, ControlLabel, Button, Collapse }
   from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 import { isUri } from 'valid-url';
 import Select from 'react-select';
+import CSSModules from 'react-css-modules';
 
+import styles from './form.less';
 import Loader from '../loader/loader.jsx';
 import * as WiregooseApi from '../services/wiregoose-api.js';
+import FetchPreview from './fetch-preview.jsx';
 
+@CSSModules(styles, {
+  allowMultiple: true
+})
 export default class FormGenerator extends React.Component {
 
   static propTypes = {
@@ -29,7 +35,8 @@ export default class FormGenerator extends React.Component {
   state = {
     record: this.props.record,
     categories: [],
-    supportedLanguages: []
+    supportedLanguages: [],
+    isRssFeedPreviewOpen: false
   }
 
   componentDidMount() {
@@ -80,6 +87,10 @@ export default class FormGenerator extends React.Component {
       .then(resp => ({options: resp.data.data.content}));
   }
 
+  performRssFeedPreview = () => {
+    this.setState({ isRssFeedPreviewOpen: true });
+  }
+
   render() {
     const {
       isNew,
@@ -88,7 +99,8 @@ export default class FormGenerator extends React.Component {
     const {
       record,
       categories,
-      supportedLanguages
+      supportedLanguages,
+      isRssFeedPreviewOpen
     } = this.state;
 
     return (
@@ -143,6 +155,10 @@ export default class FormGenerator extends React.Component {
               </Button>
             </Col>
           </FormGroup>
+
+          <Collapse in={isRssFeedPreviewOpen} mountOnEnter={true} className="w-mb-7">
+            <FetchPreview link={record.link} styleName="preview" />
+          </Collapse>
 
           <FormGroup controlId="formIdLang">
             <Col componentClass={ControlLabel} sm={2}>Lang</Col>

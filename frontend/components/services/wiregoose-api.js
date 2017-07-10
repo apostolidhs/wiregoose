@@ -85,8 +85,13 @@ function fetchRssFeed(link) {
     params: { q: link },
     headers: {
       'Content-Type': 'application/json',
-      authorization: credentialGetter(),
+      Authorization: credentialGetter(),
     },
+  })
+  .then(resp => {
+    const entries = resp.data.data.entries;
+    _.each(entries, translateArticleEntry);
+    return resp;
   });
 }
 
@@ -172,4 +177,10 @@ function httpRequest(opts) {
         _.delay(() => resolve(v), 0);
       });
     });
+}
+
+function translateArticleEntry(entry) {
+  if (entry.published) {
+    entry.published = new Date(entry.published);
+  }
 }
