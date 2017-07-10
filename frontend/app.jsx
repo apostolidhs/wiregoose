@@ -14,6 +14,7 @@ import Login from './sections/authorization/login.jsx';
 import Admin from './sections/admin/admin.jsx';
 import RssProvider from './sections/admin/rss-provider/rss-provider.jsx';
 import RssRegistration from './sections/admin/rss-registration/rss-registration.jsx';
+import FetchReport from './sections/admin/fetch-report/fetch-report.jsx';
 
 if (Auth.isAuthenticated()) {
   WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
@@ -60,9 +61,10 @@ class App extends React.Component {
           {
             Auth.isAuthenticated() &&
             <Route path="admin" component={Admin}>
-              <IndexRoute component={RssRegistration} />
+              <IndexRoute component={FetchReport} />
               <Route path="rssprovider" component={RssProvider} />
               <Route path="rssregistration" component={RssRegistration} />
+              <Route path="fetchreport" component={FetchReport} />
             </Route>
           }
           <Route path='*' component={NotFound} />

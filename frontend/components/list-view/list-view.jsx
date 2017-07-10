@@ -24,12 +24,13 @@ export default class ListView extends React.Component {
     isCreationPanelOpen: false
   };
 
-  constructor({ modelName, columns, title, form }) {
+  constructor({ modelName, columns, title, form, transformation = _.identity }) {
     super();
     this.modelName = modelName;
     this.columns = columns;
     this.title = title;
     this.form = form;
+    this.transformation = transformation;
   }
 
 
@@ -85,9 +86,14 @@ export default class ListView extends React.Component {
     this.addQuery(defaultParams);
     const prms = WiregooseApi.crud.retrieveAll(this.modelName, defaultParams)
       .then(resp => {
+        const data = resp.data.data;
+        const records = _.map(
+          data.content,
+          this.transformation
+        );
         this.setState({
-          total: resp.data.data.total,
-          records: resp.data.data.content
+          records,
+          total: data.total
         })
       });
     this.refs.load.promise = prms;
@@ -206,7 +212,7 @@ export default class ListView extends React.Component {
                   const filter = { type: 'TextFilter', defaultValue: this.state.params[col.id] || '' };
                   return (
                     <TableHeaderColumn {...col} dataField={col.id} key={col.id} filter={filter} dataSort>
-                      {toUppercasesWords(col.id)}
+                      {col.colName || toUppercasesWords(col.id)}
                     </TableHeaderColumn>
                   );
                 })}

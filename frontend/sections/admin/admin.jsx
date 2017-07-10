@@ -24,6 +24,11 @@ export default class Admin extends React.Component {
                 RSS Registration
               </NavItem>
             </LinkContainer>
+            <LinkContainer to="/admin/fetchreport">
+              <NavItem eventKey={3} title="RSS Fetch Report">
+                Fetch Report
+              </NavItem>
+            </LinkContainer>
           </Nav>
         </Col>
         <Col md={10}>

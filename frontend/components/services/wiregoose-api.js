@@ -35,6 +35,10 @@ export const rssFeed = {
   fetchRssRegistrations
 }
 
+export const translators = {
+  translateArticleEntry
+};
+
 export const statics = {
   categories: _.throttle(getStaticCategories, 3000),
   supportedLanguages: _.throttle(getStaticSupportedLanguage, 3000)

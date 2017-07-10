@@ -26,7 +26,7 @@ export default class FormGenerator extends React.Component {
   }
 
   static defaultProps = {
-    record: { name: '', link: '' },
+    record: {},
     onDelete: undefined,
     onSave: undefined,
     isNew: true,
