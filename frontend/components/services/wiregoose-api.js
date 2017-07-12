@@ -2,6 +2,7 @@ import axios from 'axios';
 import _ from 'lodash';
 
 import * as config from '../../config.js';
+import ArticleResponseTransformation from '../article-box/response-transformation.js';
 
 axios.interceptors.request.use(function (config) {
     // Do something before request is sent
@@ -34,10 +35,6 @@ export const rssFeed = {
   fetchRssFeed,
   fetchRssRegistrations
 }
-
-export const translators = {
-  translateArticleEntry
-};
 
 export const statics = {
   categories: _.throttle(getStaticCategories, 3000),
@@ -94,7 +91,7 @@ function fetchRssFeed(link) {
   })
   .then(resp => {
     const entries = resp.data.data.entries;
-    _.each(entries, translateArticleEntry);
+    _.each(entries, ArticleResponseTransformation);
     return resp;
   });
 }
@@ -181,10 +178,4 @@ function httpRequest(opts) {
         _.delay(() => resolve(v), 0);
       });
     });
-}
-
-function translateArticleEntry(entry) {
-  if (entry.published) {
-    entry.published = new Date(entry.published);
-  }
 }

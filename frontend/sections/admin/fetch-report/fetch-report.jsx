@@ -22,16 +22,34 @@ export default class RssFetchReport extends ListView {
       id: 'entriesStored'
     },
     {
+      id: 'entriesStored',
+      colName: 'Success/Stored Rate',
+      dataFormat: (cell, { succeededFetchesPerc, succeededEntriesPerc }) => {
+        return (
+          <span>
+            <span>{succeededFetchesPerc}</span> / <span>{succeededEntriesPerc}</span>
+          </span>
+        )
+      },
+      dataSort: false
+    },
+    {
       id: 'started',
       colName: 'Duration',
       dataFormat: (cell, { duration, started }) => {
-        return <span>{TextUtilities.dateToText(started, true)} (<TimeAgo date={_.now() - duration} live={false} />)</span>
+        return (
+          <span>
+            {TextUtilities.dateToText(started, true)}
+            (<TimeAgo date={_.now() - duration} live={false} />)
+          </span>
+        )
       },
-      width: '300'
+      width: '260px'
     },
     {
       id: '_id',
-      columnTitle: true
+      columnTitle: true,
+      width: '70px'
     }
   ];
 
@@ -41,7 +59,8 @@ export default class RssFetchReport extends ListView {
       transformation: r => ResponseTransformation(r),
       columns: RssFetchReport.columns,
       title: 'Rss Fetch Report',
-      form: Form
+      form: Form,
+      mutable: false
     });
   }
 }

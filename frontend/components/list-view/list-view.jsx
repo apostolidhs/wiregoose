@@ -24,13 +24,14 @@ export default class ListView extends React.Component {
     isCreationPanelOpen: false
   };
 
-  constructor({ modelName, columns, title, form, transformation = _.identity }) {
+  constructor({ modelName, columns, title, form, mutable = true, transformation = _.identity }) {
     super();
     this.modelName = modelName;
     this.columns = columns;
     this.title = title;
     this.form = form;
     this.transformation = transformation;
+    this.mutable = mutable;
   }
 
 
@@ -150,32 +151,36 @@ export default class ListView extends React.Component {
       <div>
         <h3>{this.title}</h3>
         <Row>
-          <Col sm={12}>
-            <Button
-              bsStyle="primary"
-              className="clearfix pull-right"
-              bsSize="small"
-              type="button"
-              onClick={this.onCreationPanelClicked}>
-              {(() => {
-                if (isCreationPanelOpen) {
-                  return <span><FontAwesome name="minus" /> Collapse Creation</span>
-                } else {
-                  return <span><FontAwesome name="plus" /> Create</span>
-                }
-              })()}
-            </Button>
-            <span className="pull-left w-mt-7 w-mr-7">
-              Total: {total}
-            </span>
-          </Col>
-          <Col sm={12}>
-            <Collapse in={isCreationPanelOpen} className="w-mb-7 w-mt-7">
-              <div>
-                <this.form onSave={this.onCreateRecord} isNew />
-              </div>
-            </Collapse>
-          </Col>
+          {this.mutable &&
+            <Col sm={12}>
+              <Button
+                bsStyle="primary"
+                className="clearfix pull-right"
+                bsSize="small"
+                type="button"
+                onClick={this.onCreationPanelClicked}>
+                {(() => {
+                  if (isCreationPanelOpen) {
+                    return <span><FontAwesome name="minus" /> Collapse Creation</span>
+                  } else {
+                    return <span><FontAwesome name="plus" /> Create</span>
+                  }
+                })()}
+              </Button>
+              <span className="pull-left w-mt-7 w-mr-7">
+                Total: {total}
+              </span>
+            </Col>
+          }
+          {
+            this.mutable && <Col sm={12}>
+              <Collapse in={isCreationPanelOpen} className="w-mb-7 w-mt-7">
+                <div>
+                  <this.form onSave={this.onCreateRecord} isNew />
+                </div>
+              </Collapse>
+            </Col>
+          }
           <Col sm={12}>
             <Loader ref="load">
               <BootstrapTable
@@ -184,8 +189,8 @@ export default class ListView extends React.Component {
                 hover
                 data={records}
                 keyField="_id"
-                selectRow={selectRow}
-                deleteRow
+                selectRow={this.mutable ? selectRow : {}}
+                deleteRow={this.mutable}
                 remote
                 pagination
                 fetchInfo={{ dataTotalSize: total }}
@@ -211,7 +216,7 @@ export default class ListView extends React.Component {
                 {_.map(this.columns, col => {
                   const filter = { type: 'TextFilter', defaultValue: this.state.params[col.id] || '' };
                   return (
-                    <TableHeaderColumn {...col} dataField={col.id} key={col.id} filter={filter} dataSort>
+                    <TableHeaderColumn dataField={col.id} key={col.id} filter={filter} dataSort {...col}>
                       {col.colName || toUppercasesWords(col.id)}
                     </TableHeaderColumn>
                   );

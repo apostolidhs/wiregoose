@@ -10,7 +10,7 @@ from 'react-timeago/lib/formatters/buildFormatter';
 
 const formatter = TimeAgoBuildFormatter(TimeAgoEnglishStrings)
 
-export default class FormGenerator extends React.Component {
+export default class FetchReportForm extends React.Component {
 
   static propTypes = {
     record: PropTypes.shape()

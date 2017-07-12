@@ -29,6 +29,11 @@ export default class Admin extends React.Component {
                 Fetch Report
               </NavItem>
             </LinkContainer>
+            <LinkContainer to="/admin/articleentries">
+              <NavItem eventKey={3} title="Article Entries">
+                Article Entries
+              </NavItem>
+            </LinkContainer>
           </Nav>
         </Col>
         <Col md={10}>
