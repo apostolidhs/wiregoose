@@ -61,7 +61,7 @@ KlarkModule(module, 'rssRegistrationsFetcherIterationFetch', (
   function performFetch(iteration) {
     return q.throttle({
       list: iteration,
-      promiseTransformator: rssRegistration => rssTranslator.translateFromUrl(rssRegistration.link, rssRegistration.provider.name),
+      promiseTransformator: rssRegistration => rssTranslator.translateFromUrl(rssRegistration.link, rssRegistration),
       policy: 'allSettled'
     });
   }

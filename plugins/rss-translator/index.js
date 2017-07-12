@@ -21,15 +21,15 @@ KlarkModule(module, 'rssTranslator', (
       .then(items => translateItems(items, providerName));
   }
 
-  function translateFromUrl(url, providerName) {
+  function translateFromUrl(url, rssRegistration) {
     return rssTranslatorFetchAndParse.fromUrl(url)
-      .then(items => translateItems(items, providerName));
+      .then(items => translateItems(items, rssRegistration));
   }
 
-  function translateItems(items, providerName) {
+  function translateItems(items, rssRegistration) {
     const entries = [];
     const errors = [];
-    _.each(items, item => translateItem(item, providerName, (error, entry) => {
+    _.each(items, item => translateItem(item, rssRegistration, (error, entry) => {
       if (error) {
         errors.push(error);
       } else {
@@ -41,7 +41,7 @@ KlarkModule(module, 'rssTranslator', (
   }
 
   // critical speed part, avoid using promises
-  function translateItem(rawItem, providerName, done) {
+  function translateItem(rawItem, rssRegistration, done) {
     if (!_.isObject(rawItem)) {
       return;
     }
@@ -77,7 +77,7 @@ KlarkModule(module, 'rssTranslator', (
     const published = sanitizeDate(item.pubdate);
     const link = sanitizeUrl(item.link);
     const author = sanitizeString(item.author, 'author');
-    const provider = providerName;
+    const provider = rssRegistration.provider.name;
 
     const data = {
       title,
@@ -86,7 +86,8 @@ KlarkModule(module, 'rssTranslator', (
       published,
       link,
       provider,
-      author
+      author,
+      registration: rssRegistration._id
     };
 
     const entry = new modelsEntry(data);

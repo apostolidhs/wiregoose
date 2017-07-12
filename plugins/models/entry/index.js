@@ -13,6 +13,7 @@ KlarkModule(module, 'modelsEntry', (_, q, $moment, $mongoose, $mongooseTypeUrl) 
   return $mongoose.model('Entry', schema);
 
   function getSchema() {
+    const ObjectId = $mongoose.Schema.Types.ObjectId;
     return new $mongoose.Schema({
       title: {type: String, required: true, maxlength: [128]},
       image: {type: $mongoose.SchemaTypes.Url, required: true},
@@ -24,7 +25,10 @@ KlarkModule(module, 'modelsEntry', (_, q, $moment, $mongoose, $mongooseTypeUrl) 
       author: {type: String, maxlength: [128]},
       // this should be {type: ObjectId, ref: 'RssProvider', required: true}
       // but we really need the speed, part 2 :)
-      provider: {type: String, required: true}
+      provider: {type: String, required: true},
+      // this should be {type: ObjectId, ref: 'RssRegistration', required: true, populate: true}
+      // but we really need the speed, part 3 :)
+      registration: {type: ObjectId, ref: 'RssRegistration', required: true}
     });
   }
 

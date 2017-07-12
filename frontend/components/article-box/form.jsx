@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import { Form, FormGroup, Col, FormControl, ControlLabel, Button }
   from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
+import Select from 'react-select';
 import { isUri } from 'valid-url';
+
+import Loader from '../loader/loader.jsx';
+import * as WiregooseApi from '../services/wiregoose-api.js';
 
 export default class ArticleBoxForm extends React.Component {
 
@@ -47,6 +51,28 @@ export default class ArticleBoxForm extends React.Component {
     this.setState({ record });
   }
 
+  getProviderOptions = (input) => {
+    return WiregooseApi.crud.retrieveAll('rssprovider', {})
+      .then(resp => ({options: resp.data.data.content}));
+  }
+
+  handleProviderChange = (val) => {
+    const record = this.state.record;
+    record.provider = val || undefined;
+    this.setState({ record });
+  }
+
+  getRegistrationOptions = (input) => {
+    return WiregooseApi.crud.retrieveAll('rssregistration', {})
+      .then(resp => ({options: resp.data.data.content}));
+  }
+
+  handleRegistrationChange = (val) => {
+    const record = this.state.record;
+    record.provider = val || undefined;
+    this.setState({ record });
+  }
+
   validateLink = () => (isUri(this.state.record.link) ? 'success' : 'warning');
 
   render() {
@@ -87,6 +113,77 @@ export default class ArticleBoxForm extends React.Component {
               name="link"
               value={this.state.record.link}
               onChange={this.handleInputChange}
+              required
+            />
+          </Col>
+        </FormGroup>
+
+        <FormGroup controlId="formIdImage" validationState={this.validateLink()}>
+          <Col componentClass={ControlLabel} sm={2}>Image</Col>
+          <Col sm={10}>
+            <FormControl
+              type="text"
+              name="image"
+              value={this.state.record.image}
+              onChange={this.handleInputChange}
+              required
+            />
+          </Col>
+        </FormGroup>
+
+        <FormGroup controlId="formIdDescription">
+          <Col componentClass={ControlLabel} sm={2}>Description</Col>
+          <Col sm={10}>
+            <FormControl
+              componentClass="textarea"
+              name="description"
+              value={this.state.record.description}
+              onChange={this.handleInputChange}
+              required
+            />
+          </Col>
+        </FormGroup>
+
+        <FormGroup controlId="formIdAuthor">
+          <Col componentClass={ControlLabel} sm={2}>Author</Col>
+          <Col sm={10}>
+            <FormControl
+              type="text"
+              name="author"
+              value={this.state.record.author}
+              onChange={this.handleInputChange}
+              required
+            />
+          </Col>
+        </FormGroup>
+
+        <FormGroup controlId="formIdProvider">
+          <Col componentClass={ControlLabel} sm={2}>Provider</Col>
+          <Col sm={10}>
+            <Select.Async
+              name="provider"
+              value={ {name: this.state.record.provider} }
+              loadOptions={this.getProviderOptions}
+              onChange={this.handleProviderChange}
+              autoload={false}
+              valueKey="name"
+              labelKey="name"
+              required
+            />
+          </Col>
+        </FormGroup>
+
+        <FormGroup controlId="formIdRegistration">
+          <Col componentClass={ControlLabel} sm={2}>Registration</Col>
+          <Col sm={10}>
+            <Select.Async
+              name="registration"
+              value={ {name: this.state.record.registration} }
+              loadOptions={this.getRegistrationOptions}
+              onChange={this.handleRegistrationChange}
+              autoload={false}
+              valueKey="name"
+              labelKey="name"
               required
             />
           </Col>

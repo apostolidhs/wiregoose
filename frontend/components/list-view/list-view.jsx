@@ -21,7 +21,7 @@ export default class ListView extends React.Component {
     },
     total: 0,
     records: [],
-    isCreationPanelOpen: false
+    isCreationPanelOpen: true
   };
 
   constructor({ modelName, columns, title, form, mutable = true, transformation = _.identity }) {
