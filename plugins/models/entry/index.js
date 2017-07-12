@@ -10,17 +10,7 @@ KlarkModule(module, 'modelsEntry', (_, q, $moment, $mongoose, $mongooseTypeUrl) 
   schema.methods.findDuplicateEntry = findDuplicateEntry;
   schema.statics.saveAvoidingDuplications = saveAvoidingDuplications;
 
-  return {
-    model: $mongoose.model('Entry', schema),
-    getByCategoryLang
-  };
-
-  function getByCategoryLang(categoryName, lang) {
-    return $mongoose.model(
-      `Category_${categoryName}_lang_${lang}`,
-      schema
-    );
-  }
+  return $mongoose.model('Entry', schema);
 
   function getSchema() {
     return new $mongoose.Schema({

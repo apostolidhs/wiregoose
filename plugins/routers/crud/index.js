@@ -23,7 +23,7 @@ KlarkModule(module, 'routesCrud', (
     const models = [
       modelsArticle,
       modelsAuthor,
-      modelsEntry.model,
+      modelsEntry,
       modelsFetchReport,
       modelsRssProvider,
       modelsRssRegistration

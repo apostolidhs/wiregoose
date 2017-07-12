@@ -38,11 +38,9 @@ KlarkModule(module, 'rssRegistrationsFetcherIterationFetch', (
         rssRegistration
       };
 
-      const entryModel = modelsEntry.getByCategoryLang(rssRegistration.category.name, rssRegistration.lang);
-
       if (resolvedPromise.state === 'fulfilled') {
         const entriesResp = resolvedPromise.value;
-        entriesResp.entries = _.map(entriesResp.entries, entry => new entryModel(entry));
+        entriesResp.entries = _.map(entriesResp.entries, entry => new modelsEntry(entry));
         registrationEntry.entriesResp = entriesResp;
       } else {
         registrationEntry.error = resolvedPromise.reason;

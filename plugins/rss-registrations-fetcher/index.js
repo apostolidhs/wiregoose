@@ -93,11 +93,6 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
           return q.when();
         }
 
-        const entryModel = modelsEntry.getByCategoryLang(
-          rssRegistration.category.name,
-          rssRegistration.lang
-        );
-
         const entries = registrationEntry.entriesResp.entries;
         fetchReport.succeededFetches += _.size(entries);
         fetchReport.totalFetches += _.size(translationErrors) + _.size(entries);
@@ -112,7 +107,7 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
           .value();
 
         return (_.isEmpty(authors) ? q.resolve() : modelsAuthor.saveManyIfNotExist(authors))
-          .then(() => entryModel.saveAvoidingDuplications(entries))
+          .then(() => modelsEntry.saveAvoidingDuplications(entries))
           .then(savedEntries => fetchReport.entriesStored += _.size(savedEntries))
           .then(() => onNextChunk(rssRegistration));
       }

@@ -89,7 +89,7 @@ KlarkModule(module, 'rssTranslator', (
       author
     };
 
-    const entry = new modelsEntry.model(data);
+    const entry = new modelsEntry(data);
 
     const error = entry.validateSync();
     if (_.isEmpty(error)) {
@@ -134,7 +134,7 @@ KlarkModule(module, 'rssTranslator', (
   }
 
   function sanitizeString(str, path) {
-    const validators = modelsEntry.model.schema.path(path).validators;
+    const validators = modelsEntry.schema.path(path).validators;
     const maxLengthValidator = _.find(validators, {type: 'maxlength'});
     if (_.isString(str) && str) {
       let escapedStr = $cheerio.load(str).text() || '';
