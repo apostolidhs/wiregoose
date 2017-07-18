@@ -5,10 +5,16 @@ import { Form, FormGroup, Col, FormControl, ControlLabel, Button }
 import FontAwesome from 'react-fontawesome';
 import Select from 'react-select';
 import { isUri } from 'valid-url';
+import CSSModules from 'react-css-modules';
 
+import styles from './form.less';
 import Loader from '../loader/loader.jsx';
+import SelectInlineRender from '../rss-registration/select-inline-render.jsx';
 import * as WiregooseApi from '../services/wiregoose-api.js';
 
+@CSSModules(styles, {
+  allowMultiple: true,
+})
 export default class ArticleBoxForm extends React.Component {
 
   static propTypes = {
@@ -69,7 +75,7 @@ export default class ArticleBoxForm extends React.Component {
 
   handleRegistrationChange = (val) => {
     const record = this.state.record;
-    record.provider = val || undefined;
+    record.registration = val && val._id || undefined;
     this.setState({ record });
   }
 
@@ -81,7 +87,7 @@ export default class ArticleBoxForm extends React.Component {
     } = this.props;
 
     return (
-      <Form horizontal>
+      <Form horizontal styleName="form">
 
         { !isNew &&
           <FormGroup controlId="formIdId">
@@ -162,7 +168,7 @@ export default class ArticleBoxForm extends React.Component {
           <Col sm={10}>
             <Select.Async
               name="provider"
-              value={ {name: this.state.record.provider} }
+              value={{ name: this.state.record.provider }}
               loadOptions={this.getProviderOptions}
               onChange={this.handleProviderChange}
               autoload={false}
@@ -177,13 +183,17 @@ export default class ArticleBoxForm extends React.Component {
           <Col componentClass={ControlLabel} sm={2}>Registration</Col>
           <Col sm={10}>
             <Select.Async
+              ref="registration"
               name="registration"
-              value={ {name: this.state.record.registration} }
+              value={{ _id: this.state.record.registration }}
+              optionComponent={SelectInlineRender}
               loadOptions={this.getRegistrationOptions}
               onChange={this.handleRegistrationChange}
+              onOpen={() => this.refs.registration.loadOptions('')}
               autoload={false}
-              valueKey="name"
-              labelKey="name"
+              scrollMenuIntoView={false}
+              valueKey="_id"
+              labelKey="_id"
               required
             />
           </Col>
