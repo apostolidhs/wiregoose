@@ -3,14 +3,17 @@ import PropTypes from 'prop-types';
 import { Form, FormGroup, Col, FormControl, ControlLabel, Button }
   from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
-import Select from 'react-select';
 import { isUri } from 'valid-url';
 import CSSModules from 'react-css-modules';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
 
 import styles from './form.less';
 import Loader from '../loader/loader.jsx';
+import Select from '../select/select.jsx';
 import SelectInlineRender from '../rss-registration/select-inline-render.jsx';
 import * as WiregooseApi from '../services/wiregoose-api.js';
+import ArticleBox from './article-box.jsx';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -37,8 +40,14 @@ export default class ArticleBoxForm extends React.Component {
 
   isInvalid = () => {
     const { record } = this.state;
-    return !(this.validateLink() === 'success'
-      && record.title);
+    return !(this.validateLink('image') === 'success'
+      && this.validateLink('link') === 'success'
+      && record.title
+      && record.description
+      && record.published
+      && record.provider
+      && record.registration
+    );
   }
 
   onSaveClicked = (e) => {
@@ -55,6 +64,11 @@ export default class ArticleBoxForm extends React.Component {
     const record = this.state.record;
     record[e.target.name] = e.target.value;
     this.setState({ record });
+  }
+
+  getAuthorOptions = (input) => {
+    return WiregooseApi.crud.retrieveAll('entry/authors')
+      .then(resp => ({options: resp.data.data.content}));
   }
 
   getProviderOptions = (input) => {
@@ -79,12 +93,16 @@ export default class ArticleBoxForm extends React.Component {
     this.setState({ record });
   }
 
-  validateLink = () => (isUri(this.state.record.link) ? 'success' : 'warning');
+  validateLink = (type) => (isUri(this.state.record[type]) ? 'success' : 'warning');
 
   render() {
     const {
       isNew,
     } = this.props;
+
+    const {
+      record
+    } = this.state;
 
     return (
       <Form horizontal styleName="form">
@@ -93,7 +111,7 @@ export default class ArticleBoxForm extends React.Component {
           <FormGroup controlId="formIdId">
             <Col componentClass={ControlLabel} sm={2}>ID</Col>
             <Col sm={10}>
-              <FormControl.Static>{this.state.record._id}</FormControl.Static>
+              <FormControl.Static>{record._id}</FormControl.Static>
             </Col>
           </FormGroup>
         }
@@ -104,33 +122,33 @@ export default class ArticleBoxForm extends React.Component {
             <FormControl
               type="text"
               name="title"
-              value={this.state.record.title}
+              value={record.title}
               onChange={this.handleInputChange}
               required
             />
           </Col>
         </FormGroup>
 
-        <FormGroup controlId="formIdLink" validationState={this.validateLink()}>
+        <FormGroup controlId="formIdLink" validationState={this.validateLink('link')}>
           <Col componentClass={ControlLabel} sm={2}>Link</Col>
           <Col sm={10}>
             <FormControl
               type="text"
               name="link"
-              value={this.state.record.link}
+              value={record.link}
               onChange={this.handleInputChange}
               required
             />
           </Col>
         </FormGroup>
 
-        <FormGroup controlId="formIdImage" validationState={this.validateLink()}>
+        <FormGroup controlId="formIdImage" validationState={this.validateLink('image')}>
           <Col componentClass={ControlLabel} sm={2}>Image</Col>
           <Col sm={10}>
             <FormControl
               type="text"
               name="image"
-              value={this.state.record.image}
+              value={record.image}
               onChange={this.handleInputChange}
               required
             />
@@ -143,9 +161,20 @@ export default class ArticleBoxForm extends React.Component {
             <FormControl
               componentClass="textarea"
               name="description"
-              value={this.state.record.description}
+              value={record.description}
               onChange={this.handleInputChange}
               required
+            />
+          </Col>
+        </FormGroup>
+
+         <FormGroup controlId="formIdPublished">
+          <Col componentClass={ControlLabel} sm={2}>Published</Col>
+          <Col sm={10}>
+             <DatePicker
+              name="published"
+              selected={moment(record.published)}
+              onChange={this.handleInputChange}
             />
           </Col>
         </FormGroup>
@@ -153,11 +182,12 @@ export default class ArticleBoxForm extends React.Component {
         <FormGroup controlId="formIdAuthor">
           <Col componentClass={ControlLabel} sm={2}>Author</Col>
           <Col sm={10}>
-            <FormControl
-              type="text"
+            <Select
               name="author"
-              value={this.state.record.author}
-              onChange={this.handleInputChange}
+              singleValue="name"
+              value={record.author}
+              loadOptions={this.getAuthorOptions}
+              onChange={this.handleProviderChange}
               required
             />
           </Col>
@@ -166,14 +196,12 @@ export default class ArticleBoxForm extends React.Component {
         <FormGroup controlId="formIdProvider">
           <Col componentClass={ControlLabel} sm={2}>Provider</Col>
           <Col sm={10}>
-            <Select.Async
+            <Select
               name="provider"
-              value={{ name: this.state.record.provider }}
+              singleValue="name"
+              value={record.provider}
               loadOptions={this.getProviderOptions}
               onChange={this.handleProviderChange}
-              autoload={false}
-              valueKey="name"
-              labelKey="name"
               required
             />
           </Col>
@@ -182,18 +210,13 @@ export default class ArticleBoxForm extends React.Component {
         <FormGroup controlId="formIdRegistration">
           <Col componentClass={ControlLabel} sm={2}>Registration</Col>
           <Col sm={10}>
-            <Select.Async
-              ref="registration"
+            <Select
               name="registration"
-              value={{ _id: this.state.record.registration }}
-              optionComponent={SelectInlineRender}
+              singleValue="_id"
+              value={record.registration}
+              render={SelectInlineRender}
               loadOptions={this.getRegistrationOptions}
               onChange={this.handleRegistrationChange}
-              onOpen={() => this.refs.registration.loadOptions('')}
-              autoload={false}
-              scrollMenuIntoView={false}
-              valueKey="_id"
-              labelKey="_id"
               required
             />
           </Col>
@@ -209,6 +232,12 @@ export default class ArticleBoxForm extends React.Component {
             </Button>
           }
         </div>
+
+        { !this.isInvalid() && (
+          <div className="w-mt-7">
+            <ArticleBox entry={record} />
+          </div>
+        )}
       </Form>
     );
   }

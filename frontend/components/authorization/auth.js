@@ -10,6 +10,7 @@ export function login(email, password) {
 
 export function logout() {
   this.destroySession();
+  WiregooseApi.setCredentialGetter(_.noop);
 }
 
 export function isAuthenticated() {

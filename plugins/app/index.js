@@ -30,7 +30,8 @@ KlarkModule(module, 'app', (
   routesRssFeedFetchRssFeed,
   routesRssFeedFetchRssRegistrations,
   routesCrud,
-  routesStatics
+  routesStatics,
+  routesEntry
 ) => {
 
   return {
@@ -109,6 +110,7 @@ KlarkModule(module, 'app', (
 
   function registerRoutes(app) {
     _.each([
+      routesEntry,
       routesRssFeedFetchRssRegistrations,
       routesRssFeedFetchRssFeed,
       routesCrud,

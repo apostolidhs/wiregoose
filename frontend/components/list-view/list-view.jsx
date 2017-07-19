@@ -6,6 +6,7 @@ import { BootstrapTable, TableHeaderColumn }
   from 'react-bootstrap-table';
 import { Row, Col, Button, Collapse } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
+
 import Loader from '../loader/loader.jsx';
 import { toUppercasesWords }
   from '../text-utilities/text-utilities.js';
@@ -21,7 +22,8 @@ export default class ListView extends React.Component {
     },
     total: 0,
     records: [],
-    isCreationPanelOpen: true
+    isCreationPanelOpen: true,
+    lastEffectedId: undefined
   };
 
   constructor({ modelName, columns, title, form, mutable = true, transformation = _.identity }) {
@@ -65,7 +67,9 @@ export default class ListView extends React.Component {
     this.retrieveAll(params);
   }
 
-  onRecordSaved = record => this.refs.load.promise = WiregooseApi.crud.update(this.modelName, record._id, record)
+  onRecordSaved = record =>
+    this.refs.load.promise = WiregooseApi.crud.update(this.modelName, record._id, record)
+      .then(() => this.setState({lastEffectedId: record._id}))
 
   onCreationPanelClicked = () => this.setState({
     isCreationPanelOpen: !this.state.isCreationPanelOpen
@@ -73,6 +77,7 @@ export default class ListView extends React.Component {
 
   onCreateRecord = record =>
     this.refs.load.promise = WiregooseApi.crud.create(this.modelName, record)
+      .then(() => this.setState({lastEffectedId: record._id}))
       .then(() => this.retrieveAll())
 
   addQuery = (query) => {
@@ -118,8 +123,8 @@ export default class ListView extends React.Component {
       <div>
         <this.form
           record={row}
-          onSave={this.props.onRecordSaved}
-          onDelete={record => this.props.onDeleteRow([record._id])}
+          onSave={this.onRecordSaved}
+          onDelete={record => this.onDeleteRow([record._id])}
           isNew={false}
         />
       </div>
@@ -127,7 +132,7 @@ export default class ListView extends React.Component {
   }
 
   isEffectedRow = record =>
-    record._id === this.props.lastEffectedId && 'success'
+    record._id === this.lastEffectedId && 'success'
 
   render() {
     const {
@@ -151,8 +156,8 @@ export default class ListView extends React.Component {
       <div>
         <h3>{this.title}</h3>
         <Row>
-          {this.mutable &&
-            <Col sm={12}>
+          <Col sm={12}>
+            {this.mutable &&
               <Button
                 bsStyle="primary"
                 className="clearfix pull-right"
@@ -167,11 +172,11 @@ export default class ListView extends React.Component {
                   }
                 })()}
               </Button>
-              <span className="pull-left w-mt-7 w-mr-7">
-                Total: {total}
-              </span>
-            </Col>
-          }
+            }
+            <span className="pull-left w-mt-7 w-mr-7">
+              Total: {total}
+            </span>
+          </Col>
           {
             this.mutable && <Col sm={12}>
               <Collapse in={isCreationPanelOpen} className="w-mb-7 w-mt-7">

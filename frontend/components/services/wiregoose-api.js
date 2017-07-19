@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 import * as config from '../../config.js';
 import ArticleResponseTransformation from '../article-box/response-transformation.js';
+import ServerErrorInterceptor from './server-error-interceptor.js';
 
 axios.interceptors.request.use(function (config) {
     // Do something before request is sent
@@ -17,6 +18,7 @@ axios.interceptors.response.use(function (response) {
     // Do something with response data
     return response;
   }, function (error) {
+    ServerErrorInterceptor(error);
     // Do something with response error
     return Promise.reject(error);
   });
@@ -28,6 +30,7 @@ export const crud = {
   retrieve,
   retrieveAll,
   update,
+  updateSingle,
   remove
 };
 
@@ -152,6 +155,21 @@ function update(modelName, id, params) {
   return httpRequest({
     method: 'put',
     url: `${config.apiUrl}${modelName}/${id}`,
+    data: payload,
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+  });
+}
+
+function updateSingle(modelName, params) {
+  const payload = {
+    [_.upperFirst(modelName)]: params,
+  };
+  return httpRequest({
+    method: 'put',
+    url: `${config.apiUrl}${modelName}`,
     data: payload,
     headers: {
       'Content-Type': 'application/json',

@@ -10,6 +10,8 @@ import styles from './loader.less';
 })
 export default class Loader extends React.Component {
 
+  toggleLoading = undefined
+
   state = {
     isLoading: false
   }
@@ -18,18 +20,22 @@ export default class Loader extends React.Component {
     children: PropTypes.node,
   }
 
+  componentWillUnmount(){
+    this.toggleLoading = _.noop;
+  }
+
   set promise(prms) {
-    const toggleLoading = _.debounce((isLoading = false) => {
-      this.setState({ isLoading });
+    this.toggleLoading = _.debounce((isLoading = false) => {
+      this.setState(() => { isLoading });
     }, 200);
 
-    toggleLoading(true);
+    this.toggleLoading(true);
     prms.then((v) => {
-      toggleLoading(false);
+      this.toggleLoading(false);
       return v;
     })
     .catch((e) => {
-      toggleLoading(false);
+      this.toggleLoading(false);
       throw e;
     });
   }

@@ -5,10 +5,10 @@ import { Form, FormGroup, Col, FormControl, ControlLabel, Button, Collapse }
   from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 import { isUri } from 'valid-url';
-import Select from 'react-select';
 import CSSModules from 'react-css-modules';
 
 import styles from './form.less';
+import Select from '../select/select.jsx';
 import Loader from '../loader/loader.jsx';
 import * as WiregooseApi from '../services/wiregoose-api.js';
 import FetchPreview from './fetch-preview.jsx';
@@ -181,12 +181,11 @@ export default class FormGenerator extends React.Component {
           <FormGroup controlId="formIdProvider">
             <Col componentClass={ControlLabel} sm={2}>Provider</Col>
             <Col sm={10}>
-              <Select.Async
+              <Select
                 name="provider"
                 value={record.provider}
                 loadOptions={this.getProviderOptions}
                 onChange={this.handleProviderChange}
-                autoload={false}
                 valueKey="_id"
                 labelKey="name"
                 required

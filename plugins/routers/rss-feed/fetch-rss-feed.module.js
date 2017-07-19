@@ -4,6 +4,7 @@
 
 KlarkModule(module, 'routesRssFeedFetchRssFeed', (
   _,
+  $mongodb,
   krkParameterValidator,
   krkMiddlewarePermissions,
   krkMiddlewareResponse,
@@ -31,7 +32,7 @@ KlarkModule(module, 'routesRssFeedFetchRssFeed', (
 
     function middlewareController(req, res, next) {
       const url = res.locals.params.q;
-      rssTranslator.translateFromUrl(url, 'mockProvider')
+      rssTranslator.translateFromUrl(url, {provider: {name: 'mockProvider'}, _id: new $mongodb.ObjectID()})
         .then(entries => res.locals.data = entries)
         .then(() => next())
         .catch(reason => {

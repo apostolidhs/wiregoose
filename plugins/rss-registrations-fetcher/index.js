@@ -12,16 +12,11 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
   config,
   modelsApp,
   modelsEntry,
-  modelsAuthor,
   modelsRssRegistration,
   modelsFetchReport,
   rssRegistrationsFetcherIterationFetch
 ) => {
-
-  const tryToFetchFrequent = Math.max(
-    Math.floor(config.RSS_REGISTRATIONS_FETCH_FREQUENT / 8),
-    20 * 60 * 1000
-  );
+  const TRY_TO_FETCH_FREQUENT = 20 * 60 * 1000;
   let isFetching = false;
 
   return {
@@ -101,12 +96,7 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
           return q.when();
         }
 
-        const authors = _(entries)
-          .filter(entry => entry.author)
-          .map(entry => ({name: entry.author}))
-          .value();
-
-        return (_.isEmpty(authors) ? q.resolve() : modelsAuthor.saveManyIfNotExist(authors))
+        return q.resolve()
           .then(() => modelsEntry.saveAvoidingDuplications(entries))
           .then(savedEntries => fetchReport.entriesStored += _.size(savedEntries))
           .then(() => onNextChunk(rssRegistration));
@@ -140,7 +130,7 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
 
   function startPeriodicalFetchProcess() {
     tryToFetch();
-    setInterval(tryToFetch, tryToFetchFrequent);
+    setInterval(tryToFetch, TRY_TO_FETCH_FREQUENT);
 
     function tryToFetch() {
       modelsApp.getAppInfo()
@@ -161,7 +151,7 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
       let resolvedRegistrations;
 
       const lastTime = appInfo.lastRssRegistrationFetch.getTime();
-      if (lastTime + config.RSS_REGISTRATIONS_FETCH_FREQUENT > _.now()) {
+      if (lastTime + appInfo.rssRegistrationFetchFrequency > _.now()) {
         return;
       }
 

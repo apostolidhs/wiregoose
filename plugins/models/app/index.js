@@ -2,10 +2,11 @@
 
 'use strict';
 
-KlarkModule(module, 'modelsApp', ($mongoose, _) => {
+KlarkModule(module, 'modelsApp', ($mongoose, _, config) => {
 
   const schema = new $mongoose.Schema({
-    lastRssRegistrationFetch: {type: Date, required: true}
+    lastRssRegistrationFetch: {type: Date, required: true},
+    rssRegistrationFetchFrequency: {type: Number, required: true, default: config.RSS_REGISTRATIONS_FETCH_FREQUENT},
   });
 
   schema.statics.getAppInfo = getAppInfo;
