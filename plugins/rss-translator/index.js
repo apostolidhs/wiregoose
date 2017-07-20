@@ -78,6 +78,8 @@ KlarkModule(module, 'rssTranslator', (
     const link = sanitizeUrl(item.link);
     const author = sanitizeString(item.author, 'author');
     const provider = rssRegistration.provider.name;
+    const category = rssRegistration.category;
+    const lang = rssRegistration.lang;
 
     const data = {
       title,
@@ -85,8 +87,10 @@ KlarkModule(module, 'rssTranslator', (
       description,
       published,
       link,
+      category,
       provider,
       author,
+      lang,
       registration: rssRegistration._id
     };
 

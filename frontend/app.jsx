@@ -66,6 +66,7 @@ class App extends React.Component {
           {
             Auth.isAuthenticated() &&
             <Route path="admin" component={Admin}>
+              <IndexRoute component={Dashboard} />
               <Route path="dashboard" component={Dashboard} />
               <Route path="rssprovider" component={RssProvider} />
               <Route path="rssregistration" component={RssRegistration} />

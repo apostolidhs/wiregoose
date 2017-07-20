@@ -31,7 +31,9 @@ KlarkModule(module, 'app', (
   routesRssFeedFetchRssRegistrations,
   routesCrud,
   routesStatics,
-  routesEntry
+  routesEntry,
+  routesMeasures,
+  parameterValidatorsCustomExpressValidators
 ) => {
 
   return {
@@ -72,7 +74,9 @@ KlarkModule(module, 'app', (
     app.use($morgan('dev'));
     app.use($bodyParser.json());
     app.use($bodyParser.urlencoded({ extended: false }));
-    app.use($expressValidator());
+    app.use($expressValidator({
+      customValidators: parameterValidatorsCustomExpressValidators.getValidators()
+    }));
     app.use($cookieParser());
     app.use($express.static($path.join(__dirname, '../../', 'public')));
 
@@ -110,6 +114,7 @@ KlarkModule(module, 'app', (
 
   function registerRoutes(app) {
     _.each([
+      routesMeasures,
       routesEntry,
       routesRssFeedFetchRssRegistrations,
       routesRssFeedFetchRssFeed,

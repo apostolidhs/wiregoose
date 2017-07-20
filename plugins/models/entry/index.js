@@ -2,9 +2,19 @@
 
 'use strict';
 
-KlarkModule(module, 'modelsEntry', (_, q, $moment, $mongoose, $mongooseTypeUrl) => {
+KlarkModule(module, 'modelsEntry', (
+  _,
+  q,
+  config,
+  $moment,
+  $mongoose,
+  $mongooseTypeUrl,
+  $mongooseCreatedmodified
+) => {
 
   const schema = getSchema();
+
+  schema.plugin($mongooseCreatedmodified.createdModifiedPlugin, {index: true});
 
   schema.methods.findLatestEntryByProvider = findLatestEntryByProvider;
   schema.methods.findDuplicateEntry = findDuplicateEntry;
@@ -20,6 +30,8 @@ KlarkModule(module, 'modelsEntry', (_, q, $moment, $mongoose, $mongooseTypeUrl) 
       description: {type: String, required: true, maxlength: [512]},
       published: {type: Date, required: true},
       link: {type: $mongoose.SchemaTypes.Url, required: true},
+      category: {type: String, enum: config.CATEGORIES, required: true},
+      lang: {type: String, enum: config.SUPPORTED_LANGUAGES, required: true},
       // this should be {type: ObjectId, ref: 'Author'}
       // but we really need the speed, part 1 :)
       author: {type: String, maxlength: [128]},

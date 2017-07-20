@@ -59,6 +59,18 @@ export function login(email, password) {
   });
 }
 
+export function getSucceededFetchesPerPeriod(days, lang) {
+  return httpRequest({
+    method: 'get',
+    url: `${config.apiUrl}measures/succeededFetchesPerPeriod`,
+    params: { days, lang },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: credentialGetter(),
+    },
+  })
+}
+
 export function getStatic(name) {
   return httpRequest({
     method: 'get',

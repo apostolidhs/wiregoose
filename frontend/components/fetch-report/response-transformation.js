@@ -8,10 +8,10 @@ export default function translate(fetchReport) {
     fetchReport.finished = new Date(fetchReport.finished);
   }
   if (fetchReport.finished && fetchReport.started) {
-    fetchReport.duration = fetchReport.finished.getTime()
-                      - fetchReport.started.getTime();
+    fetchReport.duration = Math.round((fetchReport.finished.getTime()
+                      - fetchReport.started.getTime()) / (1000));
   }
-  fetchReport.failedFetches = fetchReport.totalFetches - fetchReport.succeededFetches;
+  fetchReport.unsucceededFetches = fetchReport.totalFetches - fetchReport.succeededFetches;
   fetchReport.succeededFetchesPerc = Math.round((fetchReport.succeededFetches / fetchReport.totalFetches) * 100);
   fetchReport.entriesAborted = fetchReport.succeededFetches - fetchReport.entriesStored;
   fetchReport.succeededEntriesPerc = Math.round((fetchReport.entriesStored / fetchReport.succeededFetches) * 100);

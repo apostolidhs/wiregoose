@@ -33,7 +33,7 @@ KlarkModule(module, 'routesEntry', (
     const pagination = res.locals.params.pagination;
 
     const cursor = modelsEntry.find()
-      .select({ "author": 1, "_id": 0})
+      .select({ 'author': 1, '_id': 0})
       .where('author')
         .ne(null);
 

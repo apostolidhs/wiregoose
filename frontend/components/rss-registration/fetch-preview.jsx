@@ -61,7 +61,6 @@ export default class FetchPreview extends React.Component {
     } = this.props;
 
     return (
-
       <Loader ref="load" {...passDownProps}>
         <h2>Rss Feed Fetch Report</h2>
         <Table responsive>
@@ -77,7 +76,6 @@ export default class FetchPreview extends React.Component {
           </tbody>
         </Table>
 
-
         <h3>Errors</h3>
         <ReactJson src={errors} collapsed={true} theme="monokai" />
 
@@ -90,40 +88,7 @@ export default class FetchPreview extends React.Component {
             <ArticleBox entry={rssFeed} key={`${rssFeed.title}-${rssFeed.description}`} />
           )}
         </Panel>
-          {/*<Form horizontal>
-
-            <FormGroup controlId="formIdLink" validationState={this.validateLink()}>
-              <Col componentClass={ControlLabel} sm={2}>Link</Col>
-              <Col sm={10}>
-                <FormControl
-                  type="text"
-                  name="link"
-                  value={link}
-                  onChange={this.handleInputChange}
-                  required
-                />
-              </Col>
-            </FormGroup>
-
-            <div>
-              {_.map(rssFeeds, (rssFeed) =>
-                <ArticleBox entry={rssFeed} />
-              )}
-            </div>
-
-            <div className="clearfix">
-              <Button bsStyle="primary"
-                className="pull-right"
-                type="submit"
-                onClick={this.onSaveClicked}
-                disabled={this.validateLink() !== 'success'}>
-                <FontAwesome name="picture-o" /> Preview
-              </Button>
-            </div>
-
-          </Form>*/}
-
-        </Loader>
+      </Loader>
     );
   }
 

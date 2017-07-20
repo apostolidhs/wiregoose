@@ -42,17 +42,24 @@ export default class RssFetchReport extends React.Component {
     this.setState({ record });
   }
 
+  handleDatePickerChange = (e) => {
+    const record =  this.state.record;
+    record.lastRssRegistrationFetch = e.toDate();
+    this.setState({ record });
+  }
+
+
   render() {
     return (
       <Form horizontal>
 
         <FormGroup controlId="formIdLastRssRegistrationFetch">
-          <Col componentClass={ControlLabel} sm={6}>Last Rss Registration Fetch</Col>
-          <Col sm={6}>
+          <Col componentClass={ControlLabel} sm={5}>Last Rss Registration Fetch</Col>
+          <Col sm={7}>
             <DatePicker
               name="lastRssRegistrationFetch"
               selected={moment(this.state.record.lastRssRegistrationFetch)}
-              onChange={this.handleInputChange}
+              onChange={this.handleDatePickerChange}
             />
             <TimeAgo
               className="text-muted"
@@ -63,8 +70,8 @@ export default class RssFetchReport extends React.Component {
         </FormGroup>
 
         <FormGroup controlId="formIdRssRegistrationFetchFrequency">
-          <Col componentClass={ControlLabel} sm={6}>Rss Registration Fetch Frequency</Col>
-          <Col sm={6}>
+          <Col componentClass={ControlLabel} sm={5}>Rss Registration Fetch Frequency</Col>
+          <Col sm={7}>
             <InputGroup>
               <FormControl
                 type="number"
@@ -74,8 +81,8 @@ export default class RssFetchReport extends React.Component {
                 required
               />
               <InputGroup.Addon>
-                {Math.round(this.state.record.rssRegistrationFetchFrequency / (60 * 1000))} mins
-                ({Math.round(this.state.record.rssRegistrationFetchFrequency / (60 * 60 * 1000))} hours)
+                {Math.round(this.state.record.rssRegistrationFetchFrequency / (60 * 1000))} m
+                ({Math.round(this.state.record.rssRegistrationFetchFrequency / (60 * 60 * 1000))} h)
               </InputGroup.Addon>
             </InputGroup>
           </Col>

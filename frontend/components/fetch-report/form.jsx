@@ -7,6 +7,7 @@ import TimeAgoEnglishStrings
 from 'react-timeago/lib/language-strings/en';
 import TimeAgoBuildFormatter
 from 'react-timeago/lib/formatters/buildFormatter';
+import ReactJson from 'react-json-view';
 
 const formatter = TimeAgoBuildFormatter(TimeAgoEnglishStrings)
 
@@ -28,25 +29,25 @@ export default class FetchReportForm extends React.Component {
     return (
       <Form horizontal>
         <FormGroup>
-          <Col componentClass={ControlLabel} sm={4}>Total Fetches</Col>
-          <Col sm={2}>
+          <Col componentClass={ControlLabel} sm={6}>Total Fetches</Col>
+          <Col sm={6}>
             <FormControl.Static>{record.totalFetches}</FormControl.Static>
           </Col>
         </FormGroup>
         <FormGroup>
-          <Col componentClass={ControlLabel} sm={4}>Succeeded/Failed Fetches</Col>
-          <Col sm={2}>
-            <FormControl.Static>{record.succeededFetches} / {record.totalFetches - record.succeededFetches}</FormControl.Static>
+          <Col componentClass={ControlLabel} sm={6}>Succeeded/Failed Fetches</Col>
+          <Col sm={6}>
+            <FormControl.Static>{record.succeededFetches} / {record.unsucceededFetches}</FormControl.Static>
           </Col>
         </FormGroup>
         <FormGroup>
-          <Col componentClass={ControlLabel} sm={4}>Stored/aborted Entries</Col>
-          <Col sm={2}>
-            <FormControl.Static>{record.entriesStored} / {record.succeededFetches - record.entriesStored}</FormControl.Static>
+          <Col componentClass={ControlLabel} sm={6}>Stored/aborted Entries</Col>
+          <Col sm={6}>
+            <FormControl.Static>{record.entriesStored} / {record.entriesAborted}</FormControl.Static>
           </Col>
         </FormGroup>
         <FormGroup>
-          <Col componentClass={ControlLabel} sm={4}>Period</Col>
+          <Col componentClass={ControlLabel} sm={6}>Started</Col>
           <Col sm={6}>
             <FormControl.Static>
               <TimeAgo
@@ -54,14 +55,20 @@ export default class FetchReportForm extends React.Component {
                 minPeriod={1}
                 formatter={formatter}
               />
-              (<TimeAgo
-                date={record.started}
-                minPeriod={1}
-                formatter={formatter}
-              />)
             </FormControl.Static>
           </Col>
         </FormGroup>
+        <FormGroup>
+          <Col componentClass={ControlLabel} sm={6}>Duration</Col>
+          <Col sm={6}>
+            <FormControl.Static>
+              {record.duration} seconds
+            </FormControl.Static>
+          </Col>
+        </FormGroup>
+
+        <h4>Failures</h4>
+        <ReactJson src={record.failedFetches} collapsed={true} theme="monokai" />
       </Form>
     );
   }
