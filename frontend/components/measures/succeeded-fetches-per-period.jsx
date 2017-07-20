@@ -83,7 +83,7 @@ export default class SucceededFetchesPerPeriod extends React.Component {
         const colors = Pallet.createSample(_.size(providers));
         const providerInfo = _.map(
           providers,
-          (name, idx) => ({ name, color: ShadeColor(colors[idx].color, 0.5) })
+          (name, idx) => ({ name, color: ShadeColor(colors[idx].color, -0.2) })
         );
         const payload = this.calculateChartLegendPayload(charts, providerInfo);
         this.setState({
@@ -180,7 +180,7 @@ export default class SucceededFetchesPerPeriod extends React.Component {
             </Form>
           </Col>
         </Row>
-        <Row>
+        <Row className="w-mt-7">
           {(() => {
             if (_.isEmpty(this.state.charts)) {
               return (
@@ -191,7 +191,10 @@ export default class SucceededFetchesPerPeriod extends React.Component {
             } else {
               return _.map(this.state.charts, chart => (
                 <Col md={6} key={chart.name}>
-                  <h4>{chart.name}, <span className="text-muted">{chart.sum} entries</span></h4>
+                  <h4>
+                    {chart.name}, {' '}
+                    <span className="text-muted">{chart.sum} entries</span>
+                  </h4>
                   {this.renderChart(chart.data, this.state.providers, this.state.payload[chart.name])}
                 </Col>
               ));

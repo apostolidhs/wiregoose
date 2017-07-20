@@ -40,7 +40,7 @@ export default class RssFetchReport extends ListView {
         return (
           <span>
             {TextUtilities.dateToText(started, true)}
-            (<TimeAgo date={_.now() - duration} live={false} />)
+            (<TimeAgo date={_.now() - (duration * 1000)} live={false} />)
           </span>
         )
       },

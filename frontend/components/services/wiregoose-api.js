@@ -114,8 +114,7 @@ function fetchRssFeed(link) {
 function fetchRssRegistrations() {
   return httpRequest({
     method: 'post',
-    url: `${config.apiUrl}rssFeed/fetchRegistration`,
-    data: payload,
+    url: `${config.apiUrl}rssFeed/fetchRegistrations`,
     headers: {
       'Content-Type': 'application/json',
       authorization: credentialGetter(),

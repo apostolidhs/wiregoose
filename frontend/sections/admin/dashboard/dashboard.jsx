@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import React from 'react';
-import { Row, Col, Panel }
+import { Row, Col, Panel, Button }
   from 'react-bootstrap';
+import FontAwesome from 'react-fontawesome';
 
 import * as Notifications from '../../../components/notifications/notifications.jsx';
 import Loader from '../../../components/loader/loader.jsx';
@@ -55,6 +56,12 @@ export default class Dashboard extends React.Component {
       .then(() => Notifications.create.info('Rss fetch info updated'))
       .then(() => this.retrieveAppInfo())
 
+  forceFetchRssRegistrations = () =>
+    this.refs.appInfoPrms.promise = WiregooseApi.rssFeed.fetchRssRegistrations()
+      .then(() => Notifications.create.success('Rss registrations fetched successfully'))
+      .then(() => this.retrieveAppInfo())
+      .then(() => this.retrieveLastFetchReport())
+
   render() {
     return (
       <div>
@@ -65,6 +72,13 @@ export default class Dashboard extends React.Component {
                 <Panel>
                   <h4>Rss Fetch Info</h4>
                   <AppInfoForm record={this.state.appInfo} onSave={this.updateAppInfo} />
+                  <hr />
+                  <div className="text-right">
+                    Force Rss Fetch Now {' '}
+                    <Button bsStyle="primary" bsSize="xsmall" onClick={this.forceFetchRssRegistrations}>
+                      <FontAwesome name="rocket" /> Fetch
+                    </Button>
+                  </div>
                 </Panel>
               }
             </Loader>
