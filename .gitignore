@@ -1,6 +1,7 @@
 /node_modules
 /db
 /dist
+/build
 /config.js
 /frontend/app/bower_components
 /frontend/app/**/*.map

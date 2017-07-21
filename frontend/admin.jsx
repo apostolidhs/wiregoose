@@ -13,6 +13,12 @@ import * as Auth from './components/authorization/auth.js';
 import * as WiregooseApi from './components/services/wiregoose-api.js';
 import ComponentsGallery from './sections/components-gallery/components-gallery.jsx';
 import Login from './sections/authorization/login.jsx';
+import Admin from './sections/admin/admin.jsx';
+import RssProvider from './sections/admin/rss-provider/rss-provider.jsx';
+import RssRegistration from './sections/admin/rss-registration/rss-registration.jsx';
+import FetchReport from './sections/admin/fetch-report/fetch-report.jsx';
+import ArticleEntries from './sections/admin/article-entries/article-entries.jsx';
+import Dashboard from './sections/admin/dashboard/dashboard.jsx';
 
 if (Auth.isAuthenticated()) {
   WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
@@ -57,6 +63,17 @@ class App extends React.Component {
           <IndexRoute component={ComponentsGallery} />
           <Route path="login" component={Login} />
           <Route path="componentsGallery" component={ComponentsGallery}/>
+          {
+            Auth.isAuthenticated() &&
+            <Route path="admin" component={Admin}>
+              <IndexRoute component={Dashboard} />
+              <Route path="dashboard" component={Dashboard} />
+              <Route path="rssprovider" component={RssProvider} />
+              <Route path="rssregistration" component={RssRegistration} />
+              <Route path="fetchreport" component={FetchReport} />
+              <Route path="articleentries" component={ArticleEntries} />
+            </Route>
+          }
           <Route path='*' component={NotFound} />
         </Route>
       </Router>

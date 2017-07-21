@@ -40,7 +40,7 @@ KlarkModule(module, 'routesMeasures', (
       .then(data => res.locals.data = data)
       .then(() => next())
       .catch(reason => {
-        res.locals.errors.add('RSS_FEED_FETCH_FAIL', reason);
+        res.locals.errors.add('MEASURES_FAILED', reason);
         next(true);
       });
   }

@@ -2,18 +2,22 @@
 
 'use strict';
 
-KlarkModule(module, 'modelsArticle', ($mongoose, $mongooseIdValidator, $mongooseTypeUrl, config) => {
+KlarkModule(module, 'modelsArticle', ($mongoose, $mongooseIdValidator, config) => {
 
   const schema = new $mongoose.Schema({
-    content: {type: String, required: true},
-    error: {type: String},
-    created: {type: Date, default: Date.now},
+    content: {type: String},
+    contentLength: {type: Number},
+    title: {type: String},
+    byline: {type: String},
+    error: {
+      code: { type: Number },
+      msg: { type: String }
+    },
     link: {type: $mongoose.SchemaTypes.Url, required: true, index: true},
-    // this should be {type: ObjectId, ref: 'Category', required: true}
-    // but we really need the speed :)
-    category: {type: String, required: true},
-    lang: {type: String, enum: config.SUPPORTED_LANGUAGES, required: true},
-    entryId: {type: $mongoose.Schema.Types.ObjectId, ref: 'Entry', required: true}
+    entryId: {type: $mongoose.Schema.Types.ObjectId, ref: 'Entry', required: true},
+    createdAt: { type: Date, expires: config.ARTICLE_MINING_EXPIRATION },
+    lastHit: { type: Date },
+    hits: {type: Number, default: 0},
   });
 
   schema.plugin($mongooseIdValidator);

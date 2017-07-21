@@ -23,7 +23,7 @@ export default class Entry extends React.Component {
   static propTypes = {
     entry: PropTypes.shape({
       title: PropTypes.string,
-      image: validateURL,
+      image: PropTypes.string,
       description: PropTypes.string,
       published: PropTypes.instanceOf(Date),
       link: validateURL,

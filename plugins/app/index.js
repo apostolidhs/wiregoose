@@ -33,6 +33,7 @@ KlarkModule(module, 'app', (
   routesStatics,
   routesEntry,
   routesMeasures,
+  routesArticle,
   parameterValidatorsCustomExpressValidators
 ) => {
 
@@ -67,7 +68,9 @@ KlarkModule(module, 'app', (
       version: config.API_VERSION,
       errors: {
         RSS_FEED_FETCH_FAIL: [3001, 'rss feed fetch failed'],
-        RSS_REGISTRATIONS_FETCH_FAIL: [3002, 'rss registrations fetch failed']
+        RSS_REGISTRATIONS_FETCH_FAIL: [3002, 'rss registrations fetch failed'],
+        ARTICLE_MINING_FAIL: [6001, 'article mining failed'],
+        MEASURES_FAILED: [7001, 'measures failed']
       }
     }));
 
@@ -114,6 +117,7 @@ KlarkModule(module, 'app', (
 
   function registerRoutes(app) {
     _.each([
+      routesArticle,
       routesMeasures,
       routesEntry,
       routesRssFeedFetchRssRegistrations,

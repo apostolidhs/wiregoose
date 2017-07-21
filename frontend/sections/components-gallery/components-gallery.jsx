@@ -2,7 +2,7 @@ import React from 'react';
 import CSSModules from 'react-css-modules';
 import _ from 'lodash';
 import ArticleBox from '../../components/article-box/article-box.jsx';
-import '../../assets/img/entry-sample.jpg';
+import entrySampleImage from '../../assets/img/entry-sample.jpg';
 import styles from './components-gallery.less';
 
 @CSSModules(styles)
@@ -12,7 +12,7 @@ export default class ComponentsGallery extends React.Component {
     title: `Το Γουδί ξανά στο προσκήνιο για τον
             Παναθηναϊκό ασδασδ ασδασδασδ ασδασδασδ
             ασδασδ ασδδεςασδασδ ασδασδσαδασδ`,
-    image: 'http://localhost:8080/public/assets/img/entry-sample.jpg',
+    image: entrySampleImage,
     description: `Αθλητική εφημερίδα υποστηρίζει ότι επανέρχεται το Γουδί
                     ως λύση στο γηπεδικό πρόβλημα του Παναθηναϊκού και
                     το Sport24.gr εξηγεί τι ισχύει με το νομικό καθεστώς
