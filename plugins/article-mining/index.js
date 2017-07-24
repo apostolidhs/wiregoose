@@ -19,6 +19,9 @@ KlarkModule(module, 'articleMining', (
   function cachedExtraction(entryId) {
     return retrieveEntry(entryId)
       .then(entry => {
+        if (_.isEmpty(entry)) {
+          return;
+        }
         const link = entry.link;
         return retrieveArticleAndUpdateCacheHit(link)
           .then(article => {
@@ -28,7 +31,7 @@ KlarkModule(module, 'articleMining', (
 
             return articleMiningExtractContent.extract(link)
               .then(doc => createSuccessfullyArticle(doc, entry))
-              .then(reason => createFailedArticle(reason, entry));
+              .catch(reason => createFailedArticle(reason, entry));
           });
       });
   }

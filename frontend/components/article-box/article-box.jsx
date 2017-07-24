@@ -11,6 +11,7 @@ import CSSModules from 'react-css-modules';
 // from 'react-timeago/lib/formatters/buildFormatter';
 
 import styles from './article-box.less';
+import entryPropType from './entry-prop-type.js';
 import componentSize from '../responsible/component-size.js';
 import { ellipsis } from '../text-utilities/text-utilities.js';
 
@@ -21,16 +22,7 @@ import { ellipsis } from '../text-utilities/text-utilities.js';
 export default class Entry extends React.Component {
 
   static propTypes = {
-    entry: PropTypes.shape({
-      title: PropTypes.string,
-      image: PropTypes.string,
-      description: PropTypes.string,
-      published: PropTypes.instanceOf(Date),
-      link: validateURL,
-      author: PropTypes.string,
-      provider: PropTypes.string,
-      category: PropTypes.string,
-    }),
+    entry: PropTypes.shape(entryPropType),
     size: componentSize.propType,
     className: PropTypes.string,
   }
