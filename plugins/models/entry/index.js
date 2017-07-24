@@ -30,6 +30,8 @@ KlarkModule(module, 'modelsEntry', (
       description: {type: String, required: true, maxlength: [512]},
       published: {type: Date, required: true},
       link: {type: $mongoose.SchemaTypes.Url, required: true},
+      lastHit: { type: Date },
+      hits: {type: Number, default: 0},
       category: {type: String, enum: config.CATEGORIES, required: true},
       lang: {type: String, enum: config.SUPPORTED_LANGUAGES, required: true},
       // this should be {type: ObjectId, ref: 'Author'}

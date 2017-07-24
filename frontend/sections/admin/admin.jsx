@@ -36,8 +36,13 @@ export default class Admin extends React.Component {
               </NavItem>
             </LinkContainer>
             <LinkContainer to="/admin/articleentries">
-              <NavItem eventKey={3} title="Article Entries">
+              <NavItem eventKey={4} title="Article Entries">
                 <FontAwesome name="font" /> Article Entries
+              </NavItem>
+            </LinkContainer>
+            <LinkContainer to="/admin/article">
+              <NavItem eventKey={5} title="Article">
+                <FontAwesome name="newspaper-o" /> Article
               </NavItem>
             </LinkContainer>
           </Nav>

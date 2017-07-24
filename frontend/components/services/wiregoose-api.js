@@ -2,7 +2,8 @@ import axios from 'axios';
 import _ from 'lodash';
 
 import * as config from '../../config.js';
-import ArticleResponseTransformation from '../article-box/response-transformation.js';
+import ArticleResponseTransformation from '../article/response-transformation.js';
+import ArticleBoxResponseTransformation from '../article-box/response-transformation.js';
 import ServerErrorInterceptor from './server-error-interceptor.js';
 
 axios.interceptors.request.use(function (config) {
@@ -75,6 +76,21 @@ export function getStatic(name) {
   return httpRequest({
     method: 'get',
     url: `${config.apiUrl}statics/${name}`
+  });
+}
+
+export function fetchArticle(entryId) {
+  return httpRequest({
+    method: 'get',
+    url: `${config.apiUrl}article/mining/cachedFetch/entry/${entryId}`,
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+  })
+  .then(resp => {
+    const article = ArticleResponseTransformation(resp.data.data);
+    return resp;
   });
 }
 

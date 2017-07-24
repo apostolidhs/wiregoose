@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import validateURL from 'react-proptypes-url-validator';
 
-export default const entryPropType = {
+const entryPropType = {
   title: PropTypes.string,
   image: PropTypes.string,
   description: PropTypes.string,
@@ -11,3 +11,5 @@ export default const entryPropType = {
   provider: PropTypes.string,
   category: PropTypes.string,
 };
+
+export default entryPropType;

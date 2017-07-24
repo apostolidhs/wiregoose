@@ -35,7 +35,7 @@ config.EMAIL_ADDRESS = ''; // user%40gmail.com
 config.EMAIL_SMTP = ''; // smtps://user%40gmail.com:pass@smtp.gmail.com
 
 config.ARTICLE_MINING_EXPIRATION = 20 * 24 * 60 * 60; // s, when the cached article will expired
-config.ARTICLE_MINING_CACHE_SIZE = 5000; // how much articles will be stored
+// config.ARTICLE_MINING_CACHE_SIZE = 5000; // how much articles will be stored
 
 config.SUPPORTED_LANGUAGES = [
   'en',

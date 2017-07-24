@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Col, FormControl, ControlLabel, Button }
+import { Form, FormGroup, Col, FormControl, ControlLabel, Button, Panel }
   from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 import { isUri } from 'valid-url';
@@ -14,6 +14,7 @@ import Select from '../select/select.jsx';
 import SelectInlineRender from '../rss-registration/select-inline-render.jsx';
 import * as WiregooseApi from '../services/wiregoose-api.js';
 import ArticleBox from './article-box.jsx';
+import Article from '../article/article.jsx';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -35,7 +36,7 @@ export default class ArticleBoxForm extends React.Component {
   }
 
   state = {
-    record: this.props.record,
+    record: this.props.record
   }
 
   isInvalid = () => {
@@ -48,6 +49,11 @@ export default class ArticleBoxForm extends React.Component {
       && record.provider
       && record.registration
     );
+  }
+
+  fetchArticle = () => {
+    this.refs.articleLoad.promise = WiregooseApi.fetchArticle(this.state.record._id)
+      .then(resp => this.setState({ article: resp.data.data }));
   }
 
   onSaveClicked = (e) => {
@@ -90,6 +96,12 @@ export default class ArticleBoxForm extends React.Component {
   handleRegistrationChange = (val) => {
     const record = this.state.record;
     record.registration = val && val._id || undefined;
+    this.setState({ record });
+  }
+
+  handleDatePickerChange = (e) => {
+    const record =  this.state.record;
+    record.published = e.toDate();
     this.setState({ record });
   }
 
@@ -168,13 +180,13 @@ export default class ArticleBoxForm extends React.Component {
           </Col>
         </FormGroup>
 
-         <FormGroup controlId="formIdPublished">
+        <FormGroup controlId="formIdPublished">
           <Col componentClass={ControlLabel} sm={2}>Published</Col>
           <Col sm={10}>
              <DatePicker
               name="published"
               selected={moment(record.published)}
-              onChange={this.handleInputChange}
+              onChange={this.handleDatePickerChange}
             />
           </Col>
         </FormGroup>
@@ -237,6 +249,19 @@ export default class ArticleBoxForm extends React.Component {
           <div className="w-mt-7">
             <ArticleBox entry={record} />
           </div>
+        )}
+
+        { !this.isInvalid() && (
+          <Loader ref="articleLoad" className="w-mt-7">
+            <Button bsStyle="primary" className="pull-right" onClick={this.fetchArticle}>
+              <FontAwesome name="newspaper-o" /> Fetch Article
+            </Button>
+            <Panel collapsible expanded={!!this.state.article}>
+              { this.state.article &&
+                <Article article={this.state.article} />
+              }
+            </Panel>
+          </Loader>
         )}
       </Form>
     );

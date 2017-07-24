@@ -19,6 +19,7 @@ import RssRegistration from './sections/admin/rss-registration/rss-registration.
 import FetchReport from './sections/admin/fetch-report/fetch-report.jsx';
 import ArticleEntries from './sections/admin/article-entries/article-entries.jsx';
 import Dashboard from './sections/admin/dashboard/dashboard.jsx';
+import Article from './sections/admin/article/article.jsx';
 
 if (Auth.isAuthenticated()) {
   WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
@@ -72,6 +73,7 @@ class App extends React.Component {
               <Route path="rssregistration" component={RssRegistration} />
               <Route path="fetchreport" component={FetchReport} />
               <Route path="articleentries" component={ArticleEntries} />
+              <Route path="article" component={Article} />
             </Route>
           }
           <Route path='*' component={NotFound} />

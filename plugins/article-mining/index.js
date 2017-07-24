@@ -8,6 +8,7 @@ KlarkModule(module, 'articleMining', (
   $jsdom,
   $http,
   krkDbMongooseBinders,
+  articleMiningExtractContent,
   modelsEntry,
   modelsArticle
 ) => {
@@ -17,13 +18,13 @@ KlarkModule(module, 'articleMining', (
   };
 
   function cachedExtraction(entryId) {
-    return retrieveEntry(entryId)
+    return retrieveEntryAndUpdateHitCounter(entryId)
       .then(entry => {
         if (_.isEmpty(entry)) {
           return;
         }
         const link = entry.link;
-        return retrieveArticleAndUpdateCacheHit(link)
+        return retrieveArticle(link)
           .then(article => {
             if (!_.isEmpty(article)) {
               return article;
@@ -36,17 +37,18 @@ KlarkModule(module, 'articleMining', (
       });
   }
 
-  function retrieveEntry(entryId) {
-    return krkDbMongooseBinders.findById(modelsEntry, entryId);
-  }
-
-  function retrieveArticleAndUpdateCacheHit(articleId) {
+  function retrieveEntryAndUpdateHitCounter(entryId) {
     const q = {
       $inc: { hits: 1 },
       lastHit: new Date()
     };
     return krkDbMongooseBinders
-      .findByIdAndUpdate(modelsArticle, articleId, q);
+      .findByIdAndUpdate(modelsEntry, entryId, q);
+  }
+
+  function retrieveArticle(link) {
+    const q = { link };
+    return modelsArticle.findOne(q);
   }
 
   function createSuccessfullyArticle(doc, entry) {
@@ -54,12 +56,11 @@ KlarkModule(module, 'articleMining', (
       content: doc.content,
       contentLength: doc.length || 0,
       title: doc.title,
-      byline: dic.byline,
+      byline: doc.byline,
       error: undefined
     }, createBasicArticle(entry));
 
-    return krkDbMongooseBinders
-      .create(modelsArticle, article);
+    return saveArticle(article, entry);
   }
 
   function createFailedArticle(reason, entry) {
@@ -70,18 +71,24 @@ KlarkModule(module, 'articleMining', (
       }
     }, createBasicArticle(entry));
 
-    return krkDbMongooseBinders
-      .create(modelsArticle, article);
+    return saveArticle(article, entry);
   }
 
   function createBasicArticle(entry) {
     return {
       link: entry.link,
       entryId: entry._id,
-      createdAt: new Date(),
-      lastHit: new Date(),
-      hits: 0
+      createdAt: new Date()
     };
+  }
+
+  function saveArticle(article, entry) {
+    return krkDbMongooseBinders
+      .create(modelsArticle, article)
+      .then(article => {
+        article.entryId = entry;
+        return article;
+      });
   }
 
 });

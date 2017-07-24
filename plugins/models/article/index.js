@@ -2,7 +2,7 @@
 
 'use strict';
 
-KlarkModule(module, 'modelsArticle', ($mongoose, $mongooseIdValidator, config) => {
+KlarkModule(module, 'modelsArticle', ($mongoose, $mongooseIdValidator, $mongooseAutopopulate, config) => {
 
   const schema = new $mongoose.Schema({
     content: {type: String},
@@ -14,13 +14,12 @@ KlarkModule(module, 'modelsArticle', ($mongoose, $mongooseIdValidator, config) =
       msg: { type: String }
     },
     link: {type: $mongoose.SchemaTypes.Url, required: true, index: true},
-    entryId: {type: $mongoose.Schema.Types.ObjectId, ref: 'Entry', required: true},
-    createdAt: { type: Date, expires: config.ARTICLE_MINING_EXPIRATION },
-    lastHit: { type: Date },
-    hits: {type: Number, default: 0},
+    entryId: {type: $mongoose.Schema.Types.ObjectId, ref: 'Entry', required: true, autopopulate: true},
+    createdAt: { type: Date, expires: config.ARTICLE_MINING_EXPIRATION }
   });
 
   schema.plugin($mongooseIdValidator);
+  schema.plugin($mongooseAutopopulate);
 
   return $mongoose.model('Article', schema);
 

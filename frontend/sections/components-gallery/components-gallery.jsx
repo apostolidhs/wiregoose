@@ -17,7 +17,7 @@ export default class ComponentsGallery extends React.Component {
     const entryDataNoAuthor = _.omit(entrySample(), 'author');
     return (
       <div className="w-m">
-        <Article article={} />
+        <Article article={articleSample()} />
         <ArticleBox entry={entryData} style={{ width: '320px' }} />
         <ArticleBox entry={entryDataNoAuthor} style={{ width: '480px' }} />
         <ArticleBox entry={entryDataNoAuthor} style={{ width: '768px' }} />

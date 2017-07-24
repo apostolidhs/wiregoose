@@ -56,7 +56,7 @@ KlarkModule(module, 'routesArticle', (
   }
 
   function middlewareCachedFetchController(req, res, next) {
-    const entryId = res.locals.params.id;
+    const entryId = res.locals.params.entryId;
     articleMining.cachedExtraction(entryId)
       .then(data => res.locals.data = data)
       .then(() => next())

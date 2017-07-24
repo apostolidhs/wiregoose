@@ -48,7 +48,6 @@ export default class RssFetchReport extends React.Component {
     this.setState({ record });
   }
 
-
   render() {
     return (
       <Form horizontal>

@@ -18,14 +18,20 @@ export default class Article extends React.Component {
       }),
       link: validateURL,
       entryId:  PropTypes.shape(entryPropType),
-      createdAt: PropTypes.instanceOf(Date),
-      lastHit: PropTypes.instanceOf(Date),
-      hits: PropTypes.number
+      createdAt: PropTypes.instanceOf(Date)
     })
   }
 
   render() {
+    return (
+      <article>
+        <header>
 
+        </header>
+
+        <section dangerouslySetInnerHTML={{__html: this.props.article.content}}></section>
+      </article>
+    );
   }
 
 }
