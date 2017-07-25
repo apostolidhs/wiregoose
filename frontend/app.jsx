@@ -12,7 +12,6 @@ import Notifications from './components/notifications/notifications.jsx';
 import * as Auth from './components/authorization/auth.js';
 import * as WiregooseApi from './components/services/wiregoose-api.js';
 import ComponentsGallery from './sections/components-gallery/components-gallery.jsx';
-import Login from './sections/authorization/login.jsx';
 
 if (Auth.isAuthenticated()) {
   WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
@@ -27,7 +26,7 @@ class Body extends React.Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header enableAuth={false} />
         <Notifications />
         <div className="container">
           {this.props.children}
@@ -55,9 +54,6 @@ class App extends React.Component {
       <Router history={browserHistory}>
         <Route path="/" component={Body}>
           <IndexRoute component={ComponentsGallery} />
-          <Route path="login" component={Login} />
-          <Route path="componentsGallery" component={ComponentsGallery}/>
-          <Route path='*' component={NotFound} />
         </Route>
       </Router>
     );

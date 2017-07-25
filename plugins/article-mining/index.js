@@ -23,17 +23,16 @@ KlarkModule(module, 'articleMining', (
         if (_.isEmpty(entry)) {
           return;
         }
-        const link = entry.link;
-        return retrieveArticle(link)
-          .then(article => {
-            if (!_.isEmpty(article)) {
-              return article;
-            }
 
-            return articleMiningExtractContent.extract(link)
-              .then(doc => createSuccessfullyArticle(doc, entry))
-              .catch(reason => createFailedArticle(reason, entry));
-          });
+        const article = entry.article;
+        if (article) {
+          return article;
+        }
+
+        const link = entry.link;
+        return articleMiningExtractContent.extract(link)
+          .then(doc => createSuccessfullyArticle(doc, entry))
+          .catch(reason => createFailedArticle(reason, entry));
       });
   }
 
@@ -42,8 +41,12 @@ KlarkModule(module, 'articleMining', (
       $inc: { hits: 1 },
       lastHit: new Date()
     };
+    // model
+    //   .findByIdAndUpdate(id, record, {new: true})
+    //   .populate('article');
     return krkDbMongooseBinders
-      .findByIdAndUpdate(modelsEntry, entryId, q);
+      .findByIdAndUpdate(modelsEntry, entryId, q)
+      .populate('article');
   }
 
   function retrieveArticle(link) {
@@ -86,8 +89,11 @@ KlarkModule(module, 'articleMining', (
     return krkDbMongooseBinders
       .create(modelsArticle, article)
       .then(article => {
+        const q = { article: article._id };
         article.entryId = entry;
-        return article;
+        return krkDbMongooseBinders
+          .findByIdAndUpdate(modelsEntry, entry._id, q)
+          .then(() => article);
       });
   }
 

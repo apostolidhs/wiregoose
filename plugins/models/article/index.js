@@ -15,7 +15,7 @@ KlarkModule(module, 'modelsArticle', ($mongoose, $mongooseIdValidator, $mongoose
     },
     link: {type: $mongoose.SchemaTypes.Url, required: true, index: true},
     entryId: {type: $mongoose.Schema.Types.ObjectId, ref: 'Entry', required: true, autopopulate: true},
-    createdAt: { type: Date, expires: config.ARTICLE_MINING_EXPIRATION }
+    createdAt: { type: Date, expires: config.ARTICLE_MINING_EXPIRATION },
   });
 
   schema.plugin($mongooseIdValidator);

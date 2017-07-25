@@ -7,6 +7,7 @@ import { BootstrapTable, TableHeaderColumn }
 import { Row, Col, Button, Collapse } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 
+import * as Notifications from '../notifications/notifications.jsx';
 import Loader from '../loader/loader.jsx';
 import { toUppercasesWords }
   from '../text-utilities/text-utilities.js';
@@ -44,6 +45,7 @@ export default class ListView extends React.Component {
   onDeleteRow = ids => Promise.all(
       _.map(ids, id => this.refs.load.promise = WiregooseApi.crud.remove(this.modelName, id)),
     )
+    .then(() => Notifications.create.info('Record(s) deleted successfully'))
     .then(() => this.retrieveAll())
 
   onFilterChange = (filterObj) => {
@@ -69,6 +71,7 @@ export default class ListView extends React.Component {
 
   onRecordSaved = record =>
     this.refs.load.promise = WiregooseApi.crud.update(this.modelName, record._id, record)
+      .then(() => Notifications.create.info('Record saved successfully'))
       .then(() => this.setState({lastEffectedId: record._id}))
 
   onCreationPanelClicked = () => this.setState({
@@ -77,6 +80,7 @@ export default class ListView extends React.Component {
 
   onCreateRecord = record =>
     this.refs.load.promise = WiregooseApi.crud.create(this.modelName, record)
+      .then(() => Notifications.create.success('Record created successfully'))
       .then(() => this.setState({lastEffectedId: record._id}))
       .then(() => this.retrieveAll())
 

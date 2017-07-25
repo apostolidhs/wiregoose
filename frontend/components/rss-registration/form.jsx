@@ -1,10 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-// import _ from 'lodash';
 import { Form, FormGroup, Col, FormControl, ControlLabel, Button, Collapse }
   from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
-import { isUri } from 'valid-url';
 import CSSModules from 'react-css-modules';
 
 import styles from './form.less';
@@ -12,25 +9,15 @@ import Select from '../select/select.jsx';
 import Loader from '../loader/loader.jsx';
 import * as WiregooseApi from '../services/wiregoose-api.js';
 import FetchPreview from './fetch-preview.jsx';
+import * as FormFactory from '../form/factory.jsx';
 
 @CSSModules(styles, {
   allowMultiple: true
 })
 export default class FormGenerator extends React.Component {
 
-  static propTypes = {
-    record: PropTypes.shape(),
-    onSave: PropTypes.func,
-    onDelete: PropTypes.func,
-    isNew: PropTypes.bool,
-  }
-
-  static defaultProps = {
-    record: {},
-    onDelete: undefined,
-    onSave: undefined,
-    isNew: true,
-  }
+  static propTypes = FormFactory.getFormPropTypes()
+  static defaultProps = FormFactory.getFormDefaultPropTypes()
 
   state = {
     record: this.props.record,
@@ -43,16 +30,14 @@ export default class FormGenerator extends React.Component {
     const getStatic = (name) =>
       WiregooseApi.statics[name]()
         .then(resp => this.setState({ [name]: resp.data.data }));
-
-    const prms = Promise.all(
+    this.refs.load.promise = Promise.all(
       ['categories', 'supportedLanguages'].map(getStatic)
     );
-    this.refs.load.promise = prms;
   }
 
   isInvalid = () => {
     const { record } = this.state;
-    return !(this.validateLink() === 'success'
+    return !(FormFactory.validateLink(this, 'link') === 'success'
       && record.category
       && record.lang
       && record.provider);
@@ -68,19 +53,11 @@ export default class FormGenerator extends React.Component {
     this.props.onDelete(this.state.record);
   }
 
-  handleInputChange = (e) => {
-    const record = this.state.record;
-    record[e.target.name] = e.target.value;
-    this.setState({ record });
-  }
-
   handleProviderChange = (val) => {
     const record = this.state.record;
     record.provider = val && val._id || undefined;
     this.setState({ record });
   }
-
-  validateLink = () => (isUri(this.state.record.link) ? 'success' : 'warning');
 
   getProviderOptions = (input) => {
     return WiregooseApi.crud.retrieveAll('rssprovider', {})
@@ -107,51 +84,24 @@ export default class FormGenerator extends React.Component {
       <Loader ref="load">
         <Form horizontal>
 
-          { !isNew &&
-            <FormGroup controlId="formIdId">
-              <Col componentClass={ControlLabel} sm={2}>ID</Col>
-              <Col sm={10}>
-                <FormControl.Static>{record._id}</FormControl.Static>
-              </Col>
-            </FormGroup>
-          }
+          { !isNew && FormFactory.createStaticText(record._id, 'ID') }
 
-          <FormGroup controlId="formIdCategory">
-            <Col componentClass={ControlLabel} sm={2}>Category</Col>
-            <Col sm={10}>
-              <FormControl
-                componentClass="select"
-                placeholder="select"
-                name="category"
-                value={record.category}
-                onChange={this.handleInputChange}
-                required>
-                <option value="">-</option>
-                {_.map(categories, category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </FormControl>
-            </Col>
-          </FormGroup>
+          { FormFactory.createInputLink({
+            name: 'link',
+            value: record.link,
+            onChange: FormFactory.handleInputChange(this),
+            validate: FormFactory.validateLink(this, 'link'),
+            required: true
+          }) }
 
-          <FormGroup controlId="formIdLink" validationState={this.validateLink()}>
-            <Col componentClass={ControlLabel} sm={2}>Link</Col>
-            <Col sm={8}>
-              <FormControl
-                type="text"
-                name="link"
-                value={record.link}
-                onChange={this.handleInputChange}
-                required
-              />
-            </Col>
-            <Col sm={2}>
+          <FormGroup controlId="formIdPreview" className="text-right">
+            <Col xs={12}>
               <Button bsStyle="primary"
                 bsSize="small"
                 type="button"
                 onClick={this.performRssFeedPreview}
-                disabled={this.validateLink() !== 'success'}>
-                <FontAwesome name="picture-o" /> Preview
+                disabled={FormFactory.validateLink(this, 'link') !== 'success'}>
+                <FontAwesome name="picture-o" /> Preview Link Source
               </Button>
             </Col>
           </FormGroup>
@@ -160,23 +110,21 @@ export default class FormGenerator extends React.Component {
             <FetchPreview link={record.link} styleName="preview" />
           </Collapse>
 
-          <FormGroup controlId="formIdLang">
-            <Col componentClass={ControlLabel} sm={2}>Lang</Col>
-            <Col sm={10}>
-              <FormControl
-                componentClass="select"
-                placeholder="select"
-                name="lang"
-                value={record.lang}
-                onChange={this.handleInputChange}
-                required>
-                <option value="">-</option>
-                {_.map(supportedLanguages, supportedLanguage => (
-                  <option key={supportedLanguage} value={supportedLanguage}>{supportedLanguage}</option>
-                ))}
-              </FormControl>
-            </Col>
-          </FormGroup>
+          { FormFactory.createSelection({
+            name: 'category',
+            value: record.category,
+            onChange: FormFactory.handleInputChange(this),
+            enumeration: categories,
+            required: true
+          }) }
+
+          { FormFactory.createSelection({
+            name: 'lang',
+            value: record.lang,
+            onChange: FormFactory.handleInputChange(this),
+            enumeration: supportedLanguages,
+            required: true
+          }) }
 
           <FormGroup controlId="formIdProvider">
             <Col componentClass={ControlLabel} sm={2}>Provider</Col>
@@ -193,16 +141,12 @@ export default class FormGenerator extends React.Component {
             </Col>
           </FormGroup>
 
-          <div className="clearfix">
-            <Button bsStyle="primary" className="pull-right" type="submit" onClick={this.onSaveClicked} disabled={this.isInvalid()}>
-              <FontAwesome name="save" /> { isNew ? 'Create' : 'Save' }
-            </Button>
-            { !isNew &&
-              <Button bsStyle="warning" className="pull-right w-mr-7" type="submit" onClick={this.onDeleteClicked}>
-                <FontAwesome name="trash-o" /> Delete
-              </Button>
-            }
-          </div>
+          { FormFactory.createFormOptionsPanel({
+            onDelete: !isNew && this.onDeleteClicked,
+            onSave: this.onSaveClicked,
+            isInvalid: this.isInvalid(),
+            isNew
+          }) }
         </Form>
       </Loader>
     );

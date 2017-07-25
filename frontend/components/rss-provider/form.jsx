@@ -1,26 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-// import _ from 'lodash';
-import { Form, FormGroup, Col, FormControl, ControlLabel, Button }
+import { Form }
   from 'react-bootstrap';
-import FontAwesome from 'react-fontawesome';
-import { isUri } from 'valid-url';
+
+import * as FormFactory from '../form/factory.jsx';
 
 export default class FormGenerator extends React.Component {
 
-  static propTypes = {
-    record: PropTypes.shape(),
-    onSave: PropTypes.func,
-    onDelete: PropTypes.func,
-    isNew: PropTypes.bool,
-  }
-
-  static defaultProps = {
-    record: {},
-    onDelete: undefined,
-    onSave: undefined,
-    isNew: true,
-  }
+  static propTypes = FormFactory.getFormPropTypes()
+  static defaultProps = FormFactory.getFormDefaultPropTypes()
 
   state = {
     record: this.props.record,
@@ -28,7 +15,7 @@ export default class FormGenerator extends React.Component {
 
   isInvalid = () => {
     const { record } = this.state;
-    return !(this.validateLink() === 'success'
+    return !(FormFactory.validateLink(this, 'link') === 'success'
       && record.name);
   }
 
@@ -42,67 +29,35 @@ export default class FormGenerator extends React.Component {
     this.props.onDelete(this.state.record);
   }
 
-  handleInputChange = (e) => {
-    const record = this.state.record;
-    record[e.target.name] = e.target.value;
-    this.setState({ record });
-  }
-
-  validateLink = () => (isUri(this.state.record.link) ? 'success' : 'warning');
-
   render() {
-    const {
-      isNew,
-    } = this.props;
+    const { isNew } = this.props;
+    const { record } = this.state;
 
     return (
       <Form horizontal>
+        { !isNew && FormFactory.createStaticText(record._id, 'ID') }
 
-        { !isNew &&
-          <FormGroup controlId="formIdId">
-            <Col componentClass={ControlLabel} sm={2}>ID</Col>
-            <Col sm={10}>
-              <FormControl.Static>{this.state.record._id}</FormControl.Static>
-            </Col>
-          </FormGroup>
-        }
+        { FormFactory.createInput({
+          name: 'name',
+          value: record.name,
+          onChange: FormFactory.handleInputChange(this),
+          required: true
+        }) }
 
-        <FormGroup controlId="formIdName">
-          <Col componentClass={ControlLabel} sm={2}>Name</Col>
-          <Col sm={10}>
-            <FormControl
-              type="text"
-              name="name"
-              value={this.state.record.name}
-              onChange={this.handleInputChange}
-              required
-            />
-          </Col>
-        </FormGroup>
+        { FormFactory.createInputLink({
+          name: 'link',
+          value: record.link,
+          onChange: FormFactory.handleInputChange(this),
+          validate: FormFactory.validateLink(this, 'link'),
+          required: true
+        }) }
 
-        <FormGroup controlId="formIdLink" validationState={this.validateLink()}>
-          <Col componentClass={ControlLabel} sm={2}>Link</Col>
-          <Col sm={10}>
-            <FormControl
-              type="text"
-              name="link"
-              value={this.state.record.link}
-              onChange={this.handleInputChange}
-              required
-            />
-          </Col>
-        </FormGroup>
-
-        <div className="clearfix">
-          <Button bsStyle="primary" className="pull-right" type="submit" onClick={this.onSaveClicked} disabled={this.isInvalid()}>
-            <FontAwesome name="save" /> { isNew ? 'Create' : 'Save' }
-          </Button>
-          { !isNew &&
-            <Button bsStyle="warning" className="pull-right w-mr-7" type="submit" onClick={this.onDeleteClicked}>
-              <FontAwesome name="trash-o" /> Delete
-            </Button>
-          }
-        </div>
+        { FormFactory.createFormOptionsPanel({
+          onDelete: !isNew && this.onDeleteClicked,
+          onSave: this.onSaveClicked,
+          isInvalid: this.isInvalid(),
+          isNew
+        }) }
       </Form>
     );
   }

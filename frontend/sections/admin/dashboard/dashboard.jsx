@@ -11,6 +11,7 @@ import AppInfoResponseTransformation from '../../../components/app-info/response
 import FetchReportForm from '../../../components/fetch-report/form.jsx';
 import FetchReportResponseTransformation from '../../../components/fetch-report/response-transformation.js';
 import SucceededFetchesPerPeriod from '../../../components/measures/succeeded-fetches-per-period.jsx';
+import ArticleStatistics from '../../../components/measures/article-statistics.jsx';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 
 export default class Dashboard extends React.Component {
@@ -19,12 +20,14 @@ export default class Dashboard extends React.Component {
     appInfo: undefined,
     fetchReport: undefined,
     categories: undefined,
-    supportedLanguages: undefined
+    supportedLanguages: undefined,
+    articleStatistics: undefined
   };
 
   componentDidMount() {
     this.retrieveAppInfo();
     this.retrieveLastFetchReport();
+    this.retrieveArticleStatistics();
   }
 
   retrieveAppInfo = () => {
@@ -33,6 +36,13 @@ export default class Dashboard extends React.Component {
         const content = resp.data.data;
         const appInfo = AppInfoResponseTransformation(content);
         this.setState({ appInfo });
+      });
+  }
+
+  retrieveArticleStatistics = () => {
+    this.refs.articleStatistics.promise = WiregooseApi.getArticleStatistics()
+      .then(resp => {
+        this.setState({ articleStatistics: resp.data.data });
       });
   }
 
@@ -70,7 +80,7 @@ export default class Dashboard extends React.Component {
             <Loader ref="appInfoPrms">
               { this.state.appInfo &&
                 <Panel>
-                  <h4>Rss Fetch Info</h4>
+                  <h3>Rss Fetch Info</h3>
                   <AppInfoForm record={this.state.appInfo} onSave={this.updateAppInfo} />
                   <hr />
                   <div className="text-right">
@@ -87,7 +97,7 @@ export default class Dashboard extends React.Component {
             <Loader ref="fetchReportPrms">
               { this.state.fetchReport &&
                 <Panel>
-                  <h4>Last Fetch Report</h4>
+                  <h3>Last Fetch Report</h3>
                   <FetchReportForm record={this.state.fetchReport} />
                 </Panel>
               }
@@ -96,8 +106,20 @@ export default class Dashboard extends React.Component {
         </Row>
         <Row>
           <Col xs={12}>
+            <Loader ref="articleStatistics">
+              <Panel>
+                <h3>Articles</h3>
+                { this.state.articleStatistics &&
+                  <ArticleStatistics statistics={this.state.articleStatistics} />
+                }
+              </Panel>
+            </Loader>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
             <Panel>
-              <h4>Fetched Entries Per Provider</h4>
+              <h3>Fetched Entries Per Provider</h3>
               <SucceededFetchesPerPeriod />
             </Panel>
           </Col>

@@ -8,8 +8,16 @@ import { Navbar, Nav, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
 import * as Auth from '../authorization/auth.js';
 
 export default class Header extends React.Component {
+  static propTypes = {
+    enableAuth: PropTypes.bool
+  }
+
+  static defaultProps = {
+    enableAuth: true
+  }
 
   render() {
+    const { enableAuth } = this.props;
     return (
       <Navbar collapseOnSelect fixedTop>
         <Navbar.Header>
@@ -20,7 +28,7 @@ export default class Header extends React.Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav pullRight>
-            {(() => {
+            {enableAuth && (() => {
               if (Auth.isAuthenticated()) {
                 return (
                   <NavItem eventKey={1}>
@@ -37,7 +45,7 @@ export default class Header extends React.Component {
                 );
               }
             })()}
-            { Auth.isAdmin()  &&
+            { enableAuth && Auth.isAdmin()  &&
               <LinkContainer to="/admin">
                 <NavItem eventKey={1} >
                   admin

@@ -15,25 +15,15 @@ import SelectInlineRender from '../rss-registration/select-inline-render.jsx';
 import * as WiregooseApi from '../services/wiregoose-api.js';
 import ArticleBox from './article-box.jsx';
 import Article from '../article/article.jsx';
+import * as FormFactory from '../form/factory.jsx';
 
 @CSSModules(styles, {
   allowMultiple: true,
 })
 export default class ArticleBoxForm extends React.Component {
 
-  static propTypes = {
-    record: PropTypes.shape(),
-    onSave: PropTypes.func,
-    onDelete: PropTypes.func,
-    isNew: PropTypes.bool,
-  }
-
-  static defaultProps = {
-    record: {},
-    onDelete: undefined,
-    onSave: undefined,
-    isNew: true,
-  }
+  static propTypes = FormFactory.getFormPropTypes()
+  static defaultProps = FormFactory.getFormDefaultPropTypes()
 
   state = {
     record: this.props.record
@@ -41,8 +31,8 @@ export default class ArticleBoxForm extends React.Component {
 
   isInvalid = () => {
     const { record } = this.state;
-    return !(this.validateLink('image') === 'success'
-      && this.validateLink('link') === 'success'
+    return !(FormFactory.validateLink(this, 'image') === 'success'
+      && FormFactory.validateLink(this, 'link') === 'success'
       && record.title
       && record.description
       && record.published
@@ -119,53 +109,30 @@ export default class ArticleBoxForm extends React.Component {
     return (
       <Form horizontal styleName="form">
 
-        { !isNew &&
-          <FormGroup controlId="formIdId">
-            <Col componentClass={ControlLabel} sm={2}>ID</Col>
-            <Col sm={10}>
-              <FormControl.Static>{record._id}</FormControl.Static>
-            </Col>
-          </FormGroup>
-        }
+        { !isNew && FormFactory.createStaticText(record._id, 'ID') }
 
-        <FormGroup controlId="formIdTitle">
-          <Col componentClass={ControlLabel} sm={2}>Title</Col>
-          <Col sm={10}>
-            <FormControl
-              type="text"
-              name="title"
-              value={record.title}
-              onChange={this.handleInputChange}
-              required
-            />
-          </Col>
-        </FormGroup>
+        { FormFactory.createInput({
+          name: 'title',
+          value: record.title,
+          onChange: FormFactory.handleInputChange(this),
+          required: true
+        }) }
 
-        <FormGroup controlId="formIdLink" validationState={this.validateLink('link')}>
-          <Col componentClass={ControlLabel} sm={2}>Link</Col>
-          <Col sm={10}>
-            <FormControl
-              type="text"
-              name="link"
-              value={record.link}
-              onChange={this.handleInputChange}
-              required
-            />
-          </Col>
-        </FormGroup>
+        { FormFactory.createInputLink({
+          name: 'link',
+          value: record.link,
+          onChange: FormFactory.handleInputChange(this),
+          validate: FormFactory.validateLink(this, 'link'),
+          required: true
+        }) }
 
-        <FormGroup controlId="formIdImage" validationState={this.validateLink('image')}>
-          <Col componentClass={ControlLabel} sm={2}>Image</Col>
-          <Col sm={10}>
-            <FormControl
-              type="text"
-              name="image"
-              value={record.image}
-              onChange={this.handleInputChange}
-              required
-            />
-          </Col>
-        </FormGroup>
+        { FormFactory.createInputLink({
+          name: 'image',
+          value: record.image,
+          onChange: FormFactory.handleInputChange(this),
+          validate: FormFactory.validateLink(this, 'image'),
+          required: true
+        }) }
 
         <FormGroup controlId="formIdDescription">
           <Col componentClass={ControlLabel} sm={2}>Description</Col>
@@ -180,16 +147,12 @@ export default class ArticleBoxForm extends React.Component {
           </Col>
         </FormGroup>
 
-        <FormGroup controlId="formIdPublished">
-          <Col componentClass={ControlLabel} sm={2}>Published</Col>
-          <Col sm={10}>
-             <DatePicker
-              name="published"
-              selected={moment(record.published)}
-              onChange={this.handleDatePickerChange}
-            />
-          </Col>
-        </FormGroup>
+        { FormFactory.createInputDate({
+          name: 'published',
+          value: record.published,
+          onChange: FormFactory.handleDateInputChange(this, 'published'),
+          required: true
+        }) }
 
         <FormGroup controlId="formIdAuthor">
           <Col componentClass={ControlLabel} sm={2}>Author</Col>
@@ -204,6 +167,21 @@ export default class ArticleBoxForm extends React.Component {
             />
           </Col>
         </FormGroup>
+
+        { FormFactory.createInputDate({
+          name: 'lastHit',
+          value: record.lastHit,
+          onChange: FormFactory.handleDateInputChange(this, 'lastHit'),
+          required: true
+        }) }
+
+        { FormFactory.createInput({
+          name: 'hits',
+          type: 'number',
+          value: record.hits,
+          onChange: FormFactory.handleInputChange(this),
+          required: true
+        }) }
 
         <FormGroup controlId="formIdProvider">
           <Col componentClass={ControlLabel} sm={2}>Provider</Col>
@@ -234,16 +212,12 @@ export default class ArticleBoxForm extends React.Component {
           </Col>
         </FormGroup>
 
-        <div className="clearfix">
-          <Button bsStyle="primary" className="pull-right" type="submit" onClick={this.onSaveClicked} disabled={this.isInvalid()}>
-            <FontAwesome name="save" /> { isNew ? 'Create' : 'Save' }
-          </Button>
-          { !isNew &&
-            <Button bsStyle="warning" className="pull-right w-mr-7" type="submit" onClick={this.onDeleteClicked}>
-              <FontAwesome name="trash-o" /> Delete
-            </Button>
-          }
-        </div>
+        { FormFactory.createFormOptionsPanel({
+          onDelete: !isNew && this.onDeleteClicked,
+          onSave: this.onSaveClicked,
+          isInvalid: this.isInvalid(),
+          isNew
+        }) }
 
         { !this.isInvalid() && (
           <div className="w-mt-7">
@@ -254,7 +228,7 @@ export default class ArticleBoxForm extends React.Component {
         { !this.isInvalid() && (
           <Loader ref="articleLoad" className="w-mt-7">
             <Button bsStyle="primary" className="pull-right" onClick={this.fetchArticle}>
-              <FontAwesome name="newspaper-o" /> Fetch Article
+              <FontAwesome name="newspaper-o" /> Fetch Article {record.article && '(Article is Cached)'}
             </Button>
             <Panel collapsible expanded={!!this.state.article}>
               { this.state.article &&

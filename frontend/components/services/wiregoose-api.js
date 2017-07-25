@@ -72,6 +72,17 @@ export function getSucceededFetchesPerPeriod(days, lang) {
   })
 }
 
+export function getArticleStatistics() {
+  return httpRequest({
+    method: 'get',
+    url: `${config.apiUrl}measures/articles`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: credentialGetter(),
+    },
+  })
+}
+
 export function getStatic(name) {
   return httpRequest({
     method: 'get',
@@ -122,7 +133,7 @@ function fetchRssFeed(link) {
   })
   .then(resp => {
     const entries = resp.data.data.entries;
-    _.each(entries, ArticleResponseTransformation);
+    _.each(entries, ArticleBoxResponseTransformation);
     return resp;
   });
 }

@@ -42,7 +42,9 @@ KlarkModule(module, 'modelsEntry', (
       provider: {type: String, required: true},
       // this should be {type: ObjectId, ref: 'RssRegistration', required: true, populate: true}
       // but we really need the speed, part 3 :)
-      registration: {type: ObjectId, ref: 'RssRegistration', required: true}
+      registration: {type: ObjectId, ref: 'RssRegistration', required: true},
+
+      article: {type: ObjectId, ref: 'Article'}
     });
   }
 
