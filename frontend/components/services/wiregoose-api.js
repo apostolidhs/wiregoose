@@ -122,7 +122,7 @@ function timelineExplore(categories) {
   .then(resp => {
     resp.data.data = _.mapValues(
       resp.data.data,
-      ArticleBoxResponseTransformation
+      records => _.map(records, ArticleBoxResponseTransformation)
     );
     return resp;
   });

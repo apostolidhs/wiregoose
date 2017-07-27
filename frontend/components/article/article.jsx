@@ -19,18 +19,27 @@ export default class Article extends React.Component {
       link: validateURL,
       entryId:  PropTypes.shape(entryPropType),
       createdAt: PropTypes.instanceOf(Date)
-    })
+    }),
+    isLoading: PropTypes.bool
   }
 
   render() {
+    const { article, isLoading } = this.props;
+
     return (
-      <article>
-        <header>
+      <div className="article-body light sans-serif loaded">
+         <div className="article-container container font-size5 content-width3">
+          <article className="article-reader-content line-height4">
+            <header>
 
-        </header>
+            </header>
+            { !isLoading && article &&
+              <section dangerouslySetInnerHTML={{__html: article.content}}></section>
+            }
 
-        <section dangerouslySetInnerHTML={{__html: this.props.article.content}}></section>
-      </article>
+          </article>
+        </div>
+      </div>
     );
   }
 

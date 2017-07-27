@@ -79,6 +79,7 @@ export default class Timeline extends React.Component {
             padding: '15px'
           }
         }}
+        contentClassName="w-left-sidebar"
         docked={isSidebarDocked}
         sidebar={<SidebarContent />}
         open={this.state.sidebar.isLeftSidebarOpen}

@@ -46,8 +46,9 @@ KlarkModule(module, 'routesTimeline', (
     Promise.all(queries)
       .then(results => {
         res.locals.data = _(results)
+          .flatten()
           .compact()
-          .keyBy('category')
+          .groupBy('category')
           .value();
       })
       .then(() => next())
@@ -67,8 +68,7 @@ KlarkModule(module, 'routesTimeline', (
         return modelsEntry
           .find(q)
           .sort({published: -1})
-          .limit(1)
-          .then(_.first);
+          .limit(2);
       });
     }
   }

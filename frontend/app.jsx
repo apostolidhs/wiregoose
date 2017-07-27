@@ -15,6 +15,7 @@ import ComponentsGallery from './sections/components-gallery/components-gallery.
 import Timeline from './sections/timeline/timeline.jsx';
 import TimelineExplore from './sections/timeline/explore/explore.jsx';
 import Sidebar from './sections/timeline/sidebar/sidebar.jsx';
+import Article from './sections/article/article.jsx';
 
 if (Auth.isAuthenticated()) {
   WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
@@ -57,6 +58,7 @@ class App extends React.Component {
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Body}>
+          <Route path="article/:id" component={Article} />
           <Route component={Timeline} >
             <IndexRoute component={TimelineExplore} />
           </Route>

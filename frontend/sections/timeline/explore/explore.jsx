@@ -2,6 +2,8 @@ import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Nav, NavItem } from 'react-bootstrap';
 
 import styles from '../timeline.less';
 import Header from '../../../components/timeline/header.jsx';
@@ -28,12 +30,19 @@ export default class Explore extends InfiniteScrollPage {
     }
 
     this.timeline.setLoadingState(true);
-    const payload = _.mapValues(this.lastFeeds, feed => feed.published.getTime());
-    WiregooseApi.timeline.explore(payload)
+    WiregooseApi.timeline.explore(this.lastFeeds)
       .then(resp => {
-        this.lastFeeds = resp.data.data;
+        const { data } = resp.data;
+        this.lastFeeds = _.mapValues(
+          data,
+          feeds => (_.size(feeds) > 0 ? _.last(feeds).published.getTime() : undefined)
+        );
         this.timeline.setLoadingState(false);
-        this.timeline.addFeeds(_.values(this.lastFeeds));
+        const feeds = _(data)
+          .values()
+          .flatten()
+          .value();
+        this.timeline.addFeeds(feeds);
       });
   }
 
@@ -46,7 +55,11 @@ export default class Explore extends InfiniteScrollPage {
     return (
       <div>
         <Header>
-          <span>Explore</span>
+          <Nav bsStyle="pills" activeKey={1}>
+            <LinkContainer to="/">
+              <NavItem eventKey={1}>Explore</NavItem>
+            </LinkContainer>
+          </Nav>
         </Header>
         <Timeline ref={(ref) => this.timeline = ref} />
       </div>

@@ -8,6 +8,7 @@ import CSSModules from 'react-css-modules';
 import styles from './article-box.less';
 import { ellipsis } from '../text-utilities/text-utilities.js';
 import ArticleBoxProps from './entry-prop-type.js';
+import { createArticleLink } from './link-generator.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -34,12 +35,12 @@ export default class Entry extends React.Component {
     const { entry, className= '', ...passDownProps } = this.props;
     return (
       <article className={className + ' panel panel-default'} styleName="article">
-        <Link to="/" styleName="image">
+        <Link to={createArticleLink(entry)} styleName="image">
           <img src={entry.image} alt="" />
         </Link>
         <div className="panel-body">
           <header styleName="header">
-            <Link to="/" className="blind-link">
+            <Link to={createArticleLink(entry)} className="blind-link">
               <h3>
                 {ellipsis(entry.title, 100)}
               </h3>
@@ -48,7 +49,7 @@ export default class Entry extends React.Component {
           <div className="metadata">
             <Link
               className="btn btn-link-muted w-p-0"
-              to="/"
+              to="article"
               role="button"
               title="Provider"
             >
