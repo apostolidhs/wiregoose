@@ -1,30 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import validateURL from 'react-proptypes-url-validator';
+import { Link } from 'react-router';
 import FontAwesome from 'react-fontawesome';
 import TimeAgo from 'react-timeago';
-import SizeMe from 'react-sizeme';
 import CSSModules from 'react-css-modules';
-// import TimeAgoEnglishStrings
-// from 'react-timeago/lib/language-strings/en';
-// import TimeAgoBuildFormatter
-// from 'react-timeago/lib/formatters/buildFormatter';
 
 import styles from './article-box.less';
-import entryPropType from './entry-prop-type.js';
-import componentSize from '../responsible/component-size.js';
 import { ellipsis } from '../text-utilities/text-utilities.js';
+import ArticleBoxProps from './entry-prop-type.js';
 
-@SizeMe({ refreshRate: 500 })
 @CSSModules(styles, {
   allowMultiple: true,
 })
 export default class Entry extends React.Component {
-
   static propTypes = {
-    entry: PropTypes.shape(entryPropType),
-    size: componentSize.propType,
-    className: PropTypes.string,
+    entry: PropTypes.shape(ArticleBoxProps)
   }
 
   static defaultProps = {
@@ -37,115 +27,47 @@ export default class Entry extends React.Component {
       author: undefined,
       provider: undefined,
       category: undefined,
-    },
-    size: componentSize.defaultProps,
-    className: '',
-  }
-
-  static timeAgoBuildFormatter(value, unit, suffix) {
-    let normalizedUnit = unit;
-    if (unit === 'second') {
-      return 'now';
-    } else if (unit === 'minute') {
-      normalizedUnit = 'mins';
     }
-
-    return `${value} ${normalizedUnit} ${suffix}`;
-  }
-
-  constructor() {
-    super();
-    this.state = {};
-    this.imageSizeClassBuilder = componentSize.sizeFormatter({
-      xxs: 'size-xxs',
-    }, '');
-    this.titleEllipsesSizeBuilder = componentSize.sizeFormatter({
-      xxs: 60,
-      xs: 65,
-    }, 115);
   }
 
   render() {
-    const {
-      entry,
-      size,
-      ...passDownProps
-    } = this.props;
-
-    const titleEllipsesSize = this.titleEllipsesSizeBuilder(size.width);
-    const imageSizeClassBuilder = this.imageSizeClassBuilder(size.width);
-
-    passDownProps.className += ' panel panel-default';
-    passDownProps.styleName = imageSizeClassBuilder;
+    const { entry, className= '', ...passDownProps } = this.props;
     return (
-      <article {...passDownProps}>
+      <article className={className + ' panel panel-default'} styleName="article">
+        <Link to="/" styleName="image">
+          <img src={entry.image} alt="" />
+        </Link>
         <div className="panel-body">
-          <header className="head clearfix">
-            <section styleName="image" className="pull-left">
-              <img src={entry.image} alt="" />
-            </section>
-            <section styleName="head-content" className="pull-left">
-              <a
-                href="/"
-                styleName="title"
-                className="blind-link"
-                title="Open Article"
-              >
-                <h3>
-                  {ellipsis(entry.title, titleEllipsesSize)}
-                </h3>
-              </a>
-              <div styleName="info">
-                <a
-                  className="btn btn-link-muted w-p-0"
-                  href="/"
-                  role="button"
-                  title="Provider"
-                >
-                  {entry.provider}
-                </a>
-                <TimeAgo
-                  className="text-muted"
-                  styleName="time"
-                  date={entry.published}
-                  minPeriod={1}
-                  formatter={Entry.timeAgoBuildFormatter}
-                />
-              </div>
-            </section>
+          <header styleName="header">
+            <Link to="/" className="blind-link">
+              <h3>
+                {ellipsis(entry.title, 100)}
+              </h3>
+            </Link>
           </header>
-          <section className="body">
-            {
-              (() => {
-                if (entry.author) {
-                  return (
-                    <p styleName="author">
-                      <a
-                        styleName="author-btn"
-                        className="btn btn-link"
-                        href="/"
-                        role="button"
-                        title="Author"
-                      >
-                        <span>@</span>
-                        {entry.author}
-                      </a>
-                    </p>
-                  );
-                }
-              })()
-            }
-            <p
-              styleName="body-content"
-              style={{ paddingTop: entry.author || '7px' }}
+          <div className="metadata">
+            <Link
+              className="btn btn-link-muted w-p-0"
+              to="/"
+              role="button"
+              title="Provider"
             >
-              {ellipsis(entry.description, 300)}
-            </p>
+              {entry.provider}
+            </Link>
+            <TimeAgo
+              className="text-muted"
+              styleName="dot-separator"
+              date={entry.published}
+              minPeriod={1}
+              formatter={Entry.timeAgoBuildFormatter}
+            />
+          </div>
+          <section styleName="summary">
+            {ellipsis(entry.description, 280)}
           </section>
-          <footer className="footer">
+          <footer styleName="footer">
             <a
-              className="btn btn-default"
-              styleName="social-share"
+              className="btn btn-link blind-link"
               href="/"
               role="button"
               title="Link"
@@ -153,8 +75,7 @@ export default class Entry extends React.Component {
               <FontAwesome name="link" />
             </a>
             <a
-              className="w-ml-7 btn btn-default"
-              styleName="social-share"
+              className="btn btn-link blind-link"
               href="/"
               role="button"
               title="Facebook"
@@ -162,8 +83,7 @@ export default class Entry extends React.Component {
               <FontAwesome name="facebook" />
             </a>
             <a
-              className="w-ml-7 btn btn-default"
-              styleName="social-share"
+              className="btn btn-link blind-link"
               href="/"
               role="button"
               title="Twitter"
@@ -175,6 +95,4 @@ export default class Entry extends React.Component {
       </article>
     );
   }
-
-
 }

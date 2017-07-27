@@ -40,6 +40,10 @@ export const rssFeed = {
   fetchRssRegistrations
 }
 
+export const timeline = {
+  explore: timelineExplore
+}
+
 export const statics = {
   categories: _.throttle(getStaticCategories, 3000),
   supportedLanguages: _.throttle(getStaticSupportedLanguage, 3000)
@@ -105,6 +109,25 @@ export function fetchArticle(entryId) {
   });
 }
 
+function timelineExplore(categories) {
+  return httpRequest({
+    method: 'get',
+    url: `${config.apiUrl}timeline/explore`,
+    params: categories,
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+  })
+  .then(resp => {
+    resp.data.data = _.mapValues(
+      resp.data.data,
+      ArticleBoxResponseTransformation
+    );
+    return resp;
+  });
+}
+
 function getStaticSupportedLanguage() {
   return getStatic('supportedLanguages')
     .then(resp => {
@@ -132,8 +155,8 @@ function fetchRssFeed(link) {
     },
   })
   .then(resp => {
-    const entries = resp.data.data.entries;
-    _.each(entries, ArticleBoxResponseTransformation);
+    const data = resp.data.data;
+    data.entries = _.map(data.entries, ArticleBoxResponseTransformation);
     return resp;
   });
 }

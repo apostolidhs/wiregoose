@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import FontAwesome from 'react-fontawesome';
 import PropTypes from 'prop-types';
@@ -5,6 +6,7 @@ import { Link } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
 
+import * as Events from '../events/events.js';
 import * as Auth from '../authorization/auth.js';
 
 export default class Header extends React.Component {
@@ -16,8 +18,34 @@ export default class Header extends React.Component {
     enableAuth: true
   }
 
+  state = {
+    sidebar: {
+      isLeftSidebarEnabled: false,
+      isLeftSidebarOpen: false,
+      openLeftSidebarClicked: _.noop
+    }
+  }
+
+  componentWillMount() {
+    Events.subscribe('sidebar', this.updateSidebarState);
+  }
+
+  componentWillUnmount() {
+    Events.unsubscribe('sidebar', this.updateSidebarState);
+  }
+
+  updateSidebarState = (sidebar) => {
+    this.setState({ sidebar })
+  }
+
+  toggleSidebarClicked = (evt) => {
+    evt.preventDefault();
+    this.state.sidebar.openLeftSidebarClicked();
+  }
+
   render() {
     const { enableAuth } = this.props;
+    const { isLeftSidebarEnabled, isLeftSidebarOpen } = this.state.sidebar;
     return (
       <Navbar collapseOnSelect fixedTop>
         <Navbar.Header>
@@ -26,6 +54,11 @@ export default class Header extends React.Component {
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
+        { isLeftSidebarEnabled && (
+          <Nav>
+            <NavItem eventKey={1} href="#" active={isLeftSidebarOpen} onClick={this.toggleSidebarClicked}>sidebar</NavItem>
+          </Nav>
+        )}
         <Navbar.Collapse>
           <Nav pullRight>
             {enableAuth && (() => {
@@ -45,6 +78,7 @@ export default class Header extends React.Component {
                 );
               }
             })()}
+
             { enableAuth && Auth.isAdmin()  &&
               <LinkContainer to="/admin">
                 <NavItem eventKey={1} >

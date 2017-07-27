@@ -17,7 +17,7 @@ KlarkModule(module, 'routesEntry', (
     register
   };
 
-  function register(app, opts) {
+  function register(app) {
     var crudUrls = krkCrudGeneratorUrls(config.API_URL_PREFIX);
 
     app.get(crudUrls.retrieveAll(modelsEntry.modelName) + '/authors', [

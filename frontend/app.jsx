@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { Route, Router, IndexRoute, browserHistory } from 'react-router';
+import { Route, Router, IndexRoute, browserHistory, Redirect } from 'react-router';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-select/dist/react-select.css';
@@ -12,6 +12,9 @@ import Notifications from './components/notifications/notifications.jsx';
 import * as Auth from './components/authorization/auth.js';
 import * as WiregooseApi from './components/services/wiregoose-api.js';
 import ComponentsGallery from './sections/components-gallery/components-gallery.jsx';
+import Timeline from './sections/timeline/timeline.jsx';
+import TimelineExplore from './sections/timeline/explore/explore.jsx';
+import Sidebar from './sections/timeline/sidebar/sidebar.jsx';
 
 if (Auth.isAuthenticated()) {
   WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
@@ -49,11 +52,15 @@ const NotFound = () => (
 // }
 
 class App extends React.Component {
+
   render () {
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Body}>
-          <IndexRoute component={ComponentsGallery} />
+          <Route component={Timeline} >
+            <IndexRoute component={TimelineExplore} />
+          </Route>
+          <Route path="componentsGallery" component={ComponentsGallery} />
         </Route>
       </Router>
     );

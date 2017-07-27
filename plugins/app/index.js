@@ -34,6 +34,7 @@ KlarkModule(module, 'app', (
   routesEntry,
   routesMeasures,
   routesArticle,
+  routesTimeline,
   parameterValidatorsCustomExpressValidators
 ) => {
 
@@ -117,6 +118,7 @@ KlarkModule(module, 'app', (
 
   function registerRoutes(app) {
     _.each([
+      routesTimeline,
       routesArticle,
       routesMeasures,
       routesEntry,
