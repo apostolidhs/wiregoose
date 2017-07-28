@@ -14,6 +14,7 @@ import * as WiregooseApi from './components/services/wiregoose-api.js';
 import ComponentsGallery from './sections/components-gallery/components-gallery.jsx';
 import Timeline from './sections/timeline/timeline.jsx';
 import TimelineExplore from './sections/timeline/explore/explore.jsx';
+import TimelineCategory from './sections/timeline/category/category.jsx';
 import Sidebar from './sections/timeline/sidebar/sidebar.jsx';
 import Article from './sections/article/article.jsx';
 
@@ -61,6 +62,7 @@ class App extends React.Component {
           <Route path="article/:id" component={Article} />
           <Route component={Timeline} >
             <IndexRoute component={TimelineExplore} />
+            <Route path="category/:id" component={TimelineCategory} />
           </Route>
           <Route path="componentsGallery" component={ComponentsGallery} />
         </Route>

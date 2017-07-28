@@ -16,12 +16,26 @@ import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 })
 export default class Explore extends InfiniteScrollPage {
 
-  timeline: undefined
-  lastFeeds: undefined
+  static lastFeeds = undefined
+  static timelineState = undefined
+  static lastScrollTop = undefined
+
+  timeline: undefined // ref
 
   componentDidMount() {
-    this.retrieveTimeline();
+    if (Explore.timelineState) {
+      this.timeline.setState(Explore.timelineState);
+      setTimeout(() => {
+        this.setScrollTop(Explore.lastScrollTop);
+      }, 200);
+    } else {
+      this.retrieveTimeline();
+    }
     super.componentDidMount();
+  }
+
+  componentWillUnmount() {
+    Explore.lastScrollTop = this.getScrollTop();
   }
 
   retrieveTimeline = () => {
@@ -30,10 +44,10 @@ export default class Explore extends InfiniteScrollPage {
     }
 
     this.timeline.setLoadingState(true);
-    WiregooseApi.timeline.explore(this.lastFeeds)
+    WiregooseApi.timeline.explore(Explore.lastFeeds)
       .then(resp => {
         const { data } = resp.data;
-        this.lastFeeds = _.mapValues(
+        Explore.lastFeeds = _.mapValues(
           data,
           feeds => (_.size(feeds) > 0 ? _.last(feeds).published.getTime() : undefined)
         );
@@ -43,6 +57,7 @@ export default class Explore extends InfiniteScrollPage {
           .flatten()
           .value();
         this.timeline.addFeeds(feeds);
+        Explore.timelineState = this.timeline.state;
       });
   }
 

@@ -45,7 +45,14 @@ KlarkModule(module, 'articleMiningExtractContent', (
               });
             }
           } else if (status >= 300 && status < 400 && page.res.headers.location) {
-            redirectedExtraction(page.res.headers.location, ++totalRedirects)
+            let location = page.res.headers.location;
+            if (location.startsWith('/')) {
+              const linkUrl = $url.parse(link);
+              linkUrl.path = location;
+              linkUrl.pathname = location;
+              location = $url.format(linkUrl);
+            }
+            redirectedExtraction(location, ++totalRedirects)
               .then(resolve)
               .catch(reject);
           } else {
@@ -75,24 +82,27 @@ KlarkModule(module, 'articleMiningExtractContent', (
         }
       };
 
-      $http
-        .request(requestOptions, (res) => {
-          let errorOccurred = false;
-          const responseChunks = [];
+      let errorOccurred = false;
+      const req = $http.request(requestOptions, (res) => {
+        const responseChunks = [];
+        res.on('data', d => responseChunks.push(d + ''));
+        res.on('error', (reason) => {
+          errorOccurred = true;
+          reject(reason, res);
+        });
+        res.on('end', () => {
+          if (!errorOccurred) {
+            const content = responseChunks.join('');
+            resolve({content, res});
+          }
+        });
+      });
 
-          res.on('data', d => responseChunks.push(d + ''));
-          res.on('error', (reason) => {
-            errorOccurred = true;
-            reject(reason, res);
-          });
-          res.on('end', () => {
-            if (!errorOccurred) {
-              const content = responseChunks.join('');
-              resolve({content, res});
-            }
-          });
-        })
-        .end();
+      req.on('error', (error) => {
+        reject(error);
+      });
+
+      req.end();
     });
   }
 

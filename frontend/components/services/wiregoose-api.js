@@ -19,7 +19,9 @@ axios.interceptors.response.use(function (response) {
     // Do something with response data
     return response;
   }, function (error) {
-    ServerErrorInterceptor(error);
+    if (!error.config.preventErrorInterceptor) {
+      ServerErrorInterceptor(error);
+    }
     // Do something with response error
     return Promise.reject(error);
   });
@@ -41,7 +43,8 @@ export const rssFeed = {
 }
 
 export const timeline = {
-  explore: timelineExplore
+  explore: timelineExplore,
+  category: timelineCategory
 }
 
 export const statics = {
@@ -94,7 +97,7 @@ export function getStatic(name) {
   });
 }
 
-export function fetchArticle(entryId) {
+export function fetchArticle(entryId, preventErrorInterceptor = false) {
   return httpRequest({
     method: 'get',
     url: `${config.apiUrl}article/mining/cachedFetch/entry/${entryId}`,
@@ -102,6 +105,7 @@ export function fetchArticle(entryId) {
       'Content-Type': 'application/json',
       authorization: credentialGetter(),
     },
+    preventErrorInterceptor
   })
   .then(resp => {
     const article = ArticleResponseTransformation(resp.data.data);
@@ -110,10 +114,18 @@ export function fetchArticle(entryId) {
 }
 
 function timelineExplore(categories) {
+  return getTimeline('explore', categories);
+}
+
+function timelineCategory(category) {
+  return getTimeline('category', category);
+}
+
+function getTimeline(endpoint, params) {
   return httpRequest({
     method: 'get',
-    url: `${config.apiUrl}timeline/explore`,
-    params: categories,
+    url: `${config.apiUrl}timeline/${endpoint}`,
+    params,
     headers: {
       'Content-Type': 'application/json',
       authorization: credentialGetter(),
@@ -254,7 +266,7 @@ function httpRequest(opts) {
   return axios(opts)
     .then((v) => {
       return new Promise((resolve) => {
-        _.delay(() => resolve(v), 0);
+        _.delay(() => resolve(v), 0 && 2000);
       });
     });
 }

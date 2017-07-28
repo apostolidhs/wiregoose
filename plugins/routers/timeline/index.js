@@ -11,7 +11,8 @@ KlarkModule(module, 'routesTimeline', (
   krkMiddlewarePermissions,
   krkMiddlewareParameterValidator,
   krkMiddlewareResponse,
-  modelsEntry
+  modelsEntry,
+  timeline
 ) => {
 
   return {
@@ -26,51 +27,59 @@ KlarkModule(module, 'routesTimeline', (
       krkMiddlewareResponse.success,
       krkMiddlewareResponse.fail
     ]);
+
+    app.get(`/${config.API_URL_PREFIX}/timeline/category`, [
+      krkMiddlewarePermissions.check('FREE'),
+      middlewareCategoryParameterValidator,
+      middlewareExploreController,
+      krkMiddlewareResponse.success,
+      krkMiddlewareResponse.fail
+    ]);
   }
 
   function middlewareExploreParameterValidator(req, res, next) {
     const now = new Date();
     res.locals.params.timeline = _.transform(config.CATEGORIES, validateCategory, {});
+    res.locals.params.limit = 2;
     krkParameterValidator.checkForErrors(res.locals.params, req, res, next);
 
-    function validateCategory(timeline, category) {
+    function validateCategory(timePerCategory, category) {
       req.checkQuery(category).optional().isInt();
       const param = req.sanitizeQuery(category).toInt();
-      timeline[category] = param === undefined ? now : new Date(param);
+      timePerCategory[category] = _.isNumber(param) ? new Date(param) : now;
     }
   }
 
   function middlewareExploreController(req, res, next) {
-    const timeline = res.locals.params.timeline;
-    const queries = createBatchCategoriesQuery(timeline);
-    Promise.all(queries)
-      .then(results => {
-        res.locals.data = _(results)
-          .flatten()
-          .compact()
-          .groupBy('category')
-          .value();
-      })
+    const timelineParams = res.locals.params.timeline;
+    const limit = res.locals.params.limit;
+    timeline.explore(timelineParams, limit)
+      .then((feeds) => res.locals.data = feeds)
       .then(() => next())
       .catch(reason => {
         res.locals.errors.add('UNEXPECTED', reason);
         next(true);
       });
+  }
 
-    function createBatchCategoriesQuery(timeline) {
-      return _.map(timeline, (latest, category) => {
-        const q = {
-          category,
-          published: {
-            $lt: latest
-          }
-        };
-        return modelsEntry
-          .find(q)
-          .sort({published: -1})
-          .limit(2);
-      });
+  function middlewareCategoryParameterValidator(req, res, next) {
+    let time;
+    const category = _.find(config.CATEGORIES, category => {
+      req.checkQuery(category).optional().isInt();
+      time = req.sanitizeQuery(category).toInt();
+      return _.isNumber(time);
+    });
+
+    if (!category) {
+      res.locals.errors.add('INVALID_PARAMS', reason);
+      return next(true);
     }
+
+    const params = {};
+    params[category] = new Date(time);
+    res.locals.params.timeline = params;
+    res.locals.params.limit = 16;
+    next();
   }
 
 });

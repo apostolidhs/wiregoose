@@ -23,11 +23,19 @@ export default class Page extends React.Component {
     this.target.removeEventListener('scroll', this.handleOnScroll);
   }
 
+  getScrollTop = () => {
+    return this.sidebar.scrollTop;
+  }
+
+  setScrollTop = (scrollTop) => {
+    this.sidebar.scrollTop = scrollTop;
+  }
+
   handleOnScroll = _.throttle(() => {
     // http://stackoverflow.com/questions/9439725/javascript-how-to-detect-if-browser-window-is-scrolled-to-bottom
     // const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
     // const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
-    const scrollTop = this.sidebar.scrollTop;
+    const scrollTop = this.getScrollTop();
     const scrollHeight = this.sidebar.scrollHeight;
 
     const clientHeight = document.documentElement.clientHeight || window.innerHeight;
