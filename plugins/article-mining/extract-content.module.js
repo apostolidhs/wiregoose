@@ -33,7 +33,8 @@ KlarkModule(module, 'articleMiningExtractContent', (
       }
       getPageResponse(link)
         .then((page) => {
-          if (page.res.statusCode === 200) {
+          const status = page.res.statusCode;
+          if (status === 200) {
             try {
               const article = makeContentReadable(link, page.content, page.res)
               resolve(article);
@@ -43,7 +44,7 @@ KlarkModule(module, 'articleMiningExtractContent', (
                 msg: e
               });
             }
-          } else if (page.res.statusCode === 301) {
+          } else if (status >= 300 && status < 400 && page.res.headers.location) {
             redirectedExtraction(page.res.headers.location, ++totalRedirects)
               .then(resolve)
               .catch(reject);
@@ -105,6 +106,24 @@ KlarkModule(module, 'articleMiningExtractContent', (
     const article = new $readabilityNode.Readability(link, doc).parse();
     if (!article) {
       throw new Error('CANNOT_PARSE_CONTENT');
+    }
+    if (article.content) {
+      const readableDoc = $jsdom.jsdom(article.content, {
+        features: {
+          FetchExternalResources: false,
+          ProcessExternalResources: false
+        }
+      });
+      readableDoc.querySelectorAll('.page *').forEach((node) => {
+        node.removeAttribute('class');
+        node.removeAttribute('style');
+        node.removeAttribute('id');
+        node.removeAttribute('onClick');
+      });
+      const readableDocHtml = readableDoc.body.innerHTML;
+      if (readableDocHtml) {
+        article.content = readableDocHtml;
+      }
     }
     return article;
   }

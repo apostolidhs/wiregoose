@@ -1,5 +1,9 @@
 export function createArticleLink({ _id, title }) {
-  const dashTitle = title.toLowerCase().split(' ').join('-');
+  const dashTitle = _(title)
+    .split(/\W+/)
+    .compact()
+    .join('-')
+    .toLowerCase();
   const url = encodeURI(dashTitle);
   return `/article/${url}-${_id}`;
 }

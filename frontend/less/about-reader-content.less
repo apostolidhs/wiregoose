@@ -2,49 +2,97 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-.article-reader-content {
+ .article-reader-content {
   font-size: 1em !important;
   line-height: 1.6em;
-}
 
-.article-reader-content.line-height1 {
-  line-height: 1em;
-}
+  &.line-height1 {
+    line-height: 1em;
+  }
+  &.line-height2 {
+    line-height: 1.2em;
+  }
+  &.line-height3 {
+    line-height: 1.4em;
+  }
+  &.line-height4 {
+    line-height: 1.6em;
+  }
+  &.line-height5 {
+    line-height: 1.8em;
+  }
+  &.line-height6 {
+    line-height: 2.0em;
+  }
+  &.line-height7 {
+    line-height: 2.2em;
+  }
+  &.line-height8 {
+    line-height: 2.4em;
+  }
+  &.line-height9 {
+    line-height: 2.6em;
+  }
 
-.article-reader-content.line-height2 {
-  line-height: 1.2em;
-}
+  > header {
+    margin-bottom: 15px;
+  }
 
-.article-reader-content.line-height3 {
-  line-height: 1.4em;
-}
+  @media print {
+    p,
+    code,
+    pre,
+    blockquote,
+    ul,
+    ol,
+    li,
+    figure,
+    .wp-caption {
+      margin: 0 0 10px 0 !important;
+      padding: 0 !important;
+    }
+  }
 
-.article-reader-content.line-height4 {
-  line-height: 1.6em;
-}
+  h1,
+  h2,
+  h3 {
+    font-weight: bold;
+  }
 
-.article-reader-content.line-height5 {
-  line-height: 1.8em;
-}
+  h1 {
+    font-size: 1.6em;
+    line-height: 1.25em;
+  }
 
-.article-reader-content.line-height6 {
-  line-height: 2.0em;
-}
+  h2 {
+    font-size: 1.2em;
+    line-height: 1.51em;
+  }
 
-.article-reader-content.line-height7 {
-  line-height: 2.2em;
-}
+  h3 {
+    font-size: 1em;
+    line-height: 1.66em;
+  }
 
-.article-reader-content.line-height8 {
-  line-height: 2.4em;
-}
+  a:link {
+    font-weight: normal;
+  }
 
-.article-reader-content.line-height9 {
-  line-height: 2.6em;
-}
+  a:link,
+  a:link:hover,
+  a:link:active {
+    color: #0095dd;
+  }
 
-.article-reader-content {
-@media print {
+  a:visited {
+    color: #0b5275;
+  }
+
+  * {
+    max-width: 100%;
+    height: auto;
+  }
+
   p,
   code,
   pre,
@@ -54,126 +102,72 @@
   li,
   figure,
   .wp-caption {
-    margin: 0 0 10px 0 !important;
-    padding: 0 !important;
+    margin: -10px -10px 20px -10px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1em;
   }
-}
 
-h1,
-h2,
-h3 {
-  font-weight: bold;
-}
+  li {
+    margin-bottom: 0;
+  }
 
-h1 {
-  font-size: 1.6em;
-  line-height: 1.25em;
-}
+  li > ul,
+  li > ol {
+    margin-bottom: -10px;
+  }
 
-h2 {
-  font-size: 1.2em;
-  line-height: 1.51em;
-}
+  p > img:only-child,
+  p > a:only-child > img:only-child,
+  .wp-caption img,
+  figure img {
+    display: block;
+  }
 
-h3 {
-  font-size: 1em;
-  line-height: 1.66em;
-}
+  img[moz-reader-center] {
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-a:link {
-  text-decoration: underline;
-  font-weight: normal;
-}
+  .caption,
+  .wp-caption-text,
+  figcaption {
+    font-size: 0.9em;
+    line-height: 1.48em;
+    font-style: italic;
+  }
 
-a:link,
-a:link:hover,
-a:link:active {
-  color: #0095dd;
-}
+  code,
+  pre {
+    white-space: pre-wrap;
+  }
 
-a:visited {
-  color: #c2e;
-}
+  blockquote {
+    padding: 0;
+    padding-inline-start: 16px;
+  }
 
-* {
-  max-width: 100%;
-  height: auto;
-}
+  ul,
+  ol {
+    padding: 0;
+  }
 
-p,
-code,
-pre,
-blockquote,
-ul,
-ol,
-li,
-figure,
-.wp-caption {
-  margin: -10px -10px 20px -10px;
-  padding: 10px;
-  border-radius: 5px;
-}
+  ul {
+    padding-inline-start: 30px;
+    list-style: disc;
+  }
 
-li {
-  margin-bottom: 0;
-}
+  ol {
+    padding-inline-start: 30px;
+    list-style: decimal;
+  }
 
-li > ul,
-li > ol {
-  margin-bottom: -10px;
-}
-
-p > img:only-child,
-p > a:only-child > img:only-child,
-.wp-caption img,
-figure img {
-  display: block;
-}
-
-img[moz-reader-center] {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.caption,
-.wp-caption-text,
-figcaption {
-  font-size: 0.9em;
-  line-height: 1.48em;
-  font-style: italic;
-}
-
-code,
-pre {
-  white-space: pre-wrap;
-}
-
-blockquote {
-  padding: 0;
-  padding-inline-start: 16px;
-}
-
-ul,
-ol {
-  padding: 0;
-}
-
-ul {
-  padding-inline-start: 30px;
-  list-style: disc;
-}
-
-ol {
-  padding-inline-start: 30px;
-  list-style: decimal;
-}
-
-/* Hide elements with common "hidden" class names */
-.visually-hidden,
-.visuallyhidden,
-.hidden,
-.invisible,
-.sr-only {
-  display: none;
-}
+  /* Hide elements with common "hidden" class names */
+  .visually-hidden,
+  .visuallyhidden,
+  .hidden,
+  .invisible,
+  .sr-only {
+    display: none;
+  }
 }

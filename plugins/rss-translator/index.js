@@ -118,7 +118,7 @@ KlarkModule(module, 'rssTranslator', (
     }
     return error;
   }
-
+////  item['media:group']['media:content'][0]['@']['url']
   function getImage(item) {
     let img;
     if (_.isObject(item.image)) {
@@ -134,6 +134,12 @@ KlarkModule(module, 'rssTranslator', (
       );
       if (imgEnclosure) {
         return imgEnclosure.url;
+      }
+    }
+    if (item['media:group']) {
+      const img = _.get(item, "['media:group']['media:content'][0]['@']['url']");
+      if (img) {
+        return img;
       }
     }
   }
@@ -172,7 +178,8 @@ KlarkModule(module, 'rssTranslator', (
       'link',
       'author',
       'enclosures',
-      'image'
+      'image',
+      'media:group'
     ]);
   }
 

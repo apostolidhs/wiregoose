@@ -41,9 +41,6 @@ KlarkModule(module, 'articleMining', (
       $inc: { hits: 1 },
       lastHit: new Date()
     };
-    // model
-    //   .findByIdAndUpdate(id, record, {new: true})
-    //   .populate('article');
     return krkDbMongooseBinders
       .findByIdAndUpdate(modelsEntry, entryId, q)
       .populate('article');

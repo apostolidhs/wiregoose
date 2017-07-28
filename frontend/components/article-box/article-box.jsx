@@ -46,7 +46,7 @@ export default class Entry extends React.Component {
               </h3>
             </Link>
           </header>
-          <div className="metadata">
+          <div>
             <Link
               className="btn btn-link-muted w-p-0"
               to="article"
@@ -60,7 +60,6 @@ export default class Entry extends React.Component {
               styleName="dot-separator"
               date={entry.published}
               minPeriod={1}
-              formatter={Entry.timeAgoBuildFormatter}
             />
           </div>
           <section styleName="summary">

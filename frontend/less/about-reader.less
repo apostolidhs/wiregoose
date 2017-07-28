@@ -3,11 +3,7 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 .article-body {
-  padding: 64px 51px;
-}
 
-.article-body.loaded {
-  transition: color 0.4s, background-color 0.4s;
 }
 
 .article-body.light {
@@ -33,19 +29,10 @@
   background-color: #f4ecd8;
 }
 
-.article-body.sans-serif,
-.article-body.sans-serif .remove-button {
-  font-family: Helvetica, Arial, sans-serif;
-}
-
-.article-body.serif,
-.article-body.serif .remove-button  {
-  font-family: Georgia, "Times New Roman", serif;
-}
-
 .article-container {
   max-width: 30em;
   margin: 0 auto;
+  padding-bottom: 20px;
 }
 
 .article-container.font-size1 {
@@ -120,24 +107,6 @@
   max-width: 60em;
 }
 
-/* Override some controls and content styles based on color scheme */
-
-.article-body.light > .container > .header > .domain {
-  border-bottom-color: #333333 !important;
-}
-
-.article-body.sepia > .container > .header > .domain {
-  border-bottom-color: #5b4636 !important;
-}
-
-.article-body.dark > .container > .header > .domain {
-  border-bottom-color: #eeeeee !important;
-}
-
-.article-body.sepia > .container > .footer {
-  background-color: #dedad4 !important;
-}
-
 .article-body.light blockquote {
   border-inline-start: 2px solid #333333 !important;
 }
@@ -148,18 +117,4 @@
 
 .article-body.dark blockquote {
   border-inline-start: 2px solid #eeeeee !important;
-}
-
-/* Add toolbar transition base on loaded class  */
-
-.article-body.loaded .toolbar {
-  transition: transform 0.3s ease-out;
-}
-
-.article-body:not(.loaded) .toolbar:-moz-locale-dir(ltr) {
-  transform: translateX(-100%);
-}
-
-.article-body:not(.loaded) .toolbar:-moz-locale-dir(rtl) {
-  transform: translateX(100%);
 }
