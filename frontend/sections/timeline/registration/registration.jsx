@@ -46,7 +46,7 @@ export default class Registration extends InfiniteScrollPage {
       Registration.lastFeeds = { [registration]: _.now() };
     }
 
-    WiregooseApi.timeline.registration(Registration.lastFeeds)
+    WiregooseApi.timeline.registration(Registration.lastFeeds, true)
       .then(resp => {
         const data = resp.data.data;
         if (!data) {

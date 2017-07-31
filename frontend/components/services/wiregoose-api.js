@@ -19,9 +19,7 @@ axios.interceptors.response.use(function (response) {
     // Do something with response data
     return response;
   }, function (error) {
-    if (!error.config.preventErrorInterceptor) {
-      ServerErrorInterceptor(error);
-    }
+    ServerErrorInterceptor(error, !!error.config.friendlyErrorInterceptor);
     // Do something with response error
     return Promise.reject(error);
   });
@@ -92,14 +90,15 @@ export function getArticleStatistics() {
   })
 }
 
-export function getStatic(name) {
+export function getStatic(name, friendlyErrorInterceptor = false) {
   return httpRequest({
     method: 'get',
-    url: `${config.apiUrl}statics/${name}`
+    url: `${config.apiUrl}statics/${name}`,
+    friendlyErrorInterceptor
   });
 }
 
-export function fetchArticle(entryId, preventErrorInterceptor = false) {
+export function fetchArticle(entryId, friendlyErrorInterceptor = false) {
   return httpRequest({
     method: 'get',
     url: `${config.apiUrl}article/mining/cachedFetch/entry/${entryId}`,
@@ -107,7 +106,7 @@ export function fetchArticle(entryId, preventErrorInterceptor = false) {
       'Content-Type': 'application/json',
       authorization: credentialGetter(),
     },
-    preventErrorInterceptor
+    friendlyErrorInterceptor
   })
   .then(resp => {
     const article = ArticleResponseTransformation(resp.data.data);
@@ -115,23 +114,23 @@ export function fetchArticle(entryId, preventErrorInterceptor = false) {
   });
 }
 
-function timelineExplore(categories) {
-  return getTimeline('explore', categories);
+function timelineExplore(categories, friendlyErrorInterceptor = false) {
+  return getTimeline('explore', categories, friendlyErrorInterceptor);
 }
 
-function timelineCategory(category) {
-  return getTimeline('category', category);
+function timelineCategory(category, friendlyErrorInterceptor = false) {
+  return getTimeline('category', category, friendlyErrorInterceptor);
 }
 
-function timelineProvider(provider) {
-  return getTimeline('provider', provider);
+function timelineProvider(provider, friendlyErrorInterceptor = false) {
+  return getTimeline('provider', provider, friendlyErrorInterceptor);
 }
 
-function timelineRegistration(registration) {
-  return getTimeline('registration', registration);
+function timelineRegistration(registration, friendlyErrorInterceptor = false) {
+  return getTimeline('registration', registration, friendlyErrorInterceptor);
 }
 
-function getTimeline(endpoint, params) {
+function getTimeline(endpoint, params, friendlyErrorInterceptor) {
   return httpRequest({
     method: 'get',
     url: `${config.apiUrl}timeline/${endpoint}`,
@@ -140,6 +139,7 @@ function getTimeline(endpoint, params) {
       'Content-Type': 'application/json',
       authorization: credentialGetter(),
     },
+    friendlyErrorInterceptor
   })
   .then(resp => {
     resp.data.data = _.mapValues(

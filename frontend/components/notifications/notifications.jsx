@@ -9,16 +9,21 @@ export const create = {
   info: createNotification('info')
 }
 
+const defaultOptions = {
+  autoDismiss: 0,
+  position: 'tc'
+};
+
 let notificationSystem;
 
 function createNotification(level) {
   return (message, opts = {}) => {
-    _.assignIn(opts, {level, message});
+    const dopts = _.defaults({level, message}, opts, defaultOptions);
     if (!notificationSystem) {
       console.warn('notifications have not instantiated');
       return;
     }
-    notificationSystem.addNotification(opts);
+    notificationSystem.addNotification(dopts);
   }
 }
 

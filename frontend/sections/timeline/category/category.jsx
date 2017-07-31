@@ -90,7 +90,7 @@ export default class Category extends InfiniteScrollPage {
       const category = this.props.routeParams.id;
       Category.lastFeeds = { [category]: _.now() };
     }
-    WiregooseApi.timeline.category(Category.lastFeeds)
+    WiregooseApi.timeline.category(Category.lastFeeds, true)
       .then(resp => {
         const { data } = resp.data;
         Category.lastFeeds = _.mapValues(

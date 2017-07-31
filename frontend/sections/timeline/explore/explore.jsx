@@ -44,7 +44,7 @@ export default class Explore extends InfiniteScrollPage {
     }
 
     this.timeline.setLoadingState(true);
-    WiregooseApi.timeline.explore(Explore.lastFeeds)
+    WiregooseApi.timeline.explore(Explore.lastFeeds, true)
       .then(resp => {
         const { data } = resp.data;
         Explore.lastFeeds = _.mapValues(

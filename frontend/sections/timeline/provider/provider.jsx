@@ -37,7 +37,7 @@ export default class Provider extends InfiniteScrollPage {
       Provider.lastFeeds = { [provider]: _.now() };
     }
 
-    WiregooseApi.timeline.provider(Provider.lastFeeds)
+    WiregooseApi.timeline.provider(Provider.lastFeeds, true)
       .then(resp => {
         const data = resp.data.data;
         if (!data) {
