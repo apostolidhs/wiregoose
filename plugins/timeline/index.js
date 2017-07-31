@@ -8,36 +8,56 @@ KlarkModule(module, 'timeline', (
 ) => {
 
   return {
-    explore: timelineExplore
+    explore: timelineExplore,
+    provider: timelineProvider,
+    registration: timelineRegistration
   };
 
+  ////////////////////////////////////////
+  // Explore (Category)
   function timelineExplore(timeline, limit) {
-    const queries = createBatchCategoriesQuery(timeline, limit);
+    const queries = createBatchQueryBy(timeline, limit);
     return Promise.all(queries)
-      .then(result => groupResultByCategory(result));
+      .then(result => groupResultBy('category', result));
   }
 
-  function groupResultByCategory(results) {
-    return _(results)
-        .flatten()
-        .compact()
-        .groupBy('category')
-        .value();
+  ////////////////////////////////////////
+  // Provider
+  function timelineProvider(timeline, limit) {
+    const queries = createBatchQueryBy(timeline, limit);
+    return Promise.all(queries)
+      .then(result => groupResultBy('provider', result));
   }
 
-  function createBatchCategoriesQuery(timeline, limit) {
-    return _.map(timeline, (latest, category) => {
+  ////////////////////////////////////////
+  // Registration
+  function timelineRegistration(timeline, limit) {
+    const queries = createBatchQueryBy(timeline, limit);
+    return Promise.all(queries)
+      .then(result => groupResultBy('registration', result));
+  }
+
+  function createBatchQueryBy(timeline, limit) {
+    return _.map(timeline, (entry) => {
       const q = {
-        category,
         published: {
-          $lt: latest
+          $lt: entry.latest
         }
       };
+      q[entry.fieldName] = entry.fieldValue;
       return modelsEntry
         .find(q)
         .sort({published: -1})
         .limit(limit);
     });
+  }
+
+  function groupResultBy(name, results) {
+    return _(results)
+        .flatten()
+        .compact()
+        .groupBy(name)
+        .value();
   }
 
 })

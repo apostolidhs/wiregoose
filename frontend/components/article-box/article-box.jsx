@@ -8,14 +8,16 @@ import CSSModules from 'react-css-modules';
 import styles from './article-box.less';
 import { ellipsis } from '../text-utilities/text-utilities.js';
 import ArticleBoxProps from './entry-prop-type.js';
-import { createArticleLink } from './link-generator.js';
+import { createLink } from '../text-utilities/text-utilities.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
 })
 export default class Entry extends React.Component {
   static propTypes = {
-    entry: PropTypes.shape(ArticleBoxProps)
+    entry: PropTypes.shape(ArticleBoxProps),
+    hideCategory: PropTypes.bool,
+    hideProvider: PropTypes.bool
   }
 
   static defaultProps = {
@@ -33,31 +35,45 @@ export default class Entry extends React.Component {
 
   render() {
     const { entry, className= '', ...passDownProps } = this.props;
+    const articleLink = createLink(entry)
     return (
       <article className={className + ' panel panel-default'} styleName="article">
-        <Link to={createArticleLink(entry)} styleName="image">
+        <Link to={articleLink} styleName="image">
           <img src={entry.image} alt="" />
         </Link>
+        { !this.props.hideCategory &&
+          <Link
+            to={`/category/${entry.category}`}
+            role="button"
+            title="Category"
+            className="btn"
+            styleName="category"
+          >
+            {entry.category}
+          </Link>
+        }
         <div className="panel-body">
           <header styleName="header">
-            <Link to={createArticleLink(entry)} className="blind-link">
+            <Link to={articleLink} className="blind-link">
               <h3>
                 {ellipsis(entry.title, 100)}
               </h3>
             </Link>
           </header>
           <div>
-            <Link
-              className="btn btn-link-muted w-p-0"
-              to="article"
-              role="button"
-              title="Provider"
-            >
-              {entry.provider}
-            </Link>
+            { !this.props.hideProvider &&
+              <Link
+                className="btn btn-link-muted w-p-0"
+                styleName="dot-separator"
+                to={`/provider/${entry.provider}`}
+                role="button"
+                title="Provider"
+              >
+                {entry.provider}
+              </Link>
+            }
             <TimeAgo
               className="text-muted"
-              styleName="dot-separator"
               date={entry.published}
               minPeriod={1}
             />
@@ -65,7 +81,7 @@ export default class Entry extends React.Component {
           <section styleName="summary">
             {ellipsis(entry.description, 280)}
           </section>
-          <footer styleName="footer">
+          <footer styleName="footer" className="text-right">
             <a
               className="btn btn-link blind-link"
               href="/"

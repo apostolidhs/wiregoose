@@ -11,6 +11,14 @@
   width: 100%;
 }
 
+.category {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #ddd;
+}
+
 .header h3 {
   margin: 0;
   font-size: 20px;
@@ -21,7 +29,7 @@
   margin: 8px 0px;
 }
 
-.dot-separator::before {
+.dot-separator::after {
   content: '\002022';
   margin: 0px 4px;
 }
@@ -30,6 +38,7 @@
   position: absolute;
   bottom: @panel-body-padding;
   left: @panel-body-padding;
+  right: @panel-body-padding;
   > a:first-child {
     padding-left: 0;
   }

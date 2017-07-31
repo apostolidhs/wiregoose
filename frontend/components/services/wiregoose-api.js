@@ -44,7 +44,9 @@ export const rssFeed = {
 
 export const timeline = {
   explore: timelineExplore,
-  category: timelineCategory
+  category: timelineCategory,
+  provider: timelineProvider,
+  registration: timelineRegistration
 }
 
 export const statics = {
@@ -119,6 +121,14 @@ function timelineExplore(categories) {
 
 function timelineCategory(category) {
   return getTimeline('category', category);
+}
+
+function timelineProvider(provider) {
+  return getTimeline('provider', provider);
+}
+
+function timelineRegistration(registration) {
+  return getTimeline('registration', registration);
 }
 
 function getTimeline(endpoint, params) {

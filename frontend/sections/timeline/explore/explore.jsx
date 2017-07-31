@@ -39,7 +39,7 @@ export default class Explore extends InfiniteScrollPage {
   }
 
   retrieveTimeline = () => {
-    if (this.timeline.state.isLoading) {
+    if (!(this.timeline && !this.timeline.state.isLoading)) {
       return;
     }
 

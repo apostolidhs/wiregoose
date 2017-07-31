@@ -11,7 +11,7 @@ export default class Tag extends React.Component {
   render() {
     const { name } = this.props;
     return (
-      <Link to={`/category/${name}`} className="btn btn-default" role="button" title={`${name} Category`} >
+      <Link to={`/provider/${name}`} className="btn btn-default" role="button" title={`${name} Provider`} >
         { name }
       </Link>
     );

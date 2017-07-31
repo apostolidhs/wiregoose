@@ -43,6 +43,23 @@ export function dateToText(val, showSeconds = false) {
   return `${day}/${month}/${year}${seconds}`;
 }
 
+export function createLink(name, id) {
+  const dashTitle = _(name)
+    .split(/\W+/)
+    .compact()
+    .join('-')
+    .toLowerCase();
+  const url = encodeURI(dashTitle);
+  return `/article/${url}-${id}`;
+}
+
+export function getIdFromLink(link) {
+  const dashTitle = decodeURI(link);
+  const lastDash = dashTitle.lastIndexOf('-');
+  return lastDash === -1 ? '' : dashTitle.substring(lastDash + 1);
+}
+
+
 function addZero(val) {
   return val.length > 1 ? val : `0${val}`;;
 }

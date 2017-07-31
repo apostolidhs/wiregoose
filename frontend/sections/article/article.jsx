@@ -6,7 +6,7 @@ import CSSModules from 'react-css-modules';
 
 import styles from './article.less';
 import ArticleComponent from '../../components/article/article.jsx';
-import { getArticleIdFromLink } from '../../components/article-box/link-generator.js';
+import { getIdFromLink } from '../../components/text-utilities/text-utilities.js';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
 
 @CSSModules(styles, {
@@ -20,8 +20,8 @@ export default class Article extends React.Component {
   }
 
   componentDidMount() {
-    const id = this.props.routeParams.id;
-    const entryId = getArticleIdFromLink(id);
+    const link = this.props.routeParams.id;
+    const entryId = getIdFromLink(link);
     this.retrieveArticle(entryId);
   }
 

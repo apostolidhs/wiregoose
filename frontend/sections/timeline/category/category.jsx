@@ -32,31 +32,27 @@ export default class Category extends InfiniteScrollPage {
     categoryNotFound: false
   }
 
-  componentWillReceiveProps = ({ routeParams }) => {
-    this.categoryPrms.then((resp) => {
-      const category = this.props.routeParams.id;
-      if (!_.includes(this.state.categories, category)) {
-        this.setState({ categoryNotFound: true });
-        return;
-      }
-
-      this.setState({ categoryNotFound: false });
-      if (Category.timelineState) {
-        this.timeline.setState(Category.timelineState);
-        setTimeout(() => {
-          this.setScrollTop(Category.lastScrollTop);
-        }, 200);
-      } else {
-        this.retrieveTimeline();
-      }
-    })
-  }
-
   componentDidMount() {
-    this.categoryPrms = WiregooseApi.statics.categories()
-      .then(resp => {
-        const categories = resp.data.data;
-        this.setState({ categories });
+    const category = this.props.routeParams.id;
+    if (Category.lastFeeds && Category.lastFeeds[category] === undefined) {
+      Category.lastFeeds = undefined;
+      Category.timelineState = undefined;
+      Category.lastScrollTop = undefined;
+    }
+    this.retrieveCategories()
+      .then(this.checkCategoryExistence)
+      .then(() => {
+        if (this.state.categoryNotFound) {
+          return;
+        }
+        if (Category.timelineState) {
+          this.timeline.setState(Category.timelineState);
+          setTimeout(() => {
+            this.setScrollTop(Category.lastScrollTop);
+          }, 200);
+        } else {
+          this.retrieveTimeline();
+        }
       });
     this.refs.categoryLoad.promise = this.categoryPrms;
     super.componentDidMount();
@@ -64,6 +60,24 @@ export default class Category extends InfiniteScrollPage {
 
   componentWillUnmount() {
     Category.lastScrollTop = this.getScrollTop();
+  }
+
+  retrieveCategories = () => {
+    this.categoryPrms = WiregooseApi.statics.categories()
+      .then(resp => {
+        const categories = resp.data.data;
+        this.setState({ categories });
+      });
+    return this.categoryPrms;
+  }
+
+  checkCategoryExistence = () => {
+    const category = this.props.routeParams.id;
+    if (!_.includes(this.state.categories, category)) {
+      this.setState({ categoryNotFound: true });
+      return;
+    }
+    this.setState({ categoryNotFound: false });
   }
 
   retrieveTimeline = () => {
@@ -109,10 +123,10 @@ export default class Category extends InfiniteScrollPage {
           } else {
             return (
               <div>
-                <Header>
+                <Header onClose={() => this.props.router.push('/')}>
                   <CategoryTag name={this.props.routeParams.id} />
                 </Header>
-                <Timeline ref={(ref) => this.timeline = ref} />
+                <Timeline ref={(ref) => this.timeline = ref} hideCategory={true} />
               </div>
             );
           }

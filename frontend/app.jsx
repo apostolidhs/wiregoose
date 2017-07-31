@@ -15,6 +15,8 @@ import ComponentsGallery from './sections/components-gallery/components-gallery.
 import Timeline from './sections/timeline/timeline.jsx';
 import TimelineExplore from './sections/timeline/explore/explore.jsx';
 import TimelineCategory from './sections/timeline/category/category.jsx';
+import TimelineProvider from './sections/timeline/provider/provider.jsx';
+import TimelineRegistration from './sections/timeline/registration/registration.jsx';
 import Sidebar from './sections/timeline/sidebar/sidebar.jsx';
 import Article from './sections/article/article.jsx';
 
@@ -63,6 +65,8 @@ class App extends React.Component {
           <Route component={Timeline} >
             <IndexRoute component={TimelineExplore} />
             <Route path="category/:id" component={TimelineCategory} />
+            <Route path="provider/:id" component={TimelineProvider} />
+            <Route path="registration/:id" component={TimelineRegistration} />
           </Route>
           <Route path="componentsGallery" component={ComponentsGallery} />
         </Route>
