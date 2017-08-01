@@ -30,7 +30,8 @@ KlarkModule(module, 'rssTranslatorFetchAndParse', ($fs, q, $request, $feedparser
       return deferred.promise;
 
       function fromUrl(url) {
-        const req = createRequest(url);
+        const decodedUrl = decodeURIComponent(url);
+        const req = createRequest(decodedUrl);
 
         req.on('error', onError);
         req.on('response', readRequestStream);
@@ -75,6 +76,7 @@ KlarkModule(module, 'rssTranslatorFetchAndParse', ($fs, q, $request, $feedparser
       }
 
       function onError(error) {
+        console.log(error);
         if (!errorOccured) {
           errorOccured = true;
           deferred.reject(error);

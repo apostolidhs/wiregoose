@@ -69,6 +69,8 @@ KlarkModule(module, 'routesTimeline', (
       };
     });
     res.locals.params.limit = 2;
+    checkLang(req, res);
+
     krkParameterValidator.checkForErrors(res.locals.params, req, res, next);
   }
 
@@ -97,16 +99,18 @@ KlarkModule(module, 'routesTimeline', (
 
     res.locals.params.timeline = timeline;
     res.locals.params.limit = 16;
+    checkLang(req, res);
+
     krkParameterValidator.checkForErrors(res.locals.params, req, res, next);
   }
 
   function middlewareProviderParameterValidator(req, res, next) {
+    checkLang(req, res);
     const timeline = _(req.query)
       .keys()
       .map(key => {
-        req.checkQuery(key).optional().isInt();
         const timeParam = req.sanitizeQuery(key).toInt();
-        const latest = _.isNumber(timeParam) ? new Date(timeParam) : undefined;
+        const latest = _.isNumber(timeParam) && !_.isNaN(timeParam) ? new Date(timeParam) : undefined;
         return {
           latest,
           fieldName: 'provider',
@@ -123,6 +127,7 @@ KlarkModule(module, 'routesTimeline', (
 
     res.locals.params.timeline = timeline;
     res.locals.params.limit = 16;
+
     krkParameterValidator.checkForErrors(res.locals.params, req, res, next);
   }
 
@@ -133,7 +138,6 @@ KlarkModule(module, 'routesTimeline', (
         if (!$mongoose.Types.ObjectId.isValid(key)) {
           return;
         }
-        req.checkQuery(key).optional().isInt();
         const timeParam = req.sanitizeQuery(key).toInt();
         const latest = _.isNumber(timeParam) ? new Date(timeParam) : undefined;
         return {
@@ -152,6 +156,8 @@ KlarkModule(module, 'routesTimeline', (
 
     res.locals.params.timeline = timeline;
     res.locals.params.limit = 16;
+    checkLang(req, res);
+
     krkParameterValidator.checkForErrors(res.locals.params, req, res, next);
   }
 
@@ -159,7 +165,8 @@ KlarkModule(module, 'routesTimeline', (
     return (req, res, next) => {
       const timelineParams = res.locals.params.timeline;
       const limit = res.locals.params.limit;
-      timeline[name](timelineParams, limit)
+      const lang = res.locals.params.lang;
+      timeline[name](timelineParams, lang, limit)
         .then((feeds) => res.locals.data = feeds)
         .then(() => next())
         .catch(reason => {
@@ -167,5 +174,11 @@ KlarkModule(module, 'routesTimeline', (
           next(true);
         });
     }
+  }
+
+  function checkLang(req, res) {
+    req.checkQuery('lang').optional().isLang();
+    res.locals.params.lang = req.sanitizeQuery('lang').toString()
+      || config.SUPPORTED_LANGUAGES[0];
   }
 });

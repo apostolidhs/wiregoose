@@ -15,31 +15,32 @@ KlarkModule(module, 'timeline', (
 
   ////////////////////////////////////////
   // Explore (Category)
-  function timelineExplore(timeline, limit) {
-    const queries = createBatchQueryBy(timeline, limit);
+  function timelineExplore(timeline, lang, limit) {
+    const queries = createBatchQueryBy(timeline, lang, limit);
     return Promise.all(queries)
       .then(result => groupResultBy('category', result));
   }
 
   ////////////////////////////////////////
   // Provider
-  function timelineProvider(timeline, limit) {
-    const queries = createBatchQueryBy(timeline, limit);
+  function timelineProvider(timeline, lang, limit) {
+    const queries = createBatchQueryBy(timeline, lang, limit);
     return Promise.all(queries)
       .then(result => groupResultBy('provider', result));
   }
 
   ////////////////////////////////////////
   // Registration
-  function timelineRegistration(timeline, limit) {
-    const queries = createBatchQueryBy(timeline, limit);
+  function timelineRegistration(timeline, lang, limit) {
+    const queries = createBatchQueryBy(timeline, lang, limit);
     return Promise.all(queries)
       .then(result => groupResultBy('registration', result));
   }
 
-  function createBatchQueryBy(timeline, limit) {
+  function createBatchQueryBy(timeline, lang, limit) {
     return _.map(timeline, (entry) => {
       const q = {
+        lang,
         published: {
           $lt: entry.latest
         }

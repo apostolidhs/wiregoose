@@ -7,10 +7,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'react-select/dist/react-select.css';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 import './less/index.less';
+
 import Header from './components/header/header.jsx';
 import Notifications from './components/notifications/notifications.jsx';
 import * as Auth from './components/authorization/auth.js';
 import * as WiregooseApi from './components/services/wiregoose-api.js';
+
 import ComponentsGallery from './sections/components-gallery/components-gallery.jsx';
 import Timeline from './sections/timeline/timeline.jsx';
 import TimelineExplore from './sections/timeline/explore/explore.jsx';

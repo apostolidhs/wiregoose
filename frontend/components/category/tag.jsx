@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import { Badge } from 'react-bootstrap';
 
 export default class Tag extends React.Component {
 
@@ -9,10 +10,17 @@ export default class Tag extends React.Component {
   }
 
   render() {
-    const { name } = this.props;
+    const { name, ...passDownProps } = this.props;
+    passDownProps.className = (passDownProps.className || '') + ' w-tag';
+
     return (
-      <Link to={`/category/${name}`} className="btn btn-default" role="button" title={`${name} Category`} >
-        { name }
+      <Link
+        to={`/category/${name}`}
+        role="button"
+        title={`${name} Category`}
+        {...passDownProps}
+      >
+        <Badge>{ name }</Badge>
       </Link>
     );
   }

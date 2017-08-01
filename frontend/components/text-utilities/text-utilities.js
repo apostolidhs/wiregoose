@@ -70,6 +70,9 @@ export function isMongoId(id) {
   return id && /^[0-9a-fA-F]{24}$/.test(id);
 }
 
+export function createAbsoluteLink(link) {
+  return location.protocol + '//' + location.host + link;
+}
 
 function addZero(val) {
   return val.length > 1 ? val : `0${val}`;;

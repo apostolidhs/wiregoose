@@ -76,7 +76,7 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
                                     && registrationEntry.entriesResp.errors;
         const error = majorError || translationErrors;
 
-        if (!_.isEmpty(error)) {
+        if (!_.isEmpty(error) || _.isError(error)) {
           const failedFetch = {
             error,
             rssRegistration: rssRegistration.id
@@ -84,7 +84,7 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
           fetchReport.failedFetches.push(failedFetch);
         }
 
-        if (!_.isEmpty(majorError)) {
+        if (!_.isEmpty(majorError) || _.isError(error)) {
           return q.when();
         }
 

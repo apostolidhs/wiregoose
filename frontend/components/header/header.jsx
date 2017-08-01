@@ -6,6 +6,7 @@ import { Link } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
 
+import { SUPPORTED_LANGUAGES } from '../../config.js';
 import * as Events from '../events/events.js';
 import * as Auth from '../authorization/auth.js';
 
@@ -23,24 +24,36 @@ export default class Header extends React.Component {
       isLeftSidebarEnabled: false,
       isLeftSidebarOpen: false,
       openLeftSidebarClicked: _.noop
-    }
+    },
+    lang: SUPPORTED_LANGUAGES[0]
   }
 
   componentWillMount() {
     Events.subscribe('sidebar', this.updateSidebarState);
+    Events.subscribe('language', this.updateLanguageState);
   }
 
   componentWillUnmount() {
     Events.unsubscribe('sidebar', this.updateSidebarState);
+    Events.unsubscribe('language', this.updateLanguageState);
   }
 
   updateSidebarState = (sidebar) => {
     this.setState({ sidebar })
   }
 
+  updateLanguageState = (lang) => {
+    this.setState({ lang })
+  }
+
   toggleSidebarClicked = (evt) => {
     evt.preventDefault();
     this.state.sidebar.openLeftSidebarClicked();
+  }
+
+  changeLanguage = (lang) => {
+    Auth.setSessionLang(lang);
+    location.reload();
   }
 
   render() {
@@ -60,7 +73,7 @@ export default class Header extends React.Component {
           </Nav>
         )}
         <Navbar.Collapse>
-          <Nav pullRight>
+          <Nav  pullRight>
             {enableAuth && (() => {
               if (Auth.isAuthenticated()) {
                 return (
@@ -86,10 +99,23 @@ export default class Header extends React.Component {
                 </NavItem>
               </LinkContainer>
             }
+
             <NavDropdown
+              onSelect={this.changeLanguage}
               eventKey={3}
+              title={Auth.getSessionLang()}
+              id="w-menu-language"
+              noCaret
+            >
+            {_.map(SUPPORTED_LANGUAGES, lang => (
+              <MenuItem eventKey={lang} key={lang} >{lang}</MenuItem>
+            ))}
+            </NavDropdown>
+
+            <NavDropdown
+              eventKey={4}
               title={<FontAwesome name="bars" />}
-              id="basic-nav-dropdown"
+              id="w-menu-settings"
               noCaret
             >
               <LinkContainer to="/componentsGallery">
@@ -98,7 +124,7 @@ export default class Header extends React.Component {
                 </MenuItem>
               </LinkContainer>
               {/* <MenuItem divider />
-              <MenuItem eventKey={3.3}>Separated link</MenuItem>*/}
+              <MenuItem eventKey={4.3}>Separated link</MenuItem>*/}
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

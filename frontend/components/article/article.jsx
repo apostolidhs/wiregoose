@@ -7,6 +7,8 @@ import TimeAgo from 'react-timeago';
 import FontAwesome from 'react-fontawesome';
 
 import entryPropType from '../article-box/entry-prop-type.js';
+import CategoryTag from '../category/tag.jsx';
+import ProviderTag from '../rss-provider/tag.jsx';
 
 export default class Article extends React.Component {
   static ARTICLE_REDIRECTION_DELAY = 3; //s
@@ -85,22 +87,8 @@ export default class Article extends React.Component {
       <header>
         <h1>{title}</h1>
         <div>
-          <Link
-            className="btn btn-link-muted"
-            to="/"
-            role="button"
-            title="Category"
-          >
-            {entry.category}
-          </Link>
-          <Link
-            className="btn btn-link-muted"
-            to="/"
-            role="button"
-            title="Provider"
-          >
-            {entry.provider}
-          </Link>
+          <CategoryTag name={entry.category} />
+          <ProviderTag name={entry.provider} className="w-ml-7" />
           <TimeAgo
             className="text-muted pull-right"
             date={entry.published}

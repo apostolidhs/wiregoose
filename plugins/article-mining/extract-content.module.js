@@ -129,6 +129,10 @@ KlarkModule(module, 'articleMiningExtractContent', (
         node.removeAttribute('style');
         node.removeAttribute('id');
         node.removeAttribute('onClick');
+        const tagName = (node.tagName || '').toLowerCase();
+        if (tagName === 'a') {
+          node.setAttribute('target', '_blank');
+        }
       });
       const readableDocHtml = readableDoc.body.innerHTML;
       if (readableDocHtml) {

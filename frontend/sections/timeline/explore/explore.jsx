@@ -8,9 +8,10 @@ import { Nav, NavItem } from 'react-bootstrap';
 import styles from '../timeline.less';
 import Header from '../../../components/timeline/header.jsx';
 import Timeline from '../../../components/timeline/timeline.jsx';
-import TimelinePage from '../../../components/timeline/page.jsx';
+import TimelinePage from '../../../components/timeline/page.js';
 import InfiniteScrollPage from '../../../components/infinite-scroll/page.jsx';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
+import * as Auth from '../../../components/authorization/auth.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -36,7 +37,7 @@ export default class Explore extends InfiniteScrollPage {
     }
 
     this.timeline.setLoadingState(true);
-    WiregooseApi.timeline.explore(Explore.page.lastFeeds, true)
+    WiregooseApi.timeline.explore(Explore.page.lastFeeds, Auth.getSessionLang(), true)
       .then(resp => Explore.page.timelineRetrievedSuccessfully(this, resp));
   }
 

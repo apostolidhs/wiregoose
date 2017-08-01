@@ -11,10 +11,11 @@ import styles from './category.less';
 import Header from '../../../components/timeline/header.jsx';
 import CategoryTag from '../../../components/category/tag.jsx';
 import Timeline from '../../../components/timeline/timeline.jsx';
-import TimelinePage from '../../../components/timeline/page.jsx';
+import TimelinePage from '../../../components/timeline/page.js';
 import Loader from '../../../components/loader/loader.jsx';
 import InfiniteScrollPage from '../../../components/infinite-scroll/page.jsx';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
+import * as Auth from '../../../components/authorization/auth.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -72,7 +73,7 @@ export default class Category extends InfiniteScrollPage {
       const category = this.props.routeParams.id;
       Category.page.lastFeeds = { [category]: _.now() };
     }
-    WiregooseApi.timeline.category(Category.page.lastFeeds, true)
+    WiregooseApi.timeline.category(Category.page.lastFeeds, Auth.getSessionLang(), true)
       .then(resp => Category.page.timelineRetrievedSuccessfully(this, resp));
   }
 

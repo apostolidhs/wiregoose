@@ -4,11 +4,14 @@ import { Link } from 'react-router';
 import FontAwesome from 'react-fontawesome';
 import TimeAgo from 'react-timeago';
 import CSSModules from 'react-css-modules';
+import { FacebookButton, TwitterButton } from 'react-social';
+import { OverlayTrigger, Popover, Button, FormControl } from 'react-bootstrap';
 
+import { FACEBOOK_APP_ID } from '../../config.js';
 import styles from './article-box.less';
 import { ellipsis } from '../text-utilities/text-utilities.js';
 import ArticleBoxProps from './entry-prop-type.js';
-import { createLink } from '../text-utilities/text-utilities.js';
+import { createLink, createAbsoluteLink } from '../text-utilities/text-utilities.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -36,6 +39,7 @@ export default class Entry extends React.Component {
   render() {
     const { entry, className= '', ...passDownProps } = this.props;
     const articleLink = createLink(entry.title, entry._id);
+    const absoluteArticleLink = createAbsoluteLink(articleLink);
     return (
       <article className={className + ' panel panel-default'} styleName="article">
         <Link to={articleLink} styleName="image">
@@ -56,7 +60,7 @@ export default class Entry extends React.Component {
           <header styleName="header">
             <Link to={articleLink} className="blind-link">
               <h3>
-                {ellipsis(entry.title, 128)}
+                {ellipsis(entry.title, 70)}
               </h3>
             </Link>
           </header>
@@ -78,36 +82,54 @@ export default class Entry extends React.Component {
             />
           </div>
           <section styleName="summary">
-            {ellipsis(entry.description, 256)}
+            {ellipsis(entry.description, 190)}
           </section>
           <footer styleName="footer" className="text-right">
-            <a
-              className="btn btn-link blind-link"
-              href="/"
-              role="button"
-              title="Link"
+            <OverlayTrigger
+              onEntered={this.focusOnShareArticlePopover}
+              trigger="click"
+              placement="top"
+              overlay={this.renderShareLinkPopover(absoluteArticleLink)}
+              container={this}
+              rootClose
             >
-              <FontAwesome name="link" />
-            </a>
-            <a
+              <Button className="btn btn-link blind-link" title="Article Link" >
+                <FontAwesome name="link" />
+              </Button>
+            </OverlayTrigger>
+            <FacebookButton
               className="btn btn-link blind-link"
-              href="/"
-              role="button"
-              title="Facebook"
+              url={absoluteArticleLink}
+              appId={FACEBOOK_APP_ID}
+              title="Share on Facebook"
             >
               <FontAwesome name="facebook" />
-            </a>
-            <a
+            </FacebookButton>
+            <TwitterButton
               className="btn btn-link blind-link"
-              href="/"
-              role="button"
-              title="Twitter"
+              url={absoluteArticleLink}
+              title="Share on Twitter"
             >
               <FontAwesome name="twitter" />
-            </a>
+            </TwitterButton>
           </footer>
         </div>
       </article>
+    );
+  }
+
+  focusOnShareArticlePopover = (rootEl) => {
+    const inputEl = rootEl.getElementsByTagName('input')[0];
+    inputEl.focus();
+    inputEl.select();
+  }
+
+  renderShareLinkPopover = (absoluteArticleLink) => {
+    return (
+      <Popover id="popover-copy-article-link">
+        <h4>Share Article</h4>
+        <FormControl type="text" defaultValue={absoluteArticleLink} readOnly />
+      </Popover>
     );
   }
 }

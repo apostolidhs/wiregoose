@@ -150,7 +150,7 @@ KlarkModule(module, 'rssTranslator', (
     if (_.isString(str) && str) {
       let escapedStr = $cheerio.load(str).text() || '';
       escapedStr = _.trim(escapedStr.replace(/(\r\n|\n|\r)/gm, ''));
-      return escapedStr ? escapedStr.substr(0, maxLengthValidator.maxlength) : undefined;
+      return escapedStr ? escapedStr.substr(0, maxLengthValidator.maxlength - 1) : undefined;
     }
   }
 

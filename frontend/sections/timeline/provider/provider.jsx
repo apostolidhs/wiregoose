@@ -5,8 +5,9 @@ import InfiniteScrollPage from '../../../components/infinite-scroll/page.jsx';;
 import Header from '../../../components/timeline/header.jsx';
 import ProviderTag from '../../../components/rss-provider/tag.jsx';
 import Timeline from '../../../components/timeline/timeline.jsx';
-import TimelinePage from '../../../components/timeline/page.jsx';
+import TimelinePage from '../../../components/timeline/page.js';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
+import * as Auth from '../../../components/authorization/auth.js';
 
 export default class Provider extends InfiniteScrollPage {
   static page = new TimelinePage();
@@ -27,7 +28,7 @@ export default class Provider extends InfiniteScrollPage {
   }
 
   retrieveTimeline = () => {
-    if (!(this.timeline && !this.timeline.state.isLoading)) {
+    if (!(this.timeline && !this.timeline.state.isLoading && Provider.page.hasMore)) {
       return;
     }
 
@@ -37,7 +38,7 @@ export default class Provider extends InfiniteScrollPage {
       Provider.page.lastFeeds = { [provider]: _.now() };
     }
 
-    WiregooseApi.timeline.provider(Provider.page.lastFeeds, true)
+    WiregooseApi.timeline.provider(Provider.page.lastFeeds, Auth.getSessionLang(), true)
       .then(resp => Provider.page.timelineRetrievedSuccessfully(this, resp));
   }
 
