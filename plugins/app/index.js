@@ -14,6 +14,7 @@ KlarkModule(module, 'app', (
   $morgan,
   $mongoose,
   $moment,
+  $helmet,
   $passport,
   krkPromiseExtension,
   krkRouter,

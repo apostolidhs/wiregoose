@@ -46,8 +46,10 @@ if (isTestEnv) {
   });
 } else if (!script) {
   klarkApiPromise.then(klarkApi => {
-    klarkApi.injectInternalModuleFromMetadata('main', (krkServer, app) => {
-      krkServer.start(app);
+    klarkApi.injectInternalModuleFromMetadata('main', (krkServer, app, config) => {
+      krkServer.start(app, {
+        PORT: config.PORT
+      });
     })
     .catch(e => console.error(e));
   });

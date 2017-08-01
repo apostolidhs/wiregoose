@@ -8,6 +8,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 //const SpritePlugin = require('svg-sprite-loader/plugin');
 const autoprefixer = require('autoprefixer');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isProduction = nodeEnv === 'production';
@@ -26,6 +27,7 @@ const globalLessPath = isWin
 function createWebpackConfig(name, entryName, outputName) {
   // Common plugins
   const plugins = [
+    // new UglifyJSPlugin(),
     new CleanWebpackPlugin([buildPath + '/*.js*', buildPath + '/*.css*', buildPath + '/*.html*']),
     //new SpritePlugin(),
     new webpack.optimize.CommonsChunkPlugin({
