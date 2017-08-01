@@ -5,11 +5,18 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
+import CSSModules from 'react-css-modules';
 
+import styles from './header.less';
 import { SUPPORTED_LANGUAGES } from '../../config.js';
 import * as Events from '../events/events.js';
 import * as Auth from '../authorization/auth.js';
 
+import logoImage from '../../assets/img/logo.png';
+
+@CSSModules(styles, {
+  allowMultiple: true,
+})
 export default class Header extends React.Component {
   static propTypes = {
     enableAuth: PropTypes.bool
@@ -63,7 +70,10 @@ export default class Header extends React.Component {
       <Navbar collapseOnSelect fixedTop>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link to="/">Wiregoose</Link>
+            <Link to="/" styleName="logo">
+              <img src={logoImage} />
+              <span>Wiregoose</span>
+            </Link>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
@@ -112,20 +122,22 @@ export default class Header extends React.Component {
             ))}
             </NavDropdown>
 
-            <NavDropdown
-              eventKey={4}
-              title={<FontAwesome name="bars" />}
-              id="w-menu-settings"
-              noCaret
-            >
-              <LinkContainer to="/componentsGallery">
-                <MenuItem>
-                  Components Gallery
-                </MenuItem>
-              </LinkContainer>
-              {/* <MenuItem divider />
-              <MenuItem eventKey={4.3}>Separated link</MenuItem>*/}
-            </NavDropdown>
+            { false &&
+              <NavDropdown
+                eventKey={4}
+                title={<FontAwesome name="bars" />}
+                id="w-menu-settings"
+                noCaret
+              >
+                <LinkContainer to="/componentsGallery">
+                  <MenuItem>
+                    Components Gallery
+                  </MenuItem>
+                </LinkContainer>
+                {/* <MenuItem divider />
+                <MenuItem eventKey={4.3}>Separated link</MenuItem>*/}
+              </NavDropdown>
+            }
           </Nav>
         </Navbar.Collapse>
       </Navbar>

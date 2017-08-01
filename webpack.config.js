@@ -13,7 +13,7 @@ const nodeEnv = process.env.NODE_ENV || 'development';
 const isProduction = nodeEnv === 'production';
 
 const jsSourcePath = path.join(__dirname, './frontend');
-const buildPath = path.join(__dirname, './build');
+const buildPath = path.join(__dirname, './public');
 const imgPath = path.join(__dirname, './frontend/assets/img');
 const iconPath = path.join(__dirname, './source/assets/icons');
 const sourcePath = path.join(__dirname, './frontend');
@@ -249,9 +249,9 @@ function createWebpackConfig(name, entryName, outputName) {
 }
 
 //module.exports = createWebpackConfig('index', './admin', 'admin');
-module.exports = createWebpackConfig('index', './app', 'app');
+//module.exports = createWebpackConfig('index', './app', 'app');
 
-// module.exports = [
-//   createWebpackConfig('app', './app', 'app'),
-//   createWebpackConfig('admin', './admin', 'admin')
-// ];
+module.exports = [
+  createWebpackConfig('index', './app', 'app'),
+  createWebpackConfig('admin', './admin', 'admin')
+];
