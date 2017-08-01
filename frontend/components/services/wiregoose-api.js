@@ -1,5 +1,7 @@
-import axios from 'axios';
 import _ from 'lodash';
+import axios from 'axios';
+import promiseFinally from 'promise.prototype.finally';
+promiseFinally.shim();
 
 import * as config from '../../config.js';
 import ArticleResponseTransformation from '../article/response-transformation.js';
@@ -109,7 +111,7 @@ export function fetchArticle(entryId, friendlyErrorInterceptor = false) {
     friendlyErrorInterceptor
   })
   .then(resp => {
-    const article = ArticleResponseTransformation(resp.data.data);
+    resp.data.data = resp.data.data && ArticleResponseTransformation(resp.data.data);
     return resp;
   });
 }

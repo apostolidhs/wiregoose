@@ -55,7 +55,7 @@ export default class Article extends React.Component {
     return (
       <div className={"article-body"}>
          <div className="article-container font-size5 content-width4">
-           { !isLoading && article &&
+           { article &&
             <article className="article-reader-content line-height4">
               { this.renderHeader(article) }
               {(() => {
@@ -67,6 +67,10 @@ export default class Article extends React.Component {
               })()}
               { !article.error && this.renderFooter(article) }
             </article>
+           }
+           {
+             isLoading &&
+             <p>Loading...</p>
            }
         </div>
       </div>

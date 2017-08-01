@@ -53,10 +53,21 @@ export function createLink(name, id) {
   return `/article/${url}-${id}`;
 }
 
-export function getIdFromLink(link) {
+export function getIdFromLink(link, matchMongoId = false) {
   const dashTitle = decodeURI(link);
   const lastDash = dashTitle.lastIndexOf('-');
-  return lastDash === -1 ? '' : dashTitle.substring(lastDash + 1);
+  if (lastDash === -1) {
+    return;
+  }
+  const id = dashTitle.substring(lastDash + 1);
+  if (matchMongoId) {
+    return isMongoId(id) ? id : undefined;
+  }
+  return id;
+}
+
+export function isMongoId(id) {
+  return id && /^[0-9a-fA-F]{24}$/.test(id);
 }
 
 

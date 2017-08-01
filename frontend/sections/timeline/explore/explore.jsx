@@ -8,6 +8,7 @@ import { Nav, NavItem } from 'react-bootstrap';
 import styles from '../timeline.less';
 import Header from '../../../components/timeline/header.jsx';
 import Timeline from '../../../components/timeline/timeline.jsx';
+import TimelinePage from '../../../components/timeline/page.jsx';
 import InfiniteScrollPage from '../../../components/infinite-scroll/page.jsx';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 
@@ -16,26 +17,17 @@ import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 })
 export default class Explore extends InfiniteScrollPage {
 
-  static lastFeeds = undefined
-  static timelineState = undefined
-  static lastScrollTop = undefined
+  static page = new TimelinePage();
 
-  timeline: undefined // ref
+  timeline = undefined // ref
 
   componentDidMount() {
-    if (Explore.timelineState) {
-      this.timeline.setState(Explore.timelineState);
-      setTimeout(() => {
-        this.setScrollTop(Explore.lastScrollTop);
-      }, 200);
-    } else {
-      this.retrieveTimeline();
-    }
+    Explore.page.componentDidMount(this);
     super.componentDidMount();
   }
 
   componentWillUnmount() {
-    Explore.lastScrollTop = this.getScrollTop();
+    Explore.page.componentWillUnmount(this);
   }
 
   retrieveTimeline = () => {
@@ -44,21 +36,8 @@ export default class Explore extends InfiniteScrollPage {
     }
 
     this.timeline.setLoadingState(true);
-    WiregooseApi.timeline.explore(Explore.lastFeeds, true)
-      .then(resp => {
-        const { data } = resp.data;
-        Explore.lastFeeds = _.mapValues(
-          data,
-          feeds => (_.size(feeds) > 0 ? _.last(feeds).published.getTime() : undefined)
-        );
-        this.timeline.setLoadingState(false);
-        const feeds = _(data)
-          .values()
-          .flatten()
-          .value();
-        this.timeline.addFeeds(feeds);
-        Explore.timelineState = this.timeline.state;
-      });
+    WiregooseApi.timeline.explore(Explore.page.lastFeeds, true)
+      .then(resp => Explore.page.timelineRetrievedSuccessfully(this, resp));
   }
 
   // called by InfiniteScrollPage

@@ -19,6 +19,8 @@ import TimelineProvider from './sections/timeline/provider/provider.jsx';
 import TimelineRegistration from './sections/timeline/registration/registration.jsx';
 import Sidebar from './sections/timeline/sidebar/sidebar.jsx';
 import Article from './sections/article/article.jsx';
+import InternalServerError from './sections/errors/500.jsx';
+import notFoundError from './sections/errors/401.jsx';
 
 if (Auth.isAuthenticated()) {
   WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
@@ -43,9 +45,6 @@ class Body extends React.Component {
   }
 }
 
-const NotFound = () => (
-  <h1>404.. This page is not found!</h1>);
-
 // function requireAuth(nextState, replaceState) {
 //   if (!Auth.isAuthenticated()) {
 //     replaceState({
@@ -68,7 +67,10 @@ class App extends React.Component {
             <Route path="provider/:id" component={TimelineProvider} />
             <Route path="registration/:id" component={TimelineRegistration} />
           </Route>
+          <Route path="500" component={InternalServerError} />
+          <Route path="401" component={notFoundError} />
           <Route path="componentsGallery" component={ComponentsGallery} />
+          <Route path='*' component={notFoundError} />
         </Route>
       </Router>
     );

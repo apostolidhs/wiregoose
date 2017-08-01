@@ -35,7 +35,7 @@ export default class Entry extends React.Component {
 
   render() {
     const { entry, className= '', ...passDownProps } = this.props;
-    const articleLink = createLink(entry)
+    const articleLink = createLink(entry.title, entry._id);
     return (
       <article className={className + ' panel panel-default'} styleName="article">
         <Link to={articleLink} styleName="image">
@@ -56,15 +56,14 @@ export default class Entry extends React.Component {
           <header styleName="header">
             <Link to={articleLink} className="blind-link">
               <h3>
-                {ellipsis(entry.title, 100)}
+                {ellipsis(entry.title, 128)}
               </h3>
             </Link>
           </header>
-          <div>
+          <div styleName="dot-separator">
             { !this.props.hideProvider &&
               <Link
                 className="btn btn-link-muted w-p-0"
-                styleName="dot-separator"
                 to={`/provider/${entry.provider}`}
                 role="button"
                 title="Provider"
@@ -79,7 +78,7 @@ export default class Entry extends React.Component {
             />
           </div>
           <section styleName="summary">
-            {ellipsis(entry.description, 280)}
+            {ellipsis(entry.description, 256)}
           </section>
           <footer styleName="footer" className="text-right">
             <a

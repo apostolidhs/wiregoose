@@ -90,7 +90,7 @@ KlarkModule(module, 'routesTimeline', (
       .filter(timeline => timeline.latest !== undefined)
       .value();
 
-    if (_.isEmpty(categories)) {
+    if (_.isEmpty(timeline)) {
       res.locals.errors.add('INVALID_PARAMS');
       return next(true);
     }
@@ -105,7 +105,7 @@ KlarkModule(module, 'routesTimeline', (
       .keys()
       .map(key => {
         req.checkQuery(key).optional().isInt();
-        const timeParam = req.sanitizeQuery(category).toInt();
+        const timeParam = req.sanitizeQuery(key).toInt();
         const latest = _.isNumber(timeParam) ? new Date(timeParam) : undefined;
         return {
           latest,
@@ -115,6 +115,11 @@ KlarkModule(module, 'routesTimeline', (
       })
       .filter(timeline => timeline.latest !== undefined)
       .value();
+
+    if (_.isEmpty(timeline)) {
+      res.locals.errors.add('INVALID_PARAMS');
+      return next(true);
+    }
 
     res.locals.params.timeline = timeline;
     res.locals.params.limit = 16;
@@ -139,6 +144,11 @@ KlarkModule(module, 'routesTimeline', (
       })
       .filter(timeline => timeline && timeline.latest !== undefined)
       .value();
+
+    if (_.isEmpty(timeline)) {
+      res.locals.errors.add('INVALID_PARAMS');
+      return next(true);
+    }
 
     res.locals.params.timeline = timeline;
     res.locals.params.limit = 16;

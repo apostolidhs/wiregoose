@@ -27,7 +27,7 @@ KlarkModule(module, 'modelsEntry', (
     return new $mongoose.Schema({
       title: {type: String, required: true, maxlength: [128]},
       image: {type: $mongoose.SchemaTypes.Url, required: true},
-      description: {type: String, required: true, maxlength: [512]},
+      description: {type: String, required: true, maxlength: [256]},
       published: {type: Date, required: true},
       link: {type: $mongoose.SchemaTypes.Url, required: true},
       lastHit: { type: Date },

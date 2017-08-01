@@ -5,24 +5,24 @@ import InfiniteScrollPage from '../../../components/infinite-scroll/page.jsx';;
 import Header from '../../../components/timeline/header.jsx';
 import ProviderTag from '../../../components/rss-provider/tag.jsx';
 import Timeline from '../../../components/timeline/timeline.jsx';
+import TimelinePage from '../../../components/timeline/page.jsx';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 
 export default class Provider extends InfiniteScrollPage {
-  static lastFeeds = undefined
-  static timelineState = undefined
-  static lastScrollTop = undefined
-
-  state = {
-    notFound: false
-  }
+  static page = new TimelinePage();
 
   componentDidMount() {
-    this.retrieveTimeline();
+    const provider = this.props.routeParams.id;
+    if (Provider.page.lastFeeds && Provider.page.lastFeeds[provider] === undefined) {
+      Provider.page.invalidateCache();
+    }
+
+    Provider.page.componentDidMount(this);
     super.componentDidMount();
   }
 
   componentWillUnmount() {
-    Provider.lastScrollTop = this.getScrollTop();
+    Provider.page.componentWillUnmount(this);
     super.componentWillUnmount();
   }
 
@@ -32,30 +32,13 @@ export default class Provider extends InfiniteScrollPage {
     }
 
     this.timeline.setLoadingState(true);
-    if (!Provider.lastFeeds) {
+    if (!Provider.page.lastFeeds) {
       const provider = this.props.routeParams.id;
-      Provider.lastFeeds = { [provider]: _.now() };
+      Provider.page.lastFeeds = { [provider]: _.now() };
     }
 
-    WiregooseApi.timeline.provider(Provider.lastFeeds, true)
-      .then(resp => {
-        const data = resp.data.data;
-        if (!data) {
-          this.setState({ notFound: true });
-          return;
-        }
-        Provider.lastFeeds = _.mapValues(
-          data,
-          feeds => (_.size(feeds) > 0 ? _.last(feeds).published.getTime() : undefined)
-        );
-        this.timeline.setLoadingState(false);
-        const feeds = _(data)
-          .values()
-          .flatten()
-          .value();
-        this.timeline.addFeeds(feeds);
-        Provider.timelineState = this.timeline.state;
-      });
+    WiregooseApi.timeline.provider(Provider.page.lastFeeds, true)
+      .then(resp => Provider.page.timelineRetrievedSuccessfully(this, resp));
   }
 
   // called by InfiniteScrollPage
@@ -64,25 +47,13 @@ export default class Provider extends InfiniteScrollPage {
   }
 
   render() {
-    const { notFound } = this.state;
-
-    if (notFound) {
-      return this.renderNotFound();
-    } else {
-      return (
-        <div>
-          <Header onClose={() => this.props.router.push('/')}>
-            <ProviderTag name={this.props.routeParams.id} />
-          </Header>
-          <Timeline ref={(ref) => this.timeline = ref} hideProvider={true} />
-        </div>
-      );
-    }
-  }
-
-  renderNotFound() {
     return (
-      <span>Not Found</span>
+      <div>
+        <Header onClose={() => this.props.router.push('/')}>
+          <ProviderTag name={this.props.routeParams.id} />
+        </Header>
+        <Timeline ref={(ref) => this.timeline = ref} hideProvider={true} />
+      </div>
     );
   }
 }

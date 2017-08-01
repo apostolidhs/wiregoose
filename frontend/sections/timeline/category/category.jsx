@@ -5,12 +5,13 @@ import CSSModules from 'react-css-modules';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Nav, NavItem } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 
 import styles from './category.less';
 import Header from '../../../components/timeline/header.jsx';
 import CategoryTag from '../../../components/category/tag.jsx';
 import Timeline from '../../../components/timeline/timeline.jsx';
+import TimelinePage from '../../../components/timeline/page.jsx';
 import Loader from '../../../components/loader/loader.jsx';
 import InfiniteScrollPage from '../../../components/infinite-scroll/page.jsx';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
@@ -20,64 +21,45 @@ import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 })
 export default class Category extends InfiniteScrollPage {
 
-  static lastFeeds = undefined
-  static timelineState = undefined
-  static lastScrollTop = undefined
+  static page = new TimelinePage();
 
-  timeline: undefined // ref
-  categoryPrms: undefined
+  timeline = undefined // ref
 
   state = {
-    categories: undefined,
-    categoryNotFound: false
+    categories: undefined
   }
 
   componentDidMount() {
     const category = this.props.routeParams.id;
-    if (Category.lastFeeds && Category.lastFeeds[category] === undefined) {
-      Category.lastFeeds = undefined;
-      Category.timelineState = undefined;
-      Category.lastScrollTop = undefined;
+    if (Category.page.lastFeeds && Category.page.lastFeeds[category] === undefined) {
+      Category.page.invalidateCache();
     }
+
     this.retrieveCategories()
       .then(this.checkCategoryExistence)
-      .then(() => {
-        if (this.state.categoryNotFound) {
-          return;
-        }
-        if (Category.timelineState) {
-          this.timeline.setState(Category.timelineState);
-          setTimeout(() => {
-            this.setScrollTop(Category.lastScrollTop);
-          }, 200);
-        } else {
-          this.retrieveTimeline();
-        }
-      });
-    this.refs.categoryLoad.promise = this.categoryPrms;
+      .then(() => Category.page.componentDidMount(this));
+
     super.componentDidMount();
   }
 
   componentWillUnmount() {
-    Category.lastScrollTop = this.getScrollTop();
+    Category.page.componentWillUnmount(this);
   }
 
   retrieveCategories = () => {
-    this.categoryPrms = WiregooseApi.statics.categories()
+    return WiregooseApi.statics.categories()
       .then(resp => {
         const categories = resp.data.data;
         this.setState({ categories });
       });
-    return this.categoryPrms;
   }
 
   checkCategoryExistence = () => {
     const category = this.props.routeParams.id;
     if (!_.includes(this.state.categories, category)) {
-      this.setState({ categoryNotFound: true });
-      return;
+      browserHistory.replace('/401');
+      throw new Error();
     }
-    this.setState({ categoryNotFound: false });
   }
 
   retrieveTimeline = () => {
@@ -86,25 +68,12 @@ export default class Category extends InfiniteScrollPage {
     }
 
     this.timeline.setLoadingState(true);
-    if (!Category.lastFeeds) {
+    if (!Category.page.lastFeeds) {
       const category = this.props.routeParams.id;
-      Category.lastFeeds = { [category]: _.now() };
+      Category.page.lastFeeds = { [category]: _.now() };
     }
-    WiregooseApi.timeline.category(Category.lastFeeds, true)
-      .then(resp => {
-        const { data } = resp.data;
-        Category.lastFeeds = _.mapValues(
-          data,
-          feeds => (_.size(feeds) > 0 ? _.last(feeds).published.getTime() : undefined)
-        );
-        this.timeline.setLoadingState(false);
-        const feeds = _(data)
-          .values()
-          .flatten()
-          .value();
-        this.timeline.addFeeds(feeds);
-        Category.timelineState = this.timeline.state;
-      });
+    WiregooseApi.timeline.category(Category.page.lastFeeds, true)
+      .then(resp => Category.page.timelineRetrievedSuccessfully(this, resp));
   }
 
   // called by InfiniteScrollPage
@@ -113,53 +82,13 @@ export default class Category extends InfiniteScrollPage {
   }
 
   render() {
-    const { categories, categoryNotFound } = this.state;
-
     return (
-      <Loader ref="categoryLoad" className="w-mt-7">
-        {(() => {
-          if (categoryNotFound) {
-            return this.renderNotFound();
-          } else {
-            return (
-              <div>
-                <Header onClose={() => this.props.router.push('/')}>
-                  <CategoryTag name={this.props.routeParams.id} />
-                </Header>
-                <Timeline ref={(ref) => this.timeline = ref} hideCategory={true} />
-              </div>
-            );
-          }
-        })()}
-      </Loader>
-    );
-  }
-
-  renderNotFound = () => {
-    return (
-      <div className="text-center">
-        <h1>
-          <FontAwesome name="chain-broken" />
-        </h1>
-        <p className="lead">
-          Category Not Found
-        </p>
-        <p>
-          Find what you want on
-          {_.map(this.state.categories, cat => (
-            <Link
-              className="w-ml-7"
-              key={cat}
-              to={`/category/${cat}`}
-              role="button"
-              title={cat}
-            >
-              {cat}
-            </Link>
-          ))}
-        </p>
+      <div>
+        <Header onClose={() => this.props.router.push('/')}>
+          <CategoryTag name={this.props.routeParams.id} />
+        </Header>
+        <Timeline ref={(ref) => this.timeline = ref} hideCategory={true} />
       </div>
     );
   }
-
 }

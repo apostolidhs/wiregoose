@@ -55,6 +55,7 @@
     "nodemailer": "^2.6.4",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.0",
+    "promise.prototype.finally": "^3.0.0",
     "prop-types": "^15.5.10",
     "q": "^1.4.1",
     "react": "^15.6.1",

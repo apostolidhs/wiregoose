@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
+import { browserHistory } from 'react-router';
 import { Link } from 'react-router';
 import FontAwesome from 'react-fontawesome';
 import CSSModules from 'react-css-modules';
@@ -21,27 +22,35 @@ export default class Article extends React.Component {
 
   componentDidMount() {
     const link = this.props.routeParams.id;
-    const entryId = getIdFromLink(link);
+    const entryId = getIdFromLink(link, true);
+    if (!entryId) {
+      browserHistory.replace('/401');
+      return;
+    }
     this.retrieveArticle(entryId);
   }
 
   retrieveArticle = (entryId) => {
-    this.setState({ isLoading: true });
+    this.setState({
+      isLoading: true,
+      article: undefined
+    });
     WiregooseApi.fetchArticle(entryId, true)
       .then(resp => {
         const article = resp.data.data;
-        if (article) {
-          this.setState({
-            article: resp.data.data,
-            isLoading: false
-          });
+        if (!article) {
+          browserHistory.replace('/401');
+          return;
         }
+
+        this.setState({
+          article,
+          isLoading: false
+        });
       })
       .catch((resp) => {
-        const errorCode = _.get(resp, 'response.data.errors[0].code');
-        // errorCode === 1003 not found
-        this.setState({ isLoading: false })
-      });
+        this.setState({ isLoading: false });
+      })
   }
 
   render() {
@@ -49,32 +58,6 @@ export default class Article extends React.Component {
 
     if (isLoading || article) {
       return (<ArticleComponent article={article} isLoading={isLoading} />);
-    } else {
-      return this.renderNotFound();
     }
   }
-
-  renderNotFound = () => {
-    return (
-      <div className="text-center">
-        <h1>
-          <FontAwesome name="chain-broken" />
-        </h1>
-        <p className="lead">
-          Article Not Found
-        </p>
-        <p>
-          You could {''}
-          <Link
-            to="/"
-            role="button"
-            title="Explore News"
-          >
-            continue reading news
-          </Link>
-        </p>
-      </div>
-    );
-  }
-
 }
