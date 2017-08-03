@@ -2,7 +2,6 @@ import _ from 'lodash';
 import React from 'react';
 import { browserHistory } from 'react-router';
 import { Link } from 'react-router';
-import FontAwesome from 'react-fontawesome';
 import CSSModules from 'react-css-modules';
 
 import styles from './article.less';

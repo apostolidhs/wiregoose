@@ -151,9 +151,13 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
       let resolvedRegistrations;
 
       const lastTime = appInfo.lastRssRegistrationFetch.getTime();
-      if (lastTime + appInfo.rssRegistrationFetchFrequency > _.now()) {
+      const nextTime = lastTime + appInfo.rssRegistrationFetchFrequency;
+      const currentTime = _.now();
+      krkLogger.info('Try to fetch', nextTime, currentTime);
+      if (nextTime > currentTime) {
         return;
       }
+      krkLogger.info('Accepted');
 
       return fetch(onFetchStart, onNextChunk)
         .then(logSuccessFetch)

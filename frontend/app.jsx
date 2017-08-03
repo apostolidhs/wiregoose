@@ -21,6 +21,9 @@ import TimelineProvider from './sections/timeline/provider/provider.jsx';
 import TimelineRegistration from './sections/timeline/registration/registration.jsx';
 import Sidebar from './sections/timeline/sidebar/sidebar.jsx';
 import Article from './sections/article/article.jsx';
+import About from './sections/info/about.jsx';
+import Credits from './sections/info/credits.jsx';
+import Providers from './sections/info/providers.jsx';
 import InternalServerError from './sections/errors/500.jsx';
 import notFoundError from './sections/errors/401.jsx';
 
@@ -68,6 +71,11 @@ class App extends React.Component {
             <Route path="category/:id" component={TimelineCategory} />
             <Route path="provider/:id" component={TimelineProvider} />
             <Route path="registration/:id" component={TimelineRegistration} />
+          </Route>
+          <Route path="info" >
+            <Route path="about" component={About} />
+            <Route path="credits" component={Credits} />
+            <Route path="providers" component={Providers} />
           </Route>
           <Route path="500" component={InternalServerError} />
           <Route path="401" component={notFoundError} />

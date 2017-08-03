@@ -66,6 +66,7 @@ export default class Header extends React.Component {
   render() {
     const { enableAuth } = this.props;
     const { isLeftSidebarEnabled, isLeftSidebarOpen } = this.state.sidebar;
+    const otherLanguages = _.without(SUPPORTED_LANGUAGES, Auth.getSessionLang());
     return (
       <Navbar collapseOnSelect fixedTop>
         <Navbar.Header>
@@ -117,27 +118,41 @@ export default class Header extends React.Component {
               id="w-menu-language"
               noCaret
             >
-            {_.map(SUPPORTED_LANGUAGES, lang => (
+            {_.map(otherLanguages, lang => (
               <MenuItem eventKey={lang} key={lang} >{lang}</MenuItem>
             ))}
             </NavDropdown>
 
-            { false &&
-              <NavDropdown
+            <NavDropdown
                 eventKey={4}
                 title={<FontAwesome name="bars" />}
                 id="w-menu-settings"
                 noCaret
               >
-                <LinkContainer to="/componentsGallery">
-                  <MenuItem>
-                    Components Gallery
-                  </MenuItem>
-                </LinkContainer>
-                {/* <MenuItem divider />
-                <MenuItem eventKey={4.3}>Separated link</MenuItem>*/}
-              </NavDropdown>
-            }
+               <LinkContainer to="/info/providers">
+                <MenuItem>
+                  Providers
+                </MenuItem>
+              </LinkContainer>
+               <LinkContainer to="/info/about">
+                <MenuItem>
+                  About
+                </MenuItem>
+              </LinkContainer>
+               <LinkContainer to="/info/credits">
+                <MenuItem>
+                  Credits
+                </MenuItem>
+              </LinkContainer>
+              {/* <LinkContainer to="/componentsGallery">
+                <MenuItem>
+                  Components Gallery
+                </MenuItem>
+              </LinkContainer> */}
+              {/* <MenuItem divider />
+              <MenuItem eventKey={4.3}>Separated link</MenuItem>*/}
+            </NavDropdown>
+
           </Nav>
         </Navbar.Collapse>
       </Navbar>
