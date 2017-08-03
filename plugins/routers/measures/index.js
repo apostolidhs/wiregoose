@@ -18,7 +18,7 @@ KlarkModule(module, 'routesMeasures', (
 
   function register(app, opts) {
     app.get(`/${config.API_URL_PREFIX}/measures/succeededFetchesPerPeriod`, [
-      krkMiddlewarePermissions.check('FREE'),
+      krkMiddlewarePermissions.check('ADMIN'),
       middlewareFetcherParameterValidator,
       middlewareFetcherController,
       krkMiddlewareResponse.success,
@@ -26,7 +26,7 @@ KlarkModule(module, 'routesMeasures', (
     ]);
 
     app.get(`/${config.API_URL_PREFIX}/measures/articles`, [
-      krkMiddlewarePermissions.check('FREE'),
+      krkMiddlewarePermissions.check('ADMIN'),
       middlewareArticleParameterValidator,
       middlewareArticleController,
       krkMiddlewareResponse.success,

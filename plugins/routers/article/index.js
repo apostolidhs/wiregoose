@@ -18,7 +18,7 @@ KlarkModule(module, 'routesArticle', (
 
   function register(app, opts) {
     app.get(`/${config.API_URL_PREFIX}/article/mining/fetch`, [
-      krkMiddlewarePermissions.check('FREE'),
+      krkMiddlewarePermissions.check('ADMIN'),
       middlewareFetchParameterValidator,
       middlewareFetchController,
       krkMiddlewareResponse.success,

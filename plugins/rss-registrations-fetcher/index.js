@@ -17,6 +17,7 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
   rssRegistrationsFetcherIterationFetch
 ) => {
   const TRY_TO_FETCH_FREQUENT = 20 * 60 * 1000;
+  const DATE_FORMAT = 'MM/DD/YYYY HH:mm:ss';
   let isFetching = false;
 
   return {
@@ -134,16 +135,8 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
 
     function tryToFetch() {
       modelsApp.getAppInfo()
-        .catch(reason => krkLogger.error(reason))
         .then(appInfoFetched)
-        .then(saveLastFetchTime)
         .catch(reason => krkLogger.error(reason));
-    }
-
-    function saveLastFetchTime() {
-      return modelsApp.updateAppInfo({
-        lastRssRegistrationFetch: new Date()
-      });
     }
 
     function appInfoFetched(appInfo) {
@@ -153,13 +146,19 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
       const lastTime = appInfo.lastRssRegistrationFetch.getTime();
       const nextTime = lastTime + appInfo.rssRegistrationFetchFrequency;
       const currentTime = _.now();
-      krkLogger.info('Try to fetch', nextTime, currentTime);
+
+      krkLogger.info(
+        'Try to fetch',
+        $moment(new Date(nextTime)).format(DATE_FORMAT),
+        $moment(new Date(currentTime)).format(DATE_FORMAT)
+      );
       if (nextTime > currentTime) {
         return;
       }
       krkLogger.info('Accepted');
 
       return fetch(onFetchStart, onNextChunk)
+        .then(saveLastFetchTime)
         .then(logSuccessFetch)
         .catch(reason => krkLogger.error(reason));
 
@@ -175,19 +174,23 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
       }
     }
 
-    function logSuccessFetch(fetchReport) {
-      const dateFormat = 'MM/DD/YYYY HH:mm:ss';
+    function saveLastFetchTime() {
+      return modelsApp.updateAppInfo({
+        lastRssRegistrationFetch: new Date()
+      });
+    }
 
+    function logSuccessFetch(fetchReport) {
       const duration = $moment.utc(
-        $moment(fetchReport.finished, dateFormat)
-          .diff($moment(fetchReport.started, dateFormat))
+        $moment(fetchReport.finished, DATE_FORMAT)
+          .diff($moment(fetchReport.started, DATE_FORMAT))
       ).format('HH:mm:ss');
 
       const msgs = [
         '',
         'Rss registrations fetch finished successfully.',
-        `Started: ${$moment(fetchReport.started).format(dateFormat)}`,
-        `Finished: ${$moment(fetchReport.finished).format(dateFormat)}`,
+        `Started: ${$moment(fetchReport.started).format(DATE_FORMAT)}`,
+        `Finished: ${$moment(fetchReport.finished).format(DATE_FORMAT)}`,
         `Duration: ${duration}`,
         `Total fetched: ${fetchReport.totalFetches}`,
         `Total Stored: ${fetchReport.entriesStored}`,

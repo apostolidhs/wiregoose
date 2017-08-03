@@ -20,33 +20,24 @@ KlarkModule(module, 'routesCrud', (
 
   function register(app) {
     const models = [
-      modelsArticle,
-      modelsEntry,
-      modelsFetchReport,
-      modelsRssProvider,
-      modelsRssRegistration
+      [modelsArticle],
+      [modelsEntry],
+      [modelsFetchReport],
+      [modelsRssProvider, {retrieveAll: {permissions: 'FREE'}}],
+      [modelsRssRegistration]
     ];
 
-    _.each(models, model => {
-      const crudOpts = {
-        model,
+    _.each(models, reg => {
+      const crudOpts = _.assignIn({
+        model: reg[0],
         apiUrlPrefix: config.API_URL_PREFIX,
-        retrieveAll: {
-          permissions: 'FREE'
-        },
-        retrieve: {
-          permissions: 'FREE'
-        }
-      };
+      }, reg[1] || {});
       krkCrudGenerator.create(app, crudOpts);
     });
 
     krkCrudGenerator.createSingle(app, {
       model: modelsApp,
       apiUrlPrefix: config.API_URL_PREFIX,
-      retrieve: {
-        permissions: 'FREE'
-      }
     });
   }
 
