@@ -1,6 +1,8 @@
 import React from 'react';
 import FontAwesome from 'react-fontawesome';
 
+import tr from '../../components/localization/localization.js';
+
 export default class InternalServerError extends React.Component {
 
   render() {
@@ -9,15 +11,11 @@ export default class InternalServerError extends React.Component {
         <h1>
           <FontAwesome name="chain-broken" />
         </h1>
-        <h1>
-          Something went wrong
-        </h1>
+        <h1>{tr.errors500Title}</h1>
+        <p>{tr.errors500Desc}</p>
         <p>
-          We are experiencing an internal problem.
-        </p>
-        <p>
-          Please try again later.
-          <span className="text-muted"> That's all we know.</span>
+          {tr.errors500Prompt}
+          <span className="text-muted"> {tr.errors500PromptFooter}</span>
         </p>
       </div>
     );

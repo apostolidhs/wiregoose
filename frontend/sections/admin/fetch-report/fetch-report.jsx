@@ -3,12 +3,12 @@ import React from 'react';
 import { Link } from 'react-router';
 import ListView from '../../../components/list-view/list-view.jsx';
 import Form from '../../../components/fetch-report/form.jsx';
-import TimeAgo from 'react-timeago';
 
+import FromNow from '../../../components/text-utilities/from-now.jsx';
 import ResponseTransformation
   from '../../../components/fetch-report/response-transformation.js';
-import * as TextUtilities
-  from '../../../components/text-utilities/text-utilities.js';
+import * as DateUtilities
+  from '../../../components/text-utilities/dates.js';
 
 export default class RssFetchReport extends ListView {
   static columns = [
@@ -39,8 +39,8 @@ export default class RssFetchReport extends ListView {
       dataFormat: (cell, { duration, started }) => {
         return (
           <span>
-            {TextUtilities.dateToText(started, true)}
-            (<TimeAgo date={_.now() - (duration * 1000)} live={false} />)
+            {DateUtilities.toText(started, true)}
+            (<FromNow date={_.now() - (duration * 1000)} />)
           </span>
         )
       },

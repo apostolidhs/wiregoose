@@ -3,12 +3,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import validateURL from 'react-proptypes-url-validator';
 import { Link } from 'react-router';
-import TimeAgo from 'react-timeago';
 import FontAwesome from 'react-fontawesome';
 
+import FromNow from '../text-utilities/from-now.jsx';
 import entryPropType from '../article-box/entry-prop-type.js';
 import CategoryTag from '../category/tag.jsx';
 import ProviderTag from '../rss-provider/tag.jsx';
+import tr from '../localization/localization.js';
 
 export default class Article extends React.Component {
   static ARTICLE_REDIRECTION_DELAY = 3; //s
@@ -89,15 +90,14 @@ export default class Article extends React.Component {
         <div>
           <CategoryTag name={entry.category} />
           <ProviderTag name={entry.provider} className="w-ml-7" />
-          <TimeAgo
+          <FromNow
             className="text-muted pull-right"
             date={entry.published}
-            minPeriod={1}
           />
         </div>
         { article.byline &&
           <small className="text-muted">
-            By {article.byline}
+            {tr.by} {article.byline}
           </small>
         }
       </header>
@@ -108,7 +108,7 @@ export default class Article extends React.Component {
     return (
       <footer className="text-center">
         <a className="btn btn-lg btn-default" href={article.link} role="button" target="_blank">
-          Read Article From Website
+          {tr.articleReadFromWebsite}
         </a>
       </footer>
     );
@@ -120,31 +120,31 @@ export default class Article extends React.Component {
         <h1>
           <FontAwesome name="newspaper-o" />
         </h1>
-        <p className="lead">
-          Too Small Article!
-        </p>
+        <p className="lead">{tr.articleRedirectTitle}</p>
         { this.state.redirectIn !== -1 &&
           <p>
-            You will be redirected {''}
-            <a href={article.link} role="button" target="_blank">
-              at the Original Article
-            </a>
-            {''} in {Article.ARTICLE_REDIRECTION_DELAY - this.state.redirectIn} sec
+            {tr.formatString(
+              tr.articleRedirectDesc,
+              <a href={article.link} role="button" target="_blank">
+                {tr.articleRedirectDescOriginal}
+              </a>,
+              Article.ARTICLE_REDIRECTION_DELAY - this.state.redirectIn
+            )}
           </p>
         }
         { this.state.redirectIn === -1 &&
           <a href={article.link} role="button" target="_blank">
-            Read the Original Article
+            {tr.articleReadFromWebsite}
           </a>
         }
         <p>
-          <b>Or</b> {''}
+          <b>{tr.or}</b> {''}
           <Link
             to="/"
             role="button"
-            title="Explore News"
+            title={tr.exploreNews}
           >
-            Continue Reading News
+            {tr.promptReading}
           </Link>
         </p>
       </div>

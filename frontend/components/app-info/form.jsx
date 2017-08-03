@@ -6,8 +6,9 @@ import { Form, FormGroup, Col, FormControl, ControlLabel, Button, InputGroup }
 import FontAwesome from 'react-fontawesome';
 import { isUri } from 'valid-url';
 import moment from 'moment';
-import TimeAgo from 'react-timeago';
 import DatePicker from 'react-datepicker';
+
+import FromNow from '../text-utilities/from-now.jsx';
 
 export default class RssFetchReport extends React.Component {
 
@@ -60,10 +61,9 @@ export default class RssFetchReport extends React.Component {
               selected={moment(this.state.record.lastRssRegistrationFetch)}
               onChange={this.handleDatePickerChange}
             />
-            <TimeAgo
+            <FromNow
               className="text-muted"
               date={this.state.record.lastRssRegistrationFetch}
-              minPeriod={1}
             />
           </Col>
         </FormGroup>

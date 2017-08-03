@@ -8,7 +8,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 //const SpritePlugin = require('svg-sprite-loader/plugin');
 const autoprefixer = require('autoprefixer');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isProduction = nodeEnv === 'production';
@@ -27,7 +26,6 @@ const globalLessPath = isWin
 function createWebpackConfig(name, entryName, outputName) {
   // Common plugins
   const plugins = [
-    // new UglifyJSPlugin(),
     new CleanWebpackPlugin([buildPath + '/*.js*', buildPath + '/*.css*', buildPath + '/*.html*']),
     //new SpritePlugin(),
     new webpack.optimize.CommonsChunkPlugin({
@@ -72,11 +70,11 @@ function createWebpackConfig(name, entryName, outputName) {
     include: [
         path.resolve(__dirname, './frontend'),
         path.resolve(__dirname, './node_modules/url-regex'),
-        path.resolve(__dirname, './node_modules/react-proptypes-url-validator'),
+        path.resolve(__dirname, './node_modules/react-proptypes-url-validator')
       ],
       use: [
-        'babel-loader',
-      ],
+        'babel-loader'
+      ]
     },
     // {
     //   test: /\.svg$/,
@@ -94,15 +92,17 @@ function createWebpackConfig(name, entryName, outputName) {
     //},
     {
       test: /\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-      loader: 'file-loader?name=public/assets/fonts/[name].[ext]',
+      loader: 'file-loader?name=public/assets/fonts/[name].[ext]'
     },
     {
       test: /\.(png|gif|jpg|svg)$/,
       // include: imgPath,
-      loader: 'file-loader?name=public/assets/img/[name].[ext]',
-    },
+      loader: 'file-loader?name=public/assets/img/[name].[ext]'
+    }
   ];
 
+  const extractVendorsCss = new ExtractTextPlugin('style-vendors-[hash].css');
+  const extractCss = new ExtractTextPlugin('style-[hash].css');
   if (isProduction) {
     // Production plugins
     plugins.push(
@@ -123,17 +123,44 @@ function createWebpackConfig(name, entryName, outputName) {
           comments: false,
         }
       }),
-      new ExtractTextPlugin('style-[hash].css')
+      extractVendorsCss,
+      extractCss
     );
 
-    // Production rules
     rules.push(
       {
-        test: /\.(less|css)$/,
-        loader: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader!postcss-loader!less-loader',
-        }),
+        test: /\.css$/,
+        use: extractVendorsCss.extract({
+          use: [
+            'css-loader?minimize',
+            'postcss-loader'
+          ],
+          fallback: 'style-loader'
+        })
+      },
+      {
+        test: /\.less$/,
+        include: globalLessPath,
+        use: extractCss.extract({
+          use: [
+            'css-loader?minimize',
+            'postcss-loader',
+            'less-loader'
+          ],
+          fallback: 'style-loader'
+        })
+      },
+      {
+        test: /\.less$/,
+        exclude: globalLessPath,
+        use: extractCss.extract({
+          use: [
+            'css-loader?modules,minimize,localIdentName="[hash:base64:6]"',
+            'postcss-loader',
+            'less-loader'
+          ],
+          fallback: 'style-loader'
+        })
       }
     );
   } else {
@@ -145,61 +172,34 @@ function createWebpackConfig(name, entryName, outputName) {
 
     // Development rules
     rules.push(
-      // {
-      //   test: /\.(less|css)$/,
-      //   // exclude: /node_modules/,
-      //   // use: [
-      //   //   'style-loader?sourceMap',
-      //   //   // Using source maps breaks urls in the CSS loader
-      //   //   // https://github.com/webpack/css-loader/issues/232
-      //   //   // This comment solves it, but breaks testing from a local network
-      //   //   // https://github.com/webpack/css-loader/issues/232#issuecomment-240449998
-      //   //   'css-loader?sourceMap',
-      //   //   // 'css-loader',
-      //   //   'postcss-loader?sourceMap',
-      //   //   'less-loader?sourceMap',
-      //   // ],
-      //   use: [
-      //     'style-loader?sourceMap',
-      //     // Using source maps breaks urls in the CSS loader
-      //     // https://github.com/webpack/css-loader/issues/232
-      //     // This comment solves it, but breaks testing from a local network
-      //     // https://github.com/webpack/css-loader/issues/232#issuecomment-240449998
-      //     'css-loader?sourceMap',
-      //     // 'css-loader',
-      //     'postcss-loader?sourceMap',
-      //     'less-loader?sourceMap',
-      //   ],
-      // }
-        {
-          test: /\.css$/,
-          loader: [
-            'style-loader',
-            'css-loader',
-          ],
-        },
-        {
-          test: /\.less$/,
-          include: globalLessPath,
-          loader: [
-            'style-loader',
-            'css-loader',
-            'less-loader',
-          ],
-        },
-        {
-          test: /\.less$/,
-          exclude: globalLessPath,
-          loader: [
-            'style-loader',
-            'css-loader?modules&importLoaders=1'
-              + '&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-            'less-loader',
-          ],
-        }
+      {
+        test: /\.css$/,
+        loader: [
+          'style-loader',
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.less$/,
+        include: globalLessPath,
+        loader: [
+          'style-loader',
+          'css-loader',
+          'less-loader'
+        ]
+      },
+      {
+        test: /\.less$/,
+        exclude: globalLessPath,
+        loader: [
+          'style-loader',
+          'css-loader?modules&importLoaders=1'
+            + '&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
+          'less-loader'
+        ]
+      }
     );
   }
-
 
   return {
     name: name,
@@ -251,9 +251,9 @@ function createWebpackConfig(name, entryName, outputName) {
 }
 
 //module.exports = createWebpackConfig('index', './admin', 'admin');
-//module.exports = createWebpackConfig('index', './app', 'app');
+module.exports = createWebpackConfig('index', './app', 'app');
 
-module.exports = [
-  createWebpackConfig('index', './app', 'app'),
-  createWebpackConfig('admin', './admin', 'admin')
-];
+// module.exports = [
+//   createWebpackConfig('index', './app', 'app'),
+//   createWebpackConfig('admin', './admin', 'admin')
+// ];

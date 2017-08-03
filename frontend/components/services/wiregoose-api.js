@@ -221,6 +221,7 @@ function retrieve(modelName, params) {
     params,
     headers: {
       'Content-Type': 'application/json',
+      authorization: credentialGetter(),
     },
   });
 }
@@ -232,6 +233,7 @@ function retrieveAll(modelName, params) {
     params,
     headers: {
       'Content-Type': 'application/json',
+      authorization: credentialGetter(),
     },
   });
 }

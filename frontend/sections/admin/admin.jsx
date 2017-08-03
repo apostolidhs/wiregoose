@@ -15,32 +15,32 @@ export default class Admin extends React.Component {
       <Row>
         <Col md={2}>
           <Nav bsStyle="pills" stacked activeKey={1}>
-            <LinkContainer to="/admin/dashboard">
+            <LinkContainer to="/dashboard">
               <NavItem eventKey={1} title="Dashboard">
                 <FontAwesome name="tachometer" /> Dashboard
               </NavItem>
             </LinkContainer>
-            <LinkContainer to="/admin/rssprovider">
+            <LinkContainer to="/rssprovider">
               <NavItem eventKey={1} title="RSS Provider">
                 <FontAwesome name="address-card" /> RSS Provider
               </NavItem>
             </LinkContainer>
-            <LinkContainer to="/admin/rssregistration">
+            <LinkContainer to="/rssregistration">
               <NavItem eventKey={2} title="RSS Registration">
                 <FontAwesome name="rss" /> RSS Registration
               </NavItem>
             </LinkContainer>
-            <LinkContainer to="/admin/fetchreport">
+            <LinkContainer to="/fetchreport">
               <NavItem eventKey={3} title="RSS Fetch Report">
                 <FontAwesome name="flag" /> Fetch Report
               </NavItem>
             </LinkContainer>
-            <LinkContainer to="/admin/articleentries">
+            <LinkContainer to="/articleentries">
               <NavItem eventKey={4} title="Article Entries">
                 <FontAwesome name="font" /> Article Entries
               </NavItem>
             </LinkContainer>
-            <LinkContainer to="/admin/article">
+            <LinkContainer to="/article">
               <NavItem eventKey={5} title="Article">
                 <FontAwesome name="newspaper-o" /> Article
               </NavItem>

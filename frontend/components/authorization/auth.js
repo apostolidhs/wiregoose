@@ -29,7 +29,7 @@ function onLoginSuccess(resp) {
   if (!jwt) {
     throw new Error('Invalid API response, jwt is missing');
   }
-  WiregooseApi.setCredentialGetter(() => `JWT ${jwt}`);
+  WiregooseApi.setCredentialGetter(() => jwt);
   const { session, user } = jwtDecode(jwt);
   createSession(jwt, user, session, SUPPORTED_LANGUAGES[0]);
 }

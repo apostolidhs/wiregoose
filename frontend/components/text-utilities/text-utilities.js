@@ -16,33 +16,6 @@ export function toUppercasesWords(words) {
     .join(' ');
 }
 
-export function dateToText(val, showSeconds = false) {
-  let date;
-  if (_.isDate(val)) {
-    date = val;
-  } else if (_.isNumber(val)) {
-    date = new Date(val);
-  }
-
-  if (!date || _.isNaN(date.getTime())) {
-    return;
-  }
-
-  const year = date.getFullYear();
-  let month = addZero((1 + date.getMonth()).toString());
-  let day = addZero(date.getDate().toString());
-
-  let seconds = '';
-  if (showSeconds) {
-    const hours = addZero(date.getHours().toString());
-    const mins = addZero(date.getMinutes().toString());
-    const secs = addZero(date.getSeconds().toString());
-    seconds += ` ${hours}:${mins}:${secs}`;
-  }
-
-  return `${day}/${month}/${year}${seconds}`;
-}
-
 export function createLink(name, id) {
   const dashTitle = _(name)
     .split(/\W+/)
@@ -74,6 +47,3 @@ export function createAbsoluteLink(link) {
   return location.protocol + '//' + location.host + link;
 }
 
-function addZero(val) {
-  return val.length > 1 ? val : `0${val}`;;
-}

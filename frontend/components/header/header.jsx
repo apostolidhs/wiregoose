@@ -7,6 +7,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 
+import tr from '../localization/localization.js';
 import styles from './header.less';
 import { SUPPORTED_LANGUAGES } from '../../config.js';
 import * as Events from '../events/events.js';
@@ -63,6 +64,12 @@ export default class Header extends React.Component {
     location.reload();
   }
 
+  logout = (evt) => {
+    evt.preventDefault();
+    Auth.logout();
+    location.reload();
+  }
+
   render() {
     const { enableAuth } = this.props;
     const { isLeftSidebarEnabled, isLeftSidebarOpen } = this.state.sidebar;
@@ -84,7 +91,19 @@ export default class Header extends React.Component {
           </Nav>
         )}
         <Navbar.Collapse>
-          <Nav  pullRight>
+          <Nav pullRight>
+            <NavDropdown
+              onSelect={this.changeLanguage}
+              eventKey={3}
+              title={Auth.getSessionLang()}
+              id="w-menu-language"
+              noCaret
+            >
+            {_.map(otherLanguages, lang => (
+              <MenuItem eventKey={lang} key={lang} >{lang}</MenuItem>
+            ))}
+            </NavDropdown>
+
             {enableAuth && (() => {
               if (Auth.isAuthenticated()) {
                 return (
@@ -103,54 +122,48 @@ export default class Header extends React.Component {
               }
             })()}
 
-            { enableAuth && Auth.isAdmin()  &&
-              <LinkContainer to="/admin">
-                <NavItem eventKey={1} >
-                  admin
-                </NavItem>
-              </LinkContainer>
-            }
-
-            <NavDropdown
-              onSelect={this.changeLanguage}
-              eventKey={3}
-              title={Auth.getSessionLang()}
-              id="w-menu-language"
-              noCaret
-            >
-            {_.map(otherLanguages, lang => (
-              <MenuItem eventKey={lang} key={lang} >{lang}</MenuItem>
-            ))}
-            </NavDropdown>
-
             <NavDropdown
                 eventKey={4}
                 title={<FontAwesome name="bars" />}
                 id="w-menu-settings"
                 noCaret
               >
+              { !Auth.isAdmin() &&
                <LinkContainer to="/info/providers">
                 <MenuItem>
-                  Providers
+                  {tr.infoProviderTitle}
                 </MenuItem>
               </LinkContainer>
+              }
+              { !Auth.isAdmin() &&
                <LinkContainer to="/info/about">
                 <MenuItem>
-                  About
+                  {tr.infoAboutTitle}
                 </MenuItem>
               </LinkContainer>
+              }
+              { !Auth.isAdmin() &&
                <LinkContainer to="/info/credits">
                 <MenuItem>
-                  Credits
+                  {tr.infoCreatorsTitle}
                 </MenuItem>
               </LinkContainer>
-              {/* <LinkContainer to="/componentsGallery">
-                <MenuItem>
-                  Components Gallery
+              }
+              { Auth.isAdmin() &&
+                <MenuItem divider />
+              }
+              { Auth.isAdmin() &&
+                <LinkContainer to="/componentsGallery">
+                  <MenuItem>
+                    Components Gallery
+                  </MenuItem>
+                </LinkContainer>
+              }
+              { Auth.isAdmin() &&
+                <MenuItem onClick={this.logout}>
+                  Logout
                 </MenuItem>
-              </LinkContainer> */}
-              {/* <MenuItem divider />
-              <MenuItem eventKey={4.3}>Separated link</MenuItem>*/}
+              }
             </NavDropdown>
 
           </Nav>

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Badge } from 'react-bootstrap';
 
+import tr from '../localization/localization.js';
+
 export default class Tag extends React.Component {
 
   static propTypes = {
@@ -18,7 +20,7 @@ export default class Tag extends React.Component {
         to={`/provider/${name}`}
         className="btn btn-default"
         role="button"
-        title={`${name} Provider`}
+        title={`${name} ${tr.trFa('provider')}`}
         {...passDownProps}
       >
         <Badge>{ name }</Badge>

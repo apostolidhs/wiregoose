@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Badge } from 'react-bootstrap';
 
+import tr from '../localization/localization.js';
+
 export default class Tag extends React.Component {
 
   static propTypes = {
@@ -12,15 +14,16 @@ export default class Tag extends React.Component {
   render() {
     const { name, ...passDownProps } = this.props;
     passDownProps.className = (passDownProps.className || '') + ' w-tag';
+    const friendlyName = tr[name];
 
     return (
       <Link
         to={`/category/${name}`}
         role="button"
-        title={`${name} Category`}
+        title={`${friendlyName} ${tr.trFa('category')}`}
         {...passDownProps}
       >
-        <Badge>{ name }</Badge>
+        <Badge>{ friendlyName }</Badge>
       </Link>
     );
   }

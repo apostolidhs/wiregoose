@@ -1,15 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormGroup, Col, FormControl, ControlLabel }
-  from 'react-bootstrap';
-import TimeAgo from 'react-timeago';
-import TimeAgoEnglishStrings
-from 'react-timeago/lib/language-strings/en';
-import TimeAgoBuildFormatter
-from 'react-timeago/lib/formatters/buildFormatter';
-import ReactJson from 'react-json-view';
-
-const formatter = TimeAgoBuildFormatter(TimeAgoEnglishStrings)
+  from 'react-bootstrap';;
+import FromNow from '../text-utilities/from-now.jsx';
 
 export default class FetchReportForm extends React.Component {
 
@@ -50,11 +43,7 @@ export default class FetchReportForm extends React.Component {
           <Col componentClass={ControlLabel} sm={6}>Started</Col>
           <Col sm={6}>
             <FormControl.Static>
-              <TimeAgo
-                date={record.started}
-                minPeriod={1}
-                formatter={formatter}
-              />
+              <FromNow date={record.started} />
             </FormControl.Static>
           </Col>
         </FormGroup>

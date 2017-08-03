@@ -13,7 +13,7 @@ export default class Login extends React.Component {
   performLogin = (email, password) => {
     Auth.login(email, password)
       .then(() => {
-        browserHistory.push('/componentsGallery');
+        browserHistory.push('/dashboard');
       });
   }
 

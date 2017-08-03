@@ -10,7 +10,7 @@ export const create = {
 }
 
 const defaultOptions = {
-  autoDismiss: 0,
+  autoDismiss: 8000,
   position: 'tc'
 };
 

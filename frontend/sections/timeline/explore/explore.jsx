@@ -12,6 +12,7 @@ import TimelinePage from '../../../components/timeline/page.js';
 import InfiniteScrollPage from '../../../components/infinite-scroll/page.jsx';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 import * as Auth from '../../../components/authorization/auth.js';
+import tr from '../../../components/localization/localization.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -52,7 +53,7 @@ export default class Explore extends InfiniteScrollPage {
         <Header>
           <Nav bsStyle="pills" activeKey={1}>
             <LinkContainer to="/">
-              <NavItem eventKey={1}>Explore</NavItem>
+              <NavItem eventKey={1}>{tr.explore}</NavItem>
             </LinkContainer>
           </Nav>
         </Header>

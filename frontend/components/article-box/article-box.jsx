@@ -2,16 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import FontAwesome from 'react-fontawesome';
-import TimeAgo from 'react-timeago';
 import CSSModules from 'react-css-modules';
 import { FacebookButton, TwitterButton } from 'react-social';
 import { OverlayTrigger, Popover, Button, FormControl } from 'react-bootstrap';
 
 import { FACEBOOK_APP_ID } from '../../config.js';
+import FromNow from '../text-utilities/from-now.jsx';
 import styles from './article-box.less';
 import { ellipsis } from '../text-utilities/text-utilities.js';
 import ArticleBoxProps from './entry-prop-type.js';
 import { createLink, createAbsoluteLink } from '../text-utilities/text-utilities.js';
+import tr from '../localization/localization.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -49,11 +50,11 @@ export default class Entry extends React.Component {
           <Link
             to={`/category/${entry.category}`}
             role="button"
-            title="Category"
+            title={tr.trFa('category')}
             className="btn"
             styleName="category"
           >
-            {entry.category}
+            {tr[entry.category]}
           </Link>
         }
         <div className="panel-body">
@@ -70,15 +71,15 @@ export default class Entry extends React.Component {
                 className="btn btn-link-muted w-p-0"
                 to={`/provider/${entry.provider}`}
                 role="button"
-                title="Provider"
+                title={tr.trFa('provider')}
               >
                 {entry.provider}
               </Link>
             }
-            <TimeAgo
+            <FromNow
+              styleName="published"
               className="text-muted"
               date={entry.published}
-              minPeriod={1}
             />
           </div>
           <section styleName="summary">
@@ -93,7 +94,7 @@ export default class Entry extends React.Component {
               container={this}
               rootClose
             >
-              <Button className="btn btn-link blind-link" title="Article Link" >
+              <Button className="btn btn-link blind-link" title={tr.shareLink} >
                 <FontAwesome name="link" />
               </Button>
             </OverlayTrigger>
@@ -101,14 +102,14 @@ export default class Entry extends React.Component {
               className="btn btn-link blind-link"
               url={absoluteArticleLink}
               appId={FACEBOOK_APP_ID}
-              title="Share on Facebook"
+              title={tr.shareOnFacebook}
             >
               <FontAwesome name="facebook" />
             </FacebookButton>
             <TwitterButton
               className="btn btn-link blind-link"
               url={absoluteArticleLink}
-              title="Share on Twitter"
+              title={tr.shareOnTwitter}
             >
               <FontAwesome name="twitter" />
             </TwitterButton>
@@ -127,7 +128,7 @@ export default class Entry extends React.Component {
   renderShareLinkPopover = (absoluteArticleLink) => {
     return (
       <Popover id="popover-copy-article-link">
-        <h4>Share Article</h4>
+        <h4>{tr.articleLink}</h4>
         <FormControl type="text" defaultValue={absoluteArticleLink} readOnly />
       </Popover>
     );

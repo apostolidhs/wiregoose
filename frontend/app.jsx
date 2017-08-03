@@ -10,6 +10,7 @@ import './less/index.less';
 
 import Header from './components/header/header.jsx';
 import Notifications from './components/notifications/notifications.jsx';
+import Localization from './components/localization/localization.js';
 import * as Auth from './components/authorization/auth.js';
 import * as WiregooseApi from './components/services/wiregoose-api.js';
 
@@ -30,6 +31,8 @@ import notFoundError from './sections/errors/401.jsx';
 if (Auth.isAuthenticated()) {
   WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
 }
+
+Localization.setLanguage(Auth.getSessionLang());
 
 class Body extends React.Component {
 

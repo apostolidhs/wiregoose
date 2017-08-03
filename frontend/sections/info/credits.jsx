@@ -1,6 +1,7 @@
 import React from 'react';
 import FontAwesome from 'react-fontawesome';
 
+import tr from '../../components/localization/localization.js';
 import Info from './info.jsx';
 import headerImage from '../../assets/img/option-menu-creators-bg.png';
 
@@ -8,7 +9,7 @@ export default class About extends React.Component {
   render() {
     return (
       <Info headerImg={headerImage} >
-        <h1>Creators</h1>
+        <h1>{tr.infoCreatorsTitle}</h1>
 
         <p styleName="credit-contact" className="text-center">
           <a styleName="credit-contact-item" href="mailto:giannhs.apostolidhs@gmail.com" target="_blank" title="Email Me" >
@@ -20,9 +21,7 @@ export default class About extends React.Component {
         </p>
 
         <blockquote className="text-center">
-          <p className="lead">
-            Inspired, Designed, Developed by <em>John Apostolidis</em>
-          </p>
+          <p className="lead" styleName="p-lead" dangerouslySetInnerHTML={{ __html: tr.infoCreatorsDesc}}></p>
         </blockquote>
       </Info>
     );

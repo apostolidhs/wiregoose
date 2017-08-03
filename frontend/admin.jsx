@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { Route, Router, IndexRoute, browserHistory } from 'react-router';
+import { Route, Router, IndexRoute, browserHistory, IndexRedirect } from 'react-router';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-select/dist/react-select.css';
@@ -61,21 +61,18 @@ class App extends React.Component {
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Body}>
-          <IndexRoute component={ComponentsGallery} />
+          <IndexRedirect to="dashboard" />
           <Route path="login" component={Login} />
-          <Route path="componentsGallery" component={ComponentsGallery}/>
-          {
-            Auth.isAuthenticated() &&
-            <Route path="admin" component={Admin}>
-              <IndexRoute component={Dashboard} />
-              <Route path="dashboard" component={Dashboard} />
-              <Route path="rssprovider" component={RssProvider} />
-              <Route path="rssregistration" component={RssRegistration} />
-              <Route path="fetchreport" component={FetchReport} />
-              <Route path="articleentries" component={ArticleEntries} />
-              <Route path="article" component={Article} />
-            </Route>
-          }
+          <Route component={Admin}>
+            <Route path="componentsGallery" component={ComponentsGallery}/>
+
+            <Route path="dashboard" component={Dashboard} />
+            <Route path="rssprovider" component={RssProvider} />
+            <Route path="rssregistration" component={RssRegistration} />
+            <Route path="fetchreport" component={FetchReport} />
+            <Route path="articleentries" component={ArticleEntries} />
+            <Route path="article" component={Article} />
+          </Route>
           <Route path='*' component={NotFound} />
         </Route>
       </Router>

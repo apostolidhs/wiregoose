@@ -1,5 +1,6 @@
 import React from 'react';
 
+import tr from '../../components/localization/localization.js';
 import Loader from '../../components/loader/loader.jsx';
 import Info from './info.jsx';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
@@ -21,7 +22,7 @@ export default class About extends React.Component {
   render() {
     return (
       <Info headerImg={headerImage} >
-        <h1>Providers</h1>
+        <h1>{tr.infoProviderTitle}</h1>
         <Loader ref="providersLoad">
           <div className="clearfix" styleName="providers" >
             {_.map(this.state.providers, p => (
