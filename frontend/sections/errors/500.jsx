@@ -2,8 +2,18 @@ import React from 'react';
 import FontAwesome from 'react-fontawesome';
 
 import tr from '../../components/localization/localization.js';
+import { publish } from '../../components/events/events.js';
 
 export default class InternalServerError extends React.Component {
+
+  componentDidMount() {
+    publish('page-ready', {
+      status: 500,
+      title: tr.errors500Title,
+      description: tr.errors500Desc,
+      keywords: '500,internal server error'
+    });
+  }
 
   render() {
     return (

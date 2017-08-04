@@ -10,6 +10,7 @@ const entryPropType = {
   author: PropTypes.string,
   provider: PropTypes.string,
   category: PropTypes.string,
+  lang: PropTypes.string
 };
 
 export default entryPropType;

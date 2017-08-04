@@ -206,7 +206,7 @@ function createWebpackConfig(name, entryName, outputName) {
     devtool: isProduction ? false : 'source-map',
     context: jsSourcePath,
     entry: {
-      js: entryName + '.jsx',
+      js: [entryName + '.jsx'],
     },
     output: {
       path: buildPath,

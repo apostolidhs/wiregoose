@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { publish } from '../../../components/events/events.js';
 import InfiniteScrollPage from '../../../components/infinite-scroll/page.jsx';;
 import Header from '../../../components/timeline/header.jsx';
 import ProviderTag from '../../../components/rss-provider/tag.jsx';
@@ -39,7 +40,17 @@ export default class Provider extends InfiniteScrollPage {
     }
 
     WiregooseApi.timeline.provider(Provider.page.lastFeeds, Auth.getSessionLang(), true)
-      .then(resp => Provider.page.timelineRetrievedSuccessfully(this, resp));
+      .then(resp => Provider.page.timelineRetrievedSuccessfully(this, resp))
+      .then(resp => resp && this.handleMetaData(resp));
+  }
+
+  handleMetaData = (resp) => {
+    const provider = this.props.routeParams.id;
+    publish('page-ready', {
+      title: provider,
+      keywords: provider,
+      description: tr.formatString(tr.timelineProviderDescription, provider)
+    });
   }
 
   // called by InfiniteScrollPage

@@ -16,6 +16,8 @@ KlarkModule(module, 'app', (
   $moment,
   $helmet,
   $passport,
+  $reactRouter,
+  $expressDevice,
   krkPromiseExtension,
   krkRouter,
   krkDbMongooseConnector,
@@ -36,7 +38,8 @@ KlarkModule(module, 'app', (
   routesMeasures,
   routesArticle,
   routesTimeline,
-  parameterValidatorsCustomExpressValidators
+  parameterValidatorsCustomExpressValidators,
+  render
 ) => {
 
   return {
@@ -83,6 +86,11 @@ KlarkModule(module, 'app', (
       customValidators: parameterValidatorsCustomExpressValidators.getValidators()
     }));
     app.use($cookieParser());
+    app.use($expressDevice.capture());
+
+    app.get('/', staticMiddleware);
+    app.get('/index.html', staticMiddleware);
+
     app.use($express.static($path.join(__dirname, '../../', 'public')));
 
     krkRoutesServerInfo.register(app, {
@@ -108,9 +116,26 @@ KlarkModule(module, 'app', (
     });
     registerRoutes(app);
 
-    app.get('*', (req, res) => {
-      res.sendFile($path.resolve(__dirname, '../../', 'public', 'index.html'));
-    });
+    app.get('*', staticMiddleware);
+
+    function staticMiddleware(req, res) {
+      const url = config.APP_URL + req.url;
+      if (req.device.type === 'phone') {
+        render.servePage(url)
+          .then(content => {
+response.writeHead( 200, {
+            "Content-Type": "text/html; charset=UTF-8"
+        } );
+response.end( content );
+            res.send(content);
+          })
+          .catch(() => {
+            res.sendFile($path.resolve(__dirname, '../../', 'public', 'index.html'));
+          });
+      } else {
+        res.sendFile($path.resolve(__dirname, '../../', 'public', 'index.html'));
+      }
+    }
 
     app.use(krkRouter);
 

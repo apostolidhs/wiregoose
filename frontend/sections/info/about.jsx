@@ -1,10 +1,20 @@
 import React from 'react';
 
 import tr from '../../components/localization/localization.js';
+import { publish } from '../../components/events/events.js';
 import Info from './info.jsx';
 import headerImage from '../../assets/img/option-menu-about-bg.png';
 
 export default class About extends React.Component {
+
+  componentDidMount() {
+    publish('page-ready', {
+      title: tr.infoAboutTitle,
+      description: tr.infoAboutWiregoose,
+      keywords: tr.infoAboutTitle
+    });
+  }
+
   render() {
     return (
       <Info headerImg={headerImage} >

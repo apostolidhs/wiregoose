@@ -1,6 +1,7 @@
 import React from 'react';
 
 import tr from '../../components/localization/localization.js';
+import { publish } from '../../components/events/events.js';
 import Loader from '../../components/loader/loader.jsx';
 import Info from './info.jsx';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
@@ -18,6 +19,13 @@ export default class About extends React.Component {
       .then(resp => this.setState({ providers: resp.data.data.content }));
   }
 
+  componentDidMount() {
+    publish('page-ready', {
+      title: tr.infoCreatorsTitle,
+      description: tr.infoCreatorsDesc,
+      keywords: tr.infoCreatorsTitle
+    });
+  }
 
   render() {
     return (

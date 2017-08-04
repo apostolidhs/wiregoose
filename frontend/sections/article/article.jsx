@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import CSSModules from 'react-css-modules';
 
 import styles from './article.less';
+import { publish } from '../../components/events/events.js';
 import ArticleComponent from '../../components/article/article.jsx';
 import { getIdFromLink } from '../../components/text-utilities/text-utilities.js';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
@@ -45,11 +46,23 @@ export default class Article extends React.Component {
         this.setState({
           article,
           isLoading: false
-        });
+        }, this.handleMetaData);
       })
       .catch((resp) => {
         this.setState({ isLoading: false });
       })
+  }
+
+  handleMetaData = () => {
+    const { article } = this.state;
+    publish('page-ready', {
+      title: article.title,
+      description: article.entryId.description,
+      image: article.entryId.image,
+      time: article.entryId.published,
+      lang: article.entryId.lang,
+      url: article.link
+    });
   }
 
   render() {

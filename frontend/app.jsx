@@ -1,32 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import { Route, Router, IndexRoute, browserHistory, Redirect } from 'react-router';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-select/dist/react-select.css';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 import './less/index.less';
 
-import Header from './components/header/header.jsx';
-import Notifications from './components/notifications/notifications.jsx';
 import Localization from './components/localization/localization.js';
 import * as Auth from './components/authorization/auth.js';
 import * as WiregooseApi from './components/services/wiregoose-api.js';
+import * as Meta from './components/meta/meta.js';
+import { subscribe } from './components/events/events.js';
 
-import ComponentsGallery from './sections/components-gallery/components-gallery.jsx';
-import Timeline from './sections/timeline/timeline.jsx';
-import TimelineExplore from './sections/timeline/explore/explore.jsx';
-import TimelineCategory from './sections/timeline/category/category.jsx';
-import TimelineProvider from './sections/timeline/provider/provider.jsx';
-import TimelineRegistration from './sections/timeline/registration/registration.jsx';
-import Sidebar from './sections/timeline/sidebar/sidebar.jsx';
-import Article from './sections/article/article.jsx';
-import About from './sections/info/about.jsx';
-import Credits from './sections/info/credits.jsx';
-import Providers from './sections/info/providers.jsx';
-import InternalServerError from './sections/errors/500.jsx';
-import notFoundError from './sections/errors/401.jsx';
+import AppRouter from './sections/router/app.jsx';
 
 if (Auth.isAuthenticated()) {
   WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
@@ -34,24 +20,16 @@ if (Auth.isAuthenticated()) {
 
 Localization.setLanguage(Auth.getSessionLang());
 
-class Body extends React.Component {
-
-  static propTypes = {
-    children: PropTypes.node.isRequired,
+subscribe('page-ready', (options) => {
+  // @TODO: if same page ignore
+  Meta.setOptions(options);
+  if (typeof window.callPhantom === 'function') {
+    window.callPhantom({
+      id: 'page-ready',
+      options: opts
+    });
   }
-
-  render() {
-    return (
-      <div>
-        <Header enableAuth={false} />
-        <Notifications />
-        <div className="container">
-          {this.props.children}
-        </div>
-      </div>
-    );
-  }
-}
+});
 
 // function requireAuth(nextState, replaceState) {
 //   if (!Auth.isAuthenticated()) {
@@ -62,35 +40,10 @@ class Body extends React.Component {
 //   }
 // }
 
-class App extends React.Component {
+ReactDOM.render(<AppRouter />, document.getElementById('root'));
 
-  render () {
-    return (
-      <Router history={browserHistory}>
-        <Route path="/" component={Body}>
-          <Route path="article/:id" component={Article} />
-          <Route component={Timeline} >
-            <IndexRoute component={TimelineExplore} />
-            <Route path="category/:id" component={TimelineCategory} />
-            <Route path="provider/:id" component={TimelineProvider} />
-            <Route path="registration/:id" component={TimelineRegistration} />
-          </Route>
-          <Route path="info" >
-            <Route path="about" component={About} />
-            <Route path="credits" component={Credits} />
-            <Route path="providers" component={Providers} />
-          </Route>
-          <Route path="500" component={InternalServerError} />
-          <Route path="401" component={notFoundError} />
-          <Route path="componentsGallery" component={ComponentsGallery} />
-          <Route path='*' component={notFoundError} />
-        </Route>
-      </Router>
-    );
-  }
-}
+// if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
+//   ReactDOM.render(<AppRouter />, document.getElementById('app'));
+// }
 
-ReactDOM.render(
-  <App/>,
-  document.getElementById('root')
-);
+// export default AppRouter;

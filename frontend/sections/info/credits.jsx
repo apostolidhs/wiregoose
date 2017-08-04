@@ -2,10 +2,20 @@ import React from 'react';
 import FontAwesome from 'react-fontawesome';
 
 import tr from '../../components/localization/localization.js';
+import { publish } from '../../components/events/events.js';
 import Info from './info.jsx';
 import headerImage from '../../assets/img/option-menu-creators-bg.png';
 
 export default class About extends React.Component {
+
+  componentDidMount() {
+    publish('page-ready', {
+      title: tr.infoCreatorsTitle,
+      description: tr.infoCreatorsDesc,
+      keywords: tr.infoCreatorsTitle
+    });
+  }
+
   render() {
     return (
       <Info headerImg={headerImage} >

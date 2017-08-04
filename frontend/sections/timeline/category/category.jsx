@@ -8,6 +8,7 @@ import FontAwesome from 'react-fontawesome';
 import { Link, browserHistory } from 'react-router';
 
 import styles from './category.less';
+import { publish } from '../../../components/events/events.js';
 import Header from '../../../components/timeline/header.jsx';
 import CategoryTag from '../../../components/category/tag.jsx';
 import Timeline from '../../../components/timeline/timeline.jsx';
@@ -74,7 +75,18 @@ export default class Category extends InfiniteScrollPage {
       Category.page.lastFeeds = { [category]: _.now() };
     }
     WiregooseApi.timeline.category(Category.page.lastFeeds, Auth.getSessionLang(), true)
-      .then(resp => Category.page.timelineRetrievedSuccessfully(this, resp));
+      .then(resp => Category.page.timelineRetrievedSuccessfully(this, resp))
+      .then(resp => resp && this.handleMetaData(resp));
+  }
+
+  handleMetaData = (resp) => {
+    const category = this.props.routeParams.id;
+    const catName = tr[category] || category;
+    publish('page-ready', {
+      title: catName,
+      keywords: catName,
+      description: tr.formatString(tr.timelineCategoryDescription, catName)
+    });
   }
 
   // called by InfiniteScrollPage

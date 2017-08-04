@@ -6,6 +6,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { Nav, NavItem } from 'react-bootstrap';
 
 import styles from '../timeline.less';
+import { publish } from '../../../components/events/events.js';
 import Header from '../../../components/timeline/header.jsx';
 import Timeline from '../../../components/timeline/timeline.jsx';
 import TimelinePage from '../../../components/timeline/page.js';
@@ -39,7 +40,19 @@ export default class Explore extends InfiniteScrollPage {
 
     this.timeline.setLoadingState(true);
     WiregooseApi.timeline.explore(Explore.page.lastFeeds, Auth.getSessionLang(), true)
-      .then(resp => Explore.page.timelineRetrievedSuccessfully(this, resp));
+      .then(resp => Explore.page.timelineRetrievedSuccessfully(this, resp))
+      .then(resp => resp && this.handleMetaData(resp))
+  }
+
+  handleMetaData = (resp) => {
+    publish('page-ready', {
+      title: tr.timelineExploreTitle,
+      keywords: tr.timelineExploreKeywords,
+      description: tr.timelineExploreDescription
+      // image:
+      // time:
+      // lang:
+    });
   }
 
   // called by InfiniteScrollPage

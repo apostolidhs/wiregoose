@@ -45,6 +45,8 @@ export default class Page {
     }
     component.timeline.setLoadingState(false);
     this.timelineState = component.timeline.state;
+
+    return resp;
   }
 
   invalidateCache() {
