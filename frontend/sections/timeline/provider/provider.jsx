@@ -9,6 +9,7 @@ import Timeline from '../../../components/timeline/timeline.jsx';
 import TimelinePage from '../../../components/timeline/page.js';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 import * as Auth from '../../../components/authorization/auth.js';
+import tr from '../../../components/localization/localization.js';
 
 export default class Provider extends InfiniteScrollPage {
   static page = new TimelinePage();
@@ -41,10 +42,10 @@ export default class Provider extends InfiniteScrollPage {
 
     WiregooseApi.timeline.provider(Provider.page.lastFeeds, Auth.getSessionLang(), true)
       .then(resp => Provider.page.timelineRetrievedSuccessfully(this, resp))
-      .then(resp => resp && this.handleMetaData(resp));
+      .then(this.handleMetaData);
   }
 
-  handleMetaData = (resp) => {
+  handleMetaData = () => {
     const provider = this.props.routeParams.id;
     publish('page-ready', {
       title: provider,

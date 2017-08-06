@@ -16,15 +16,12 @@ export default class About extends React.Component {
 
   componentDidMount() {
     this.refs.providersLoad.promise = WiregooseApi.crud.retrieveAll('rssProvider')
-      .then(resp => this.setState({ providers: resp.data.data.content }));
-  }
-
-  componentDidMount() {
-    publish('page-ready', {
-      title: tr.infoCreatorsTitle,
-      description: tr.infoCreatorsDesc,
-      keywords: tr.infoCreatorsTitle
-    });
+      .then(resp => this.setState({ providers: resp.data.data.content }))
+      .then(() => publish('page-ready', {
+        title: tr.infoCreatorsTitle,
+        description: tr.infoCreatorsDesc,
+        keywords: tr.infoCreatorsTitle
+      }));
   }
 
   render() {

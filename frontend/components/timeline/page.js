@@ -14,6 +14,7 @@ export default class Page {
       setTimeout(() => {
         component.setScrollTop(this.lastScrollTop);
       }, 200);
+      component.handleMetaData();
     } else {
       component.retrieveTimeline();
     }

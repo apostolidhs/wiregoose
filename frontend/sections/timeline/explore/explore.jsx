@@ -41,10 +41,10 @@ export default class Explore extends InfiniteScrollPage {
     this.timeline.setLoadingState(true);
     WiregooseApi.timeline.explore(Explore.page.lastFeeds, Auth.getSessionLang(), true)
       .then(resp => Explore.page.timelineRetrievedSuccessfully(this, resp))
-      .then(resp => resp && this.handleMetaData(resp))
+      .then(this.handleMetaData);
   }
 
-  handleMetaData = (resp) => {
+  handleMetaData = () => {
     publish('page-ready', {
       title: tr.timelineExploreTitle,
       keywords: tr.timelineExploreKeywords,

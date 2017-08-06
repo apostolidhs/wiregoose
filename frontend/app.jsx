@@ -6,6 +6,7 @@ import 'react-select/dist/react-select.css';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 import './less/index.less';
 
+import 'core-js/shim';
 import Localization from './components/localization/localization.js';
 import * as Auth from './components/authorization/auth.js';
 import * as WiregooseApi from './components/services/wiregoose-api.js';

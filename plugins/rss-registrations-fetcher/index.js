@@ -158,8 +158,8 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
       krkLogger.info('Accepted');
 
       return fetch(onFetchStart, onNextChunk)
-        .then(saveLastFetchTime)
-        .then(logSuccessFetch)
+        .then(fetchReport => saveLastFetchTime()
+                          .then(() => logSuccessFetch(fetchReport)))
         .catch(reason => krkLogger.error(reason));
 
       function onFetchStart(rssRegistrations) {

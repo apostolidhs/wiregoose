@@ -51,9 +51,9 @@ export function fromNow(val) {
     return [
       tr.timeYesterday,
       ', ',
-      prefixWithZeroIF2Digits(nowDate.getHours().toString()),
+      prefixWithZeroIF2Digits(date.getHours().toString()),
       ':',
-      prefixWithZeroIF2Digits(nowDate.getMinutes().toString())
+      prefixWithZeroIF2Digits(date.getMinutes().toString())
     ].join('');
   } else {
     return toText(timestamp);

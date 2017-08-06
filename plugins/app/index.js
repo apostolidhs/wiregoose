@@ -88,8 +88,11 @@ KlarkModule(module, 'app', (
     app.use($cookieParser());
     app.use($expressDevice.capture());
 
-    app.get('/', staticMiddleware);
-    app.get('/index.html', staticMiddleware);
+    const indexPagePath = $path.resolve(__dirname, '../../', 'public', 'index.html');
+    const middlewarePreRender = render.createMiddlewarePreRender(indexPagePath);
+
+    app.get('/', middlewarePreRender);
+    app.get('/index.html', middlewarePreRender);
 
     app.use($express.static($path.join(__dirname, '../../', 'public')));
 
@@ -116,26 +119,26 @@ KlarkModule(module, 'app', (
     });
     registerRoutes(app);
 
-    app.get('*', staticMiddleware);
+    app.get('*', middlewarePreRender);
 
-    function staticMiddleware(req, res) {
-      const url = config.APP_URL + req.url;
-      if (req.device.type === 'phone') {
-        render.servePage(url)
-          .then(content => {
-response.writeHead( 200, {
-            "Content-Type": "text/html; charset=UTF-8"
-        } );
-response.end( content );
-            res.send(content);
-          })
-          .catch(() => {
-            res.sendFile($path.resolve(__dirname, '../../', 'public', 'index.html'));
-          });
-      } else {
-        res.sendFile($path.resolve(__dirname, '../../', 'public', 'index.html'));
-      }
-    }
+    // function staticMiddleware(req, res) {
+    //   const url = config.APP_URL + req.url;
+    //   if (req.device.type === 'phone') {
+    //     render.servePage(url)
+    //       .then(content => {
+    //         res.writeHead( 200, {
+    //           "Content-Type": "text/html; charset=UTF-8"
+    //         });
+    //         res.end(content);
+
+    //         })
+    //       .catch(() => {
+    //         res.sendFile($path.resolve(__dirname, '../../', 'public', 'index.html'));
+    //       });
+    //   } else {
+    //     res.sendFile($path.resolve(__dirname, '../../', 'public', 'index.html'));
+    //   }
+    // }
 
     app.use(krkRouter);
 

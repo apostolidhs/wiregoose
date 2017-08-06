@@ -40,18 +40,27 @@ export function setOptions(opts = {}) {
   clearElements(headEl);
   createElements(headEl, opts);
 }
-
+//
 function createElementFromMetaCategory(rootEl, metaTagCategory, value) {
   _.each(metaTags[metaTagCategory], (tags) => {
     const [tagName, attributeKey, attributeValue, content] = tags;
+    let tagValue = value;
+    if (metaTagCategory === 'title') {
+      tagValue = `Wiregoose - ${tagValue}`;
+    } else if (metaTagCategory === 'keywords') {
+      tagValue = 'news,rss,rss feed,real time,online news,latest news';
+      if (value) {
+        tagValue += `,${value}`;
+      }
+    }
     const el = document.createElement(tagName);
     if (attributeKey) {
       el.setAttribute(attributeKey, attributeValue);
     }
     if (content) {
-      el.setAttribute(content, value);
+      el.setAttribute(content, tagValue);
     } else {
-      const textNode = document.createTextNode(value);
+      const textNode = document.createTextNode(tagValue);
       el.appendChild(textNode);
     }
     rootEl.appendChild(el);

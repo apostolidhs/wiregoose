@@ -11,6 +11,7 @@ import Timeline from '../../../components/timeline/timeline.jsx';
 import TimelinePage from '../../../components/timeline/page.js';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 import * as Auth from '../../../components/authorization/auth.js';
+import tr from '../../../components/localization/localization.js';
 
 export default class Registration extends InfiniteScrollPage {
 
@@ -51,10 +52,10 @@ export default class Registration extends InfiniteScrollPage {
 
     WiregooseApi.timeline.registration(Registration.page.lastFeeds, Auth.getSessionLang(), true)
       .then(resp => Registration.page.timelineRetrievedSuccessfully(this, resp))
-      .then(resp => resp && this.handleMetaData(resp));
+      .then(this.handleMetaData);
   }
 
-  handleMetaData = (resp) => {
+  handleMetaData = () => {
     const { category, provider } = this.state.registration;
     const title = `${provider} ${category}`;
     const keywords = `${provider},${category}`;

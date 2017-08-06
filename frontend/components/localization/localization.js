@@ -71,8 +71,6 @@ const strings = new LocalizedStrings({
     category: 'category',
     provider: 'provider',
 
-    keywords: 'news, rss, rss feed, real time, online news, latest news',
-
     timelineExploreDescription: 'Explore the latest news',
     timelineExploreKeywords: 'Explore',
     timelineExploreTitle: 'Explore News',
@@ -151,7 +149,17 @@ const strings = new LocalizedStrings({
     Sports: 'Aθλητικά',
     All: 'Διάφορα',
     category: 'κατηγορία',
-    provider: 'πάροχος'
+    provider: 'πάροχος',
+
+    timelineExploreDescription: 'Πλοηγήσου στα πιο πρόσφατα νέα',
+    timelineExploreKeywords: 'Πλοηγήσου',
+    timelineExploreTitle: 'Πλοηγήσου στα Νέα',
+
+    timelineCategoryDescription: 'Πλοηγηθείτε στα πιο πρόσφατα ${0} νέα',
+
+    timelineProviderDescription: 'Πλοηγηθείτε στα πιο πρόσφατα από ${0}',
+
+    timelineRegistrationDescription: 'Πλοηγηθείτε στα πιο πρόσφατα από ${0}'
   }
 });
 
