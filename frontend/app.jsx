@@ -26,9 +26,10 @@ subscribe('page-ready', (options) => {
   Meta.setOptions(options);
   if (typeof window.callPhantom === 'function') {
     window.callPhantom({
-      id: 'page-ready',
-      options: opts
+      command: 'page-ready',
+      message:  options
     });
+
   }
 });
 
