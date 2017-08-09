@@ -5,42 +5,51 @@
 KlarkModule(module, 'render', (
   q,
   _,
-  config,
+  $phantom,
   krkLogger,
-  $phantom
+  krkDbMongooseBinders,
+  config,
+  modelsPreRender
 ) => {
 
   const debug = true;
   const PRE_RENDER_TIMEOUT = 8000; //ms
-  const PRE_RENDER_ENABLED_DEVICES = ['bot', 'car', 'phone'];
+  const PRE_RENDER_ENABLED_DEVICES = ['bot', 'car'];
 
   let phantomInstancePrms = $phantom.create();
 
   return {
     preRender,
-    createMiddlewarePreRender
+    createMiddlewareCachedPreRender
   };
 
-  /*
-    save content on mongo (cache)
-  */
-
-  function createMiddlewarePreRender(indexPagePath) {
+  function createMiddlewareCachedPreRender(indexPagePath) {
     return (req, res, next) => {
-      const url = config.APP_URL + req.url;
       if (!_.includes(PRE_RENDER_ENABLED_DEVICES, req.device.type)) {
         return res.sendFile(indexPagePath);
       }
-      preRender(url)
-        .then(content => {
-          res.writeHead(200, {
-            'Content-Type': 'text/html; charset=UTF-8'
-          });
-          res.end(content);
+      return retrievePreRenderPageAndUpdateHitCounter(req.url)
+        .then(preRenderEntry => {
+          if (preRenderEntry) {
+            return responseContent(res, preRenderEntry.content);
+          }
+
+          const url = config.APP_URL + req.url;
+          return preRender(url)
+            .catch((reason) => {
+              krkLogger.info('phantom js crash', reason);
+              res.sendFile(indexPagePath);
+            })
+            .then(content => {
+              if (content) {
+                return savePreRenderContent(content, req.url)
+                  .then(preRenderEntry => responseContent(res, preRenderEntry.content));
+              }
+            });
         })
-        .catch((reason) => {
-          krkLogger.info('phantom js crash', reason);
-          res.sendFile(indexPagePath);
+        .catch(reason => {
+          res.locals.errors.add('UNEXPECTED', reason);
+          next(true);
         });
     };
   }
@@ -50,7 +59,7 @@ KlarkModule(module, 'render', (
     let phantom;
     return phantomInstancePrms
       .then(phantomInstance => phantom = phantomInstance)
-      .then(() => createPage(phantom))
+      .then(() => phantom.createPage())
       .then(pageInstance => page = pageInstance)
       .then(() => getPageContent(phantom, page, url))
       .then(content => {
@@ -61,14 +70,6 @@ KlarkModule(module, 'render', (
         page.close();
         throw reason;
       });
-  }
-
-  function createPage(phantom) {
-    return phantom.createPage();
-  }
-
-  function loadUrl(page, url) {
-    return page.open(url);
   }
 
   function getPageContent(phantom, page, url) {
@@ -104,7 +105,7 @@ KlarkModule(module, 'render', (
         }
       }, config.APP_URL);
 
-      loadUrl(page, url)
+      page.open(url)
         .then(status => {
           if (status !== 'success') {
             return rejectLoaded(status);
@@ -128,6 +129,33 @@ KlarkModule(module, 'render', (
         }
       }
     });
+  }
+
+  function savePreRenderContent(content, link) {
+    const preRenderEntry = {
+      content,
+      link,
+      createdAt: new Date(),
+      lastHit: new Date(),
+      hits: 0
+    };
+    return krkDbMongooseBinders
+      .create(modelsPreRender, preRenderEntry);
+  }
+
+  function retrievePreRenderPageAndUpdateHitCounter(link) {
+    const q = {
+      $inc: { hits: 1 },
+      lastHit: new Date()
+    };
+    return modelsPreRender.findOneAndUpdate({ link }, q, {new: true});
+  }
+
+  function responseContent(res, content) {
+    res.writeHead(200, {
+      'Content-Type': 'text/html; charset=UTF-8'
+    });
+    res.end(content);
   }
 
 });

@@ -1,32 +1,34 @@
 import _ from 'lodash';
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Form, FormGroup, Col, FormControl, ControlLabel, Button, Panel, Collapse }
   from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
-import ReactJson from 'react-json-view';
 import CSSModules from 'react-css-modules';
 
-import ArticleBox from '../article-box/article-box.jsx';
+import styles from './form.less';
 import * as FormFactory from '../form/factory.jsx';
-import Article from './article.jsx';
 
-export default class ArticleForm extends React.Component {
+@CSSModules(styles, {
+  allowMultiple: true,
+})
+export default class PreRenderForm extends React.Component {
 
   static propTypes = FormFactory.getFormPropTypes()
   static defaultProps = FormFactory.getFormDefaultPropTypes()
 
   state = {
     record: this.props.record,
-    isArticlePreviewOpen: false
+    isPagePreviewOpen: false
   }
 
   isInvalid = () => {
     const { record } = this.state;
-    return !(FormFactory.validateLink(this, 'link') === 'success'
-      && record.content
+    return !(
+      record.content
+      && record.link
       && record.createdAt
-      && record.entryId
+      && record.lastHit
+      && _.isNumber(record.hits)
     );
   }
 
@@ -38,6 +40,20 @@ export default class ArticleForm extends React.Component {
   onDeleteClicked = (e) => {
     e.preventDefault();
     this.props.onDelete(this.state.record);
+  }
+
+  previewIframe = () => {
+    this.setState({ isPagePreviewOpen: !this.state.isPagePreviewOpen }, () => {
+      if (!this.state.isPagePreviewOpen) {
+        return;
+      }
+      const iframe = document.createElement('iframe');
+      const html = this.state.record.content;
+      this.iframeContainerEl.appendChild(iframe);
+      iframe.contentWindow.document.open();
+      iframe.contentWindow.document.write(html);
+      iframe.contentWindow.document.close();
+    });
   }
 
   render () {
@@ -54,28 +70,10 @@ export default class ArticleForm extends React.Component {
 
         { !isNew && FormFactory.createStaticText(record._id, 'ID') }
 
-        {
-          record.error &&
-          <ReactJson src={record.error} collapsed={true} theme="monokai" />
-        }
-
         { FormFactory.createInput({
-          name: 'title',
-          value: record.title,
-          onChange: FormFactory.handleInputChange(this)
-        }) }
-
-        { FormFactory.createInput({
-          name: 'byline',
-          value: record.byline || '',
-          onChange: FormFactory.handleInputChange(this)
-        }) }
-
-        { FormFactory.createInputLink({
           name: 'link',
           value: record.link,
           onChange: FormFactory.handleInputChange(this),
-          validate: FormFactory.validateLink(this, 'link'),
           required: true
         }) }
 
@@ -87,11 +85,18 @@ export default class ArticleForm extends React.Component {
           required: true
         }) }
 
-        { FormFactory.createInputLink({
-          name: 'content',
-          value: record.link,
+        { FormFactory.createInputDate({
+          name: 'lastHit',
+          value: record.lastHit,
+          onChange: FormFactory.handleDateInputChange(this, 'lastHit'),
+          required: true
+        }) }
+
+        { FormFactory.createInput({
+          name: 'hits',
+          type: 'number',
+          value: record.hits,
           onChange: FormFactory.handleInputChange(this),
-          validate: FormFactory.validateLink(this, 'link'),
           required: true
         }) }
 
@@ -99,8 +104,8 @@ export default class ArticleForm extends React.Component {
           <Col componentClass={ControlLabel} sm={2}>Content</Col>
           <Col sm={10}>
             <FormControl
+              rows="10"
               className="form-textarea-content"
-              rows="20"
               componentClass="textarea"
               name="content"
               value={record.content}
@@ -110,6 +115,21 @@ export default class ArticleForm extends React.Component {
           </Col>
         </FormGroup>
 
+        { record.content && (
+          <FormGroup controlId="formIdContentPreview" styleName="content-preview">
+            <Col xs={12} className="w-mt-7">
+              <Button className="pull-right" onClick={this.previewIframe}>
+                <FontAwesome name="picture-o" /> Preview Page
+              </Button>
+            </Col>
+            { this.state.isPagePreviewOpen &&
+              <Col xs={12} className="w-mt-7">
+                <div ref={el => this.iframeContainerEl = el}></div>
+              </Col>
+            }
+          </FormGroup>
+        )}
+
         { FormFactory.createFormOptionsPanel({
           onDelete: !isNew && this.onDeleteClicked,
           onSave: this.onSaveClicked,
@@ -117,26 +137,8 @@ export default class ArticleForm extends React.Component {
           isNew
         }) }
 
-        { _.isObject(record.entryId) && (
-          <div className="w-mt-7">
-            <ArticleBox entry={record.entryId} />
-          </div>
-        )}
-
-
-        { !this.isInvalid() && (
-          <div>
-            <Button className="w-mt-7 pull-right" onClick={ () => this.setState({ isArticlePreviewOpen: !this.state.isArticlePreviewOpen }) }>
-              <FontAwesome name="picture-o" /> Preview Article
-            </Button>
-            { this.state.isArticlePreviewOpen &&
-              <Article className="w-mt-7" article={record} />
-            }
-          </div>
-        )}
-
       </Form>
-    )
+    );
   }
 
 }

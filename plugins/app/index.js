@@ -89,7 +89,7 @@ KlarkModule(module, 'app', (
     app.use($expressDevice.capture());
 
     const indexPagePath = $path.resolve(__dirname, '../../', 'public', 'index.html');
-    const middlewarePreRender = render.createMiddlewarePreRender(indexPagePath);
+    const middlewarePreRender = render.createMiddlewareCachedPreRender(indexPagePath);
 
     app.get('/', middlewarePreRender);
     app.get('/index.html', middlewarePreRender);

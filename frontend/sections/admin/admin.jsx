@@ -45,6 +45,11 @@ export default class Admin extends React.Component {
                 <FontAwesome name="newspaper-o" /> Article
               </NavItem>
             </LinkContainer>
+            <LinkContainer to="/prerender">
+              <NavItem eventKey={5} title="Pre Render">
+                <FontAwesome name="picture-o" /> Pre Render
+              </NavItem>
+            </LinkContainer>
           </Nav>
         </Col>
         <Col md={10}>
