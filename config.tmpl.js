@@ -45,14 +45,23 @@ config.SUPPORTED_LANGUAGES = [
 ];
 
 config.CATEGORIES = [
-  "World",
-  "Economy",
-  "Politics",
-  "Technology",
-  "Travel",
-  "Science",
-  "Lifestyle",
-  "Country"
+  'Country',
+  'World',
+  'Politics',
+  'Economy',
+  'Society',
+  'Environment',
+  'Technology',
+  'Travel',
+  'Food',
+  'Entertainment',
+  'Sports',
+  'Auto',
+  'Lifestyle',
+  'Culture',
+  'Health',
+  'Viral',
+  'Media'
 ];
 
 module.exports = config;

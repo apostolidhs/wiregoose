@@ -4,7 +4,7 @@
 
 KlarkModule(module, 'routesRssFeedFetchRssFeed', (
   _,
-  $mongodb,
+  $mongoose,
   krkParameterValidator,
   krkMiddlewarePermissions,
   krkMiddlewareResponse,
@@ -32,7 +32,7 @@ KlarkModule(module, 'routesRssFeedFetchRssFeed', (
 
     function middlewareController(req, res, next) {
       const url = res.locals.params.q;
-      rssTranslator.translateFromUrl(url, {provider: {name: 'mockProvider'}, lang: config.SUPPORTED_LANGUAGES[0], category: config.CATEGORIES[0], _id: new $mongodb.ObjectID()})
+      rssTranslator.translateFromUrl(url, {provider: {name: 'mockProvider'}, lang: config.SUPPORTED_LANGUAGES[0], category: config.CATEGORIES[0], _id: new $mongoose.Types.ObjectId()})
         .then(entries => res.locals.data = entries)
         .then(() => next())
         .catch(reason => {

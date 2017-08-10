@@ -1,0 +1,45 @@
+.navbar > .container {
+  position: relative;
+}
+.navbar-brand {
+  padding: 7px 15px;
+}
+.navigation-menu {
+  @media (max-width: @screen-xs-max) {
+    position: fixed;
+    right: @navbar-padding-horizontal;
+    top: 0;
+    text-align: right;
+    .clearfix();
+    > * {
+      float: left;
+    }
+    .dropdown-menu {
+      position: absolute!important;
+      left: auto;
+      right: 0;
+    }
+    .open .dropdown-menu {
+      float: left;
+      width: initial;
+      margin: 2px 0 0 !important;
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+      > li > a,
+      .dropdown-header {
+        padding: 3px 20px;
+      }
+      > li > a {
+        line-height: @line-height-base!important;
+        color: @gray-darker!important;
+        &:hover,
+        &:focus {
+          background-image: none;
+          color: @gray-darker!important;
+          background-color: @dropdown-link-hover-bg!important;
+        }
+      }
+    }
+  }
+}

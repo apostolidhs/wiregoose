@@ -3,6 +3,7 @@
 
 @import './about-reader-content.less';
 @import './about-reader.less';
+@import './navbar.less';
 
 @border-radius-base:        0px;
 @border-radius-large:       0px;
@@ -17,12 +18,30 @@
 
 @font-size-base: 16px;
 
-body {
-  padding-top: 70px;
+.is-main-page-loading {
+  span {
+    display: inline!important;
+    position: relative;
+    color: #888;
+  }
+  span:before {
+    content: attr(data-text);
+    position: absolute;
+    overflow: hidden;
+    max-width: 7em;
+    white-space: nowrap;
+    color: #555;
+    animation: mainPageTextLoadingKeyFrame 10s linear;
+  }
+  @keyframes mainPageTextLoadingKeyFrame {
+    0% {
+      max-width: 0;
+    }
+  }
 }
 
-.navbar-brand {
-  padding: 7px 15px;
+body {
+  padding-top: 70px;
 }
 
 .inline-block {

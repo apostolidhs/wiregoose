@@ -83,26 +83,15 @@ export default class Header extends React.Component {
               <span>Wiregoose</span>
             </Link>
           </Navbar.Brand>
-          <Navbar.Toggle />
         </Navbar.Header>
+
         { isLeftSidebarEnabled && (
           <Nav>
             <NavItem eventKey={1} href="#" active={isLeftSidebarOpen} onClick={this.toggleSidebarClicked}>sidebar</NavItem>
           </Nav>
         )}
-        <Navbar.Collapse>
-          <Nav pullRight>
-            <NavDropdown
-              onSelect={this.changeLanguage}
-              eventKey={3}
-              title={Auth.getSessionLang()}
-              id="w-menu-language"
-              noCaret
-            >
-            {_.map(otherLanguages, lang => (
-              <MenuItem eventKey={lang} key={lang} >{lang}</MenuItem>
-            ))}
-            </NavDropdown>
+        {/* <Navbar.Collapse> */}
+          <Nav className="navigation-menu" pullRight>
 
             {enableAuth && (() => {
               if (Auth.isAuthenticated()) {
@@ -121,6 +110,18 @@ export default class Header extends React.Component {
                 );
               }
             })()}
+
+            <NavDropdown
+              onSelect={this.changeLanguage}
+              eventKey={3}
+              title={Auth.getSessionLang()}
+              id="w-menu-language"
+              noCaret
+            >
+            {_.map(otherLanguages, lang => (
+              <MenuItem eventKey={lang} key={lang} >{lang}</MenuItem>
+            ))}
+            </NavDropdown>
 
             <NavDropdown
                 eventKey={4}
@@ -150,14 +151,14 @@ export default class Header extends React.Component {
               </LinkContainer>
               }
               { Auth.isAdmin() &&
-                <MenuItem divider />
-              }
-              { Auth.isAdmin() &&
-                <LinkContainer to="/componentsGallery">
+                <LinkContainer to="/admin.html" target="_blank">
                   <MenuItem>
-                    Components Gallery
+                    Admin
                   </MenuItem>
                 </LinkContainer>
+              }
+              { Auth.isAdmin() &&
+                <MenuItem divider />
               }
               { Auth.isAdmin() &&
                 <MenuItem onClick={this.logout}>
@@ -167,7 +168,9 @@ export default class Header extends React.Component {
             </NavDropdown>
 
           </Nav>
-        </Navbar.Collapse>
+        {/* </Navbar.Collapse> */}
+
+
       </Navbar>
     );
   }

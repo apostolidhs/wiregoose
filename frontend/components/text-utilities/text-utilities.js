@@ -18,7 +18,7 @@ export function toUppercasesWords(words) {
 
 export function createLink(name, id) {
   const dashTitle = _(name)
-    .split(/\W+/)
+    .split(/[^\wΆΈ-ϗἀ-῾]+/gi)//.split(/\W+/)
     .compact()
     .join('-')
     .toLowerCase();

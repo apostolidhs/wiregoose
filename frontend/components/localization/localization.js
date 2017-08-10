@@ -57,17 +57,22 @@ const strings = new LocalizedStrings({
 
     Country: 'UK',
     World: 'World',
-    Auto: 'Auto',
-    Tastes: 'Tastes',
-    Science: 'Science',
-    Travel: 'Travel',
-    Showbiz: 'Showbiz',
-    Technology: 'Technology',
     Politics: 'Politics',
-    Lifestyle: 'Lifestyle',
     Economy: 'Economy',
+    Society: 'Society',
+    Environment: 'Environment',
+    Technology: 'Technology',
+    Travel: 'Travel',
+    Food: 'Tastes',
+    Entertainment: 'Entertainment',
     Sports: 'Sports',
-    All:'All',
+    Auto: 'Auto',
+    Lifestyle: 'Lifestyle',
+    Culture: 'Culture',
+    Health: 'Health',
+    Viral: 'Viral',
+    Media: 'Media',
+
     category: 'category',
     provider: 'provider',
 
@@ -75,11 +80,13 @@ const strings = new LocalizedStrings({
     timelineExploreKeywords: 'Explore',
     timelineExploreTitle: 'Explore News',
 
-    timelineCategoryDescription: 'Read the latest news on ${0} category',
+    timelineCategoryDescription: 'Read the latest news on {0} category',
 
-    timelineProviderDescription: 'Read the latest news from ${0}',
+    timelineProviderDescription: 'Read the latest news from {0}',
 
-    timelineRegistrationDescription: 'Read the latest news from ${0}'
+    timelineRegistrationDescription: 'Read the latest news from {0}',
+
+    articleDescription: '{0}. By Wiregoose.com.'
   },
   gr: {
     infoAboutTitle: 'About',
@@ -137,17 +144,22 @@ const strings = new LocalizedStrings({
 
     Country: 'Ελλάδα',
     World: 'Κόσμος',
-    Auto:	'Μοτο',
-    Tastes: 'Γεύσεις',
-    Science: 'Επιστήμη',
-    Travel: 'Ταξίδια',
-    Showbiz: 'Showbiz',
-    Technology: 'Τεχνολογία',
     Politics: 'Πολιτικά',
-    Lifestyle: 'Lifestyle',
     Economy: 'Oικονομία',
-    Sports: 'Aθλητικά',
-    All: 'Διάφορα',
+    Society: 'Κοινωνία',
+    Environment: 'περιβάλλον',
+    Technology: 'Τεχνολογία',
+    Travel: 'Ταξίδια',
+    Food: 'Γεύσεις',
+    Entertainment: 'Ψυχαγωγία',
+    Sports: 'Αθλητικά',
+    Auto: 'Auto',
+    Lifestyle: 'Lifestyle',
+    Culture: 'Πολιτισμός',
+    Health: 'Υγεία',
+    Viral: 'Viral',
+    Media: 'Media',
+
     category: 'κατηγορία',
     provider: 'πάροχος',
 
@@ -155,11 +167,13 @@ const strings = new LocalizedStrings({
     timelineExploreKeywords: 'Πλοηγήσου',
     timelineExploreTitle: 'Πλοηγήσου στα Νέα',
 
-    timelineCategoryDescription: 'Πλοηγηθείτε στα πιο πρόσφατα ${0} νέα',
+    timelineCategoryDescription: 'Πλοηγηθείτε στα πιο πρόσφατα {0} νέα',
 
-    timelineProviderDescription: 'Πλοηγηθείτε στα πιο πρόσφατα από ${0}',
+    timelineProviderDescription: 'Πλοηγηθείτε στα πιο πρόσφατα από {0}',
 
-    timelineRegistrationDescription: 'Πλοηγηθείτε στα πιο πρόσφατα από ${0}'
+    timelineRegistrationDescription: 'Πλοηγηθείτε στα πιο πρόσφατα από {0}',
+
+    articleDescription: '{0}. Απο το Wiregoose.com.'
   }
 });
 

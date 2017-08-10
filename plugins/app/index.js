@@ -121,25 +121,6 @@ KlarkModule(module, 'app', (
 
     app.get('*', middlewarePreRender);
 
-    // function staticMiddleware(req, res) {
-    //   const url = config.APP_URL + req.url;
-    //   if (req.device.type === 'phone') {
-    //     render.servePage(url)
-    //       .then(content => {
-    //         res.writeHead( 200, {
-    //           "Content-Type": "text/html; charset=UTF-8"
-    //         });
-    //         res.end(content);
-
-    //         })
-    //       .catch(() => {
-    //         res.sendFile($path.resolve(__dirname, '../../', 'public', 'index.html'));
-    //       });
-    //   } else {
-    //     res.sendFile($path.resolve(__dirname, '../../', 'public', 'index.html'));
-    //   }
-    // }
-
     app.use(krkRouter);
 
     startPeriodicalProcesses();

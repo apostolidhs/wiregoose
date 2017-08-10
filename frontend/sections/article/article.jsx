@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import CSSModules from 'react-css-modules';
 
 import styles from './article.less';
+import tr from '../../components/localization/localization.js';
 import { publish } from '../../components/events/events.js';
 import ArticleComponent from '../../components/article/article.jsx';
 import { getIdFromLink } from '../../components/text-utilities/text-utilities.js';
@@ -57,7 +58,7 @@ export default class Article extends React.Component {
     const { article } = this.state;
     publish('page-ready', {
       title: article.title,
-      description: article.entryId.description,
+      description: tr.formatString(tr.articleDescription, article.entryId.description),
       image: article.entryId.image,
       time: article.entryId.published,
       lang: article.entryId.lang,
