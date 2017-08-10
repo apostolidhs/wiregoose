@@ -7,7 +7,7 @@ import Form from '../../../components/article-box/form.jsx';
 import ResponseTransformation
   from '../../../components/article-box/response-transformation.js';
 import * as TextUtilities
-  from '../../../components/text-utilities/text-utilities.js';
+  from '../../../components/utilities/text-utilities.js';
 
 export default class ArticleEntries extends ListView {
   static columns = [

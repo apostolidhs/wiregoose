@@ -9,9 +9,10 @@ import CSSModules from 'react-css-modules';
 
 import tr from '../localization/localization.js';
 import styles from './header.less';
-import { SUPPORTED_LANGUAGES } from '../../config.js';
+import { SUPPORTED_LANGUAGES } from '../../../config-public.js';
 import * as Events from '../events/events.js';
 import * as Auth from '../authorization/auth.js';
+import BrowserLanguageDetection from '../utilities/browser-language-detection.js';
 
 import logoImage from '../../assets/img/logo.png';
 
@@ -73,7 +74,8 @@ export default class Header extends React.Component {
   render() {
     const { enableAuth } = this.props;
     const { isLeftSidebarEnabled, isLeftSidebarOpen } = this.state.sidebar;
-    const otherLanguages = _.without(SUPPORTED_LANGUAGES, Auth.getSessionLang());
+    const currentLanguage = BrowserLanguageDetection();
+    const otherLanguages = _.without(SUPPORTED_LANGUAGES, currentLanguage);
     return (
       <Navbar collapseOnSelect fixedTop>
         <Navbar.Header>
@@ -114,7 +116,7 @@ export default class Header extends React.Component {
             <NavDropdown
               onSelect={this.changeLanguage}
               eventKey={3}
-              title={Auth.getSessionLang()}
+              title={currentLanguage}
               id="w-menu-language"
               noCaret
             >

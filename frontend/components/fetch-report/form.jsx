@@ -4,7 +4,7 @@ import { Form, FormGroup, Col, FormControl, ControlLabel }
   from 'react-bootstrap';
 import ReactJson from 'react-json-view';
 
-import FromNow from '../text-utilities/from-now.jsx';
+import FromNow from '../utilities/from-now.jsx';
 
 export default class FetchReportForm extends React.Component {
 

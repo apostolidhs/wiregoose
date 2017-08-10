@@ -8,6 +8,7 @@ import './less/index.less';
 
 import 'core-js/shim';
 import Localization from './components/localization/localization.js';
+import BrowserLanguageDetection from './components/utilities/browser-language-detection.js';
 import * as Auth from './components/authorization/auth.js';
 import * as WiregooseApi from './components/services/wiregoose-api.js';
 import * as Meta from './components/meta/meta.js';
@@ -19,7 +20,8 @@ if (Auth.isAuthenticated()) {
   WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
 }
 
-Localization.setLanguage(Auth.getSessionLang());
+const lang = BrowserLanguageDetection();
+Localization.setLanguage(lang);
 
 subscribe('page-ready', (options) => {
   // @TODO: if same page ignore

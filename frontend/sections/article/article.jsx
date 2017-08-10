@@ -8,7 +8,7 @@ import styles from './article.less';
 import tr from '../../components/localization/localization.js';
 import { publish } from '../../components/events/events.js';
 import ArticleComponent from '../../components/article/article.jsx';
-import { getIdFromLink } from '../../components/text-utilities/text-utilities.js';
+import { getIdFromLink } from '../../components/utilities/text-utilities.js';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
 
 @CSSModules(styles, {

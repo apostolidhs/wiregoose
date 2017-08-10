@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import jwtDecode from 'jwt-decode';
 
-import { SUPPORTED_LANGUAGES } from '../../config.js';
+import { SUPPORTED_LANGUAGES } from '../../../config-public.js';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
 
 export function login(email, password) {
@@ -36,7 +36,6 @@ function onLoginSuccess(resp) {
 
 export function createSession(token, user, session, lang) {
   window.localStorage.setItem('token', token);
-  setSessionLang(lang);
   window.localStorage.setItem('user', JSON.stringify(user));
   window.localStorage.setItem('session', JSON.stringify(session));
 }
@@ -45,7 +44,6 @@ export function destroySession() {
   window.localStorage.setItem('token', '');
   window.localStorage.setItem('user', '');
   window.localStorage.setItem('session', '');
-  setSessionLang();
 }
 
 export function getSession() {
@@ -63,10 +61,9 @@ export function getSession() {
 }
 
 export function getSessionLang() {
-  return window.localStorage.getItem('lang')
-    || SUPPORTED_LANGUAGES[0];
+  return window.localStorage.getItem('lang');
 }
 
-export function setSessionLang(lang = SUPPORTED_LANGUAGES[0]) {
+export function setSessionLang(lang) {
   window.localStorage.setItem('lang', lang);
 }

@@ -8,7 +8,7 @@ import ProviderTag from '../../../components/rss-provider/tag.jsx';
 import Timeline from '../../../components/timeline/timeline.jsx';
 import TimelinePage from '../../../components/timeline/page.js';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
-import * as Auth from '../../../components/authorization/auth.js';
+import BrowserLanguageDetection from '../../../components/utilities/browser-language-detection.js';
 import tr from '../../../components/localization/localization.js';
 
 export default class Provider extends InfiniteScrollPage {
@@ -40,7 +40,7 @@ export default class Provider extends InfiniteScrollPage {
       Provider.page.lastFeeds = { [provider]: _.now() };
     }
 
-    WiregooseApi.timeline.provider(Provider.page.lastFeeds, Auth.getSessionLang(), true)
+    WiregooseApi.timeline.provider(Provider.page.lastFeeds, BrowserLanguageDetection(), true)
       .then(resp => Provider.page.timelineRetrievedSuccessfully(this, resp))
       .then(this.handleMetaData);
   }

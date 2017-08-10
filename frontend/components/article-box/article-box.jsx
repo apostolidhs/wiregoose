@@ -6,12 +6,12 @@ import CSSModules from 'react-css-modules';
 import { FacebookButton, TwitterButton } from 'react-social';
 import { OverlayTrigger, Popover, Button, FormControl } from 'react-bootstrap';
 
-import { FACEBOOK_APP_ID } from '../../config.js';
-import FromNow from '../text-utilities/from-now.jsx';
+import { FACEBOOK_APP_ID } from '../../../config-public.js';
+import FromNow from '../utilities/from-now.jsx';
 import styles from './article-box.less';
-import { ellipsis } from '../text-utilities/text-utilities.js';
+import { ellipsis } from '../utilities/text-utilities.js';
 import ArticleBoxProps from './entry-prop-type.js';
-import { createLink, createAbsoluteLink } from '../text-utilities/text-utilities.js';
+import { createLink, createAbsoluteLink } from '../utilities/text-utilities.js';
 import tr from '../localization/localization.js';
 
 @CSSModules(styles, {
@@ -36,7 +36,9 @@ export default class Entry extends React.Component {
       category: undefined,
     }
   }
-
+  /* <div styleName="image-mock-loader">
+    <FontAwesome name="futbol-o" />
+  </div> */
   render() {
     const { entry, className= '', ...passDownProps } = this.props;
     const articleLink = createLink(entry.title, entry._id);
@@ -45,6 +47,7 @@ export default class Entry extends React.Component {
       <article className={className + ' panel panel-default'} styleName="article">
         <Link to={articleLink} styleName="image">
           <img src={entry.image} alt="" />
+
         </Link>
         { !this.props.hideCategory &&
           <Link

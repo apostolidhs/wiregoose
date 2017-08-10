@@ -10,7 +10,7 @@ import FontAwesome from 'react-fontawesome';
 import * as Notifications from '../notifications/notifications.jsx';
 import Loader from '../loader/loader.jsx';
 import { toUppercasesWords }
-  from '../text-utilities/text-utilities.js';
+  from '../utilities/text-utilities.js';
 import * as WiregooseApi from '../services/wiregoose-api.js';
 
 export default class ListView extends React.Component {

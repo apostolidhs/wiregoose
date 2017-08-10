@@ -10,7 +10,7 @@ import RegistrationTag from '../../../components/rss-registration/tag.jsx';
 import Timeline from '../../../components/timeline/timeline.jsx';
 import TimelinePage from '../../../components/timeline/page.js';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
-import * as Auth from '../../../components/authorization/auth.js';
+import BrowserLanguageDetection from '../../../components/utilities/browser-language-detection.js';
 import tr from '../../../components/localization/localization.js';
 
 export default class Registration extends InfiniteScrollPage {
@@ -50,7 +50,7 @@ export default class Registration extends InfiniteScrollPage {
       Registration.page.lastFeeds = { [registration]: _.now() };
     }
 
-    WiregooseApi.timeline.registration(Registration.page.lastFeeds, Auth.getSessionLang(), true)
+    WiregooseApi.timeline.registration(Registration.page.lastFeeds, BrowserLanguageDetection(), true)
       .then(resp => Registration.page.timelineRetrievedSuccessfully(this, resp))
       .then(this.handleMetaData);
   }

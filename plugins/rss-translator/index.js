@@ -5,6 +5,7 @@
 KlarkModule(module, 'rssTranslator', (
   q,
   _,
+  $url,
   $isUrl,
   $cheerio,
   modelsEntry,
@@ -49,6 +50,13 @@ KlarkModule(module, 'rssTranslator', (
     const item = filterItemFields(rawItem);
     item.author = item.author || _.get(rawItem, "['atom:author']['name']['#']");
 
+    const published = sanitizeDate(item.pubdate);
+    const link = sanitizeUrl(item.link);
+    const author = sanitizeString(item.author, 'author');
+    const provider = rssRegistration.provider.name;
+    const category = rssRegistration.category;
+    const lang = rssRegistration.lang;
+
     const title = sanitizeString(item.title, 'title');
 
     let description = sanitizeString(item.summary, 'description')
@@ -66,20 +74,13 @@ KlarkModule(module, 'rssTranslator', (
                       || JQDescription('img').attr('alt');
     }
 
-    let image = sanitizeUrl(getImage(item));
+    let image = sanitizeUrl(getImage(item), link);
     if (!image && item.summary) {
-      image = sanitizeUrl($cheerio.load(item.summary)('img').attr('src'));
+      image = sanitizeUrl($cheerio.load(item.summary)('img').attr('src'), link);
     }
     if (!image && item.description) {
-      image = sanitizeUrl($cheerio.load(item.description)('img').attr('src'));
+      image = sanitizeUrl($cheerio.load(item.description)('img').attr('src'), link);
     }
-
-    const published = sanitizeDate(item.pubdate);
-    const link = sanitizeUrl(item.link);
-    const author = sanitizeString(item.author, 'author');
-    const provider = rssRegistration.provider.name;
-    const category = rssRegistration.category;
-    const lang = rssRegistration.lang;
 
     const data = {
       title,
@@ -154,10 +155,14 @@ KlarkModule(module, 'rssTranslator', (
     }
   }
 
-  function sanitizeUrl(img) {
+  function sanitizeUrl(img, link) {
     if (_.isString(img)) {
-      img = img.trim().replace(/ /g, '%20');
-      return $isUrl(img) ? img : undefined;
+      let imgLink = img;
+      if (imgLink && imgLink[0] === '/') {
+        imgLink = $url.resolve(link, imgLink);
+      }
+      imgLink = imgLink.trim().replace(/ /g, '%20');
+      return $isUrl(imgLink) ? imgLink : undefined;
     }
   }
 

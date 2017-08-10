@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import CSSModules from 'react-css-modules';
 
 import styles from './tag.less';
-import { createLink } from '../text-utilities/text-utilities.js';
+import { createLink } from '../utilities/text-utilities.js';
 
 @CSSModules(styles, {
   allowMultiple: true

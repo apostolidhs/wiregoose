@@ -148,7 +148,7 @@ KlarkModule(module, 'render', (
       $inc: { hits: 1 },
       lastHit: new Date()
     };
-    return modelsPreRender.findOneAndUpdate({ link }, q, {new: true});
+    return findOneAndUpdate.findOneAndUpdate(modelsPreRender, { link }, q);
   }
 
   function responseContent(res, content) {

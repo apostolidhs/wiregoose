@@ -3,10 +3,12 @@ import axios from 'axios';
 import promiseFinally from 'promise.prototype.finally';
 promiseFinally.shim();
 
-import { API_URL } from '../../config.js';
+import { API_URL, API_URL_PREFIX } from '../../../config-public.js';
 import ArticleResponseTransformation from '../article/response-transformation.js';
 import ArticleBoxResponseTransformation from '../article-box/response-transformation.js';
 import ServerErrorInterceptor from './server-error-interceptor.js';
+
+const API_ORIGIN = `${API_URL}/${API_URL_PREFIX}/`
 
 axios.interceptors.request.use(function (config) {
     // Do something before request is sent
@@ -61,7 +63,7 @@ export function setCredentialGetter(_credentialGetter) {
 export function login(email, password) {
   return httpRequest({
     method: 'post',
-    url: `${API_URL}authorize/login`,
+    url: `${API_ORIGIN}authorize/login`,
     data: { name: email, password },
     headers: {
       'Content-Type': 'application/json',
@@ -72,7 +74,7 @@ export function login(email, password) {
 export function getSucceededFetchesPerPeriod(days, lang) {
   return httpRequest({
     method: 'get',
-    url: `${API_URL}measures/succeededFetchesPerPeriod`,
+    url: `${API_ORIGIN}measures/succeededFetchesPerPeriod`,
     params: { days, lang },
     headers: {
       'Content-Type': 'application/json',
@@ -84,7 +86,7 @@ export function getSucceededFetchesPerPeriod(days, lang) {
 export function getArticleStatistics() {
   return httpRequest({
     method: 'get',
-    url: `${API_URL}measures/articles`,
+    url: `${API_ORIGIN}measures/articles`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: credentialGetter(),
@@ -95,7 +97,7 @@ export function getArticleStatistics() {
 export function getStatic(name, friendlyErrorInterceptor = false) {
   return httpRequest({
     method: 'get',
-    url: `${API_URL}statics/${name}`,
+    url: `${API_ORIGIN}statics/${name}`,
     friendlyErrorInterceptor
   });
 }
@@ -103,7 +105,7 @@ export function getStatic(name, friendlyErrorInterceptor = false) {
 export function fetchArticle(entryId, friendlyErrorInterceptor = false) {
   return httpRequest({
     method: 'get',
-    url: `${API_URL}article/mining/cachedFetch/entry/${entryId}`,
+    url: `${API_ORIGIN}article/mining/cachedFetch/entry/${entryId}`,
     headers: {
       'Content-Type': 'application/json',
       authorization: credentialGetter(),
@@ -135,7 +137,7 @@ function timelineRegistration(registration, lang, friendlyErrorInterceptor = fal
 function getTimeline(endpoint, params, lang, friendlyErrorInterceptor) {
   return httpRequest({
     method: 'get',
-    url: `${API_URL}timeline/${endpoint}`,
+    url: `${API_ORIGIN}timeline/${endpoint}`,
     params: {
       ...params,
       lang
@@ -174,7 +176,7 @@ function getStaticCategories() {
 function fetchRssFeed(link) {
   return httpRequest({
     method: 'get',
-    url: `${API_URL}rssFeed/fetch`,
+    url: `${API_ORIGIN}rssFeed/fetch`,
     params: { q: link },
     headers: {
       'Content-Type': 'application/json',
@@ -191,7 +193,7 @@ function fetchRssFeed(link) {
 function fetchRssRegistrations() {
   return httpRequest({
     method: 'post',
-    url: `${API_URL}rssFeed/fetchRegistrations`,
+    url: `${API_ORIGIN}rssFeed/fetchRegistrations`,
     headers: {
       'Content-Type': 'application/json',
       authorization: credentialGetter(),
@@ -205,7 +207,7 @@ function create(modelName, params) {
   };
   return httpRequest({
     method: 'post',
-    url: `${API_URL}${modelName}`,
+    url: `${API_ORIGIN}${modelName}`,
     data: payload,
     headers: {
       'Content-Type': 'application/json',
@@ -217,7 +219,7 @@ function create(modelName, params) {
 function retrieve(modelName, params) {
   return httpRequest({
     method: 'get',
-    url: `${API_URL}${modelName}`,
+    url: `${API_ORIGIN}${modelName}`,
     params,
     headers: {
       'Content-Type': 'application/json',
@@ -229,7 +231,7 @@ function retrieve(modelName, params) {
 function retrieveAll(modelName, params) {
   return httpRequest({
     method: 'get',
-    url: `${API_URL}${modelName}`,
+    url: `${API_ORIGIN}${modelName}`,
     params,
     headers: {
       'Content-Type': 'application/json',
@@ -244,7 +246,7 @@ function update(modelName, id, params) {
   };
   return httpRequest({
     method: 'put',
-    url: `${API_URL}${modelName}/${id}`,
+    url: `${API_ORIGIN}${modelName}/${id}`,
     data: payload,
     headers: {
       'Content-Type': 'application/json',
@@ -259,7 +261,7 @@ function updateSingle(modelName, params) {
   };
   return httpRequest({
     method: 'put',
-    url: `${API_URL}${modelName}`,
+    url: `${API_ORIGIN}${modelName}`,
     data: payload,
     headers: {
       'Content-Type': 'application/json',
@@ -271,7 +273,7 @@ function updateSingle(modelName, params) {
 function remove(modelName, id) {
   return httpRequest({
     method: 'delete',
-    url: `${API_URL}${modelName}/${id}`,
+    url: `${API_ORIGIN}${modelName}/${id}`,
     headers: {
       'Content-Type': 'application/json',
       authorization: credentialGetter(),

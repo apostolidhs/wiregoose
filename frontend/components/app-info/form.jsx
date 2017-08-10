@@ -8,7 +8,7 @@ import { isUri } from 'valid-url';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 
-import FromNow from '../text-utilities/from-now.jsx';
+import FromNow from '../utilities/from-now.jsx';
 
 export default class RssFetchReport extends React.Component {
 

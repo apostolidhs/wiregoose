@@ -4,11 +4,11 @@ import { Link } from 'react-router';
 import ListView from '../../../components/list-view/list-view.jsx';
 import Form from '../../../components/fetch-report/form.jsx';
 
-import FromNow from '../../../components/text-utilities/from-now.jsx';
+import FromNow from '../../../components/utilities/from-now.jsx';
 import ResponseTransformation
   from '../../../components/fetch-report/response-transformation.js';
 import * as DateUtilities
-  from '../../../components/text-utilities/dates.js';
+  from '../../../components/utilities/dates.js';
 
 export default class RssFetchReport extends ListView {
   static columns = [

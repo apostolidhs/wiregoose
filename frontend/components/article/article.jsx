@@ -5,7 +5,7 @@ import validateURL from 'react-proptypes-url-validator';
 import { Link } from 'react-router';
 import FontAwesome from 'react-fontawesome';
 
-import FromNow from '../text-utilities/from-now.jsx';
+import FromNow from '../utilities/from-now.jsx';
 import entryPropType from '../article-box/entry-prop-type.js';
 import CategoryTag from '../category/tag.jsx';
 import ProviderTag from '../rss-provider/tag.jsx';

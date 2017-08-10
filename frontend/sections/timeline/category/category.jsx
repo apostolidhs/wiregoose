@@ -16,7 +16,7 @@ import TimelinePage from '../../../components/timeline/page.js';
 import Loader from '../../../components/loader/loader.jsx';
 import InfiniteScrollPage from '../../../components/infinite-scroll/page.jsx';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
-import * as Auth from '../../../components/authorization/auth.js';
+import BrowserLanguageDetection from '../../../components/utilities/browser-language-detection.js';
 import tr from '../../../components/localization/localization.js';
 
 @CSSModules(styles, {
@@ -75,7 +75,7 @@ export default class Category extends InfiniteScrollPage {
       const category = this.props.routeParams.id;
       Category.page.lastFeeds = { [category]: _.now() };
     }
-    WiregooseApi.timeline.category(Category.page.lastFeeds, Auth.getSessionLang(), true)
+    WiregooseApi.timeline.category(Category.page.lastFeeds, BrowserLanguageDetection(), true)
       .then(resp => Category.page.timelineRetrievedSuccessfully(this, resp))
       .then(this.handleMetaData);
   }

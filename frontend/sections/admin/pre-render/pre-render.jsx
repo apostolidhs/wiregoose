@@ -8,7 +8,7 @@ import Form from '../../../components/pre-render/form.jsx';
 import ResponseTransformation
   from '../../../components/pre-render/response-transformation.js';
 import * as DateUtilities
-  from '../../../components/text-utilities/dates.js';
+  from '../../../components/utilities/dates.js';
 
 export default class PreRender extends ListView {
   static columns = [

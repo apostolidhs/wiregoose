@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { FACEBOOK_APP_ID } from '../../../config-public.js';
 
 const metaTags = {
   description: [
@@ -32,10 +33,14 @@ const metaTags = {
   url: [
     ['link', 'rel', 'canonical', 'href'],
     ['meta', 'property', 'og:url', 'content']
+  ],
+  facebookAppId: [
+    ['meta', 'property', 'fb:app_id', 'content']
   ]
 };
 
 export function setOptions(opts = {}) {
+  opts.facebookAppId = FACEBOOK_APP_ID;
   const headEl = document.getElementsByTagName('head')[0];
   clearElements(headEl);
   createElements(headEl, opts);

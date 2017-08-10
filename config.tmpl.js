@@ -2,16 +2,6 @@
 
 const config = {};
 
-config.RUN_MODE = ''; // dev | dist
-
-config.NAME = 'Wiregoose'; // 'applicationName'
-
-config.PORT = 3000; // application port
-
-config.API_URL = ''; // localhost:3000
-config.API_VERSION = ''; // 'v1';
-config.API_URL_PREFIX = ''; // `api/${config.API_VERSION}`;
-
 config.ENABLE_RSS_REGISTRATIONS_FETCH = true;
 config.RSS_REGISTRATIONS_FETCH_FREQUENT = 4 * 60 * 60 * 1000; // ms, how often it will fetch the registrations
 
@@ -38,30 +28,5 @@ config.ARTICLE_MINING_EXPIRATION = 20 * 24 * 60 * 60; // s, when the cached arti
 // config.ARTICLE_MINING_CACHE_SIZE = 5000; // how much articles will be stored
 
 config.PRE_RENDER_EXPIRATION = 4 * 24 * 60 * 60; // s, when the cached article will expired
-
-config.SUPPORTED_LANGUAGES = [
-  'en',
-  'gr'
-];
-
-config.CATEGORIES = [
-  'Country',
-  'World',
-  'Politics',
-  'Economy',
-  'Society',
-  'Environment',
-  'Technology',
-  'Travel',
-  'Food',
-  'Entertainment',
-  'Sports',
-  'Auto',
-  'Lifestyle',
-  'Culture',
-  'Health',
-  'Viral',
-  'Media'
-];
 
 module.exports = config;
