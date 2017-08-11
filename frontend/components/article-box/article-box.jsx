@@ -43,12 +43,27 @@ export default class Entry extends React.Component {
     const { entry, className= '', ...passDownProps } = this.props;
     const articleLink = createLink(entry.title, entry._id);
     const absoluteArticleLink = createAbsoluteLink(articleLink);
-    return (
-      <article className={className + ' panel panel-default'} styleName="article">
-        <Link to={articleLink} styleName="image">
-          <img src={entry.image} alt="" />
 
-        </Link>
+    const hasImage = entry.boxSize !== 'ARTICLE_BOX_NO_IMAGE';
+    const hasDescription = false && entry.boxSize !== 'ARTICLE_BOX_NO_DESCRIPTION';
+    let isArticleFull = false;
+    let articleSizeStyleName;
+    if (!hasImage) {
+      articleSizeStyleName = 'article-no-image';
+    } else if (!hasDescription) {
+      articleSizeStyleName = 'article-no-description';
+    } else {
+      articleSizeStyleName = 'article-full';
+      isArticleFull = true;
+    }
+    const styleName = `article ${articleSizeStyleName}`;
+    return (
+      <article className={className + ' panel panel-default'} styleName={styleName}>
+        { hasImage && (
+          <Link to={articleLink} styleName="image">
+            <img src={entry.image} alt="" />
+          </Link>
+        )}
         { !this.props.hideCategory &&
           <Link
             to={`/category/${entry.category}`}
@@ -85,9 +100,11 @@ export default class Entry extends React.Component {
               date={entry.published}
             />
           </div>
-          <section styleName="summary">
-            {ellipsis(entry.description, 190)}
-          </section>
+          { hasDescription && (
+            <section styleName="summary">
+              {ellipsis(entry.description, isArticleFull ? 190 : 120)}
+            </section>
+          )}
           <footer styleName="footer" className="text-right">
             <OverlayTrigger
               onEntered={this.focusOnShareArticlePopover}

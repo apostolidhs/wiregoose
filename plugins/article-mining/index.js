@@ -30,7 +30,7 @@ KlarkModule(module, 'articleMining', (
         }
 
         const link = entry.link;
-        return articleMiningExtractContent.extract(link)
+        return articleMiningExtractContent.extract(link, entry.provider)
           .then(doc => createSuccessfullyArticle(doc, entry))
           .catch(reason => createFailedArticle(reason, entry));
       });

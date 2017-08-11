@@ -6,7 +6,8 @@ KlarkModule(module, 'articleMiningExtractContent', (
   $readabilityNode,
   $jsdom,
   $http,
-  $url
+  $url,
+  articleMiningCustomExtractors
 ) => {
 
   const FAILURE_REASONS = {
@@ -19,11 +20,11 @@ KlarkModule(module, 'articleMiningExtractContent', (
     FAILURE_REASONS
   };
 
-  function extract(link) {
-    return redirectedExtraction(link, 0);
+  function extract(link, provider) {
+    return redirectedExtraction(link, provider, 0);
   }
 
-  function redirectedExtraction(link, totalRedirects) {
+  function redirectedExtraction(link, provider, totalRedirects) {
     return new Promise((resolve, reject) => {
       if (totalRedirects > 2) {
         return reject({
@@ -36,7 +37,7 @@ KlarkModule(module, 'articleMiningExtractContent', (
           const status = page.res.statusCode;
           if (status === 200) {
             try {
-              const article = makeContentReadable(link, page.content, page.res)
+              const article = makeContentReadable(link, page.content, provider)
               resolve(article);
             } catch (e) {
               reject({
@@ -52,7 +53,7 @@ KlarkModule(module, 'articleMiningExtractContent', (
               linkUrl.pathname = location;
               location = $url.format(linkUrl);
             }
-            redirectedExtraction(location, ++totalRedirects)
+            redirectedExtraction(location, provider, ++totalRedirects)
               .then(resolve)
               .catch(reject);
           } else {
@@ -106,13 +107,16 @@ KlarkModule(module, 'articleMiningExtractContent', (
     });
   }
 
-  function makeContentReadable(link, content, res) {
+  function makeContentReadable(link, content, provider) {
     const doc = $jsdom.jsdom(content, {
       features: {
         FetchExternalResources: false,
         ProcessExternalResources: false
       }
     });
+
+    articleMiningCustomExtractors.extract(provider, doc);
+
     const article = new $readabilityNode.Readability(link, doc).parse();
     if (!article) {
       throw new Error('CANNOT_PARSE_CONTENT');

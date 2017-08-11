@@ -1,14 +1,28 @@
 @import (reference) "../../less/index.less";
 
+@article-height: 500px;
+
 .article {
   width: 270px;
-  height: 500px;
   position: relative;
   white-space: normal;
 }
 
+.article-full {
+  height: @article-height;
+}
+
+.article-no-image {
+  height: (@article-height / 2) - 7px;
+}
+
+.article-no-description {
+  height: (@article-height / 3) - 7px;
+}
+
 .image > img {
   width: 100%;
+  max-height: 200px;
 }
 
 // .image-mock-loader {
@@ -49,9 +63,9 @@
 
 .footer {
   position: absolute;
-  bottom: @panel-body-padding;
+  bottom: 5px;
   left: @panel-body-padding;
-  right: @panel-body-padding;
+  right: 10px;
   > a:first-child {
     padding-left: 0;
   }
@@ -60,3 +74,16 @@
     color: @link-color;
   }
 }
+
+// .no-description {
+//   :global {
+//     .panel-body {
+//       background-color: rgba(255,255,255,0.6);
+//       position: absolute;
+//       bottom: 26px;
+//     }
+//     footer {
+//       bottom: -20px;
+//     }
+//   }
+// }
