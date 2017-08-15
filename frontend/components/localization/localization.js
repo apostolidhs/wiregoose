@@ -19,7 +19,7 @@ const strings = new LocalizedStrings({
     infoProviderTitle: 'Providers',
 
     infoCreatorsTitle: 'Creators',
-    infoCreatorsDesc: 'Inspired, Designed, Developed by <em>Giannis Apostolidis</em>',
+    infoCreatorsDesc: 'Inspired, Designed, Developed by <em>John Apostolidis</em>',
 
     errors401Title: 'Page Not Found',
     errors401Desc: 'Sorry, we couldn\'t find the page you were looking for. You may have mistyped the address or the page may have moved.',

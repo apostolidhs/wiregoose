@@ -1,12 +1,18 @@
 @import (reference) "../../less/index.less";
 
 .info {
+  position: fixed;
+  top: 40px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
   img {
     width: 100%;
+    min-height: 100px;
   }
   section {
-    margin-top: -15%;
-    margin-bottom: -5%;
+    min-height: 400px;
   }
   .credit-contact {
     display: block;
@@ -15,6 +21,9 @@
     font-size: 64px;
     padding: 30px 20px 15px 30px;
     color: @text-color;
+    :hover {
+      color: @link-color;
+    }
   }
   .providers {
     padding-top: 20px;
@@ -24,6 +33,7 @@
     padding: 15px;
     font-size: @font-size-h4;
     text-decoration: none;
+    display: inline-block;
   }
   p {
     font-size: 18px;
@@ -32,3 +42,4 @@
 .p-lead{
   font-size: 24px!important;
 }
+

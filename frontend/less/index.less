@@ -12,6 +12,8 @@
 @panel-border-radius: 3px;
 @body-bg: #eee;
 
+@navbar-height: 40px;
+
 // Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif
 @font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
 @font-family-serif:       Georgia, "Times New Roman", Times, serif;
@@ -41,7 +43,18 @@
 }
 
 body {
-  padding-top: 70px;
+  padding-top: 50px;
+}
+
+@media (max-width: @screen-xs-max) {
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .w-left-sidebar {
+    padding-left: 5px!important;
+    padding-right: 5px!important;
+  }
 }
 
 .inline-block {

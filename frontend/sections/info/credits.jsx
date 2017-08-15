@@ -5,6 +5,7 @@ import tr from '../../components/localization/localization.js';
 import { publish } from '../../components/events/events.js';
 import Info from './info.jsx';
 import headerImage from '../../assets/img/option-menu-creators-bg.png';
+import headerFooterImage from '../../assets/img/option-menu-creators-bg-footer.png';
 
 export default class About extends React.Component {
 
@@ -18,7 +19,7 @@ export default class About extends React.Component {
 
   render() {
     return (
-      <Info headerImg={headerImage} >
+      <Info headerImg={headerImage} headerFooterImg={headerFooterImage} >
         <h1>{tr.infoCreatorsTitle}</h1>
 
         <p styleName="credit-contact" className="text-center">

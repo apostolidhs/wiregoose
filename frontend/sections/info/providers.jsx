@@ -7,6 +7,7 @@ import Info from './info.jsx';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
 
 import headerImage from '../../assets/img/option-menu-providers-bg.png';
+import headerFooterImage from '../../assets/img/option-menu-providers-bg-footer.png';
 
 export default class About extends React.Component {
 
@@ -26,7 +27,7 @@ export default class About extends React.Component {
 
   render() {
     return (
-      <Info headerImg={headerImage} >
+      <Info headerImg={headerImage} headerFooterImg={headerFooterImage} >
         <h1>{tr.infoProviderTitle}</h1>
         <Loader ref="providersLoad">
           <div className="clearfix" styleName="providers" >
