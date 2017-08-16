@@ -21,11 +21,19 @@ export default class Timeline extends React.Component {
   }
 
   addFeeds = (feeds) => {
-    const newElements = _.map(feeds, feed => (
-      <div key={feed._id} styleName="timeline-box" >
-        <ArticleBox entry={feed} hideCategory={this.props.hideCategory} hideProvider={this.props.hideProvider} />
-      </div>
-    ));
+    this.changeFeedsToDebug(feeds);
+    const cascadedFeeds = this.cascadeFeedsView(feeds);
+    const newElements = _.map(cascadedFeeds, cascadedFeed => {
+      const feeds = _.castArray(cascadedFeed);
+      return (
+        <div key={feeds[0]._id} styleName="timeline-box" >
+          {_.map(feeds, (feed) => (
+            <ArticleBox key={feed._id} entry={feed} hideCategory={this.props.hideCategory} hideProvider={this.props.hideProvider} />
+          ))}
+        </div>
+      );
+    });
+
     const elements = this.state.elements.concat(newElements);
     this.setState({ elements });
   }
@@ -53,5 +61,45 @@ export default class Timeline extends React.Component {
     return (
       <p>Loading...</p>
     );
+  }
+
+  cascadeFeedsView = (feeds) => {
+    const byBoxSize = _.groupBy(feeds, feed => feed.boxSize);
+    const noImages = byBoxSize['ARTICLE_BOX_NO_IMAGE'];
+    const noDescrs = byBoxSize['ARTICLE_BOX_NO_DESCRIPTION'];
+    const fulls = byBoxSize['ARTICLE_BOX_FULL'];
+    if (!noImages && !noDescrs) {
+      return feeds;
+    } else if (!noImages) {
+      return feeds;
+    } else if (!noDescrs) {
+      return this.cascadeNoDescriptionFeedsView(fulls, noDescrs);
+    } else {
+      let view = [];
+      while(noImages.length && noDescrs.length) {
+        const noImage = noImages.pop();
+        const noDescr = noDescrs.pop();
+        view.push(_.shuffle([noImage, noDescr]));
+      }
+      view = this.cascadeNoDescriptionFeedsView(view, noDescrs);
+      return _.shuffle(view.concat(noImages).concat(fulls));
+    }
+  }
+
+  cascadeNoDescriptionFeedsView = (list, noDescrs) => {
+    const noDescChunks = _.chunk(noDescrs, 3);
+    return _.shuffle(noDescChunks.concat(list));
+  }
+
+  noImage = 0;
+  noDescription = 0;
+  changeFeedsToDebug = (feeds) => {
+    _.each(feeds, feed => {
+      if (++this.noImage % 5 === 0) {
+        feed.boxSize = 'ARTICLE_BOX_NO_IMAGE';
+      } else if (++this.noDescription % 2 === 0) {
+        feed.boxSize = 'ARTICLE_BOX_NO_DESCRIPTION';
+      }
+    });
   }
 }

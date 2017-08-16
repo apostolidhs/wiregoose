@@ -1,7 +1,5 @@
 @import (reference) "../../less/index.less";
 
-@article-height: 500px;
-
 .article {
   width: 270px;
   position: relative;
@@ -13,16 +11,37 @@
 }
 
 .article-no-image {
-  height: (@article-height / 2) - 7px;
+  height: (@article-height * 0.66) - 2px;
 }
 
 .article-no-description {
-  height: (@article-height / 3) - 7px;
+  height: (@article-height / 3) - 10px;
+  background-size: cover;
+  .image-placeholder();
+  :global {
+    .panel-body {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      * {
+        color: #eee;
+      }
+    }
+  }
 }
 
 .image > img {
+  display: block;
   width: 100%;
   max-height: 200px;
+  min-height: 100px;
+  .image-placeholder();
+}
+
+.image-placeholder {
+  background-color: @gray-lighter;
 }
 
 // .image-mock-loader {
@@ -38,7 +57,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.4);
   color: #ddd;
 }
 

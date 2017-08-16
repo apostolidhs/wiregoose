@@ -18,6 +18,15 @@ import tr from '../localization/localization.js';
   allowMultiple: true,
 })
 export default class Entry extends React.Component {
+
+  style = undefined;
+  articleLink = undefined;
+  absoluteArticleLink = undefined;
+  hasImage = undefined;
+  hasDescription = undefined;
+  isArticleFull = false;
+  articleSizeStyleName = '';
+
   static propTypes = {
     entry: PropTypes.shape(ArticleBoxProps),
     hideCategory: PropTypes.bool,
@@ -36,35 +45,58 @@ export default class Entry extends React.Component {
       category: undefined,
     }
   }
+
+  componentWillReceiveProps = () => {
+    const { entry } = this.props;
+    this.articleLink = createLink(entry.title, entry._id);
+    this.absoluteArticleLink = createAbsoluteLink(this.articleLink);
+
+    this.hasImage = entry.boxSize !== 'ARTICLE_BOX_NO_IMAGE';
+    this.hasDescription = entry.boxSize !== 'ARTICLE_BOX_NO_DESCRIPTION';
+    this.isArticleFull = false;
+
+    if (!this.hasImage) {
+      this.articleSizeStyleName = 'article-no-image';
+    } else if (!this.hasDescription) {
+      this.articleSizeStyleName = 'article-no-description';
+    } else {
+      this.articleSizeStyleName = 'article-full';
+      this.isArticleFull = true;
+    }
+
+    this.styleName = `article ${this.articleSizeStyleName}`;
+    this.style = undefined;
+
+    if (!this.hasDescription) {
+      this.style = {
+        backgroundImage: `url(${entry.image})`
+      };
+    }
+  }
   /* <div styleName="image-mock-loader">
     <FontAwesome name="futbol-o" />
   </div> */
   render() {
-    const { entry, className= '', ...passDownProps } = this.props;
-    const articleLink = createLink(entry.title, entry._id);
-    const absoluteArticleLink = createAbsoluteLink(articleLink);
+    const {
+      entry,
+      hideCategory,
+      hideProvider,
+      className= '',
+      ...passDownProps
+    } = this.props;
 
-    const hasImage = entry.boxSize !== 'ARTICLE_BOX_NO_IMAGE';
-    const hasDescription = false && entry.boxSize !== 'ARTICLE_BOX_NO_DESCRIPTION';
-    let isArticleFull = false;
-    let articleSizeStyleName;
-    if (!hasImage) {
-      articleSizeStyleName = 'article-no-image';
-    } else if (!hasDescription) {
-      articleSizeStyleName = 'article-no-description';
-    } else {
-      articleSizeStyleName = 'article-full';
-      isArticleFull = true;
-    }
-    const styleName = `article ${articleSizeStyleName}`;
     return (
-      <article className={className + ' panel panel-default'} styleName={styleName}>
-        { hasImage && (
-          <Link to={articleLink} styleName="image">
+      <article
+        className={className + ' panel panel-default'}
+        styleName={this.styleName}
+        style={this.style}
+      >
+        { this.hasDescription && this.hasImage && (
+          <Link to={this.articleLink} styleName="image">
             <img src={entry.image} alt="" />
           </Link>
         )}
-        { !this.props.hideCategory &&
+        { !hideCategory &&
           <Link
             to={`/category/${entry.category}`}
             role="button"
@@ -77,14 +109,14 @@ export default class Entry extends React.Component {
         }
         <div className="panel-body">
           <header styleName="header">
-            <Link to={articleLink} className="blind-link">
+            <Link to={this.articleLink} className="blind-link">
               <h3>
                 {ellipsis(entry.title, 70)}
               </h3>
             </Link>
           </header>
           <div styleName="dot-separator">
-            { !this.props.hideProvider &&
+            { !hideProvider &&
               <Link
                 className="btn btn-link-muted w-p-0"
                 to={`/provider/${entry.provider}`}
@@ -100,40 +132,12 @@ export default class Entry extends React.Component {
               date={entry.published}
             />
           </div>
-          { hasDescription && (
+          { this.hasDescription && (
             <section styleName="summary">
-              {ellipsis(entry.description, isArticleFull ? 190 : 120)}
+              {ellipsis(entry.description, this.isArticleFull ? 190 : 120)}
             </section>
           )}
-          <footer styleName="footer" className="text-right">
-            <OverlayTrigger
-              onEntered={this.focusOnShareArticlePopover}
-              trigger="click"
-              placement="top"
-              overlay={this.renderShareLinkPopover(absoluteArticleLink)}
-              container={this}
-              rootClose
-            >
-              <Button className="btn btn-link blind-link" title={tr.shareLink} >
-                <FontAwesome name="link" />
-              </Button>
-            </OverlayTrigger>
-            <FacebookButton
-              className="btn btn-link blind-link"
-              url={absoluteArticleLink}
-              appId={FACEBOOK_APP_ID}
-              title={tr.shareOnFacebook}
-            >
-              <FontAwesome name="facebook" />
-            </FacebookButton>
-            <TwitterButton
-              className="btn btn-link blind-link"
-              url={absoluteArticleLink}
-              title={tr.shareOnTwitter}
-            >
-              <FontAwesome name="twitter" />
-            </TwitterButton>
-          </footer>
+          {this.renderFooter()}
         </div>
       </article>
     );
@@ -145,12 +149,46 @@ export default class Entry extends React.Component {
     inputEl.select();
   }
 
-  renderShareLinkPopover = (absoluteArticleLink) => {
+  renderShareLinkPopover = () => {
     return (
       <Popover id="popover-copy-article-link">
         <h4>{tr.articleLink}</h4>
-        <FormControl type="text" defaultValue={absoluteArticleLink} readOnly />
+        <FormControl type="text" defaultValue={this.absoluteArticleLink} readOnly />
       </Popover>
+    );
+  }
+
+  renderFooter = () => {
+    return (
+      <footer styleName="footer" className="text-right">
+        <OverlayTrigger
+          onEntered={this.focusOnShareArticlePopover}
+          trigger="click"
+          placement="top"
+          overlay={this.renderShareLinkPopover()}
+          container={this}
+          rootClose
+        >
+          <Button className="btn btn-link blind-link" title={tr.shareLink} >
+            <FontAwesome name="link" />
+          </Button>
+        </OverlayTrigger>
+        <FacebookButton
+          className="btn btn-link blind-link"
+          url={this.absoluteArticleLink}
+          appId={FACEBOOK_APP_ID}
+          title={tr.shareOnFacebook}
+        >
+          <FontAwesome name="facebook" />
+        </FacebookButton>
+        <TwitterButton
+          className="btn btn-link blind-link"
+          url={this.absoluteArticleLink}
+          title={tr.shareOnTwitter}
+        >
+          <FontAwesome name="twitter" />
+        </TwitterButton>
+      </footer>
     );
   }
 }
