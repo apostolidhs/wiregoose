@@ -19,6 +19,8 @@ config.API_URL = config.IS_DEV ? 'http://localhost:3000' : 'http://wiregoose.com
 
 config.FACEBOOK_APP_ID = '821271344594009';
 
+config.GOOGLE_TRACKING_ID = 'UA-90338056-2';
+
 config.SUPPORTED_LANGUAGES = [
   'en',
   'gr'

@@ -14,6 +14,10 @@ KlarkModule(module, 'modelsEntry', (
 
   const schema = getSchema();
 
+  schema.index({ published: 1, lang: 1, category: 1 });
+  schema.index({ published: 1, lang: 1, provider: 1 });
+  schema.index({ published: 1, lang: 1, provider: 1, category: 1 });
+
   schema.plugin($mongooseCreatedmodified.createdModifiedPlugin, {index: true});
 
   schema.methods.findLatestEntryByProvider = findLatestEntryByProvider;
@@ -26,8 +30,8 @@ KlarkModule(module, 'modelsEntry', (
     const ObjectId = $mongoose.Schema.Types.ObjectId;
     return new $mongoose.Schema({
       title: {type: String, required: true, maxlength: [128]},
-      image: {type: $mongoose.SchemaTypes.Url, required: true},
-      description: {type: String, required: true, maxlength: [256]},
+      image: {type: $mongoose.SchemaTypes.Url, validate: conditionalRequired('description')},
+      description: {type: String, maxlength: [256], validate: conditionalRequired('image')},
       published: {type: Date, required: true},
       link: {type: $mongoose.SchemaTypes.Url, required: true},
       lastHit: { type: Date },
@@ -46,6 +50,15 @@ KlarkModule(module, 'modelsEntry', (
 
       article: {type: ObjectId, ref: 'Article'}
     });
+  }
+
+  function conditionalRequired(field) {
+    return {
+      msg: 'description or image is required',
+      validator: function(value) {
+        return value || this[field];
+      }
+    };
   }
 
   function findLatestEntryByProvider(model) {

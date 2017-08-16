@@ -73,9 +73,7 @@ export default class Entry extends React.Component {
       };
     }
   }
-  /* <div styleName="image-mock-loader">
-    <FontAwesome name="futbol-o" />
-  </div> */
+
   render() {
     const {
       entry,

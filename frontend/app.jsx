@@ -35,19 +35,4 @@ subscribe('page-ready', (options) => {
   }
 });
 
-// function requireAuth(nextState, replaceState) {
-//   if (!Auth.isAuthenticated()) {
-//     replaceState({
-//       pathname: '/login',
-//       state: { nextPathname: nextState.location.pathname }
-//     })
-//   }
-// }
-
 ReactDOM.render(<AppRouter />, document.getElementById('root'));
-
-// if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
-//   ReactDOM.render(<AppRouter />, document.getElementById('app'));
-// }
-
-// export default AppRouter;

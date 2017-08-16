@@ -251,9 +251,9 @@ function createWebpackConfig(name, entryName, outputName) {
 }
 
 //module.exports = createWebpackConfig('index', './admin', 'admin');
-module.exports = createWebpackConfig('index', './app', 'app');
+//module.exports = createWebpackConfig('index', './app', 'app');
 
-// module.exports = [
-//   createWebpackConfig('index', './app', 'app'),
-//   createWebpackConfig('admin', './admin', 'admin')
-// ];
+module.exports = [
+  createWebpackConfig('index', './app', 'app'),
+  createWebpackConfig('admin', './admin', 'admin')
+];

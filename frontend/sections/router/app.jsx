@@ -1,7 +1,9 @@
 import React from 'react';
 import { Route, Router, IndexRoute, browserHistory } from 'react-router';
+import ReactGA from 'react-ga';
 
 import Body from '../../components/body/body.jsx';
+import { GOOGLE_TRACKING_ID, IS_DEV } from '../../../config-public.js';
 
 import Timeline from '../timeline/timeline.jsx';
 import TimelineExplore from '../timeline/explore/explore.jsx';
@@ -16,10 +18,22 @@ import Providers from '../info/providers.jsx';
 import InternalServerError from '../errors/500.jsx';
 import notFoundError from '../errors/401.jsx';
 
+if (!IS_DEV) {
+  ReactGA.initialize(GOOGLE_TRACKING_ID);
+}
+
 export default class AppRouter extends React.Component {
+
+  logPageView = () => {
+    if (!IS_DEV) {
+      ReactGA.set({ page: window.location.pathname + window.location.search });
+      ReactGA.pageview(window.location.pathname + window.location.search);
+    }
+  }
+
   render() {
     return (
-      <Router history={browserHistory}>
+      <Router history={browserHistory} onUpdate={this.logPageView} >
         <Route path="/" component={Body}>
           <Route path="article/:id" component={Article} />
           <Route component={Timeline} >

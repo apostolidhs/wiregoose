@@ -31,10 +31,10 @@ export default class ArticleBoxForm extends React.Component {
 
   isInvalid = () => {
     const { record } = this.state;
-    return !(FormFactory.validateLink(this, 'image') === 'success'
+    return !((FormFactory.validateLink(this, 'image') === 'success'
+      || record.description)
       && FormFactory.validateLink(this, 'link') === 'success'
       && record.title
-      && record.description
       && record.published
       && record.provider
       && record.registration
@@ -130,8 +130,7 @@ export default class ArticleBoxForm extends React.Component {
           name: 'image',
           value: record.image,
           onChange: FormFactory.handleInputChange(this),
-          validate: FormFactory.validateLink(this, 'image'),
-          required: true
+          validate: FormFactory.validateLink(this, 'image')
         }) }
 
         <FormGroup controlId="formIdDescription">
@@ -142,7 +141,6 @@ export default class ArticleBoxForm extends React.Component {
               name="description"
               value={record.description}
               onChange={this.handleInputChange}
-              required
             />
           </Col>
         </FormGroup>
