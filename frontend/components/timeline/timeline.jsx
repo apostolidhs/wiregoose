@@ -21,7 +21,7 @@ export default class Timeline extends React.Component {
   }
 
   addFeeds = (feeds) => {
-    this.changeFeedsToDebug(feeds);
+    // this.changeFeedsToDebug(feeds);
     const cascadedFeeds = this.cascadeFeedsView(feeds);
     const newElements = _.map(cascadedFeeds, cascadedFeed => {
       const feeds = _.castArray(cascadedFeed);

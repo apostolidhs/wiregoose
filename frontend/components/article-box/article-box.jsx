@@ -26,6 +26,7 @@ export default class Entry extends React.Component {
   hasDescription = undefined;
   isArticleFull = false;
   articleSizeStyleName = '';
+  articleStyleName = undefined;
 
   static propTypes = {
     entry: PropTypes.shape(ArticleBoxProps),
@@ -46,7 +47,7 @@ export default class Entry extends React.Component {
     }
   }
 
-  componentWillReceiveProps = () => {
+  componentWillMount() {
     const { entry } = this.props;
     this.articleLink = createLink(entry.title, entry._id);
     this.absoluteArticleLink = createAbsoluteLink(this.articleLink);
@@ -64,7 +65,7 @@ export default class Entry extends React.Component {
       this.isArticleFull = true;
     }
 
-    this.styleName = `article ${this.articleSizeStyleName}`;
+    this.articleStyleName = `article ${this.articleSizeStyleName}`;
     this.style = undefined;
 
     if (!this.hasDescription) {
@@ -82,11 +83,10 @@ export default class Entry extends React.Component {
       className= '',
       ...passDownProps
     } = this.props;
-
     return (
       <article
         className={className + ' panel panel-default'}
-        styleName={this.styleName}
+        styleName={this.articleStyleName}
         style={this.style}
       >
         { this.hasDescription && this.hasImage && (
