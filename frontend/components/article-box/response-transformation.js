@@ -8,6 +8,9 @@ export default function translate(entry) {
   if (entry.modified) {
     entry.modified = new Date(entry.modified);
   }
+  if (entry.image) {
+    entry.image = decodeURIComponent(entry.image);
+  }
   estimateContent(entry);
   return entry;
 }

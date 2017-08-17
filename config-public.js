@@ -32,6 +32,7 @@ config.CATEGORIES = [
   'Politics',
   'Economy',
   'Society',
+  'Science',
   'Environment',
   'Technology',
   'Travel',
