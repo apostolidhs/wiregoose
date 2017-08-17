@@ -148,7 +148,7 @@ KlarkModule(module, 'render', (
       $inc: { hits: 1 },
       lastHit: new Date()
     };
-    return findOneAndUpdate.findOneAndUpdate(modelsPreRender, { link }, q);
+    return krkDbMongooseBinders.findOneAndUpdate(modelsPreRender, { link }, q);
   }
 
   function responseContent(res, content) {

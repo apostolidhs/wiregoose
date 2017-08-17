@@ -127,7 +127,7 @@ const strings = new LocalizedStrings({
     close: 'κλείσιμο',
 
     articleReadFromWebsite: 'Διαβάστε το άρθρο απο την Ιστοσελίδα',
-    articleRedirectTitle: 'Πολύτ μικρό άρθρο!',
+    articleRedirectTitle: 'Πολύ μικρό άρθρο!',
     articleRedirectDesc: 'Θα σας ανακατευθύνουμε {0} σε {1} δευτερόλεπτα',
     articleRedirectDescOriginal: 'στο πρωτότυπο άρθρο',
 
