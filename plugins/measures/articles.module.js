@@ -27,13 +27,13 @@ KlarkModule(module, 'measuresArticles', (
     return modelsEntry.find({ article: { $exists: true } })
       .sort({hits: 1})
       .select({ 'link': 1, 'hits': 1})
-      .limit(20);
+      .limit(10);
   }
 
   function failedArticles() {
     return modelsArticle.find({ error: { $exists: true } })
       .select({ 'link': 1, 'error': 1 })
-      .limit(20);
+      .limit(10);
   }
 
 });
