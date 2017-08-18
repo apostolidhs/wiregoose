@@ -11,6 +11,9 @@ export default function translate(entry) {
   if (entry.image) {
     entry.image = decodeURIComponent(entry.image);
   }
+  if (entry.link) {
+    entry.link = decodeURIComponent(entry.link);
+  }
   estimateContent(entry);
   return entry;
 }

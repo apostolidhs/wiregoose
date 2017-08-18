@@ -30,6 +30,9 @@ const strings = new LocalizedStrings({
     errors500Prompt: 'Please try again later.',
     errors500PromptFooter: 'That\'s all we know.',
 
+    loadingMore: 'Loading More...',
+    loadingArticle: 'Loading Article...',
+
     promptReading: 'Continue Reading News',
 
     exploreNews: 'Explore News',
@@ -63,6 +66,7 @@ const strings = new LocalizedStrings({
     Environment: 'Environment',
     Technology: 'Technology',
     Travel: 'Travel',
+    Science: 'Science',
     Food: 'Tastes',
     Entertainment: 'Entertainment',
     Sports: 'Sports',
@@ -117,6 +121,9 @@ const strings = new LocalizedStrings({
     errors500Prompt: 'Παρακαλώ προσπαθήστε ξανά.',
     errors500PromptFooter: 'Αυτό είναι το μόνο που ξέρουμε.',
 
+    loadingMore: 'Φόρτωση...',
+    loadingArticle: 'Φόρτωση Άρθρου...',
+
     promptReading: 'Συνεχίσετε να Διαβάζετε Νέα',
 
     exploreNews: 'Πλοηγήσου στα Νέα',
@@ -146,6 +153,7 @@ const strings = new LocalizedStrings({
     World: 'Κόσμος',
     Politics: 'Πολιτικά',
     Economy: 'Oικονομία',
+    Science: 'Επιστήμη',
     Society: 'Κοινωνία',
     Environment: 'περιβάλλον',
     Technology: 'Τεχνολογία',

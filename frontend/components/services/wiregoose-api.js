@@ -10,6 +10,9 @@ import ServerErrorInterceptor from './server-error-interceptor.js';
 
 const API_ORIGIN = `${API_URL}/${API_URL_PREFIX}/`
 
+// add this to set timeout
+//  .then(resp => new Promise(r => setTimeout(() =>r(resp), 4000000000000)));
+
 axios.interceptors.request.use(function (config) {
     // Do something before request is sent
     return config;
@@ -115,7 +118,7 @@ export function fetchArticle(entryId, friendlyErrorInterceptor = false) {
   .then(resp => {
     resp.data.data = resp.data.data && ArticleResponseTransformation(resp.data.data);
     return resp;
-  });
+  })
 }
 
 function timelineExplore(categories, lang, friendlyErrorInterceptor = false) {

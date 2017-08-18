@@ -9,5 +9,8 @@ export default function translate(entry) {
   if (_.isObject(entry.entryId)) {
     entry.entryId = ArticleBoxResponseTransformation(entry.entryId);
   }
+  if (entry.link) {
+    entry.link = decodeURIComponent(entry.link);
+  }
   return entry;
 }

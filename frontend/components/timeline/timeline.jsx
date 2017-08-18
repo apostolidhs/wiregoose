@@ -5,6 +5,7 @@ import CSSModules from 'react-css-modules';
 
 import styles from './timeline.less';
 import ArticleBox from '../article-box/article-box.jsx';
+import tr from '../localization/localization.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -59,7 +60,9 @@ export default class Timeline extends React.Component {
 
   renderLoading = () => {
     return (
-      <p>Loading...</p>
+      <h4 className="w-text-loading" data-text={tr.loadingMore}>
+        {tr.loadingMore}
+      </h4>
     );
   }
 
@@ -69,9 +72,9 @@ export default class Timeline extends React.Component {
     const noDescrs = byBoxSize['ARTICLE_BOX_NO_DESCRIPTION'];
     const fulls = byBoxSize['ARTICLE_BOX_FULL'];
     if (!noImages && !noDescrs) {
-      return feeds;
+      return _.shuffle(feeds);
     } else if (!noImages) {
-      return feeds;
+      return _.shuffle(feeds);
     } else if (!noDescrs) {
       return this.cascadeNoDescriptionFeedsView(fulls, noDescrs);
     } else {

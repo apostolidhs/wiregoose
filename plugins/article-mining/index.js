@@ -83,6 +83,8 @@ KlarkModule(module, 'articleMining', (
   }
 
   function saveArticle(article, entry) {
+    // article.entryId = entry;
+    // return article;
     return krkDbMongooseBinders
       .create(modelsArticle, article)
       .then(article => {

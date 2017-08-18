@@ -3,10 +3,10 @@ import React from 'react';
 
 export default class Page extends React.Component {
 
-  sidebar: undefined
-  target: undefined
+  sidebar = undefined
+  target = undefined
   defaultRegisterInfiniteScrollOpts = {
-    infiniteScrollYOffset: 100, // pixels height
+    infiniteScrollYOffset: 500, // pixels height
     throttledScrollDelay: 500 // ms
   };
 

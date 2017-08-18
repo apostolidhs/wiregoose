@@ -57,12 +57,12 @@ export default class Article extends React.Component {
   handleMetaData = () => {
     const { article } = this.state;
     publish('page-ready', {
-      title: article.title,
+      title: article.title || article.entryId.title,
       description: tr.formatString(tr.articleDescription, article.entryId.description),
       image: article.entryId.image,
       time: article.entryId.published,
       lang: article.entryId.lang,
-      url: article.link
+      url: article.link || article.entryId.title
     });
   }
 

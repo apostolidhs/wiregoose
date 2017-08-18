@@ -22,26 +22,29 @@
 
 @article-height: 500px;
 
-.is-main-page-loading {
-  span {
-    display: inline!important;
-    position: relative;
-    color: #888;
+.is-main-page-loading .w-text-loading {
+  display: inline!important;
+}
+.w-text-loading {
+  position: relative;
+  color: #888;
+}
+.w-text-loading:before {
+  content: attr(data-text);
+  position: absolute;
+  overflow: hidden;
+  max-width: 8em;
+  white-space: nowrap;
+  color: #555;
+  animation: wTextLoadingKeyFrame 10s linear;
+}
+@keyframes wTextLoadingKeyFrame {
+  0% {
+    max-width: 0;
   }
-  span:before {
-    content: attr(data-text);
-    position: absolute;
-    overflow: hidden;
-    max-width: 7em;
-    white-space: nowrap;
-    color: #555;
-    animation: mainPageTextLoadingKeyFrame 10s linear;
-  }
-  @keyframes mainPageTextLoadingKeyFrame {
-    0% {
-      max-width: 0;
-    }
-  }
+}
+.w-is-logo-loading {
+  vertical-align: top;
 }
 
 body {

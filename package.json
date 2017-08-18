@@ -86,7 +86,7 @@
     "react-social": "^1.9.0",
     "readability-node": "^0.1.0",
     "recharts": "^1.0.0-alpha.2",
-    "request": "^2.75.0",
+    "request": "^2.81.0",
     "run-sequence": "^1.2.2",
     "serve-favicon": "^2.3.0",
     "single-line-log": "^1.1.2",

@@ -5,7 +5,7 @@
 KlarkModule(module, 'articleMiningExtractContent', (
   $readabilityNode,
   $jsdom,
-  $http,
+  $request,
   $url,
   articleMiningCustomExtractors
 ) => {
@@ -21,7 +21,8 @@ KlarkModule(module, 'articleMiningExtractContent', (
   };
 
   function extract(link, provider) {
-    return redirectedExtraction(link, provider, 0);
+    const decodedLink = decodeURIComponent(link);
+    return redirectedExtraction(decodedLink, provider, 0);
   }
 
   function redirectedExtraction(link, provider, totalRedirects) {
@@ -74,36 +75,12 @@ KlarkModule(module, 'articleMiningExtractContent', (
 
   function getPageResponse(link) {
     return new Promise((resolve, reject) => {
-      const url = $url.parse(link, true);
-      const requestOptions = {
-        host: url.host,
-        path: url.path,
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13'
+      $request(link, function(error, res, content) {
+        if (error) {
+          return reject(error);
         }
-      };
-
-      let errorOccurred = false;
-      const req = $http.request(requestOptions, (res) => {
-        const responseChunks = [];
-        res.on('data', d => responseChunks.push(d + ''));
-        res.on('error', (reason) => {
-          errorOccurred = true;
-          reject(reason, res);
-        });
-        res.on('end', () => {
-          if (!errorOccurred) {
-            const content = responseChunks.join('');
-            resolve({content, res});
-          }
-        });
+        resolve({ content, res });
       });
-
-      req.on('error', (error) => {
-        reject(error);
-      });
-
-      req.end();
     });
   }
 

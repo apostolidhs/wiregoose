@@ -73,7 +73,14 @@ export default class Article extends React.Component {
            }
            {
              isLoading &&
-             <p>Loading...</p>
+             (
+              <div className="text-center">
+                <img className="w-is-logo-loading" src="/public/assets/img/logo.png" style={{width: '50px'}}/>
+                <h4 className="w-text-loading" data-text={tr.loadingArticle}>
+                  {tr.loadingArticle}
+                </h4>
+              </div>
+             )
            }
         </div>
       </div>
