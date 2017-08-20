@@ -33,6 +33,8 @@ const strings = new LocalizedStrings({
     loadingMore: 'Loading More...',
     loadingArticle: 'Loading Article...',
 
+    goBack: 'Back',
+
     promptReading: 'Continue Reading News',
 
     exploreNews: 'Explore News',
@@ -123,6 +125,8 @@ const strings = new LocalizedStrings({
 
     loadingMore: 'Φόρτωση...',
     loadingArticle: 'Φόρτωση Άρθρου...',
+
+    goBack: 'Πίσω',
 
     promptReading: 'Συνεχίσετε να Διαβάζετε Νέα',
 

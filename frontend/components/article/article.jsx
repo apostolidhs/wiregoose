@@ -4,8 +4,11 @@ import PropTypes from 'prop-types';
 import validateURL from 'react-proptypes-url-validator';
 import { Link } from 'react-router';
 import FontAwesome from 'react-fontawesome';
+import { Button } from 'react-bootstrap';
+import { browserHistory } from 'react-router';
 
-import FromNow from '../utilities/from-now.jsx';
+ import FromNow from '../utilities/from-now.jsx';
+import SocialShare from '../article-box/social-share.jsx';
 import entryPropType from '../article-box/entry-prop-type.js';
 import CategoryTag from '../category/tag.jsx';
 import ProviderTag from '../rss-provider/tag.jsx';
@@ -73,16 +76,32 @@ export default class Article extends React.Component {
            }
            {
              isLoading &&
-             (
-              <div className="text-center">
-                <img className="w-is-logo-loading" src="/public/assets/img/logo.png" style={{width: '50px'}}/>
-                <h4 className="w-text-loading" data-text={tr.loadingArticle}>
-                  {tr.loadingArticle}
-                </h4>
-              </div>
-             )
+              this.renderLoading()
            }
         </div>
+      </div>
+    );
+  }
+
+  goBack = () => {
+    browserHistory.goBack();
+  }
+
+  renderBackButton = () => {
+    return (
+      <Button bsStyle="link" className="blind-link" onClick={this.goBack}>
+        <FontAwesome name="chevron-left" /> {tr.goBack}
+      </Button>
+    );
+  }
+
+  renderLoading = () => {
+    return (
+      <div className="text-center">
+        <img className="w-is-logo-loading" src="/public/assets/img/logo.png" style={{width: '50px'}}/>
+        <h4 className="w-text-loading" data-text={tr.loadingArticle}>
+          {tr.loadingArticle}
+        </h4>
       </div>
     );
   }
@@ -93,6 +112,12 @@ export default class Article extends React.Component {
 
     return (
       <header>
+        <div className="pull-left" >
+          {this.renderBackButton()}
+        </div>
+        <div className="text-right">
+          <SocialShare link={location.href} overlayPlacement={"bottom"} />
+        </div>
         <h1>{title}</h1>
         <div>
           <CategoryTag name={entry.category} />
@@ -113,10 +138,13 @@ export default class Article extends React.Component {
 
   renderFooter = (article) => {
     return (
-      <footer className="text-center">
-        <a className="btn btn-default" href={article.link} role="button" target="_blank">
-          {tr.articleReadFromWebsite}
-        </a>
+      <footer>
+        {this.renderBackButton()}
+        <div className="text-center">
+          <a className="btn btn-default" href={article.link} role="button" target="_blank">
+            {tr.articleReadFromWebsite}
+          </a>
+        </div>
       </footer>
     );
   }

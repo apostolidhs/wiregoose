@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 
 import tr from '../../components/localization/localization.js';
@@ -33,7 +34,7 @@ export default class About extends React.Component {
           <div className="clearfix" styleName="providers" >
             {_.map(this.state.providers, p => (
               <a key={p._id} styleName="providers-item" href={p.link} target="_blank" >
-                {p.name}
+                {_.upperCase(p.name)}
               </a>
             ))}
           </div>

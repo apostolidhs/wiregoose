@@ -29,9 +29,9 @@ KlarkModule(module, 'modelsEntry', (
   function getSchema() {
     const ObjectId = $mongoose.Schema.Types.ObjectId;
     return new $mongoose.Schema({
-      title: {type: String, required: true, maxlength: [128]},
-      image: {type: $mongoose.SchemaTypes.Url, validate: conditionalRequired('description')},
-      description: {type: String, maxlength: [256], validate: conditionalRequired('image')},
+      title: {type: String, required: true, maxlength: [128], validate: conditionalRequired()},
+      image: {type: $mongoose.SchemaTypes.Url},
+      description: {type: String, maxlength: [256]},
       published: {type: Date, required: true},
       link: {type: $mongoose.SchemaTypes.Url, required: true},
       lastHit: { type: Date },
@@ -52,11 +52,11 @@ KlarkModule(module, 'modelsEntry', (
     });
   }
 
-  function conditionalRequired(field) {
+  function conditionalRequired() {
     return {
-      msg: 'description or image is required',
-      validator: function(value) {
-        return value || this[field];
+      message: 'description or image is required',
+      validator: function() {
+        return !!(this.image || this.description);
       }
     };
   }
