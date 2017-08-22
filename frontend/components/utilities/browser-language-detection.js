@@ -6,13 +6,14 @@ export default function detect() {
   if (sessionLang) {
     return sessionLang;
   }
-  const navLang = navigator.languages
-    ? navigator.languages[0]
-    : (navigator.language || navigator.userLanguage);
+  return 'gr';
+  // const navLang = navigator.languages
+  //   ? navigator.languages[0]
+  //   : (navigator.language || navigator.userLanguage);
 
-  if (_.includes(navLang, 'el')
-    || _.includes(navLang, 'gr')) {
-      return 'gr';
-  }
-  return 'en';
+  // if (_.includes(navLang, 'el')
+  //   || _.includes(navLang, 'gr')) {
+  //     return 'gr';
+  // }
+  // return 'en';
 }

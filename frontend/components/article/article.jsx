@@ -84,6 +84,13 @@ export default class Article extends React.Component {
   }
 
   goBack = () => {
+    const pathname = browserHistory.getCurrentLocation().pathname;
+    setTimeout(() => {
+      const nextPathname = browserHistory.getCurrentLocation().pathname;
+      if (pathname === nextPathname) {
+        browserHistory.replace('/');
+      }
+    }, 0);
     browserHistory.goBack();
   }
 
