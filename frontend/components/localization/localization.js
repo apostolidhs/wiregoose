@@ -49,6 +49,9 @@ const strings = new LocalizedStrings({
     articleRedirectDesc: 'You will be redirected {0} in {1} sec',
     articleRedirectDescOriginal: 'at the Original Article',
 
+    articleFbTitle: 'Join our group',
+    articleFbSubHeader: 'Keep updated with the latest news',
+
     timeNotYet: 'not yet',
     timeNow: 'now',
     timeMinsAgo: 'mins ago',
@@ -141,6 +144,9 @@ const strings = new LocalizedStrings({
     articleRedirectTitle: 'Πολύ μικρό άρθρο!',
     articleRedirectDesc: 'Θα σας ανακατευθύνουμε {0} σε {1} δευτερόλεπτα',
     articleRedirectDescOriginal: 'στο πρωτότυπο άρθρο',
+
+    articleFbTitle: 'Γίνε μέλος της μεγάλης παρέας',
+    articleFbSubHeader: 'Ενημερώσου άμεσα με τα πιο προσφατα νέα',
 
     timeNotYet: 'όχι ακόμα',
     timeNow: 'τώρα',

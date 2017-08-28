@@ -62,7 +62,7 @@ export default class Article extends React.Component {
       image: article.entryId.image,
       time: article.entryId.published,
       lang: article.entryId.lang,
-      url: article.link || article.entryId.title
+      // url: article.link || article.entryId.title
     });
   }
 

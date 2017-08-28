@@ -5,12 +5,15 @@ import CSSModules from 'react-css-modules';
 
 import styles from './timeline.less';
 import ArticleBox from '../article-box/article-box.jsx';
+import FBFollowBox from '../article-box/fb-follow-box.jsx';
 import tr from '../localization/localization.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
 })
 export default class Timeline extends React.Component {
+  static FB_FOLLOW_WIDGET_POSITION = 8;
+
   static propTypes = {
     hideCategory: PropTypes.bool,
     hideProvider: PropTypes.bool,
@@ -24,13 +27,22 @@ export default class Timeline extends React.Component {
   addFeeds = (feeds) => {
     // this.changeFeedsToDebug(feeds);
     const cascadedFeeds = this.cascadeFeedsView(feeds);
-    const newElements = _.map(cascadedFeeds, cascadedFeed => {
+    const elementsLength = this.state.elements.length;
+    const newElements = _.map(cascadedFeeds, (cascadedFeed, feedsIdx) => {
       const feeds = _.castArray(cascadedFeed);
       return (
         <div key={feeds[0]._id} styleName="timeline-box" >
-          {_.map(feeds, (feed) => (
-            <ArticleBox key={feed._id} entry={feed} hideCategory={this.props.hideCategory} hideProvider={this.props.hideProvider} />
-          ))}
+          {_.map(feeds, (feed) => {
+            if (elementsLength + feedsIdx === Timeline.FB_FOLLOW_WIDGET_POSITION) {
+              return (
+                <FBFollowBox key="facebookFollowKey" />
+              );
+            } else {
+              return (
+                <ArticleBox key={feed._id} entry={feed} hideCategory={this.props.hideCategory} hideProvider={this.props.hideProvider} />
+              );
+            }
+          })}
         </div>
       );
     });

@@ -82,7 +82,7 @@ export default class Header extends React.Component {
           <Navbar.Brand>
             <Link to="/" styleName="logo">
               <img src={logoImage} />
-              <span>Wiregoose</span>
+              <span>Wiregoose <small className="text-muted">beta</small></span>
             </Link>
           </Navbar.Brand>
         </Navbar.Header>

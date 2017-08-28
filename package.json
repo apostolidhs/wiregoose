@@ -38,6 +38,7 @@
     "express": "^4.14.0",
     "express-device": "^0.4.2",
     "express-validator": "^2.20.10",
+    "facebook-plugins": "^1.0.5",
     "feedparser": "^2.2.1",
     "font-awesome": "^4.7.0",
     "helmet": "^3.8.1",
