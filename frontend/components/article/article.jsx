@@ -102,6 +102,19 @@ export default class Article extends React.Component {
     );
   }
 
+  renderSocialBanner = () => {
+    return (
+      <div>
+        <div className="pull-left" >
+          {this.renderBackButton()}
+        </div>
+        <div className="text-right">
+          <SocialShare link={location.href} overlayPlacement={"bottom"} />
+        </div>
+      </div>
+    );
+  }
+
   renderLoading = () => {
     return (
       <div className="text-center">
@@ -119,12 +132,7 @@ export default class Article extends React.Component {
 
     return (
       <header>
-        <div className="pull-left" >
-          {this.renderBackButton()}
-        </div>
-        <div className="text-right">
-          <SocialShare link={location.href} overlayPlacement={"bottom"} />
-        </div>
+        {this.renderSocialBanner()}
         <h1>{title}</h1>
         <div>
           <CategoryTag name={entry.category} />
@@ -146,12 +154,12 @@ export default class Article extends React.Component {
   renderFooter = (article) => {
     return (
       <footer>
-        {this.renderBackButton()}
         <div className="text-center">
           <a className="btn btn-default" href={article.link} role="button" target="_blank">
             {tr.articleReadFromWebsite}
           </a>
         </div>
+        {this.renderSocialBanner()}
       </footer>
     );
   }
