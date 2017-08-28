@@ -18,6 +18,7 @@ config.API_URL_PREFIX = 'api/v1'; // `api/${config.API_VERSION}`;
 config.API_URL = config.IS_DEV ? 'http://localhost:3000' : 'http://wiregoose.com';
 
 config.FACEBOOK_APP_ID = '821271344594009';
+config.FACEBOOK_PAGE = 'https://www.facebook.com/wiregoose';
 
 config.GOOGLE_TRACKING_ID = 'UA-90338056-2';
 
