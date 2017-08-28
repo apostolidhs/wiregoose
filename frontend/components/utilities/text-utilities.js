@@ -47,3 +47,9 @@ export function createAbsoluteLink(link) {
   return location.protocol + '//' + location.host + link;
 }
 
+export function toParam(params) {
+  return _(params)
+    .toPairs()
+    .map(v => `${v[0]}=${encodeURIComponent(v[1])}`)
+    .join('&');
+}

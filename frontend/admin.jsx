@@ -75,7 +75,7 @@ class App extends React.Component {
             <Route path="article" component={Article} />
             <Route path="prerender" component={PreRender} />
           </Route>
-          <Route path='*' component={NotFound} />
+          <Route path='*' component={Dashboard} />
         </Route>
       </Router>
     );

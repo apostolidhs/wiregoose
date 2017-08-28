@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FBFollow } from 'facebook-plugins';
 import CSSModules from 'react-css-modules';
 import FontAwesome from 'react-fontawesome';
 
 import styles from './article-box.less';
 import tr from '../localization/localization.js';
 import { FACEBOOK_APP_ID, FACEBOOK_PAGE } from '../../../config-public.js';
+import FBFollow from '../social/fb-follow.jsx';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -32,10 +32,8 @@ export default class FBFollowBox extends React.Component {
           </header>
           <div styleName="follow-plugin">
             <FBFollow
-              height={300}
+              height={28}
               width={200}
-              appId={FACEBOOK_APP_ID}
-              href={FACEBOOK_PAGE}
             />
           </div>
         </div>
