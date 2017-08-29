@@ -6,7 +6,6 @@ import { FACEBOOK_APP_ID, FACEBOOK_PAGE } from '../../../config-public.js';
 import { toParam } from '../utilities/text-utilities.js';
 
 export default class FBFollowBox extends React.Component {
-  src = ''
 
   static propTypes = {
     width: PropTypes.number,
@@ -16,6 +15,10 @@ export default class FBFollowBox extends React.Component {
   static defaultProps = {
     width: 200,
     height: 200
+  }
+
+  state = {
+    src: ''
   }
 
   componentDidMount() {
@@ -29,7 +32,8 @@ export default class FBFollowBox extends React.Component {
       show_faces: 'true',
       appId: FACEBOOK_APP_ID
     };
-    this.src = `${fbFollowDomain}?${toParam(params)}`;
+    const src = `${fbFollowDomain}?${toParam(params)}`;
+    this.setState({ src });
   }
 
   render() {
@@ -39,7 +43,7 @@ export default class FBFollowBox extends React.Component {
     } = this.props;
 
     return (
-      <iframe src={this.src}
+      <iframe src={this.state.src}
         width={width}
         height={height}
         style={{border:'none',overflow:'hidden'}}

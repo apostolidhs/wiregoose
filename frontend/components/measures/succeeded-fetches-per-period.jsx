@@ -3,20 +3,25 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Panel, Form, FormGroup, FormControl, ControlLabel, Button, Collapse }
   from 'react-bootstrap';
-import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import {ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 import FontAwesome from 'react-fontawesome';
+import CSSModules from 'react-css-modules';
 
+import styles from './measures.less';
 import Loader from '../loader/loader.jsx';
 import * as WiregooseApi from '../services/wiregoose-api.js';
 import * as Pallet from '../colors/pallet.js';
 import ShadeColor from '../colors/shade.js'
 
+@CSSModules(styles, {
+  allowMultiple: true,
+})
 export default class SucceededFetchesPerPeriod extends React.Component {
 
   state = {
     categories: [],
     supportedLanguages: [],
-    selectedLang: 'en',
+    selectedLang: 'gr',
     selectedPeriod: 30,
     entriesPerCategory: undefined,
     providers: undefined,
@@ -184,13 +189,13 @@ export default class SucceededFetchesPerPeriod extends React.Component {
           {(() => {
             if (_.isEmpty(this.state.charts)) {
               return (
-                <Col md={6}>
+                <Col xs={12}>
                   <p className="legent">No results.</p>
                 </Col>
               );
             } else {
               return _.map(this.state.charts, chart => (
-                <Col md={6} key={chart.name}>
+                <Col xs={12} key={chart.name} styleName="provider-chart" >
                   <h4>
                     {chart.name}, {' '}
                     <span className="text-muted">{chart.sum} entries</span>
@@ -207,17 +212,21 @@ export default class SucceededFetchesPerPeriod extends React.Component {
 
   renderChart = (chartData, providers, payload) => {
   	return (
-    	<LineChart width={400} height={300} data={chartData}
-            margin={{top: 5, right: 30, left: 20, bottom: 5}} >
-       <XAxis dataKey="period" />
-       <YAxis />
-       <CartesianGrid strokeDasharray="3 3" />
-       <Tooltip />
-       <Legend align="right" layout="vertical" verticalAlign="middle" iconSize={12} payload={payload} />
-        {_.map(providers, provider => (
-          <Line key={provider.name} type="monotone" dataKey={provider.name} stroke={provider.color} />
-        ))}
-      </LineChart>
+      <ResponsiveContainer height={200} >
+        <LineChart
+          data={chartData}
+          margin={{top: 5, right: 30, left: 20, bottom: 5}}
+        >
+          <XAxis dataKey="period" />
+          <YAxis />
+          <CartesianGrid strokeDasharray="3 3" />
+          <Tooltip />
+          <Legend verticalAlign="bottom" align="left" iconSize={12} payload={payload} />
+          {_.map(providers, provider => (
+            <Line key={provider.name} type="monotone" dataKey={provider.name} stroke={provider.color} />
+          ))}
+        </LineChart>
+      </ResponsiveContainer>
     );
   }
 }

@@ -5,7 +5,13 @@ import { Link } from 'react-router';
 import { ListGroup, ListGroupItem, Badge }
   from 'react-bootstrap';
 import ReactJson from 'react-json-view';
+import CSSModules from 'react-css-modules';
 
+import styles from './measures.less';
+
+@CSSModules(styles, {
+  allowMultiple: true,
+})
 export default class SucceededFetchesPerPeriod extends React.Component {
 
   static propTypes = {
@@ -18,9 +24,9 @@ export default class SucceededFetchesPerPeriod extends React.Component {
     return (
       <div>
         { !_.isEmpty(stats.failed) && (
-          <section>
+          <section className="w-mt-7">
             <h4>Failed Articles</h4>
-            <ListGroup>
+            <ListGroup styleName="scroll-list">
               {_.map(stats.failed, item => (
                 <ListGroupItem key={item._id}>
                   <Link to={{
@@ -37,9 +43,9 @@ export default class SucceededFetchesPerPeriod extends React.Component {
         )}
 
         { !_.isEmpty(stats.topViewed) && (
-          <section>
+          <section className="w-mt-7">
             <h4>Most viewed Articles</h4>
-            <ListGroup>
+            <ListGroup styleName="scroll-list">
               {_.map(stats.topViewed, item => (
                 <ListGroupItem className="w-text-overflow" key={item._id}>
                   <Link to={{

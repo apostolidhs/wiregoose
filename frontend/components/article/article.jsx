@@ -154,7 +154,7 @@ export default class Article extends React.Component {
   renderFooter = (article) => {
     return (
       <footer>
-        <div className="text-center">
+        <div className="text-center w-mb-7">
           <a className="btn btn-default" href={article.link} role="button" target="_blank">
             {tr.articleReadFromWebsite}
           </a>
