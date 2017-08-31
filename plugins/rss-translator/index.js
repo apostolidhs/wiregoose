@@ -82,6 +82,11 @@ KlarkModule(module, 'rssTranslator', (
       image = sanitizeUrl($cheerio.load(item.description)('img').attr('src'), link);
     }
 
+    // altsantiri has enabled cross origin
+    if (provider === 'altsantiri.gr') {
+      image = undefined;
+    }
+
     const data = {
       title,
       image,
