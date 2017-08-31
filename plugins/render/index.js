@@ -82,9 +82,16 @@ KlarkModule(module, 'render', (
         }
 
         page.evaluate(function() {
-          var scripts = document.getElementsByTagName("script");
-          while(scripts.length) {
-            scripts[0].parentElement.removeChild(scripts[0]);
+          var scripts = document.querySelectorAll("script");
+          var removableScripts = [];
+          for (var i = 0; i < scripts.length; ++i) {
+            if (scripts[i].className !== 'prevent-prerender-removal') {
+              removableScripts.push(scripts[i]);
+            }
+          }
+          while(removableScripts.length) {
+            var script = removableScripts.pop();
+            script.parentElement.removeChild(script);
           }
         })
         .then(() => page.property('content'))
