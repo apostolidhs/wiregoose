@@ -29,9 +29,9 @@ KlarkModule(module, 'modelsEntry', (
   function getSchema() {
     const ObjectId = $mongoose.Schema.Types.ObjectId;
     return new $mongoose.Schema({
-      title: {type: String, required: true, maxlength: [128], validate: conditionalRequired()},
+      title: {type: String, required: true, minlength: [6], maxlength: [128], validate: conditionalRequired()},
       image: {type: $mongoose.SchemaTypes.Url},
-      description: {type: String, maxlength: [256]},
+      description: {type: String, minlength: [15], maxlength: [256]},
       published: {type: Date, required: true},
       link: {type: $mongoose.SchemaTypes.Url, required: true},
       lastHit: { type: Date },
