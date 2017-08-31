@@ -103,17 +103,19 @@ export default class SucceededFetchesPerPeriod extends React.Component {
   calculateChartLegendPayload = (charts, providerInfo) => {
     const chartsByCategory = _.keyBy(charts, 'name');
     return _.transform(this.state.categories, (payload, category) => {
-      payload[category] = _.map(providerInfo, provider => {
+       const legends = _.map(providerInfo, provider => {
         const sum = _.sumBy(
           chartsByCategory[category].data,
           byProviders => byProviders[provider.name]
         );
         return {
+          sum,
           id: provider.name,
           value: `${provider.name} ${sum || 0}`,
           type: 'circle', color: provider.color
         };
       });
+      payload[category] = _.sortBy(legends, legend => -legend.sum);
     }, {});
   }
 
@@ -185,7 +187,7 @@ export default class SucceededFetchesPerPeriod extends React.Component {
             </Form>
           </Col>
         </Row>
-        <Row className="w-mt-7">
+        <Row className="w-mt-7" styleName="provider-chart-container" >
           {(() => {
             if (_.isEmpty(this.state.charts)) {
               return (
@@ -212,7 +214,7 @@ export default class SucceededFetchesPerPeriod extends React.Component {
 
   renderChart = (chartData, providers, payload) => {
   	return (
-      <ResponsiveContainer height={200} >
+      <ResponsiveContainer height={250} >
         <LineChart
           data={chartData}
           margin={{top: 5, right: 30, left: 20, bottom: 5}}

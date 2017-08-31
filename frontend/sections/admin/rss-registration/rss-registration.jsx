@@ -1,8 +1,12 @@
 import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router';
+
+import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
+import Loader from '../../../components/loader/loader.jsx';
 import ListView from '../../../components/list-view/list-view.jsx';
 import Form from '../../../components/rss-registration/form.jsx';
+import RssRegistrationFetches from '../../../components/measures/rss-registrations-fetches.jsx';
 
 export default class RssRegistration extends ListView {
   static columns = [
@@ -27,6 +31,11 @@ export default class RssRegistration extends ListView {
     },
   ];
 
+  componentDidMount() {
+    super.componentDidMount();
+    this.fetchRssRegistrationsFetches();
+  }
+
   constructor() {
     super({
       modelName: 'rssRegistration',
@@ -36,4 +45,16 @@ export default class RssRegistration extends ListView {
     });
   }
 
+  fetchRssRegistrationsFetches = () => {
+    this.refs.registrationsFetchesLoad.promise = WiregooseApi.getRssRegistrationsFetches()
+      .then(resp => this.setState({ registrationsFetches: resp.data.data }));
+  }
+
+  afterTable = () => {
+    return (
+      <Loader ref="registrationsFetchesLoad" >
+        <RssRegistrationFetches registrationsFetches={this.state.registrationsFetches} />
+      </Loader>
+    );
+  }
 }

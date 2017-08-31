@@ -1,6 +1,12 @@
+@import (reference) "../../less/index.less";
+
 .scroll-list {
   max-height: 200px;
   overflow: auto;
+}
+
+.provider-chart-container {
+  min-height: 400px;
 }
 
 .provider-chart {
@@ -10,4 +16,30 @@
       width: 155px;
     }
   }
+}
+
+.reg-fetches-filter {
+  padding: 7px 15px;
+}
+.reg-fetches-list {
+  margin-top: 8px;
+  max-height: 400px;
+  overflow: auto;
+}
+.reg-fetches-title {
+  font-size: @font-size-h3;
+}
+.reg-fetches-title-badge {
+  margin-top: 10px;
+}
+.reg-fetches-content-title {
+  margin-left: 7px;
+  width: 150px;
+  display: inline-block
+}
+.reg-fetches-content-badge {
+  float: initial!important;
+}
+.reg-fetches-content-link {
+  float: right;
 }

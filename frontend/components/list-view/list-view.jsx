@@ -138,6 +138,8 @@ export default class ListView extends React.Component {
   isEffectedRow = record =>
     record._id === this.lastEffectedId && 'success'
 
+  afterTable = () => undefined
+
   render() {
     const {
       records,
@@ -158,6 +160,7 @@ export default class ListView extends React.Component {
 
     return (
       <div>
+        {this.afterTable()}
         <h3>{this.title}</h3>
         <Row>
           <Col sm={12}>
@@ -234,6 +237,7 @@ export default class ListView extends React.Component {
             </Loader>
           </Col>
         </Row>
+
       </div>
     );
   }

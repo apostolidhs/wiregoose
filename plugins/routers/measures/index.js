@@ -9,7 +9,8 @@ KlarkModule(module, 'routesMeasures', (
   krkMiddlewareResponse,
   krkParameterValidator,
   measuresSucceededFetchesPerPeriod,
-  measuresArticles
+  measuresArticles,
+  measuresRssRegistrationsFetches
 ) => {
 
   return {
@@ -29,6 +30,13 @@ KlarkModule(module, 'routesMeasures', (
       krkMiddlewarePermissions.check('ADMIN'),
       middlewareArticleParameterValidator,
       middlewareArticleController,
+      krkMiddlewareResponse.success,
+      krkMiddlewareResponse.fail
+    ]);
+
+    app.get(`/${config.API_URL_PREFIX}/measures/registrationFetches`, [
+      krkMiddlewarePermissions.check('FREE'),
+      middlewareRegistrationFetchesController,
       krkMiddlewareResponse.success,
       krkMiddlewareResponse.fail
     ]);
@@ -66,6 +74,16 @@ KlarkModule(module, 'routesMeasures', (
         res.locals.errors.add('MEASURES_FAILED', reason);
         next(true);
       });
+  }
+
+  function middlewareRegistrationFetchesController(req, res, next) {
+    measuresRssRegistrationsFetches.measure()
+      .then(data => res.locals.data = data)
+        .then(() => next())
+        .catch(reason => {
+          res.locals.errors.add('MEASURES_FAILED', reason);
+          next(true);
+        });
   }
 
 });

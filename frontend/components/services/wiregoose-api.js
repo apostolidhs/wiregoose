@@ -83,7 +83,7 @@ export function getSucceededFetchesPerPeriod(days, lang) {
       'Content-Type': 'application/json',
       Authorization: credentialGetter(),
     },
-  })
+  });
 }
 
 export function getArticleStatistics() {
@@ -94,7 +94,18 @@ export function getArticleStatistics() {
       'Content-Type': 'application/json',
       Authorization: credentialGetter(),
     },
-  })
+  });
+}
+
+export function getRssRegistrationsFetches() {
+  return httpRequest({
+    method: 'get',
+    url: `${API_ORIGIN}measures/registrationFetches`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: credentialGetter(),
+    },
+  });
 }
 
 export function getStatic(name, friendlyErrorInterceptor = false) {
