@@ -44,7 +44,7 @@ const strings = new LocalizedStrings({
     by: 'by',
     close: 'close',
 
-    articleReadFromWebsite: 'Read Article From Website',
+    articleReadFromWebsite: 'Read From Website',
     articleRedirectTitle: 'Too Small Article!',
     articleRedirectDesc: 'You will be redirected {0} in {1} sec',
     articleRedirectDescOriginal: 'at the Original Article',
@@ -140,7 +140,7 @@ const strings = new LocalizedStrings({
     by: 'από',
     close: 'κλείσιμο',
 
-    articleReadFromWebsite: 'Διαβάστε το άρθρο απο την Ιστοσελίδα',
+    articleReadFromWebsite: 'Διαβάστε το απο την Ιστοσελίδα',
     articleRedirectTitle: 'Πολύ μικρό άρθρο!',
     articleRedirectDesc: 'Θα σας ανακατευθύνουμε {0} σε {1} δευτερόλεπτα',
     articleRedirectDescOriginal: 'στο πρωτότυπο άρθρο',

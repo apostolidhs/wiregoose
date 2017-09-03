@@ -13,7 +13,7 @@ export default class Page {
       component.timeline.setState(this.timelineState);
       setTimeout(() => {
         component.setScrollTop(this.lastScrollTop);
-      }, 200);
+      }, 300);
       component.handleMetaData();
     } else {
       component.retrieveTimeline();

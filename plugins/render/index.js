@@ -25,7 +25,14 @@ KlarkModule(module, 'render', (
 
   function createMiddlewareCachedPreRender(indexPagePath) {
     return (req, res, next) => {
-      if (!_.includes(PRE_RENDER_ENABLED_DEVICES, req.device.type)) {
+      if (
+        !_.includes(PRE_RENDER_ENABLED_DEVICES, req.device.type)
+        || _.endsWith(req.url, 'js')
+        || _.endsWith(req.url, 'css')
+        || _.endsWith(req.url, 'ico')
+        || _.endsWith(req.url, 'png')
+        || _.endsWith(req.url, 'jpeg')
+      ) {
         return res.sendFile(indexPagePath);
       }
       return retrievePreRenderPageAndUpdateHitCounter(req.url)
@@ -151,6 +158,7 @@ KlarkModule(module, 'render', (
   }
 
   function retrievePreRenderPageAndUpdateHitCounter(link) {
+    return Promise.resolve();
     const q = {
       $inc: { hits: 1 },
       lastHit: new Date()

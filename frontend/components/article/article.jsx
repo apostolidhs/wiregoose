@@ -7,12 +7,14 @@ import FontAwesome from 'react-fontawesome';
 import { Button } from 'react-bootstrap';
 import { browserHistory } from 'react-router';
 
- import FromNow from '../utilities/from-now.jsx';
+import FromNow from '../utilities/from-now.jsx';
 import SocialShare from '../article-box/social-share.jsx';
 import entryPropType from '../article-box/entry-prop-type.js';
 import CategoryTag from '../category/tag.jsx';
 import ProviderTag from '../rss-provider/tag.jsx';
 import tr from '../localization/localization.js';
+
+import mongooseIcon from '../../assets/img/logo-170-nologo.png';
 
 export default class Article extends React.Component {
   static ARTICLE_REDIRECTION_DELAY = 3; //s
@@ -118,7 +120,7 @@ export default class Article extends React.Component {
   renderLoading = () => {
     return (
       <div className="text-center">
-        <img className="w-is-logo-loading" src="/public/assets/img/logo.png" style={{width: '50px'}}/>
+        <img className="w-is-logo-loading" src={mongooseIcon} style={{width: '120px'}}/>
         <h4 className="w-text-loading" data-text={tr.loadingArticle}>
           {tr.loadingArticle}
         </h4>

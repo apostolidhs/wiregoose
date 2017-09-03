@@ -82,6 +82,7 @@ export default class Timeline extends React.Component {
         contentClassName="w-left-sidebar"
         docked={isSidebarDocked}
         sidebar={<SidebarContent />}
+        touch={false}
         open={this.state.sidebar.isLeftSidebarOpen}
         onSetOpen={this.state.sidebar.onSetSidebarOpen}
       >

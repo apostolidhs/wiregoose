@@ -6,8 +6,8 @@ export default class Page extends React.Component {
   sidebar = undefined
   target = undefined
   defaultRegisterInfiniteScrollOpts = {
-    infiniteScrollYOffset: 500, // pixels height
-    throttledScrollDelay: 500 // ms
+    infiniteScrollYOffset: 630, // pixels height
+    throttledScrollDelay: 400 // ms
   };
 
   componentDidMount() {

@@ -68,7 +68,7 @@ KlarkModule(module, 'routesTimeline', (
         fieldValue: category
       };
     });
-    res.locals.params.limit = 2;
+    res.locals.params.limit = 1;
     checkLang(req, res);
 
     krkParameterValidator.checkForErrors(res.locals.params, req, res, next);

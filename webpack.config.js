@@ -8,6 +8,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 //const SpritePlugin = require('svg-sprite-loader/plugin');
 const autoprefixer = require('autoprefixer');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isProduction = nodeEnv === 'production';
@@ -27,6 +28,7 @@ function createWebpackConfig(name, entryName, outputName) {
   // Common plugins
   const plugins = [
     new CleanWebpackPlugin([buildPath + '/*.js*', buildPath + '/*.css*', buildPath + '/*.html*']),
+    new CopyWebpackPlugin([{from: imgPath + '/logo.ico', to: buildPath + '/logo.ico'}]),
     //new SpritePlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
@@ -67,7 +69,7 @@ function createWebpackConfig(name, entryName, outputName) {
     {
       test: /\.(js|jsx)$/,
       // exclude: /node_modules\/(?!(url-regex|ANOTHER-ONE)\/).*/,
-    include: [
+      include: [
         path.resolve(__dirname, './frontend'),
         path.resolve(__dirname, './node_modules/url-regex'),
         path.resolve(__dirname, './node_modules/react-proptypes-url-validator')
@@ -251,9 +253,9 @@ function createWebpackConfig(name, entryName, outputName) {
 }
 
 //module.exports = createWebpackConfig('index', './admin', 'admin');
-//module.exports = createWebpackConfig('index', './app', 'app');
+module.exports = createWebpackConfig('index', './app', 'app');
 
-module.exports = [
-  createWebpackConfig('index', './app', 'app'),
-  createWebpackConfig('admin', './admin', 'admin')
-];
+// module.exports = [
+//   createWebpackConfig('index', './app', 'app'),
+//   createWebpackConfig('admin', './admin', 'admin')
+// ];
