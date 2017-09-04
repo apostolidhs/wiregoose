@@ -61,9 +61,9 @@ export default class Page extends React.Component {
     const throttledOffset = this.defaultRegisterInfiniteScrollOpts.infiniteScrollYOffset;
     const scrolledToBottom = Math.ceil(scrollTop) + 100 >= scrollHeight - clientHeight;
     console.log(scrollTop, scrollHeight - clientHeight);
-    // if (scrolledToBottom) {
-    //   this.onTopScrollReached();
-    // }
+    if (scrollTop < 200) {
+      this.onTopScrollReached();
+    }
   }
 
 }

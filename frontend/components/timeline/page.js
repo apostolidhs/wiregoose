@@ -89,25 +89,37 @@ export default class Page {
   }
 
   retrievePrevTimeline(component) {
+    if (this.firstSectionPos === -1 || this.firstSectionPos === 0 || this.secondSectionPos === 0) {
+      return;
+    }
 
+    if (this.firstSectionPos > this.secondSectionPos) {
+      this.prevSectionPos = this.firstSectionPos;
+      this.firstSectionPos = this.secondSectionPos - 1;
+    } else {
+      this.prevSectionPos = this.secondSectionPos;
+      this.secondSectionPos = this.firstSectionPos;
+      --this.firstSectionPos;
+    }
 
-    // if (this.currentListPosition === 0) {
-    //   return;
-    // }
-    // this.prevListPosition = this.currentListPosition;
-    // --this.currentListPosition;
-    // const elements = this.getVirtualScrollListElements(this.currentListPosition);
-    // if (!_.isEmpty(elements)) {
-    //   this.addElementsOnTimeline(elements);
-    // } else {
-    //   throw new Error('previous virtual timeline elements should always exist');
-    // }
+    const elements = this.getVirtualScrollListElements(this.firstSectionPos);
+    if (!_.isEmpty(elements)) {
+      this.addElementsOnTimeline(component, elements);
+    } else {
+      throw new Error('previous virtual timeline elements should always exist');
+    }
   }
 
   retrieveNextTimeline(component) {
-    this.prevSectionPos = this.secondSectionPos;
-    this.secondSectionPos = this.firstSectionPos;
-    ++this.firstSectionPos;
+    if (this.firstSectionPos > this.secondSectionPos) {
+      this.prevSectionPos = this.secondSectionPos;
+      this.secondSectionPos = this.firstSectionPos;
+      ++this.firstSectionPos;
+    } else {
+      this.prevSectionPos = this.firstSectionPos;
+      this.firstSectionPos = this.secondSectionPos + 1;
+    }
+
     if (this.secondSectionPos !== -1 && !this.isActiveSection(this.secondSectionPos)) {
       throw new Error('virtual timeline: second element should always exist');
     }
@@ -137,7 +149,7 @@ export default class Page {
   getVirtualScrollListElements(idx) {
     const elements = this.virtualScrollList[idx];
     if (elements) {
-      delete this.virtualScrollList.idx;
+      delete this.virtualScrollList[idx];
       return elements;
     }
   }

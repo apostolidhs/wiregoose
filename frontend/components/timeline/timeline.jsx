@@ -45,6 +45,9 @@ export default class Timeline extends React.Component {
   removeElements(elements) {
     const stateElements = this.state.elements;
     _.pullAll(stateElements, elements);
+    this.setState({
+      elements: stateElements
+    });
   }
 
   createElements(feeds) {
