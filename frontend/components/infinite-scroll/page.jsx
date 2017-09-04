@@ -7,7 +7,7 @@ export default class Page extends React.Component {
   target = undefined
   defaultRegisterInfiniteScrollOpts = {
     infiniteScrollYOffset: 630, // pixels height
-    throttledScrollDelay: 400 // ms
+    throttledScrollDelay: 300 // ms
   };
 
   componentDidMount() {
@@ -32,9 +32,15 @@ export default class Page extends React.Component {
   }
 
   handleOnScroll = _.throttle(() => {
-    // http://stackoverflow.com/questions/9439725/javascript-how-to-detect-if-browser-window-is-scrolled-to-bottom
-    // const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
-    // const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
+    this.checkBottomScroll();
+    this.checkTopScroll();
+  }, this.defaultRegisterInfiniteScrollOpts.throttledScrollDelay)
+
+  // http://stackoverflow.com/questions/9439725/javascript-how-to-detect-if-browser-window-is-scrolled-to-bottom
+  // const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+  // const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
+
+  checkBottomScroll = () => {
     const scrollTop = this.getScrollTop();
     const scrollHeight = this.sidebar.scrollHeight;
 
@@ -45,6 +51,19 @@ export default class Page extends React.Component {
     if (scrolledToBottom) {
       this.onBottomScrollReached();
     }
-  }, this.defaultRegisterInfiniteScrollOpts.throttledScrollDelay)
+  }
+
+  checkTopScroll = () => {
+    const scrollTop = this.getScrollTop();
+    const scrollHeight = this.sidebar.scrollHeight;
+
+    const clientHeight = document.documentElement.clientHeight || window.innerHeight;
+    const throttledOffset = this.defaultRegisterInfiniteScrollOpts.infiniteScrollYOffset;
+    const scrolledToBottom = Math.ceil(scrollTop) + 100 >= scrollHeight - clientHeight;
+    console.log(scrollTop, scrollHeight - clientHeight);
+    // if (scrolledToBottom) {
+    //   this.onTopScrollReached();
+    // }
+  }
 
 }

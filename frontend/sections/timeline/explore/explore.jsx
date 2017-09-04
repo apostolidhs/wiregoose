@@ -57,7 +57,17 @@ export default class Explore extends InfiniteScrollPage {
 
   // called by InfiniteScrollPage
   onBottomScrollReached = () => {
-    this.retrieveTimeline();
+    if (!(this.timeline && !this.timeline.state.isLoading)) {
+      return;
+    }
+    Explore.page.retrieveNextTimeline(this);
+    // this.retrieveTimeline();
+  }
+
+  // called by InfiniteScrollPage
+  onTopScrollReached = () => {
+    Explore.page.retrievePrevTimeline(this);
+    // this.retrieveTimeline();
   }
 
   render() {

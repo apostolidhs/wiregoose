@@ -24,7 +24,30 @@ export default class Timeline extends React.Component {
     isLoading: false
   }
 
-  addFeeds = (feeds) => {
+  // addFeeds = (feeds) => {
+
+  // }
+
+  appendElements(elements) {
+    const stateElements = this.state.elements;
+    this.setState({
+      elements: stateElements.concat(elements)
+    });
+  }
+
+  prependElements(elements) {
+    const stateElements = this.state.elements;
+    this.setState({
+      elements: elements.concat(stateElements)
+    });
+  }
+
+  removeElements(elements) {
+    const stateElements = this.state.elements;
+    _.pullAll(stateElements, elements);
+  }
+
+  createElements(feeds) {
     // this.changeFeedsToDebug(feeds);
     const cascadedFeeds = this.cascadeFeedsView(feeds);
     const elementsLength = this.state.elements.length;
@@ -52,9 +75,7 @@ export default class Timeline extends React.Component {
         </div>
       );
     });
-
-    const elements = this.state.elements.concat(newElements);
-    this.setState({ elements });
+    return newElements;
   }
 
   setLoadingState = (isLoading = false) => {
