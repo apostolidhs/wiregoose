@@ -39,7 +39,13 @@ export default class Timeline extends React.Component {
               );
             } else {
               return (
-                <ArticleBox key={feed._id} entry={feed} hideCategory={this.props.hideCategory} hideProvider={this.props.hideProvider} />
+                <ArticleBox
+                  key={feed._id}
+                  entry={feed}
+                  hideCategory={this.props.hideCategory}
+                  hideProvider={this.props.hideProvider}
+                  showMockImage={feed.showMockImage}
+                />
               );
             }
           })}
@@ -78,17 +84,20 @@ export default class Timeline extends React.Component {
     );
   }
 
+  // noImage -> [2]
+  // noDescr -> [1]
   cascadeFeedsView = (feeds) => {
     const byBoxSize = _.groupBy(feeds, feed => feed.boxSize);
     const noImages = byBoxSize['ARTICLE_BOX_NO_IMAGE'];
     const noDescrs = byBoxSize['ARTICLE_BOX_NO_DESCRIPTION'];
     const fulls = byBoxSize['ARTICLE_BOX_FULL'];
+    let cascadeFeeds;
     if (!noImages && !noDescrs) {
-      return _.shuffle(feeds);
+      cascadeFeeds = _.shuffle(feeds);
     } else if (!noImages) {
-      return _.shuffle(feeds);
+      cascadeFeeds = this.cascadeNoDescriptionFeedsView(fulls, noDescrs);
     } else if (!noDescrs) {
-      return this.cascadeNoDescriptionFeedsView(fulls, noDescrs);
+      cascadeFeeds = _.shuffle(feeds);
     } else {
       let view = [];
       while(noImages.length && noDescrs.length) {
@@ -97,8 +106,13 @@ export default class Timeline extends React.Component {
         view.push(_.shuffle([noImage, noDescr]));
       }
       view = this.cascadeNoDescriptionFeedsView(view, noDescrs);
-      return _.shuffle(view.concat(noImages).concat(fulls));
+      cascadeFeeds = _.shuffle(view.concat(noImages).concat(fulls));
     }
+    _.each(cascadeFeeds, cascadeFeed => {
+        cascadeFeed.showMockImage = !_.isArray(cascadeFeed)
+                                  && cascadeFeed.boxSize === 'ARTICLE_BOX_NO_IMAGE';
+    });
+    return cascadeFeeds;
   }
 
   cascadeNoDescriptionFeedsView = (list, noDescrs) => {

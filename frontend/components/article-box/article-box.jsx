@@ -27,6 +27,7 @@ export default class Entry extends React.Component {
 
   static propTypes = {
     entry: PropTypes.shape(ArticleBoxProps),
+    showMockImage: PropTypes.bool,
     hideCategory: PropTypes.bool,
     hideProvider: PropTypes.bool
   }
@@ -45,7 +46,7 @@ export default class Entry extends React.Component {
   }
 
   componentWillMount() {
-    const { entry } = this.props;
+    const { entry, showMockImage } = this.props;
     this.articleLink = createLink(entry.title, entry._id);
     this.absoluteArticleLink = createAbsoluteLink(this.articleLink);
 
@@ -62,7 +63,8 @@ export default class Entry extends React.Component {
       this.isArticleFull = true;
     }
 
-    this.articleStyleName = `article ${this.articleSizeStyleName}`;
+    const showMockImageStyleName = showMockImage ? 'article-show-mock-image' : '';
+    this.articleStyleName = `article ${this.articleSizeStyleName} ${showMockImageStyleName}`;
     this.style = undefined;
 
     if (!this.hasDescription) {
@@ -77,20 +79,35 @@ export default class Entry extends React.Component {
       entry,
       hideCategory,
       hideProvider,
+      showMockImage,
       className= '',
       ...passDownProps
     } = this.props;
+
     return (
       <article
         className={className + ' panel panel-default'}
         styleName={this.articleStyleName}
         style={this.style}
       >
-        { this.hasDescription && this.hasImage && (
+        { ((this.hasDescription && this.hasImage) || showMockImage) && (
           <Link to={this.articleLink} styleName="image">
-            <img src={entry.image} alt="" />
+            {(() => {
+              if (showMockImage) {
+                return (
+                  <div styleName="mock-image" >
+                    <span styleName="mock-image-title">
+                      {_.upperFirst(entry.provider)}
+                    </span>
+                  </div>
+                );
+              } else {
+                return (<img src={entry.image} alt="" />);
+              }
+            })()}
           </Link>
         )}
+
         { !hideCategory &&
           <Link
             to={`/category/${entry.category}`}

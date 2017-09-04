@@ -53,7 +53,7 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
     }
 
     function startRssRegistrationFetch(registrationsResp) {
-      onFetchStart(registrationsResp);
+    onFetchStart(registrationsResp);
       rssRegistrationsFetcherIterationFetch.fetch(
         registrationsResp,
         onIterationFetchFinished,

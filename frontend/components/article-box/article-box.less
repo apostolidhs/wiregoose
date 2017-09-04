@@ -32,7 +32,17 @@
   }
 }
 
-.image > img {
+.article-show-mock-image {
+  .article-full();
+}
+
+.image,
+.image:hover {
+  text-decoration: none;
+}
+
+.image > img,
+.mock-image {
   display: block;
   width: 100%;
   max-height: 200px;
@@ -42,6 +52,17 @@
 
 .image-placeholder {
   background-color: @gray-lighter;
+}
+
+.mock-image {
+  height: 152px;
+  text-align: center;
+  padding-top: 60px;
+}
+
+.mock-image-title {
+  font-size: @font-size-h3;
+  color: @gray-light;
 }
 
 // .image-mock-loader {

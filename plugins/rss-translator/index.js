@@ -64,14 +64,14 @@ KlarkModule(module, 'rssTranslator', (
 
     if (!description && item.summary) {
       const JQSummary = $cheerio.load(item.summary);
-      description = JQSummary('img').attr('title')
-                      || JQSummary('img').attr('alt');
+      description = sanitizeString(JQSummary('img').attr('title'), 'description')
+                      || sanitizeString(JQSummary('img').attr('alt'), 'description');
     }
 
     if (!description && item.description) {
       const JQDescription = $cheerio.load(item.description);
-      description = JQDescription('img').attr('title')
-                      || JQDescription('img').attr('alt');
+      description = sanitizeString(JQDescription('img').attr('title'), 'description')
+                      || sanitizeString(JQDescription('img').attr('alt'), 'description');
     }
 
     let image = sanitizeUrl(getImage(item), link);
@@ -152,11 +152,18 @@ KlarkModule(module, 'rssTranslator', (
 
   function sanitizeString(str, path) {
     const validators = modelsEntry.schema.path(path).validators;
-    const maxLengthValidator = _.find(validators, {type: 'maxlength'});
+    const maxLengthValidator = _.find(validators, {type: 'maxlength'}) || { maxlength: 256 };
+    const minLengthValidator = _.find(validators, {type: 'minlength'});
     if (_.isString(str) && str) {
       let escapedStr = $cheerio.load(str).text() || '';
       escapedStr = _.trim(escapedStr.replace(/(\r\n|\n|\r)/gm, ''));
-      return escapedStr ? escapedStr.substr(0, maxLengthValidator.maxlength - 1) : undefined;
+      const sanitized = escapedStr ? escapedStr.substr(0, maxLengthValidator.maxlength - 1) : undefined;
+      if (sanitized) {
+        if (minLengthValidator) {
+          return minLengthValidator.minlength >= sanitized.length ? undefined : sanitized;
+        }
+        return sanitized;
+      }
     }
   }
 
