@@ -12,12 +12,15 @@ import tr from '../localization/localization.js';
   allowMultiple: true,
 })
 export default class Timeline extends React.Component {
-  static FB_FOLLOW_WIDGET_POSITION = 8;
+  static FB_FOLLOW_WIDGET_POSITION = 14;
+  static ADV_WIDGET_POSITION = 20;
 
   static propTypes = {
     hideCategory: PropTypes.bool,
     hideProvider: PropTypes.bool,
   }
+
+  totalElements = 0
 
   state = {
     elements: [],
@@ -87,9 +90,26 @@ export default class Timeline extends React.Component {
       return (
         <div key={feeds[0]._id} styleName="timeline-box" >
           {_.map(feeds, (feed) => {
-            if (elementsLength + feedsIdx === Timeline.FB_FOLLOW_WIDGET_POSITION) {
+            ++this.totalElements;
+            if (this.totalElements === Timeline.FB_FOLLOW_WIDGET_POSITION) {
               return (
                 <FBFollowBox key="facebookFollowKey" />
+              );
+            } else if (this.totalElements === Timeline.ADV_WIDGET_POSITION) {
+              return (
+                <div key="adv" style={{width: '100%', height: '100%'}}>
+                  <ins className="adsbygoogle"
+                    style={{display: 'block'}}
+                    data-ad-format="fluid"
+                    data-ad-layout="image-top"
+                    data-ad-layout-key="-88+1i-gp+c2+11r"
+                    data-ad-client="ca-pub-3571483150053473"
+                    data-ad-slot="1477167936">
+                  </ins>
+                  <script dangerouslySetInnerHTML={{__html: '(adsbygoogle = window.adsbygoogle || []).push({});'}} >
+
+                  </script>
+                </div>
               );
             } else {
               return (
