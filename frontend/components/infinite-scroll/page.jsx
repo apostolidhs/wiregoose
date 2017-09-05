@@ -24,11 +24,32 @@ export default class Page extends React.Component {
   }
 
   getScrollTop = () => {
-    return this.sidebar.scrollTop;
+    if (this.sidebar) {
+      return this.sidebar.scrollTop;
+    } else {
+      return (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+    }
+  }
+
+  getScrollHeight = () => {
+    if (this.sidebar) {
+      return this.sidebar.scrollHeight;
+    } else {
+      return (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
+    }
   }
 
   setScrollTop = (scrollTop) => {
-    this.sidebar.scrollTop = scrollTop;
+    if (this.sidebar) {
+      this.sidebar.scrollTop = scrollTop;
+    } else {
+      if (document.documentElement && document.documentElement.scrollTop) {
+        document.documentElement.scrollTop = scrollTop;
+      } else {
+        document.body.scrollTop = scrollTop;
+      }
+    }
+
   }
 
   handleOnScroll = _.throttle(() => {
@@ -42,7 +63,7 @@ export default class Page extends React.Component {
 
   checkBottomScroll = () => {
     const scrollTop = this.getScrollTop();
-    const scrollHeight = this.sidebar.scrollHeight;
+    const scrollHeight = this.getScrollHeight();
 
     const clientHeight = document.documentElement.clientHeight || window.innerHeight;
     const throttledOffset = this.defaultRegisterInfiniteScrollOpts.infiniteScrollYOffset;
@@ -55,13 +76,8 @@ export default class Page extends React.Component {
 
   checkTopScroll = () => {
     const scrollTop = this.getScrollTop();
-    const scrollHeight = this.sidebar.scrollHeight;
 
-    const clientHeight = document.documentElement.clientHeight || window.innerHeight;
-    const throttledOffset = this.defaultRegisterInfiniteScrollOpts.infiniteScrollYOffset;
-    const scrolledToBottom = Math.ceil(scrollTop) + 100 >= scrollHeight - clientHeight;
-    console.log(scrollTop, scrollHeight - clientHeight);
-    if (scrollTop < 200) {
+    if (scrollTop < this.defaultRegisterInfiniteScrollOpts.infiniteScrollYOffset) {
       this.onTopScrollReached();
     }
   }

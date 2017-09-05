@@ -5,7 +5,7 @@ export default class Page {
 
   lastFeeds = undefined
   timelineState = undefined
-  lastScrollTop = undefined
+  lastScrollTop = 0
   hasMore = true
 
   virtualScrollList = {};
@@ -13,20 +13,22 @@ export default class Page {
   prevSectionPos = -1;
   firstSectionPos = -1;
   secondSectionPos = -1;
+  currentScrollFlow = true; // true = down, false = up
   activeSections = [];
 
 
   componentDidMount(component) {
     if (this.timelineState) {
-      // component.timeline.setState(this.timelineState);
+      component.timeline.setState(this.timelineState, () => {
+        component.setScrollTop(this.lastScrollTop);
+      });
       // setTimeout(() => {
       //   component.setScrollTop(this.lastScrollTop);
       // }, 300);
-      // component.handleMetaData();
+      component.handleMetaData();
     } else {
-      // component.retrieveTimeline();
+      this.retrieveNextTimeline(component);
     }
-    this.retrieveNextTimeline(component);
   }
 
   componentWillUnmount(component) {
@@ -53,10 +55,9 @@ export default class Page {
     } else {
       const elements = component.timeline.createElements(feeds);
       this.addElementsOnTimeline(component, elements);
-      //component.timeline.addFeeds(feeds);
     }
     component.timeline.setLoadingState(false);
-    //this.timelineState = component.timeline.state;
+    this.timelineState = component.timeline.state;
 
     return resp;
   }
@@ -67,25 +68,18 @@ export default class Page {
       this.addVirtualScrollList(prevActiveSection.elements, this.prevSectionPos);
     }
 
-    const activeSection = {idx: this.firstSectionPos, elements};
-    if (this.firstSectionPos > this.secondSectionPos) {
-      this.activeSections.push(activeSection);
-      component.timeline.appendElements(elements);
-    } else if (this.firstSectionPos < this.secondSectionPos) {
-      this.activeSections.splice(0, 0, activeSection);
-      component.timeline.prependElements(elements);
-    } else {
+    if (this.firstSectionPos === this.secondSectionPos) {
       throw new Error('virtual timeline: second and first section cannot be the same');
     }
 
-
-
-    // ///
-    // const currentTimelineElements = component.timeline.state.elements;
-    // if (!_.isEmpty(currentTimelineElements)) {
-    //   this.setPreviousScrollElements(currentTimelineElements);
-    // }
-    // component.timeline.setCurrentElements(elements);
+    const activeSection = {idx: this.firstSectionPos, elements};
+    if (this.currentScrollFlow) {
+      this.activeSections.push(activeSection);
+      component.timeline.appendElements(elements);
+    } else {
+      this.activeSections.splice(0, 0, activeSection);
+      component.timeline.prependElements(elements);
+    }
   }
 
   retrievePrevTimeline(component) {
@@ -101,10 +95,12 @@ export default class Page {
       this.secondSectionPos = this.firstSectionPos;
       --this.firstSectionPos;
     }
+    this.currentScrollFlow = false;
 
     const elements = this.getVirtualScrollListElements(this.firstSectionPos);
     if (!_.isEmpty(elements)) {
       this.addElementsOnTimeline(component, elements);
+      component.checkTopScroll();
     } else {
       throw new Error('previous virtual timeline elements should always exist');
     }
@@ -119,6 +115,7 @@ export default class Page {
       this.prevSectionPos = this.firstSectionPos;
       this.firstSectionPos = this.secondSectionPos + 1;
     }
+    this.currentScrollFlow = true;
 
     if (this.secondSectionPos !== -1 && !this.isActiveSection(this.secondSectionPos)) {
       throw new Error('virtual timeline: second element should always exist');
@@ -137,8 +134,24 @@ export default class Page {
     if (!activeSection) {
       throw new Error('virtual timeline: trying to remove a section that does not exist');
     }
-    component.timeline.removeElements(activeSection.elements);
+    if (this.currentScrollFlow && activeSection !== this.activeSections[0]) {
+      throw new Error('virtual timeline: positive flow should delete the first section');
+    } else if (!this.currentScrollFlow && activeSection !== this.activeSections[1]) {
+      throw new Error('virtual timeline: positive flow should delete the second section');
+    }
+
+    const whiteSpaceElements = component.timeline.removeElements(activeSection.elements, this.currentScrollFlow);
+
+    if (this.currentScrollFlow) {
+      this.activeSections[1].elements = whiteSpaceElements.concat(this.activeSections[1].elements);
+    } else {
+      this.activeSections[0].elements = _.filter(this.activeSections[0].elements, el => {
+        return !_.startsWith(el.key, 'whitespace');
+      });
+    }
+
     _.pull(this.activeSections, activeSection);
+
     return activeSection;
   }
 
