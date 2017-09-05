@@ -7,7 +7,7 @@ export default class Page extends React.Component {
   target = undefined
   defaultRegisterInfiniteScrollOpts = {
     infiniteScrollYOffset: 630, // pixels height
-    throttledScrollDelay: 400 // ms
+    throttledScrollDelay: 300 // ms
   };
 
   componentDidMount() {
@@ -24,19 +24,46 @@ export default class Page extends React.Component {
   }
 
   getScrollTop = () => {
-    return this.sidebar.scrollTop;
+    if (this.sidebar) {
+      return this.sidebar.scrollTop;
+    } else {
+      return (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+    }
+  }
+
+  getScrollHeight = () => {
+    if (this.sidebar) {
+      return this.sidebar.scrollHeight;
+    } else {
+      return (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
+    }
   }
 
   setScrollTop = (scrollTop) => {
-    this.sidebar.scrollTop = scrollTop;
+    if (this.sidebar) {
+      this.sidebar.scrollTop = scrollTop;
+    } else {
+      if (document.documentElement && document.documentElement.scrollTop) {
+        document.documentElement.scrollTop = scrollTop;
+      } else {
+        document.body.scrollTop = scrollTop;
+      }
+    }
+
   }
 
   handleOnScroll = _.throttle(() => {
-    // http://stackoverflow.com/questions/9439725/javascript-how-to-detect-if-browser-window-is-scrolled-to-bottom
-    // const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
-    // const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
+    this.checkBottomScroll();
+    this.checkTopScroll();
+  }, this.defaultRegisterInfiniteScrollOpts.throttledScrollDelay)
+
+  // http://stackoverflow.com/questions/9439725/javascript-how-to-detect-if-browser-window-is-scrolled-to-bottom
+  // const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+  // const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
+
+  checkBottomScroll = () => {
     const scrollTop = this.getScrollTop();
-    const scrollHeight = this.sidebar.scrollHeight;
+    const scrollHeight = this.getScrollHeight();
 
     const clientHeight = document.documentElement.clientHeight || window.innerHeight;
     const throttledOffset = this.defaultRegisterInfiniteScrollOpts.infiniteScrollYOffset;
@@ -45,6 +72,14 @@ export default class Page extends React.Component {
     if (scrolledToBottom) {
       this.onBottomScrollReached();
     }
-  }, this.defaultRegisterInfiniteScrollOpts.throttledScrollDelay)
+  }
+
+  checkTopScroll = () => {
+    const scrollTop = this.getScrollTop();
+
+    if (scrollTop < this.defaultRegisterInfiniteScrollOpts.infiniteScrollYOffset) {
+      this.onTopScrollReached();
+    }
+  }
 
 }

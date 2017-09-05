@@ -25,8 +25,8 @@ export default class Provider extends InfiniteScrollPage {
   }
 
   componentWillUnmount() {
-    Provider.page.componentWillUnmount(this);
     super.componentWillUnmount();
+    Provider.page.componentWillUnmount(this);
   }
 
   retrieveTimeline = () => {
@@ -56,7 +56,15 @@ export default class Provider extends InfiniteScrollPage {
 
   // called by InfiniteScrollPage
   onBottomScrollReached = () => {
-    this.retrieveTimeline();
+    if (!(this.timeline && !this.timeline.state.isLoading)) {
+      return;
+    }
+    Provider.page.retrieveNextTimeline(this);
+  }
+
+  // called by InfiniteScrollPage
+  onTopScrollReached = () => {
+    Provider.page.retrievePrevTimeline(this);
   }
 
   render() {

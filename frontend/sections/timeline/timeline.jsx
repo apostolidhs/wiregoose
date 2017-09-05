@@ -67,32 +67,40 @@ export default class Timeline extends React.Component {
         && this.isSidebarDockedCalc(size.width);
 
     return (
-      <Sidebar
-        styles={{
-          root: {
-            top: 50
-          },
-          sidebar: {
-            width: '250px'
-          },
-          content: {
-            padding: '15px'
-          }
-        }}
-        contentClassName="w-left-sidebar"
-        docked={isSidebarDocked}
-        sidebar={<SidebarContent />}
-        touch={false}
-        open={this.state.sidebar.isLeftSidebarOpen}
-        onSetOpen={this.state.sidebar.onSetSidebarOpen}
-      >
-        <div styleName={"container-wrapper" + (isSidebarDocked ? ' sidebar-docked' : '')}>
-          <div className="container" >
-            {children}
-          </div>
+      <div styleName={"container-wrapper" + (isSidebarDocked ? ' sidebar-docked' : '')}>
+        <div className="container" >
+          {children}
         </div>
-      </Sidebar>
+      </div>
     );
+
+    // return (
+    //   <Sidebar
+    //     styles={{
+    //       root: {
+    //         top: 50
+    //       },
+    //       sidebar: {
+    //         width: '250px'
+    //       },
+    //       content: {
+    //         padding: '15px'
+    //       }
+    //     }}
+    //     contentClassName="w-left-sidebar"
+    //     docked={isSidebarDocked}
+    //     sidebar={<SidebarContent />}
+    //     touch={false}
+    //     open={this.state.sidebar.isLeftSidebarOpen}
+    //     onSetOpen={this.state.sidebar.onSetSidebarOpen}
+    //   >
+    //     <div styleName={"container-wrapper" + (isSidebarDocked ? ' sidebar-docked' : '')}>
+    //       <div className="container" >
+    //         {children}
+    //       </div>
+    //     </div>
+    //   </Sidebar>
+    // );
   }
 
 }

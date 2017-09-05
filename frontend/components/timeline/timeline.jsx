@@ -24,7 +24,61 @@ export default class Timeline extends React.Component {
     isLoading: false
   }
 
-  addFeeds = (feeds) => {
+  appendElements(elements) {
+    const stateElements = this.state.elements;
+    this.setState({
+      elements: stateElements.concat(elements)
+    });
+  }
+
+  prependElements(elements) {
+    const stateElements = this.state.elements;
+    this.setState({
+      elements: elements.concat(stateElements)
+    });
+  }
+
+  removeElements(elements, scrollFlow) {
+    const stateElements = this.state.elements;
+
+    let totalWhiteSpaceElements = 0;
+    if (scrollFlow) {
+      const lastElement = _.last(elements);
+      const lastStateElementIdx = _.findIndex(stateElements, e => e === lastElement);
+      if (window.innerWidth > 1200) {
+        totalWhiteSpaceElements = (lastStateElementIdx + 1) % 4;
+      }
+    }
+
+    _.pullAll(stateElements, elements);
+
+    if (!scrollFlow) {
+      _.remove(stateElements, el => {
+        return _.startsWith(el.key, 'whitespace');
+      });
+    }
+
+    const whiteSpaceElements = _.map(
+      _.times(totalWhiteSpaceElements),
+      () => {
+        const el = this.createWhiteSpaceElement();
+        stateElements.unshift(el);
+        return el;
+      }
+    );
+
+    this.setState({
+      elements: stateElements
+    });
+
+    return whiteSpaceElements;
+  }
+
+  createWhiteSpaceElement() {
+    return (<div key={_.uniqueId('whitespace-')} styleName="timeline-box" ></div>);
+  }
+
+  createElements(feeds) {
     // this.changeFeedsToDebug(feeds);
     const cascadedFeeds = this.cascadeFeedsView(feeds);
     const elementsLength = this.state.elements.length;
@@ -52,9 +106,7 @@ export default class Timeline extends React.Component {
         </div>
       );
     });
-
-    const elements = this.state.elements.concat(newElements);
-    this.setState({ elements });
+    return newElements;
   }
 
   setLoadingState = (isLoading = false) => {
@@ -66,7 +118,7 @@ export default class Timeline extends React.Component {
 
     return (
       <div>
-        <div className="clearfix">
+        <div className="clearfix" >
           {elements}
         </div>
         { isLoading &&
@@ -93,20 +145,20 @@ export default class Timeline extends React.Component {
     const fulls = byBoxSize['ARTICLE_BOX_FULL'];
     let cascadeFeeds;
     if (!noImages && !noDescrs) {
-      cascadeFeeds = _.shuffle(feeds);
+      cascadeFeeds = /*_.shuffle*/(feeds);
     } else if (!noImages) {
       cascadeFeeds = this.cascadeNoDescriptionFeedsView(fulls, noDescrs);
     } else if (!noDescrs) {
-      cascadeFeeds = _.shuffle(feeds);
+      cascadeFeeds = /*_.shuffle*/(feeds);
     } else {
       let view = [];
       while(noImages.length && noDescrs.length) {
         const noImage = noImages.pop();
         const noDescr = noDescrs.pop();
-        view.push(_.shuffle([noImage, noDescr]));
+        view.push(/*_.shuffle*/([noImage, noDescr]));
       }
       view = this.cascadeNoDescriptionFeedsView(view, noDescrs);
-      cascadeFeeds = _.shuffle(view.concat(noImages).concat(fulls));
+      cascadeFeeds = /*_.shuffle*/(view.concat(noImages).concat(fulls));
     }
     _.each(cascadeFeeds, cascadeFeed => {
         cascadeFeed.showMockImage = !_.isArray(cascadeFeed)
@@ -117,7 +169,7 @@ export default class Timeline extends React.Component {
 
   cascadeNoDescriptionFeedsView = (list, noDescrs) => {
     const noDescChunks = _.chunk(noDescrs, 3);
-    return _.shuffle(noDescChunks.concat(list));
+    return /*_.shuffle*/(noDescChunks.concat(list));
   }
 
   noImage = 0;
