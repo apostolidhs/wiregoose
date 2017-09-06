@@ -17,6 +17,7 @@ import tr from '../localization/localization.js';
 import mongooseIcon from '../../assets/img/logo-170-nologo.png';
 
 export default class Article extends React.Component {
+  static displayedAdds = 0;
   static ARTICLE_REDIRECTION_DELAY = 3; //s
 
   static propTypes = {
@@ -40,6 +41,8 @@ export default class Article extends React.Component {
     redirectIn: -1
   }
 
+  articleContentEl = undefined
+
   componentWillReceiveProps = ({ article, isLoading }) => {
     if (!isLoading && article && article.error && this.state.redirectIn === -1) {
       const redirectIn = Article.ARTICLE_REDIRECTION_DELAY;
@@ -57,6 +60,26 @@ export default class Article extends React.Component {
     }
   }
 
+  setArticleContentEl = (el) => {
+    if (!this.articleContentEl) {
+      this.articleContentEl = el;
+      ++Article.displayedAdds;
+      if (Article.displayedAdds % 2 === 1) {
+        return;
+      }
+      const pEls = el.getElementsByTagName('p');
+      if (pEls.length > 1) {
+        const targetEl = pEls[pEls.length - 1];
+        const pAdvEl = document.createElement('div');
+        pAdvEl.innerHTML = this.getParagraphAdv();
+        targetEl.parentElement.insertBefore(pAdvEl, targetEl);
+        setTimeout(() => {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }, 0);
+      }
+    }
+  }
+
   render() {
     const { article, isLoading } = this.props;
 
@@ -69,8 +92,13 @@ export default class Article extends React.Component {
               {(() => {
                 if (article.error) {
                   return this.renderError(article);
-                } else {
-                  return <section dangerouslySetInnerHTML={{__html: article.content}}></section>
+                } else {//el => this.articleContentEl = el
+                  return (
+                    <section
+                      ref={ this.setArticleContentEl }
+                      dangerouslySetInnerHTML={{__html: article.content}}>
+                    </section>
+                  )
                 }
               })()}
               { !article.error && this.renderFooter(article) }
@@ -94,6 +122,18 @@ export default class Article extends React.Component {
       }
     }, 0);
     browserHistory.goBack();
+  }
+
+  getParagraphAdv = () => {
+    return (
+      `<ins class="adsbygoogle"
+        style="display:block; text-align:center;"
+        data-ad-format="fluid"
+        data-ad-layout="in-article"
+        data-ad-client="ca-pub-3571483150053473"
+        data-ad-slot="8983891351">
+      </ins>`
+    );
   }
 
   renderBackButton = () => {

@@ -21,6 +21,7 @@ export default class Timeline extends React.Component {
   }
 
   totalElements = 0
+  googleAdsLaunched = 0
 
   state = {
     elements: [],
@@ -31,6 +32,13 @@ export default class Timeline extends React.Component {
     const stateElements = this.state.elements;
     this.setState({
       elements: stateElements.concat(elements)
+    }, () => {
+      if (this.googleAdsLaunched === 1) {
+        --this.googleAdsLaunched;
+        setTimeout(() => {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }, 0);
+      }
     });
   }
 
@@ -96,6 +104,7 @@ export default class Timeline extends React.Component {
                 <FBFollowBox key="facebookFollowKey" />
               );
             } else if (this.totalElements === Timeline.ADV_WIDGET_POSITION) {
+              ++this.googleAdsLaunched;
               return (
                 <div key="adv" style={{width: '100%', height: '100%'}}>
                   <ins className="adsbygoogle"
@@ -106,9 +115,6 @@ export default class Timeline extends React.Component {
                     data-ad-client="ca-pub-3571483150053473"
                     data-ad-slot="1477167936">
                   </ins>
-                  <script dangerouslySetInnerHTML={{__html: '(adsbygoogle = window.adsbygoogle || []).push({});'}} >
-
-                  </script>
                 </div>
               );
             } else {
