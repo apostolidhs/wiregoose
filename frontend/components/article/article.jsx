@@ -34,30 +34,31 @@ export default class Article extends React.Component {
       entryId:  PropTypes.shape(entryPropType),
       createdAt: PropTypes.instanceOf(Date)
     }),
-    isLoading: PropTypes.bool
+    isLoading: PropTypes.bool,
+    relatedEntries: PropTypes.arrayOf(entryPropType)
   }
 
-  state = {
-    redirectIn: -1
-  }
+  // state = {
+  //   redirectIn: -1
+  // }
 
   articleContentEl = undefined
 
   componentWillReceiveProps = ({ article, isLoading }) => {
-    if (!isLoading && article && article.error && this.state.redirectIn === -1) {
-      const redirectIn = Article.ARTICLE_REDIRECTION_DELAY;
-      this.setState({ redirectIn });
-      _.each(_.times(redirectIn), sec => {
-        setTimeout(() => {
-          const normalSec = sec + 1;
-          const isLast = normalSec === redirectIn;
-          this.setState({ redirectIn: isLast ? -1 : normalSec });
-          if (isLast) {
-            window.open(article.link, "_blank");
-          }
-        }, sec * 1000);
-      });
-    }
+    // if (!isLoading && article && article.error && this.state.redirectIn === -1) {
+    //   const redirectIn = Article.ARTICLE_REDIRECTION_DELAY;
+    //   this.setState({ redirectIn });
+    //   _.each(_.times(redirectIn), sec => {
+    //     setTimeout(() => {
+    //       const normalSec = sec + 1;
+    //       const isLast = normalSec === redirectIn;
+    //       this.setState({ redirectIn: isLast ? -1 : normalSec });
+    //       if (isLast) {
+    //         window.open(article.link, "_blank");
+    //       }
+    //     }, sec * 1000);
+    //   });
+    // }
   }
 
   setArticleContentEl = (el) => {
@@ -213,7 +214,7 @@ export default class Article extends React.Component {
           <FontAwesome name="newspaper-o" />
         </h1>
         <p className="lead">{tr.articleRedirectTitle}</p>
-        { this.state.redirectIn !== -1 &&
+        {/* { this.state.redirectIn !== -1 &&
           <p>
             {tr.formatString(
               tr.articleRedirectDesc,
@@ -223,22 +224,28 @@ export default class Article extends React.Component {
               Article.ARTICLE_REDIRECTION_DELAY - this.state.redirectIn
             )}
           </p>
-        }
-        { this.state.redirectIn === -1 &&
+        } */}
+        {/* { this.state.redirectIn === -1 &&
           <a href={article.link} role="button" target="_blank">
             {tr.articleReadFromWebsite}
           </a>
-        }
-        <p>
+        } */}
+
+        <a href={article.link} className="btn btn-default" role="button" target="_blank" style={{color: '#333'}}>
+          <FontAwesome name="external-link" /> {' '}
+          {tr.articleReadFromWebsite}
+        </a>
+        {/* <p>
           <b>{tr.or}</b> {''}
           <Link
             to="/"
+            className="btn btn-primary"
             role="button"
             title={tr.exploreNews}
           >
             {tr.promptReading}
           </Link>
-        </p>
+        </p> */}
       </div>
     );
   }

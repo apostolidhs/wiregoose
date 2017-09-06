@@ -132,6 +132,24 @@ export function fetchArticle(entryId, friendlyErrorInterceptor = false) {
   })
 }
 
+export function entryRelated(entryId) {
+  return httpRequest({
+    method: 'get',
+    url: `${API_ORIGIN}entry/${entryId}/related`,
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+    friendlyErrorInterceptor: true
+  })
+  .then(resp => {
+    resp.data.data = _.map(
+      resp.data.data, ArticleBoxResponseTransformation
+    );
+    return resp;
+  });
+}
+
 function timelineExplore(categories, lang, friendlyErrorInterceptor = false) {
   return getTimeline('explore', categories, lang, friendlyErrorInterceptor);
 }

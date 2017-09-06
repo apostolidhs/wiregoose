@@ -51,7 +51,10 @@ export default class Article extends React.Component {
       })
       .catch((resp) => {
         this.setState({ isLoading: false });
-      })
+      });
+
+      // WiregooseApi.entryRelated(entryId)
+      //   .then(resp => console.log(resp));
   }
 
   handleMetaData = () => {

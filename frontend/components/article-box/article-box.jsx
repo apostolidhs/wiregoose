@@ -6,6 +6,7 @@ import CSSModules from 'react-css-modules';
 import FromNow from '../utilities/from-now.jsx';
 import styles from './article-box.less';
 import SocialShare from './social-share.jsx';
+import CategoryImage from '../category/images.jsx';
 import { ellipsis } from '../utilities/text-utilities.js';
 import ArticleBoxProps from './entry-prop-type.js';
 import { createLink, createAbsoluteLink } from '../utilities/text-utilities.js';
@@ -94,13 +95,7 @@ export default class Entry extends React.Component {
           <Link to={this.articleLink} styleName="image">
             {(() => {
               if (showMockImage) {
-                return (
-                  <div styleName="mock-image" >
-                    <span styleName="mock-image-title">
-                      {_.upperFirst(entry.provider)}
-                    </span>
-                  </div>
-                );
+                return this.renderImagePlaceholder();
               } else {
                 return (<img src={entry.image} alt="" />);
               }
@@ -154,6 +149,20 @@ export default class Entry extends React.Component {
           </footer>
         </div>
       </article>
+    );
+  }
+
+  renderImagePlaceholder = () => {
+    const { entry } = this.props;
+    return (
+      <div styleName="mock-image" >
+        <div styleName="mock-image-category">
+          <CategoryImage name={entry.category} />
+        </div>
+        <div styleName="mock-image-provider">
+          {_.upperFirst(entry.provider)}
+        </div>
+      </div>
     );
   }
 }
