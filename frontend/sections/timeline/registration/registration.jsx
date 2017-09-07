@@ -30,8 +30,8 @@ export default class Registration extends InfiniteScrollPage {
     }
     this.setState({ registration }, () => {
       Registration.page.componentDidMount(this);
+      super.componentDidMount();
     });
-    super.componentDidMount();
   }
 
   componentWillUnmount() {

@@ -182,5 +182,12 @@ export default class Page {
     this.lastFeeds = undefined;
     this.timelineState = undefined;
     this.lastScrollTop = undefined;
+    this.hasMore = true;
+    this.virtualScrollList = {};
+    this.prevSectionPos = -1;
+    this.firstSectionPos = -1;
+    this.secondSectionPos = -1;
+    this.currentScrollFlow = true; // true = down, false = up
+    this.activeSections = [];
   }
 }

@@ -13,7 +13,8 @@ import tr from '../localization/localization.js';
 })
 export default class Timeline extends React.Component {
   static FB_FOLLOW_WIDGET_POSITION = 14;
-  static ADV_WIDGET_POSITION = 20;
+  static ADVERTISE_WIDGET_FREQUENCY = 19;
+  static ADVERTISE_WIDGET_INITIAL_POSITION = 9;
 
   static propTypes = {
     hideCategory: PropTypes.bool,
@@ -33,7 +34,7 @@ export default class Timeline extends React.Component {
     this.setState({
       elements: stateElements.concat(elements)
     }, () => {
-      if (this.googleAdsLaunched === 1) {
+      while(this.googleAdsLaunched > 0) {
         --this.googleAdsLaunched;
         setTimeout(() => {
           (adsbygoogle = window.adsbygoogle || []).push({});
@@ -92,47 +93,41 @@ export default class Timeline extends React.Component {
   createElements(feeds) {
     // this.changeFeedsToDebug(feeds);
     const cascadedFeeds = this.cascadeFeedsView(feeds);
-    const elementsLength = this.state.elements.length;
-    const newElements = _.map(cascadedFeeds, (cascadedFeed, feedsIdx) => {
+    const newElements = _.map(cascadedFeeds, (cascadedFeed) => {
+      ++this.totalElements;
+
+      if (this.shouldRenderFBFollowBox()) {
+        return this.renderFBFollowBox();
+      }
+
+      if (this.shouldRenderAdvertiseBox()) {
+        ++this.googleAdsLaunched;
+        return this.renderAdvertiseBox();
+      }
+
       const feeds = _.castArray(cascadedFeed);
       return (
         <div key={feeds[0]._id} styleName="timeline-box" >
-          {_.map(feeds, (feed) => {
-            ++this.totalElements;
-            if (this.totalElements === Timeline.FB_FOLLOW_WIDGET_POSITION) {
-              return (
-                <FBFollowBox key="facebookFollowKey" />
-              );
-            } else if (this.totalElements === Timeline.ADV_WIDGET_POSITION) {
-              ++this.googleAdsLaunched;
-              return (
-                <div key="adv" style={{width: '100%', height: '100%'}}>
-                  <ins className="adsbygoogle"
-                    style={{display: 'block'}}
-                    data-ad-format="fluid"
-                    data-ad-layout="image-top"
-                    data-ad-layout-key="-88+1i-gp+c2+11r"
-                    data-ad-client="ca-pub-3571483150053473"
-                    data-ad-slot="1477167936">
-                  </ins>
-                </div>
-              );
-            } else {
-              return (
-                <ArticleBox
-                  key={feed._id}
-                  entry={feed}
-                  hideCategory={this.props.hideCategory}
-                  hideProvider={this.props.hideProvider}
-                  showMockImage={feed.showMockImage}
-                />
-              );
-            }
-          })}
+          {_.map(feeds, this.renderArticleBox)}
         </div>
       );
     });
+
     return newElements;
+  }
+
+  shouldRenderFBFollowBox = () => {
+    return this.totalElements === Timeline.FB_FOLLOW_WIDGET_POSITION;
+  }
+
+  shouldRenderAdvertiseBox = () => {
+    return (
+      this.totalElements === Timeline.ADVERTISE_WIDGET_INITIAL_POSITION
+      || (
+        this.totalElements !== Timeline.ADVERTISE_WIDGET_FREQUENCY
+        && this.totalElements % Timeline.ADVERTISE_WIDGET_FREQUENCY === 0
+      )
+    );
   }
 
   setLoadingState = (isLoading = false) => {
@@ -156,48 +151,118 @@ export default class Timeline extends React.Component {
 
   renderLoading = () => {
     return (
-      <h4 className="w-text-loading" data-text={tr.loadingMore}>
+      <h4 className="w-text-loading" styleName="text-loading" data-text={tr.loadingMore}>
         {tr.loadingMore}
       </h4>
+    );
+  }
+
+  renderArticleBox = (feed) => {
+    return (
+      <ArticleBox
+        key={feed._id}
+        entry={feed}
+        hideCategory={this.props.hideCategory}
+        hideProvider={this.props.hideProvider}
+        showMockImage={feed.showMockImage}
+      />
+    );
+  }
+
+  renderFBFollowBox = () => {
+    return (
+      <div key={_.uniqueId('facebook-follow-Key-')} styleName="timeline-box" >
+        <FBFollowBox />
+      </div>
+    );
+  }
+
+  renderAdvertiseBox = () => {
+    return (
+      <div key={_.uniqueId('advertise-key-')} styleName="timeline-box" >
+        <ins className="adsbygoogle"
+          style={{display: 'block'}}
+          data-ad-format="fluid"
+          data-ad-layout="image-top"
+          data-ad-layout-key="-88+1i-gp+c2+11r"
+          data-ad-client="ca-pub-3571483150053473"
+          data-ad-slot="1477167936">
+        </ins>
+      </div>
     );
   }
 
   // noImage -> [2]
   // noDescr -> [1]
   cascadeFeedsView = (feeds) => {
+    const cascadedFeeds = this.createCascadeFeedsView(feeds);
+    const prioritiesFeeds = this.createPriorityOnFullBoxes(cascadedFeeds);
+    const fullfiedFeeds = this.createFullHeightOnSingleNoImageBoxes(prioritiesFeeds);
+    return fullfiedFeeds;
+  }
+
+  createCascadeFeedsView = (feeds) => {
     const byBoxSize = _.groupBy(feeds, feed => feed.boxSize);
     const noImages = byBoxSize['ARTICLE_BOX_NO_IMAGE'];
     const noDescrs = byBoxSize['ARTICLE_BOX_NO_DESCRIPTION'];
     const fulls = byBoxSize['ARTICLE_BOX_FULL'];
     let cascadeFeeds;
     if (!noImages && !noDescrs) {
-      cascadeFeeds = /*_.shuffle*/(feeds);
+      cascadeFeeds = _.shuffle(feeds);
     } else if (!noImages) {
       cascadeFeeds = this.cascadeNoDescriptionFeedsView(fulls, noDescrs);
     } else if (!noDescrs) {
-      cascadeFeeds = /*_.shuffle*/(feeds);
+      cascadeFeeds = _.shuffle(feeds);
     } else {
       let view = [];
       while(noImages.length && noDescrs.length) {
         const noImage = noImages.pop();
         const noDescr = noDescrs.pop();
-        view.push(/*_.shuffle*/([noImage, noDescr]));
+        view.push(_.shuffle([noImage, noDescr]));
       }
       view = this.cascadeNoDescriptionFeedsView(view, noDescrs);
-      cascadeFeeds = /*_.shuffle*/(view.concat(noImages).concat(fulls));
+      cascadeFeeds = _.shuffle(view.concat(noImages).concat(fulls));
     }
+    return cascadeFeeds;
+  }
+
+  createFullHeightOnSingleNoImageBoxes = (cascadeFeeds) => {
     _.each(cascadeFeeds, cascadeFeed => {
-        cascadeFeed.showMockImage = !_.isArray(cascadeFeed)
-                                  && cascadeFeed.boxSize === 'ARTICLE_BOX_NO_IMAGE';
+      if (
+        !_.isArray(cascadeFeed)
+        && cascadeFeed.boxSize === 'ARTICLE_BOX_NO_IMAGE'
+      ) {
+        cascadeFeed.showMockImage = true;
+      }
     });
     return cascadeFeeds;
   }
 
-  cascadeNoDescriptionFeedsView = (list, noDescrs) => {
-    const noDescChunks = _.chunk(noDescrs, 3);
-    return /*_.shuffle*/(noDescChunks.concat(list));
+  createPriorityOnFullBoxes = (cascadeFeeds) => {
+    const cascadeFeedsByBoxSize = _.groupBy(
+      cascadeFeeds,
+      cascadeFeed => cascadeFeed.boxSize === 'ARTICLE_BOX_FULL' ? 'full' : 'noFull'
+    );
+
+    const prioritiesView = [];
+    const { full, noFull } = cascadeFeedsByBoxSize;
+    while(full.length > 2 && noFull.length) {
+      prioritiesView.push(full.pop());
+      prioritiesView.push(full.pop());
+      prioritiesView.push(full.pop());
+      prioritiesView.push(noFull.pop());
+    }
+    return prioritiesView
+      .concat(full)
+      .concat(noFull);
   }
 
+  cascadeNoDescriptionFeedsView = (list, noDescrs) => {
+    const noDescChunks = _.chunk(noDescrs, 3);
+    return _.shuffle(noDescChunks.concat(list));
+  }
+
+  /////// debug
   noImage = 0;
   noDescription = 0;
   changeFeedsToDebug = (feeds) => {

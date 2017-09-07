@@ -40,9 +40,8 @@ export default class Category extends InfiniteScrollPage {
 
     this.retrieveCategories()
       .then(this.checkCategoryExistence)
-      .then(() => Category.page.componentDidMount(this));
-
-    super.componentDidMount();
+      .then(() => Category.page.componentDidMount(this))
+      .then(() => super.componentDidMount())
   }
 
   componentWillUnmount() {
