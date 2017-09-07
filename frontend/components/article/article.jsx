@@ -54,7 +54,7 @@ export default class Article extends React.Component {
   }
 
   createAdvertiseIfIsPossible = () => {
-    if (false && Article.totalDisplayedAdds % Article.DISPLAY_ADDS_FREQUENCY === 1) {
+    if (Article.totalDisplayedAdds % Article.DISPLAY_ADDS_FREQUENCY === 1) {
       return;
     }
     const pEls = this.articleContentEl.getElementsByTagName('p');
