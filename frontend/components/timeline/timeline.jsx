@@ -208,20 +208,20 @@ export default class Timeline extends React.Component {
     const fulls = byBoxSize['ARTICLE_BOX_FULL'];
     let cascadeFeeds;
     if (!noImages && !noDescrs) {
-      cascadeFeeds = _.shuffle(feeds);
+      cascadeFeeds = /*_.shuffle*/(feeds);
     } else if (!noImages) {
       cascadeFeeds = this.cascadeNoDescriptionFeedsView(fulls, noDescrs);
     } else if (!noDescrs) {
-      cascadeFeeds = _.shuffle(feeds);
+      cascadeFeeds = /*_.shuffle*/(feeds);
     } else {
       let view = [];
       while(noImages.length && noDescrs.length) {
         const noImage = noImages.pop();
         const noDescr = noDescrs.pop();
-        view.push(_.shuffle([noImage, noDescr]));
+        view.push(/*_.shuffle*/([noImage, noDescr]));
       }
       view = this.cascadeNoDescriptionFeedsView(view, noDescrs);
-      cascadeFeeds = _.shuffle(view.concat(noImages).concat(fulls));
+      cascadeFeeds = /*_.shuffle*/(view.concat(noImages).concat(fulls));
     }
     return cascadeFeeds;
   }
@@ -245,13 +245,15 @@ export default class Timeline extends React.Component {
     );
 
     const prioritiesView = [];
-    const { full, noFull } = cascadeFeedsByBoxSize;
+    const full = cascadeFeedsByBoxSize.full || [];
+    const noFull = cascadeFeedsByBoxSize.noFull || [];
     while(full.length > 2 && noFull.length) {
       prioritiesView.push(full.pop());
       prioritiesView.push(full.pop());
       prioritiesView.push(full.pop());
       prioritiesView.push(noFull.pop());
     }
+
     return prioritiesView
       .concat(full)
       .concat(noFull);

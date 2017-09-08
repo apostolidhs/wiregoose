@@ -7,7 +7,7 @@ export default class Page extends React.Component {
   target = undefined
   defaultRegisterInfiniteScrollOpts = {
     infiniteScrollYOffset: 630, // pixels height
-    throttledScrollDelay: 300 // ms
+    throttledScrollDelay: 500 // ms
   };
 
   componentDidMount() {
@@ -68,7 +68,7 @@ export default class Page extends React.Component {
     const clientHeight = document.documentElement.clientHeight || window.innerHeight;
     const throttledOffset = this.defaultRegisterInfiniteScrollOpts.infiniteScrollYOffset;
     const scrolledToBottom = (Math.ceil(scrollTop + clientHeight) + throttledOffset) >= scrollHeight;
-
+    //console.log(scrollTop, scrollHeight, clientHeight, scrolledToBottom);
     if (scrolledToBottom) {
       this.onBottomScrollReached();
     }

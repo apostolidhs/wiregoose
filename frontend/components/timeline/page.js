@@ -50,42 +50,54 @@ export default class Page {
       .flatten()
       .value();
 
+    let addElementPrms;
     if (_.isEmpty(feeds)) {
       this.hasMore = false;
+      addElementPrms = Promise.resolve();
     } else {
       const elements = component.timeline.createElements(feeds);
-      this.addElementsOnTimeline(component, elements);
+      addElementPrms = this.addElementsOnTimeline(component, elements);
     }
-    component.timeline.setLoadingState(false);
-    this.timelineState = component.timeline.state;
+
+    addElementPrms.then(() => {
+      component.timeline.setLoadingState(false);
+      this.timelineState = component.timeline.state;
+    });
 
     return resp;
   }
 
   addElementsOnTimeline(component, elements) {
-    if (this.prevSectionPos !== -1) {
-      const prevActiveSection = this.removeActiveSection(component, this.prevSectionPos);
-      this.addVirtualScrollList(prevActiveSection.elements, this.prevSectionPos);
-    }
+    return new Promise((resolve) => {
+      if (this.prevSectionPos !== -1) {
+        const prevActiveSection = this.removeActiveSection(component, this.prevSectionPos);
+        this.addVirtualScrollList(prevActiveSection.elements, this.prevSectionPos);
+      }
 
-    if (this.firstSectionPos === this.secondSectionPos) {
-      throw new Error('virtual timeline: second and first section cannot be the same');
-    }
+      if (this.firstSectionPos === this.secondSectionPos) {
+        throw new Error('virtual timeline: second and first section cannot be the same');
+      }
 
-    const activeSection = {idx: this.firstSectionPos, elements};
-    if (this.currentScrollFlow) {
-      this.activeSections.push(activeSection);
-      component.timeline.appendElements(elements);
-    } else {
-      this.activeSections.splice(0, 0, activeSection);
-      component.timeline.prependElements(elements);
-    }
+      if (this.currentScrollFlow) {
+        setTimeout(() => {
+          this.addActiveSection(component, elements);
+          resolve();
+        }, 0);
+      } else {
+        this.addActiveSection(component, elements);
+        resolve();
+      }
+
+    });
   }
 
+  isRetrievePrevTimelineLoading = false;
   retrievePrevTimeline(component) {
     if (this.firstSectionPos === -1 || this.firstSectionPos === 0 || this.secondSectionPos === 0) {
       return;
     }
+
+    console.log('retrievePrevTimeline');
 
     if (this.firstSectionPos > this.secondSectionPos) {
       this.prevSectionPos = this.firstSectionPos;
@@ -99,14 +111,15 @@ export default class Page {
 
     const elements = this.getVirtualScrollListElements(this.firstSectionPos);
     if (!_.isEmpty(elements)) {
-      this.addElementsOnTimeline(component, elements);
-      component.checkTopScroll();
+      this.addElementsOnTimeline(component, elements)
+        .then(() => component.checkTopScroll());
     } else {
       throw new Error('previous virtual timeline elements should always exist');
     }
   }
 
   retrieveNextTimeline(component) {
+    console.log('retrieveNextTimeline');
     if (this.firstSectionPos > this.secondSectionPos) {
       this.prevSectionPos = this.secondSectionPos;
       this.secondSectionPos = this.firstSectionPos;
@@ -126,6 +139,20 @@ export default class Page {
       this.addElementsOnTimeline(component, elements);
     } else {
       component.retrieveTimeline();
+    }
+  }
+
+  addActiveSection = (component, elements) => {
+    const activeSection = {idx: this.firstSectionPos, elements};
+    if (this.currentScrollFlow) {
+      this.activeSections.push(activeSection);
+      component.timeline.appendElements(elements);
+    } else {
+      const prevScrollPos = component.getScrollHeight();
+      this.activeSections.splice(0, 0, activeSection);
+      component.timeline.prependElements(elements);
+      const tt = (component.getScrollHeight() - prevScrollPos) + component.getScrollTop();
+      component.setScrollTop(tt);
     }
   }
 
