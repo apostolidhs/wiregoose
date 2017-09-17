@@ -30,19 +30,15 @@ export default class Provider extends InfiniteScrollPage {
   }
 
   retrieveTimeline = () => {
-    if (!(this.timeline && !this.timeline.state.isLoading && Provider.page.hasMore)) {
-      return;
-    }
-
-    this.timeline.setLoadingState(true);
     if (!Provider.page.lastFeeds) {
       const provider = this.props.routeParams.id;
       Provider.page.lastFeeds = { [provider]: _.now() };
     }
-
-    WiregooseApi.timeline.provider(Provider.page.lastFeeds, BrowserLanguageDetection(), true)
-      .then(resp => Provider.page.timelineRetrievedSuccessfully(this, resp))
-      .then(this.handleMetaData);
+    return WiregooseApi.timeline.provider(
+      Provider.page.lastFeeds,
+      BrowserLanguageDetection(),
+      true
+    );
   }
 
   handleMetaData = () => {

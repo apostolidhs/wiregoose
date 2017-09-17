@@ -7,7 +7,7 @@ export default class Page extends React.Component {
   target = undefined
   defaultRegisterInfiniteScrollOpts = {
     infiniteScrollYOffset: 630, // pixels height
-    throttledScrollDelay: 500 // ms
+    throttledScrollDelay: 300 // ms
   };
 
   componentDidMount() {

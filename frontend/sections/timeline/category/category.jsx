@@ -66,18 +66,15 @@ export default class Category extends InfiniteScrollPage {
   }
 
   retrieveTimeline = () => {
-    if (!(this.timeline && !this.timeline.state.isLoading)) {
-      return;
-    }
-
-    this.timeline.setLoadingState(true);
     if (!Category.page.lastFeeds) {
       const category = this.props.routeParams.id;
       Category.page.lastFeeds = { [category]: _.now() };
     }
-    WiregooseApi.timeline.category(Category.page.lastFeeds, BrowserLanguageDetection(), true)
-      .then(resp => Category.page.timelineRetrievedSuccessfully(this, resp))
-      .then(this.handleMetaData);
+    return WiregooseApi.timeline.category(
+      Category.page.lastFeeds,
+      BrowserLanguageDetection(),
+      true
+    );
   }
 
   handleMetaData = () => {
