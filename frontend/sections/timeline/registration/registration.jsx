@@ -40,19 +40,15 @@ export default class Registration extends InfiniteScrollPage {
   }
 
   retrieveTimeline = () => {
-    if (!(this.timeline && !this.timeline.state.isLoading)) {
-      return;
-    }
-
-    this.timeline.setLoadingState(true);
     if (!Registration.page.lastFeeds) {
       const registration = this.state.registration._id;
       Registration.page.lastFeeds = { [registration]: _.now() };
     }
-
-    WiregooseApi.timeline.registration(Registration.page.lastFeeds, BrowserLanguageDetection(), true)
-      .then(resp => Registration.page.timelineRetrievedSuccessfully(this, resp))
-      .then(this.handleMetaData);
+    return WiregooseApi.timeline.registration(
+      Registration.page.lastFeeds,
+      BrowserLanguageDetection(),
+      true
+    );
   }
 
   handleMetaData = () => {

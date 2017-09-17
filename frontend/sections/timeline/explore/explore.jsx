@@ -35,14 +35,11 @@ export default class Explore extends InfiniteScrollPage {
   }
 
   retrieveTimeline = () => {
-    if (!(this.timeline && !this.timeline.state.isLoading)) {
-      return;
-    }
-
-    this.timeline.setLoadingState(true);
-    WiregooseApi.timeline.explore(Explore.page.lastFeeds, BrowserLanguageDetection(), true)
-      .then(resp => Explore.page.timelineRetrievedSuccessfully(this, resp))
-      .then(this.handleMetaData);
+    return WiregooseApi.timeline.explore(
+      Explore.page.lastFeeds,
+      BrowserLanguageDetection(),
+      true
+    );
   }
 
   handleMetaData = () => {

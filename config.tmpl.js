@@ -1,6 +1,6 @@
 /* jshint esversion: 6 */
 
-const config = {};
+const config = Object.assign({}, require('./config-public.js'));
 
 config.ENABLE_RSS_REGISTRATIONS_FETCH = true;
 config.RSS_REGISTRATIONS_FETCH_FREQUENT = 4 * 60 * 60 * 1000; // ms, how often it will fetch the registrations

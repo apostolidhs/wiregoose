@@ -23,7 +23,7 @@ import mongooseIcon from '../../assets/img/logo-170-nologo.png';
 })
 export default class Article extends React.Component {
   static totalDisplayedAdds = 0;
-  static DISPLAY_ADDS_FREQUENCY = 2;
+  static DISPLAY_ADDS_FREQUENCY = 1;
 
   static propTypes = {
     article: PropTypes.shape({
@@ -54,7 +54,7 @@ export default class Article extends React.Component {
   }
 
   createAdvertiseIfIsPossible = () => {
-    if (Article.totalDisplayedAdds % Article.DISPLAY_ADDS_FREQUENCY === 1) {
+    if (Article.totalDisplayedAdds % Article.DISPLAY_ADDS_FREQUENCY === 0) {
       return;
     }
     const pEls = this.articleContentEl.getElementsByTagName('p');

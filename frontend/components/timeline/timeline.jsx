@@ -29,63 +29,6 @@ export default class Timeline extends React.Component {
     isLoading: false
   }
 
-  appendElements(elements) {
-    const stateElements = this.state.elements;
-    this.setState({
-      elements: stateElements.concat(elements)
-    }, () => {
-      while(this.googleAdsLaunched > 0) {
-        --this.googleAdsLaunched;
-        setTimeout(() => {
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        }, 0);
-      }
-    });
-  }
-
-  prependElements(elements) {
-    const stateElements = this.state.elements;
-    this.setState({
-      elements: elements.concat(stateElements)
-    });
-  }
-
-  removeElements(elements, scrollFlow) {
-    const stateElements = this.state.elements;
-
-    let totalWhiteSpaceElements = 0;
-    if (scrollFlow) {
-      const lastElement = _.last(elements);
-      const lastStateElementIdx = _.findIndex(stateElements, e => e === lastElement);
-      if (window.innerWidth > 1200) {
-        totalWhiteSpaceElements = (lastStateElementIdx + 1) % 4;
-      }
-    }
-
-    _.pullAll(stateElements, elements);
-
-    if (!scrollFlow) {
-      _.remove(stateElements, el => {
-        return _.startsWith(el.key, 'whitespace');
-      });
-    }
-
-    const whiteSpaceElements = _.map(
-      _.times(totalWhiteSpaceElements),
-      () => {
-        const el = this.createWhiteSpaceElement();
-        stateElements.unshift(el);
-        return el;
-      }
-    );
-
-    this.setState({
-      elements: stateElements
-    });
-
-    return whiteSpaceElements;
-  }
-
   createWhiteSpaceElement() {
     return (<div key={_.uniqueId('whitespace-')} styleName="timeline-box" ></div>);
   }
@@ -208,20 +151,20 @@ export default class Timeline extends React.Component {
     const fulls = byBoxSize['ARTICLE_BOX_FULL'];
     let cascadeFeeds;
     if (!noImages && !noDescrs) {
-      cascadeFeeds = _.shuffle(feeds);
+      cascadeFeeds = /*_.shuffle*/(feeds);
     } else if (!noImages) {
       cascadeFeeds = this.cascadeNoDescriptionFeedsView(fulls, noDescrs);
     } else if (!noDescrs) {
-      cascadeFeeds = _.shuffle(feeds);
+      cascadeFeeds = /*_.shuffle*/(feeds);
     } else {
       let view = [];
       while(noImages.length && noDescrs.length) {
         const noImage = noImages.pop();
         const noDescr = noDescrs.pop();
-        view.push(_.shuffle([noImage, noDescr]));
+        view.push(/*_.shuffle*/([noImage, noDescr]));
       }
       view = this.cascadeNoDescriptionFeedsView(view, noDescrs);
-      cascadeFeeds = _.shuffle(view.concat(noImages).concat(fulls));
+      cascadeFeeds = /*_.shuffle*/(view.concat(noImages).concat(fulls));
     }
     return cascadeFeeds;
   }
@@ -245,13 +188,15 @@ export default class Timeline extends React.Component {
     );
 
     const prioritiesView = [];
-    const { full, noFull } = cascadeFeedsByBoxSize;
+    const full = cascadeFeedsByBoxSize.full || [];
+    const noFull = cascadeFeedsByBoxSize.noFull || [];
     while(full.length > 2 && noFull.length) {
       prioritiesView.push(full.pop());
       prioritiesView.push(full.pop());
       prioritiesView.push(full.pop());
       prioritiesView.push(noFull.pop());
     }
+
     return prioritiesView
       .concat(full)
       .concat(noFull);
