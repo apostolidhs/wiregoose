@@ -53,17 +53,21 @@ export default class Explore extends InfiniteScrollPage {
     });
   }
 
+  onScroll = () => {
+    Explore.page.onScroll(this);
+  }
+
   // called by InfiniteScrollPage
   onBottomScrollReached = () => {
-    if (!(this.timeline && !this.timeline.state.isLoading)) {
-      return;
-    }
-    Explore.page.retrieveNextTimeline(this);
+    // if (!(this.timeline && !this.timeline.state.isLoading)) {
+    //   return;
+    // }
+    // Explore.page.retrieveNextTimeline(this);
   }
 
   // called by InfiniteScrollPage
   onTopScrollReached = () => {
-    Explore.page.retrievePrevTimeline(this);
+    // Explore.page.retrievePrevTimeline(this);
   }
 
   render() {

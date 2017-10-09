@@ -21,6 +21,8 @@ export default class Timeline extends React.Component {
     hideProvider: PropTypes.bool,
   }
 
+  scrollContainerEl = undefined
+
   totalElements = 0
   googleAdsLaunched = 0
 
@@ -82,7 +84,7 @@ export default class Timeline extends React.Component {
 
     return (
       <div>
-        <div className="clearfix" >
+        <div className="clearfix" ref={el => this.scrollContainerEl = el} >
           {elements}
         </div>
         { isLoading &&

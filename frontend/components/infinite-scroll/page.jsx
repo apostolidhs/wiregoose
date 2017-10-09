@@ -39,6 +39,10 @@ export default class Page extends React.Component {
     }
   }
 
+  getClientHeight = () => {
+    return document.documentElement.clientHeight || window.innerHeight;
+  }
+
   setScrollTop = (scrollTop) => {
     if (this.sidebar) {
       this.sidebar.scrollTop = scrollTop;
@@ -52,10 +56,14 @@ export default class Page extends React.Component {
 
   }
 
-  handleOnScroll = _.throttle(() => {
-    this.checkBottomScroll();
-    this.checkTopScroll();
-  }, this.defaultRegisterInfiniteScrollOpts.throttledScrollDelay)
+  // handleOnScroll = _.throttle(() => {
+  //   this.checkBottomScroll();
+  //   this.checkTopScroll();
+  // }, this.defaultRegisterInfiniteScrollOpts.throttledScrollDelay)
+
+  handleOnScroll = () => {
+    this.onScroll();
+  }
 
   // http://stackoverflow.com/questions/9439725/javascript-how-to-detect-if-browser-window-is-scrolled-to-bottom
   // const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
@@ -65,7 +73,7 @@ export default class Page extends React.Component {
     const scrollTop = this.getScrollTop();
     const scrollHeight = this.getScrollHeight();
 
-    const clientHeight = document.documentElement.clientHeight || window.innerHeight;
+    const clientHeight = this.getClientHeight();
     const throttledOffset = this.defaultRegisterInfiniteScrollOpts.infiniteScrollYOffset;
     const scrolledToBottom = (Math.ceil(scrollTop + clientHeight) + throttledOffset) >= scrollHeight;
     //console.log(scrollTop, scrollHeight, clientHeight, scrolledToBottom);
