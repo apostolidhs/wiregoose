@@ -15,6 +15,7 @@ export default class Timeline extends React.Component {
   static FB_FOLLOW_WIDGET_POSITION = 14;
   static ADVERTISE_WIDGET_FREQUENCY = 19;
   static ADVERTISE_WIDGET_INITIAL_POSITION = 9;
+  static totalElementsFromAllTimelines = 0;
 
   static propTypes = {
     hideCategory: PropTypes.bool,
@@ -39,7 +40,7 @@ export default class Timeline extends React.Component {
     // this.changeFeedsToDebug(feeds);
     const cascadedFeeds = this.cascadeFeedsView(feeds);
     const newElements = _.map(cascadedFeeds, (cascadedFeed) => {
-      ++this.totalElements;
+      ++Timeline.totalElementsFromAllTimelines;
 
       if (this.shouldRenderFBFollowBox()) {
         return this.renderFBFollowBox();
@@ -62,15 +63,15 @@ export default class Timeline extends React.Component {
   }
 
   shouldRenderFBFollowBox = () => {
-    return this.totalElements === Timeline.FB_FOLLOW_WIDGET_POSITION;
+    return Timeline.totalElementsFromAllTimelines === Timeline.FB_FOLLOW_WIDGET_POSITION;
   }
 
   shouldRenderAdvertiseBox = () => {
     return (
-      this.totalElements === Timeline.ADVERTISE_WIDGET_INITIAL_POSITION
+      Timeline.totalElementsFromAllTimelines === Timeline.ADVERTISE_WIDGET_INITIAL_POSITION
       || (
-        this.totalElements !== Timeline.ADVERTISE_WIDGET_FREQUENCY
-        && this.totalElements % Timeline.ADVERTISE_WIDGET_FREQUENCY === 0
+        Timeline.totalElementsFromAllTimelines !== Timeline.ADVERTISE_WIDGET_FREQUENCY
+        && Timeline.totalElementsFromAllTimelines % Timeline.ADVERTISE_WIDGET_FREQUENCY === 0
       )
     );
   }
@@ -129,10 +130,9 @@ export default class Timeline extends React.Component {
         <ins className="adsbygoogle"
           style={{display: 'block'}}
           data-ad-format="fluid"
-          data-ad-layout="image-top"
-          data-ad-layout-key="-88+1i-gp+c2+11r"
+          data-ad-layout-key="-8j+1w-dx+ec+gk"
           data-ad-client="ca-pub-3571483150053473"
-          data-ad-slot="1477167936">
+          data-ad-slot="9953314902">
         </ins>
       </div>
     );

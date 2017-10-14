@@ -43,18 +43,18 @@ export default class Page extends React.Component {
     return document.documentElement.clientHeight || window.innerHeight;
   }
 
-  // setScrollTop = (scrollTop) => {
-  //   if (this.sidebar) {
-  //     this.sidebar.scrollTop = scrollTop;
-  //   } else {
-  //     if (document.documentElement && document.documentElement.scrollTop) {
-  //       document.documentElement.scrollTop = scrollTop;
-  //     } else {
-  //       document.body.scrollTop = scrollTop;
-  //     }
-  //   }
-
-  // }
+  setScrollTop = (scrollTop) => {
+    if (this.sidebar) {
+      this.sidebar.scrollTop = scrollTop;
+    } else {
+      const docScrollTop = document.documentElement && document.documentElement.scrollTop;
+      if (_.isNumber(docScrollTop)) {
+        document.documentElement.scrollTop = scrollTop;
+      } else {
+        document.body.scrollTop = scrollTop;
+      }
+    }
+  }
 
   handleOnScroll = _.throttle(() => {
     this.onScroll();

@@ -17,17 +17,25 @@ export default class Page {
   totalItemsFit = 0;
   isLoading = false;
   columnsPerRow = 0;
+  lastScrollTop = 0;
 
   componentDidMount(component) {
     this.targetComponent = component;
-    setTimeout(() => this.onResize());
+
+    this.recalculateComponentPositions();
+    if (this.lastScrollTop) {
+      this.targetComponent.setScrollTop(this.lastScrollTop);
+    }
+
     if (_.isEmpty(this.virtualList)) {
       this.retrieveNextTimeline();
     }
+
     window.addEventListener('resize', this.onResize);
   }
 
   componentWillUnmount() {
+    this.lastScrollTop = this.targetComponent.getScrollTop();
     this.targetComponent = undefined;
     window.removeEventListener('resize', this.onResize);
   }
@@ -41,6 +49,11 @@ export default class Page {
   }
 
   onResize = _.throttle(() => {
+    this.recalculateComponentPositions();
+    this.onScroll();
+  }, 200)
+
+  recalculateComponentPositions = () => {
     this.columnsPerRow = componentSize.sizeFormatter({
       sm: 2,
       md: 3,
@@ -66,8 +79,7 @@ export default class Page {
 
     this.refreshVirtualList();
     this.updateVirtualListPositions();
-    this.onScroll();
-  }, 200)
+  }
 
   onScroll = _.throttle(() => {
     const absoluteFrom = Math.round(
@@ -92,7 +104,12 @@ export default class Page {
       return;
     }
 
-    this.targetComponent.timeline.setState({elements});
+    this.targetComponent.timeline.setState({elements}, () => {
+      const hasGoogleAdv = _.find(elements, element => element.key.includes('advertise'));
+      if (hasGoogleAdv) {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    });
   }, 200)
 
   updateVirtualListPositions = () => {
@@ -172,6 +189,7 @@ export default class Page {
     this.totalItemsFit = 0;
     this.isLoading = false
     this.columnsPerRow = 0;
+    this.lastScrollTop = 0;
   }
 
 }
