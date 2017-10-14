@@ -46,7 +46,7 @@ export default class Category extends InfiniteScrollPage {
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    Category.page.componentWillUnmount(this);
+    Category.page.componentWillUnmount();
   }
 
   retrieveCategories = () => {
@@ -87,17 +87,8 @@ export default class Category extends InfiniteScrollPage {
     });
   }
 
-  // called by InfiniteScrollPage
-  onBottomScrollReached = () => {
-    if (!(this.timeline && !this.timeline.state.isLoading)) {
-      return;
-    }
-    Category.page.retrieveNextTimeline(this);
-  }
-
-  // called by InfiniteScrollPage
-  onTopScrollReached = () => {
-    Category.page.retrievePrevTimeline(this);
+  onScroll = () => {
+    Category.page.onScroll(this);
   }
 
   render() {

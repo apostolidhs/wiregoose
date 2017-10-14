@@ -22,9 +22,6 @@ import mongooseIcon from '../../assets/img/logo-170-nologo.png';
   allowMultiple: true,
 })
 export default class Article extends React.Component {
-  static totalDisplayedAdds = 0;
-  static DISPLAY_ADDS_FREQUENCY = 1;
-
   static propTypes = {
     article: PropTypes.shape({
       content: PropTypes.string,
@@ -48,18 +45,14 @@ export default class Article extends React.Component {
   setArticleContentEl = (el) => {
     if (!this.articleContentEl) {
       this.articleContentEl = el;
-      ++Article.totalDisplayedAdds;
       this.createAdvertiseIfIsPossible();
     }
   }
 
   createAdvertiseIfIsPossible = () => {
-    if (Article.totalDisplayedAdds % Article.DISPLAY_ADDS_FREQUENCY === 0) {
-      return;
-    }
     const pEls = this.articleContentEl.getElementsByTagName('p');
     const totalP = pEls.length;
-    if (totalP > 1) {
+    if (totalP > 2) {
       const targetEl = pEls[Math.round(totalP * 0.7)];
       const pAdvEl = document.createElement('div');
       pAdvEl.style.padding = '10px 0';
@@ -86,10 +79,10 @@ export default class Article extends React.Component {
     return (
       `<ins class="adsbygoogle"
         style="display:block; text-align:center;"
-        data-ad-format="fluid"
         data-ad-layout="in-article"
+        data-ad-format="fluid"
         data-ad-client="ca-pub-3571483150053473"
-        data-ad-slot="8983891351">
+        data-ad-slot="7904245373">
       </ins>`
     );
   }

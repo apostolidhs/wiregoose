@@ -74,9 +74,12 @@ function createWebpackConfig(name, entryName, outputName) {
         path.resolve(__dirname, './node_modules/url-regex'),
         path.resolve(__dirname, './node_modules/react-proptypes-url-validator')
       ],
-      use: [
-        'babel-loader'
-      ]
+      use: {
+        loader: 'babel-loader',
+        options: {
+          cacheDirectory: path.join(__dirname, './tmp/cache/webpack')
+        }
+      }
     },
     // {
     //   test: /\.svg$/,
@@ -121,6 +124,10 @@ function createWebpackConfig(name, entryName, outputName) {
           if_return: true,
           join_vars: true,
         },
+        parallel: {
+          cache: path.join(__dirname, './tmp/cache/webpack/uglify'),
+          workers: 4
+        },
         output: {
           comments: false,
         }
@@ -134,6 +141,12 @@ function createWebpackConfig(name, entryName, outputName) {
         test: /\.css$/,
         use: extractVendorsCss.extract({
           use: [
+            {
+              loader: 'cache-loader',
+              options: {
+                cacheDirectory: path.join(__dirname, '../../tmp/cache/webpack/css')
+              }
+            },
             'css-loader?minimize',
             'postcss-loader'
           ],
@@ -145,6 +158,12 @@ function createWebpackConfig(name, entryName, outputName) {
         include: globalLessPath,
         use: extractCss.extract({
           use: [
+            {
+              loader: 'cache-loader',
+              options: {
+                cacheDirectory: path.join(__dirname, '../../tmp/cache/webpack/less')
+              }
+            },
             'css-loader?minimize',
             'postcss-loader',
             'less-loader'
@@ -157,6 +176,12 @@ function createWebpackConfig(name, entryName, outputName) {
         exclude: globalLessPath,
         use: extractCss.extract({
           use: [
+            {
+              loader: 'cache-loader',
+              options: {
+                cacheDirectory: path.join(__dirname, '../../tmp/cache/webpack/less-global')
+              }
+            },
             'css-loader?modules,minimize,localIdentName="[hash:base64:6]"',
             'postcss-loader',
             'less-loader'
@@ -177,6 +202,12 @@ function createWebpackConfig(name, entryName, outputName) {
       {
         test: /\.css$/,
         loader: [
+          {
+            loader: 'cache-loader',
+            options: {
+              cacheDirectory: path.join(__dirname, '../../tmp/cache/webpack/dev-css')
+            }
+          },
           'style-loader',
           'css-loader'
         ]
@@ -185,6 +216,12 @@ function createWebpackConfig(name, entryName, outputName) {
         test: /\.less$/,
         include: globalLessPath,
         loader: [
+          {
+            loader: 'cache-loader',
+            options: {
+              cacheDirectory: path.join(__dirname, '../../tmp/cache/webpack/dev-less')
+            }
+          },
           'style-loader',
           'css-loader',
           'less-loader'
@@ -194,6 +231,12 @@ function createWebpackConfig(name, entryName, outputName) {
         test: /\.less$/,
         exclude: globalLessPath,
         loader: [
+          {
+            loader: 'cache-loader',
+            options: {
+              cacheDirectory: path.join(__dirname, '../../tmp/cache/webpack/dev-less-global')
+            }
+          },
           'style-loader',
           'css-loader?modules&importLoaders=1'
             + '&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
@@ -233,21 +276,7 @@ function createWebpackConfig(name, entryName, outputName) {
       compress: isProduction,
       inline: !isProduction,
       hot: !isProduction,
-      host: '0.0.0.0',
-      stats: {
-        assets: true,
-        children: false,
-        chunks: false,
-        hash: false,
-        modules: false,
-        publicPath: false,
-        timings: true,
-        version: false,
-        warnings: true,
-        colors: {
-          green: '\u001b[32m',
-        },
-      }
+      host: '0.0.0.0'
     }
   };
 }

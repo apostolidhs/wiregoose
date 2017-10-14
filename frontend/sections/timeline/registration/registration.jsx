@@ -36,7 +36,7 @@ export default class Registration extends InfiniteScrollPage {
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    Registration.page.componentWillUnmount(this);
+    Registration.page.componentWillUnmount();
   }
 
   retrieveTimeline = () => {
@@ -62,17 +62,8 @@ export default class Registration extends InfiniteScrollPage {
     });
   }
 
-  // called by InfiniteScrollPage
-  onBottomScrollReached = () => {
-    if (!(this.timeline && !this.timeline.state.isLoading)) {
-      return;
-    }
-    Registration.page.retrieveNextTimeline(this);
-  }
-
-  // called by InfiniteScrollPage
-  onTopScrollReached = () => {
-    Registration.page.retrievePrevTimeline(this);
+  onScroll = () => {
+    Registration.page.onScroll(this);
   }
 
   render() {

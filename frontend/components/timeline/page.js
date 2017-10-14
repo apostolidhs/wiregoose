@@ -1,53 +1,143 @@
 import _ from 'lodash';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router';
 
+import componentSize from '../../components/responsible/component-size.js';
+
 export default class Page {
+  static TIMELINE_PADDING = 15;
+  static ARTICLE_BOX_HEIGHT = 500;
+  targetComponent = undefined;
+  lastFeeds = undefined;
+  hasMore = true;
 
-  lastFeeds = undefined
-  timelineState = undefined
-  lastScrollTop = 0
-  hasMore = true
-
-  topScrollLock = false
-  loadingVLIdx = -1
-  firstActiveVLIdx = -2
-  secondActiveVLIdx = -1
-  virtualList = []
+  virtualList = [];
+  articleBoxWidth = 0; // will be filled in runtime
+  totalItemsFit = 0;
+  isLoading = false;
+  columnsPerRow = 0;
+  lastScrollTop = 0;
 
   componentDidMount(component) {
-    if (this.timelineState) {
-      component.timeline.setState(this.timelineState, () => {
-        setTimeout(() => {
-          component.setScrollTop(this.lastScrollTop);
-        }, 0);
-      });
-      component.handleMetaData();
-    } else {
-      this.retrieveNextTimeline(component);
+    this.targetComponent = component;
+
+    this.recalculateComponentPositions();
+    if (this.lastScrollTop) {
+      this.targetComponent.setScrollTop(this.lastScrollTop);
     }
+
+    if (_.isEmpty(this.virtualList)) {
+      this.retrieveNextTimeline();
+    }
+
+    window.addEventListener('resize', this.onResize);
   }
 
-  componentWillUnmount(component) {
-    this.lastScrollTop = component.getScrollTop();
-    this.timelineState = component.timeline.state;
+  componentWillUnmount() {
+    this.lastScrollTop = this.targetComponent.getScrollTop();
+    this.targetComponent = undefined;
+    window.removeEventListener('resize', this.onResize);
   }
 
-  timelineRetrievedSuccessfully(component, resp, idx) {
+  refreshVirtualList = () => {
+    const scrollContainerHeight = Math.round(
+      (this.virtualList.length / this.columnsPerRow)
+      * (Page.ARTICLE_BOX_HEIGHT + Page.TIMELINE_PADDING)
+    );
+    this.targetComponent.timeline.scrollContainerEl.style.height = `${scrollContainerHeight}px`;
+  }
+
+  onResize = _.throttle(() => {
+    this.recalculateComponentPositions();
+    this.onScroll();
+  }, 200)
+
+  recalculateComponentPositions = () => {
+    this.columnsPerRow = componentSize.sizeFormatter({
+      sm: 2,
+      md: 3,
+      lg: 4,
+    }, 1)(window.innerWidth);
+
+    const widthDividend = componentSize.sizeFormatter({
+      sm: 0.45,
+      md: 0.31,
+      lg: 0.24,
+    }, 1)(window.innerWidth);
+
+    this.articleBoxWidth = Math.floor(
+      this.targetComponent.timeline.scrollContainerEl.offsetWidth
+      * widthDividend
+    );
+    const absoluteItemsFit = Math.round(
+      this.targetComponent.getClientHeight()
+      / (Page.ARTICLE_BOX_HEIGHT + Page.TIMELINE_PADDING)
+    );
+    const itemsFit = Math.max(1, absoluteItemsFit);
+    this.totalItemsFit = itemsFit * this.columnsPerRow;
+
+    this.refreshVirtualList();
+    this.updateVirtualListPositions();
+  }
+
+  onScroll = _.throttle(() => {
+    const absoluteFrom = Math.round(
+      this.targetComponent.getScrollTop()
+      / (Page.ARTICLE_BOX_HEIGHT + Page.TIMELINE_PADDING)
+    ) * this.columnsPerRow;
+
+    let from = absoluteFrom - this.totalItemsFit;
+    from = Math.max(from, 0);
+
+    let to = from + (this.totalItemsFit * 3);
+    if (to > this.virtualList.length) {
+      this.retrieveNextTimeline();
+      to = this.virtualList.length;
+    }
+
+    const timelineElements = this.targetComponent.timeline.state.elements;
+    const elements = this.virtualList.slice(from, to);
+
+    if (_.first(timelineElements) === _.first(elements)
+      && _.last(timelineElements) === _.last(elements)){
+      return;
+    }
+
+    this.targetComponent.timeline.setState({elements}, () => {
+      const hasGoogleAdv = _.find(elements, element => element.key.includes('advertise'));
+      if (hasGoogleAdv) {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    });
+  }, 200)
+
+  updateVirtualListPositions = () => {
+    _.each(this.virtualList, this.calculateArticleBoxPosition);
+  }
+
+  retrieveNextTimeline = () => {
+    if (this.isLoading) {
+      return;
+    }
+    this.isLoading = true;
+    this.targetComponent.timeline.setLoadingState(true);
+    return this.targetComponent.retrieveTimeline()
+      .then(resp => this.timelineRetrievedSuccessfully(resp))
+      .finally(() => {
+        this.isLoading = false;
+        this.targetComponent.timeline.setLoadingState(false);
+      })
+  }
+
+  timelineRetrievedSuccessfully = (resp) => {
     const { data } = resp.data;
     if (!data) {
       browserHistory.replace('/401');
       return;
     }
 
-    const VLLen = this.virtualList.length;
-    if (idx !== VLLen) {
-      throw new Error(
-        `virtual scroll: fetched an unordered index,
-        list length: ${VLLen}, current: ${idx}`
-      );
-    }
-
-    component.handleMetaData();
+    this.targetComponent.handleMetaData();
 
     this.lastFeeds = _.mapValues(
       data,
@@ -61,182 +151,45 @@ export default class Page {
 
     if (_.isEmpty(feeds)) {
       this.hasMore = false;
-      return [];
     } else {
-      const feedElements = component.timeline.createElements(feeds);
-      const blankElements = idx === 0 ? [] : this.createBlankElements(VLLen);
-      const elements = [...blankElements, ...feedElements];
-      this.virtualList.push(elements);
-
-      return elements;
-    }
-  }
-
-  retrievePrevTimeline(component) {
-    if (
-      this.bottomScrollLock
-      || this.topScrollLock
-      || this.firstActiveVLIdx <= 0
-    ) {
-      return;
-    }
-    this.topScrollLock = true;
-    this.decreaseActiveVLIdxs();
-    this.updateActiveElements(component, false)
-      .finally(() => {
-        this.topScrollLock = false;
-
+      const feedElements = this.targetComponent.timeline.createElements(feeds);
+      _.each(feedElements, feedElement => {
+        this.calculateArticleBoxPosition(feedElement, this.virtualList.length);
+        this.virtualList.push(feedElement);
       });
-  }
-
-  retrieveNextTimeline(component) {
-    if (
-      this.bottomScrollLock
-      || (this.loadingVLIdx !== -1
-      && this.loadingVLIdx === this.secondActiveVLIdx)
-    ) {
-      return;
+      this.refreshVirtualList();
+      this.onScroll();
     }
-    this.bottomScrollLock = true;
-    this.raiseActiveVLIdxs();
-    this.updateActiveElements(component, true)
-    .finally(() => {
-      this.bottomScrollLock = false;
-    });
   }
 
-  raiseActiveVLIdxs() {
-    ++this.firstActiveVLIdx;
-    ++this.secondActiveVLIdx;
-  }
+  calculateArticleBoxPosition = (element, idx) => {
+    const row = Math.floor(idx / this.columnsPerRow);
+    const column = idx % this.columnsPerRow;
 
-  decreaseActiveVLIdxs() {
-    if (this.firstActiveVLIdx <= 0) {
-      return;
+    const top = `${(row * (Page.ARTICLE_BOX_HEIGHT + Page.TIMELINE_PADDING))}px`;
+
+    let left = column * this.articleBoxWidth;
+    if (column !== 0) {
+      left += Page.TIMELINE_PADDING * column;
     }
-    --this.firstActiveVLIdx;
-    --this.secondActiveVLIdx;
+    left = `${left}px`;
+
+    const width = `${this.articleBoxWidth}px`;
+
+    element.props.style.top = top;
+    element.props.style.left = left;
+    element.props.style.width = width;
   }
 
-  updateActiveElements(component, flow) {
-    const firstActiveVLIdx = this.firstActiveVLIdx;
-    const secondActiveVLIdx = this.secondActiveVLIdx;
-    const firstActiveElementsPrms = this.getActiveElements(component, firstActiveVLIdx);
-    const secondActiveElementsPrms = this.getActiveElements(component, secondActiveVLIdx);
-
-    return Promise.all(
-      [
-        firstActiveElementsPrms,
-        secondActiveElementsPrms
-      ]
-    ).then(([firstActiveElements, secondActiveElements]) => {
-      if (
-        this.firstActiveVLIdx !== firstActiveVLIdx
-        || this.secondActiveVLIdx !== secondActiveVLIdx
-      ) {
-        return;
-      }
-
-      const secondActiveFeedElements = _.filter(secondActiveElements, el => {
-        return !_.startsWith(el.key, 'whitespace');
-      });
-
-      const activeElements = [
-        ...firstActiveElements,
-        ...secondActiveFeedElements
-      ];
-
-      return new Promise((resolve) => {
-        const prevHeight = component.getScrollHeight();
-        if (flow) {
-          this.setTimelineElements(component, firstActiveElements, () => {
-            setTimeout(() => {
-              this.setTimelineElements(component, activeElements, () => {
-                resolve();
-              });
-            }, 0);
-          });
-        } else {
-          this.setTimelineElements(component, activeElements);
-          resolve();
-          this.setTimelineElements(component, secondActiveFeedElements, () => {
-            const prevHeight = component.getScrollHeight();
-            setTimeout(() => {
-              this.setTimelineElements(component, activeElements, () => {
-                const currHeight = component.getScrollHeight();
-                const scrollTop = component.getScrollTop();
-                component.setScrollTop(scrollTop + (currHeight - prevHeight));
-                resolve();
-              });
-            }, 0);
-          });
-        }
-      });
-    });
+  invalidateCache = () => {
+    this.lastFeeds = undefined
+    this.hasMore = true
+    this.virtualList = []
+    this.articleBoxWidth = 0; // will be filled in runtime
+    this.totalItemsFit = 0;
+    this.isLoading = false
+    this.columnsPerRow = 0;
+    this.lastScrollTop = 0;
   }
 
-  getActiveElements(component, idx) {
-    if (idx < 0) {
-      return Promise.resolve([]);
-    }
-
-    const cachedElements = this.virtualList[idx];
-    if (cachedElements) {
-      return Promise.resolve(cachedElements);
-    }
-
-    const VLLen = this.virtualList.length;
-    if (idx !== VLLen) {
-      throw new Error(
-        `virtual scroll: trying to fetch an unordered index,
-        list length: ${VLLen}, current: ${idx}`
-      );
-    }
-
-    this.loadingVLIdx = idx;
-    component.timeline.setLoadingState(true);
-    this.setTimelineElements(component, this.virtualList[idx - 1] || []);
-    return component.retrieveTimeline()
-      .then(resp => this.timelineRetrievedSuccessfully(component, resp, idx))
-      .finally(() => {
-        component.timeline.setLoadingState(false);
-        this.loadingVLIdx = -1;
-      })
-  }
-
-  createBlankElements(nextIdx) {
-    const currentIdx = nextIdx - 1;
-    const totalEls = this.virtualList[currentIdx].length;
-    let totalWhiteSpaceElements = 0;
-    if (window.innerWidth > 1200) {
-      totalWhiteSpaceElements = totalEls % 4;
-    }
-    return _.map(
-      _.times(totalWhiteSpaceElements),
-      () => component.timeline.createWhiteSpaceElement()
-    );
-  }
-
-  setTimelineElements(component, elements, next = _.noop) {
-    //const tt = (component.getScrollHeight() - prevScrollPos) + component.getScrollTop();
-    //component.setScrollTop(component.getScrollHeight());
-
-    component.timeline.setState({elements}, () => {
-
-      next();
-    });
-  }
-
-  invalidateCache() {
-    this.lastFeeds = undefined;
-    this.timelineState = undefined;
-    this.lastScrollTop = undefined;
-    this.hasMore = true;
-
-    this.topScrollLock = false;
-    this.loadingVLIdx = -1;
-    this.firstActiveVLIdx = -2;
-    this.secondActiveVLIdx = -1;
-    this.virtualList = [];
-  }
 }
