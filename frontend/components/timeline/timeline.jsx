@@ -68,10 +68,13 @@ export default class Timeline extends React.Component {
 
   shouldRenderAdvertiseBox = () => {
     return (
-      Timeline.totalElementsFromAllTimelines === Timeline.ADVERTISE_WIDGET_INITIAL_POSITION
-      || (
-        Timeline.totalElementsFromAllTimelines !== Timeline.ADVERTISE_WIDGET_FREQUENCY
-        && Timeline.totalElementsFromAllTimelines % Timeline.ADVERTISE_WIDGET_FREQUENCY === 0
+      !window.wgLazyAddBlockerDetected
+      && (
+        Timeline.totalElementsFromAllTimelines === Timeline.ADVERTISE_WIDGET_INITIAL_POSITION
+        || (
+          Timeline.totalElementsFromAllTimelines !== Timeline.ADVERTISE_WIDGET_FREQUENCY
+          && Timeline.totalElementsFromAllTimelines % Timeline.ADVERTISE_WIDGET_FREQUENCY === 0
+        )
       )
     );
   }

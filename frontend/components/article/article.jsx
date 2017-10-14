@@ -52,7 +52,7 @@ export default class Article extends React.Component {
   createAdvertiseIfIsPossible = () => {
     const pEls = this.articleContentEl.getElementsByTagName('p');
     const totalP = pEls.length;
-    if (totalP > 2) {
+    if (totalP > 2  && !window.wgLazyAddBlockerDetected) {
       const targetEl = pEls[Math.round(totalP * 0.7)];
       const pAdvEl = document.createElement('div');
       pAdvEl.style.padding = '10px 0';

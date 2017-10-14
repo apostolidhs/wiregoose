@@ -18,6 +18,7 @@ export default class Page {
   isLoading = false;
   columnsPerRow = 0;
   lastScrollTop = 0;
+  advertiseElements = {};
 
   componentDidMount(component) {
     this.targetComponent = component;
@@ -105,9 +106,10 @@ export default class Page {
     }
 
     this.targetComponent.timeline.setState({elements}, () => {
-      const hasGoogleAdv = _.find(elements, element => element.key.includes('advertise'));
-      if (hasGoogleAdv) {
+      const advertiseElement = _.find(elements, element => element.key.includes('advertise'));
+      if (advertiseElement && !this.advertiseElements[advertiseElement.key]) {
         (adsbygoogle = window.adsbygoogle || []).push({});
+        this.advertiseElements[advertiseElement.key] = true;
       }
     });
   }, 200)
@@ -190,6 +192,7 @@ export default class Page {
     this.isLoading = false
     this.columnsPerRow = 0;
     this.lastScrollTop = 0;
+    this.advertiseElements = {};
   }
 
 }
