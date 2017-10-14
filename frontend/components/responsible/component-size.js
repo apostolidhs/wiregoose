@@ -29,23 +29,23 @@ function createPropType() {
 }
 
 function isXxs(width) {
-  return width <= componentSize.xxs;
+  return width <= componentSize.xs;
 }
 
 function isXs(width) {
-  return width > componentSize.xxs && width <= componentSize.xs;
-}
-
-function isSm(width) {
   return width > componentSize.xs && width <= componentSize.sm;
 }
 
-function isMd(width) {
+function isSm(width) {
   return width > componentSize.sm && width <= componentSize.md;
 }
 
+function isMd(width) {
+  return width > componentSize.md && width <= componentSize.lg;
+}
+
 function isLg(width) {
-  return width > componentSize.md;
+  return width > componentSize.lg;
 }
 
 function sizeFormatter(breakpoints, defaultValue) {

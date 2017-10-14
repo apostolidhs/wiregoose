@@ -1,41 +1,26 @@
 @import (reference) "../../less/index.less";
 
+.scroll-container {
+  width: 100%;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .timeline-box {
-  margin-right: 15px;
-  float: left;
+  position: absolute;
   height: @article-height;
-  margin-bottom: 15px;
   & > article {
     width: 100%;
     margin-bottom: 0;
   }
-
-  @media (max-width: @screen-xs-max) {
-    width: 100%;
-    height: initial;
-  }
-  @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
-    &:nth-child(2n) {
-      margin-right: 0;
-    }
-    width: 45%;
-  }
-  @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
-    &:nth-child(3n) {
-      margin-right: 0;
-    }
-    width: 31%;
-  }
-  @media (min-width: @screen-lg-min) {
-    &:nth-child(4n) {
-      margin-right: 0;
-    }
-    width: 24%;
+  & > article:not(:last-child) {
+    margin-bottom: 15px;
   }
 }
 
 .text-loading {
-  padding: 0 15px;
+  padding: 20px 15px;
 }
 
 

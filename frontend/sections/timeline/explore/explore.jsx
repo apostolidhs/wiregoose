@@ -31,7 +31,7 @@ export default class Explore extends InfiniteScrollPage {
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    Explore.page.componentWillUnmount(this);
+    Explore.page.componentWillUnmount();
   }
 
   retrieveTimeline = () => {
@@ -55,19 +55,6 @@ export default class Explore extends InfiniteScrollPage {
 
   onScroll = () => {
     Explore.page.onScroll(this);
-  }
-
-  // called by InfiniteScrollPage
-  onBottomScrollReached = () => {
-    // if (!(this.timeline && !this.timeline.state.isLoading)) {
-    //   return;
-    // }
-    // Explore.page.retrieveNextTimeline(this);
-  }
-
-  // called by InfiniteScrollPage
-  onTopScrollReached = () => {
-    // Explore.page.retrievePrevTimeline(this);
   }
 
   render() {

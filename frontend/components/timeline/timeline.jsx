@@ -52,7 +52,7 @@ export default class Timeline extends React.Component {
 
       const feeds = _.castArray(cascadedFeed);
       return (
-        <div key={feeds[0]._id} styleName="timeline-box" >
+        <div key={feeds[0]._id} styleName="timeline-box" style={{}} >
           {_.map(feeds, this.renderArticleBox)}
         </div>
       );
@@ -84,7 +84,7 @@ export default class Timeline extends React.Component {
 
     return (
       <div>
-        <div className="clearfix" ref={el => this.scrollContainerEl = el} >
+        <div className="clearfix" styleName='scroll-container' ref={el => this.scrollContainerEl = el} >
           {elements}
         </div>
         { isLoading &&
@@ -110,13 +110,14 @@ export default class Timeline extends React.Component {
         hideCategory={this.props.hideCategory}
         hideProvider={this.props.hideProvider}
         showMockImage={feed.showMockImage}
+        style={{}}
       />
     );
   }
 
   renderFBFollowBox = () => {
     return (
-      <div key={_.uniqueId('facebook-follow-Key-')} styleName="timeline-box" >
+      <div key={_.uniqueId('facebook-follow-Key-')} styleName="timeline-box" style={{}} >
         <FBFollowBox />
       </div>
     );
@@ -124,7 +125,7 @@ export default class Timeline extends React.Component {
 
   renderAdvertiseBox = () => {
     return (
-      <div key={_.uniqueId('advertise-key-')} styleName="timeline-box" >
+      <div key={_.uniqueId('advertise-key-')} styleName="timeline-box"  style={{}} >
         <ins className="adsbygoogle"
           style={{display: 'block'}}
           data-ad-format="fluid"
