@@ -7,3 +7,54 @@
 .article-control-btn {
   color: @text-color!important;
 }
+
+.next-related-entry {
+  margin: 0;
+  :global {
+    .panel-body {
+      padding: 7px 15px;
+    }
+  }
+}
+
+.social-share {
+  a:hover,
+  button:hover {
+    color: @link-color;
+  }
+}
+
+@media (max-width: @screen-xs-min) {
+  .header-toolbar {
+
+  }
+  .header-toolbar-actions {
+    > button {
+      .pull-left();
+    }
+  }
+  .header-toolbar-related-entry {
+    width: 100%;
+    margin-top: 10px;
+  }
+  .header-social-share {
+    .text-right();
+  }
+}
+@media (min-width: @screen-xs-min) {
+  .header-toolbar {
+    .clearfix();
+    position: relative;
+  }
+  .header-toolbar-actions {
+    .pull-left();
+  }
+  .header-toolbar-related-entry {
+    .pull-right();
+    width: 280px;
+  }
+  .header-social-share {
+    position: absolute;
+    bottom: -5px;
+  }
+}

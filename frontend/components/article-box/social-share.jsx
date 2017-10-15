@@ -36,10 +36,15 @@ export default class SocialShare extends React.Component {
   }
 
   render() {
-    const { link, selfContainer, overlayPlacement } = this.props;
+    const {
+      link,
+      selfContainer,
+      overlayPlacement,
+      ...rest
+    } = this.props;
 
     return (
-      <div>
+      <div {...rest} >
         <OverlayTrigger
           onEntered={this.focusOnShareArticlePopover}
           trigger="click"

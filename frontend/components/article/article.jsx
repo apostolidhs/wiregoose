@@ -4,17 +4,20 @@ import PropTypes from 'prop-types';
 import validateURL from 'react-proptypes-url-validator';
 import { Link } from 'react-router';
 import FontAwesome from 'react-fontawesome';
-import { Button } from 'react-bootstrap';
+import { Button, Media, Panel } from 'react-bootstrap';
 import { browserHistory } from 'react-router';
 import CSSModules from 'react-css-modules';
 
+import CategoryImage from '../category/images.jsx';
 import FromNow from '../utilities/from-now.jsx';
 import SocialShare from '../article-box/social-share.jsx';
 import entryPropType from '../article-box/entry-prop-type.js';
 import CategoryTag from '../category/tag.jsx';
 import ProviderTag from '../rss-provider/tag.jsx';
 import tr from '../localization/localization.js';
+import { ellipsis } from '../utilities/text-utilities.js';
 import styles from './article.less';
+import { createLink } from '../utilities/text-utilities.js';
 
 import mongooseIcon from '../../assets/img/logo-170-nologo.png';
 
@@ -37,7 +40,10 @@ export default class Article extends React.Component {
       createdAt: PropTypes.instanceOf(Date)
     }),
     isLoading: PropTypes.bool,
-    relatedEntries: PropTypes.arrayOf(entryPropType)
+    relatedEntries: PropTypes.arrayOf(
+      PropTypes.shape(entryPropType)
+    ),
+    nextRelatedEntry: PropTypes.shape(entryPropType)
   }
 
   articleContentEl = undefined
@@ -94,7 +100,7 @@ export default class Article extends React.Component {
       <div className="article-body" >
          <div className="article-container font-size5 content-width4">
            { article &&
-              <article className="article-reader-content line-height4">
+              <article className="line-height4">
                 { this.renderHeader(article) }
                 {(() => {
                   if (article.error) {
@@ -102,6 +108,7 @@ export default class Article extends React.Component {
                   } else {
                     return (
                       <section
+                        className="article-reader-content"
                         ref={ this.setArticleContentEl }
                         dangerouslySetInnerHTML={{__html: article.content}}>
                       </section>
@@ -138,9 +145,61 @@ export default class Article extends React.Component {
           {this.renderBackButton()}
         </div>
         <div className="text-right">
-          <SocialShare link={location.href} overlayPlacement={"bottom"} />
+          <SocialShare styleName="social-share" link={location.href} overlayPlacement={"bottom"} />
         </div>
       </div>
+    );
+  }
+
+  renderHeaderToolbar = () => {
+    const {
+      nextRelatedEntry
+    } = this.props;
+    return (
+      <div styleName="header-toolbar" >
+        <div styleName="header-toolbar-actions" >
+          {this.renderBackButton()}
+          <SocialShare
+            styleName="header-social-share social-share"
+            link={location.href}
+            overlayPlacement={"bottom"}
+          />
+        </div>
+        <div styleName="header-toolbar-related-entry" >
+          {
+            nextRelatedEntry
+              && this.renderNextRelatedEntry()
+          }
+        </div>
+      </div>
+    );
+  }
+
+  renderNextRelatedEntry = () => {
+    const entry = this.props.nextRelatedEntry;
+    return (
+      <a className="blind-link" href={createLink(entry.title, entry._id)} >
+        <Panel styleName="next-related-entry" >
+          <Media>
+            {}
+            <Media.Left align="middle" >
+              {
+                entry.image
+                  ? <img width={32} height={32} src={entry.image} />
+                  : <CategoryImage name={entry.category} />
+              }
+            </Media.Left>
+            <Media.Body className="vertical-align-middle" >
+              <p className="w-m-0" >
+                {ellipsis(entry.title, 60)}
+              </p>
+            </Media.Body>
+            <Media.Right align="middle" >
+              <FontAwesome name="chevron-right" />
+            </Media.Right>
+          </Media>
+        </Panel>
+      </a>
     );
   }
 
@@ -160,10 +219,10 @@ export default class Article extends React.Component {
     const title = article.title || article.entryId.title;
 
     return (
-      <header>
-        {this.renderSocialBanner()}
+      <header className="w-mb-14" >
+        {this.renderHeaderToolbar()}
         <h1>{title}</h1>
-        <div>
+        <div className="w-mt-14" >
           <CategoryTag name={entry.category} />
           <ProviderTag name={entry.provider} className="w-ml-7" />
           <FromNow

@@ -24,12 +24,15 @@ export default class Page {
     this.targetComponent = component;
 
     this.recalculateComponentPositions();
-    if (this.lastScrollTop) {
-      this.targetComponent.setScrollTop(this.lastScrollTop);
-    }
 
     if (_.isEmpty(this.virtualList)) {
       this.retrieveNextTimeline();
+    } else {
+      if (this.lastScrollTop) {
+        this.targetComponent.setScrollTop(this.lastScrollTop);
+      } else {
+        this.onScroll();
+      }
     }
 
     window.addEventListener('resize', this.onResize);

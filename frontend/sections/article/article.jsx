@@ -19,6 +19,7 @@ export default class Article extends React.Component {
   state = {
     article: undefined,
     isLoading: false,
+    relatedEntries: undefined
   }
 
   componentDidMount() {
@@ -53,8 +54,8 @@ export default class Article extends React.Component {
         this.setState({ isLoading: false });
       });
 
-      // WiregooseApi.entryRelated(entryId)
-      //   .then(resp => console.log(resp));
+      WiregooseApi.entryRelated(entryId)
+        .then(resp => this.setState({ relatedEntries: resp.data.data }));
   }
 
   handleMetaData = () => {
@@ -70,10 +71,17 @@ export default class Article extends React.Component {
   }
 
   render() {
-    const { article, isLoading } = this.state;
+    const { article, isLoading, relatedEntries } = this.state;
 
     if (isLoading || article) {
-      return (<ArticleComponent article={article} isLoading={isLoading} />);
+      return (
+        <ArticleComponent
+          article={article}
+          isLoading={isLoading}
+          relatedEntries={relatedEntries}
+          nextRelatedEntry={_.first(relatedEntries)}
+        />
+      );
     }
   }
 }
