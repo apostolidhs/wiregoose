@@ -1,5 +1,7 @@
 @import (reference) "../../less/index.less";
 
+@image-height-md: 152px;
+
 .article {
   width: 270px;
   position: relative;
@@ -56,7 +58,7 @@
 
 .mock-image {
   position: relative;
-  height: 152px;
+  height: @image-height-md;
   text-align: center;
   padding-top: 18px;
 }
@@ -89,6 +91,9 @@
   top: 0;
   background-color: rgba(0, 0, 0, 0.4);
   color: #ddd;
+  &:hover {
+    color: #aaa;
+  }
 }
 
 .header h3 {
@@ -108,6 +113,7 @@
 
 .published {
   vertical-align: middle;
+  font-size: @font-size-base;
 }
 
 .footer {
@@ -123,19 +129,6 @@
     color: @link-color;
   }
 }
-
-// .no-description {
-//   :global {
-//     .panel-body {
-//       background-color: rgba(255,255,255,0.6);
-//       position: absolute;
-//       bottom: 26px;
-//     }
-//     footer {
-//       bottom: -20px;
-//     }
-//   }
-// }
 
 .fb-follow {
   background-color: #3b5998;
@@ -162,4 +155,22 @@
   right: 16px;
   background-color: white;
   padding: 15px 5px 10px 5px;
+}
+
+.article-box-sm-panel {
+  margin: 0;
+}
+
+.article-box-md-panel {
+  margin: 0;
+  padding: 0;
+  height: 300px;
+  background-color: inherit;
+  border: initial;
+  :global {
+    img {
+      height: @image-height-md !important;
+      width: 100% !important;
+    }
+  }
 }

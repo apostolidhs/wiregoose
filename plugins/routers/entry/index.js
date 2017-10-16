@@ -61,26 +61,8 @@ KlarkModule(module, 'routesEntry', (
   }
 
   function middlewareGetRelatedEntries(req, res, next) {
-    console.log('log');
     const entryId = res.locals.params.id;
-    modelsEntry.findOne({_id: entryId})
-      .then(entry => {
-        if (!entry) {
-          return;
-        }
-
-        const similarityQuery = {
-          lang: entry.lang,
-          category: entry.category,
-          published: {
-            $lt: entry.published
-          }
-        };
-
-        return modelsEntry.find(similarityQuery)
-          .sort({published: -1})
-          .limit(3);
-      })
+    modelsEntry.getRelatedEntriesById(entryId, 3)
       .then((data) => {
         res.locals.data = data;
         next();

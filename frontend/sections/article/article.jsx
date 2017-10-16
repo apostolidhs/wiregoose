@@ -35,11 +35,12 @@ export default class Article extends React.Component {
   retrieveArticle = (entryId) => {
     this.setState({
       isLoading: true,
-      article: undefined
+      article: undefined,
+      relatedEntries: undefined
     });
     WiregooseApi.fetchArticle(entryId, true)
       .then(resp => {
-        const article = resp.data.data;
+        const {article, relatedEntries} = resp.data.data;
         if (!article) {
           browserHistory.replace('/401');
           return;
@@ -47,15 +48,11 @@ export default class Article extends React.Component {
 
         this.setState({
           article,
+          relatedEntries,
           isLoading: false
         }, this.handleMetaData);
       })
-      .catch((resp) => {
-        this.setState({ isLoading: false });
-      });
-
-      WiregooseApi.entryRelated(entryId)
-        .then(resp => this.setState({ relatedEntries: resp.data.data }));
+      .catch(() => this.setState({ isLoading: false }));
   }
 
   handleMetaData = () => {
@@ -71,7 +68,11 @@ export default class Article extends React.Component {
   }
 
   render() {
-    const { article, isLoading, relatedEntries } = this.state;
+    const {
+      article,
+      isLoading,
+      relatedEntries
+    } = this.state;
 
     if (isLoading || article) {
       return (

@@ -29,6 +29,15 @@ export default class Loader extends React.Component {
     this.hasMount = false;
   }
 
+  // todo change this
+  set isLoading(loading) {
+    if (loading) {
+      this.setState({ isLoading: true });
+    } else {
+      this.setState({ isLoading: false });
+    }
+  }
+
   set promise(prms) {
     this.toggleLoading = _.debounce((isLoading = false) => {
       if (this.hasMount) {

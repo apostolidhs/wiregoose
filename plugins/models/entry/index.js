@@ -23,6 +23,7 @@ KlarkModule(module, 'modelsEntry', (
   schema.methods.findLatestEntryByProvider = findLatestEntryByProvider;
   schema.methods.findDuplicateEntry = findDuplicateEntry;
   schema.statics.saveAvoidingDuplications = saveAvoidingDuplications;
+  schema.statics.getRelatedEntriesById = getRelatedEntriesById;
 
   return $mongoose.model('Entry', schema);
 
@@ -87,6 +88,27 @@ KlarkModule(module, 'modelsEntry', (
       promiseTransformator: (duplication, idx) => _.isEmpty(duplication) && entries[idx].save()
     }))
     .then(savedEntries => _.compact(savedEntries));
+  }
+
+  function getRelatedEntriesById(id, count) {
+    return this.findOne({_id: id})
+      .then(entry => {
+        if (!entry) {
+          return;
+        }
+
+        const similarityQuery = {
+          lang: entry.lang,
+          category: entry.category,
+          published: {
+            $lt: entry.published
+          }
+        };
+
+        return this.find(similarityQuery)
+          .sort({published: -1})
+          .limit(count);
+      })
   }
 
 });

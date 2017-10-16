@@ -3,13 +3,15 @@
 'use strict';
 
 KlarkModule(module, 'routesArticle', (
+  q,
   _,
   config,
   krkMiddlewarePermissions,
   krkMiddlewareResponse,
   krkParameterValidator,
   articleMining,
-  articleMiningExtractContent
+  articleMiningExtractContent,
+  modelsEntry
 ) => {
 
   return {
@@ -52,13 +54,27 @@ KlarkModule(module, 'routesArticle', (
 
   function middlewareCachedFetchParameterValidator(req, res, next) {
     res.locals.params.entryId = krkParameterValidator.validations.paramId(req);
+    res.locals.params.relatedArticles = req.sanitizeQuery('relatedArticles').toString() === 'true';
     krkParameterValidator.checkForErrors(res.locals.params, req, res, next);
   }
 
   function middlewareCachedFetchController(req, res, next) {
-    const entryId = res.locals.params.entryId;
-    articleMining.cachedExtraction(entryId)
-      .then(data => res.locals.data = data)
+    const {entryId, relatedArticles} = res.locals.params;
+
+    res.locals.data = {};
+    const fetchAllPrms = [
+      articleMining.cachedExtraction(entryId)
+        .then(data => res.locals.data.article = data)
+    ];
+
+    if (relatedArticles) {
+      fetchAllPrms.push(
+        modelsEntry.getRelatedEntriesById(entryId, 3)
+          .then(data => res.locals.data.relatedEntries = data)
+      );
+    }
+
+    q.all(fetchAllPrms)
       .then(() => next())
       .catch(reason => {
         res.locals.errors.add('UNEXPECTED', reason);

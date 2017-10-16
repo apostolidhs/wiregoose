@@ -43,7 +43,7 @@ export default class ArticleBoxForm extends React.Component {
 
   fetchArticle = () => {
     this.refs.articleLoad.promise = WiregooseApi.fetchArticle(this.state.record._id)
-      .then(resp => this.setState({ article: resp.data.data }));
+      .then(resp => this.setState({ article: resp.data.article }));
   }
 
   onSaveClicked = (e) => {

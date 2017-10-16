@@ -116,7 +116,7 @@ export function getStatic(name, friendlyErrorInterceptor = false) {
   });
 }
 
-export function fetchArticle(entryId, friendlyErrorInterceptor = false) {
+export function fetchArticle(entryId, relatedArticles = false, friendlyErrorInterceptor = false) {
   return httpRequest({
     method: 'get',
     url: `${API_ORIGIN}article/mining/cachedFetch/entry/${entryId}`,
@@ -124,10 +124,17 @@ export function fetchArticle(entryId, friendlyErrorInterceptor = false) {
       'Content-Type': 'application/json',
       authorization: credentialGetter(),
     },
+    params: {
+      relatedArticles
+    },
     friendlyErrorInterceptor
   })
   .then(resp => {
-    resp.data.data = resp.data.data && ArticleResponseTransformation(resp.data.data);
+    const {article, relatedEntries} = resp.data.data;
+    resp.data.data.article = ArticleResponseTransformation(article);
+    resp.data.data.relatedEntries = _.map(
+      relatedEntries, ArticleBoxResponseTransformation
+    );
     return resp;
   })
 }

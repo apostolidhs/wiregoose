@@ -4,18 +4,18 @@ import PropTypes from 'prop-types';
 import validateURL from 'react-proptypes-url-validator';
 import { Link } from 'react-router';
 import FontAwesome from 'react-fontawesome';
-import { Button, Media, Panel } from 'react-bootstrap';
+import { Button, Row, Col } from 'react-bootstrap';
 import { browserHistory } from 'react-router';
 import CSSModules from 'react-css-modules';
 
-import CategoryImage from '../category/images.jsx';
 import FromNow from '../utilities/from-now.jsx';
 import SocialShare from '../article-box/social-share.jsx';
 import entryPropType from '../article-box/entry-prop-type.js';
+import ArticleBoxSm from '../article-box/article-box-sm.jsx';
+import ArticleBoxMd from '../article-box/article-box-md.jsx';
 import CategoryTag from '../category/tag.jsx';
 import ProviderTag from '../rss-provider/tag.jsx';
 import tr from '../localization/localization.js';
-import { ellipsis } from '../utilities/text-utilities.js';
 import styles from './article.less';
 import { createLink } from '../utilities/text-utilities.js';
 
@@ -94,7 +94,7 @@ export default class Article extends React.Component {
   }
 
   render() {
-    const { article, isLoading } = this.props;
+    const { article, isLoading, relatedEntries } = this.props;
 
     return (
       <div className="article-body" >
@@ -116,6 +116,18 @@ export default class Article extends React.Component {
                   }
                 })()}
                 {
+                  !article.error && (
+                    <div className="text-center w-mb-7">
+                      <a className="btn btn-default" href={article.link} role="button" target="_blank" styleName="article-control-btn" >
+                        {tr.articleReadFromWebsite}
+                      </a>
+                    </div>
+                  )
+                }<hr/>
+                {
+                  this.renderRelatedArticles()
+                }
+                {
                   !article.error &&
                     this.renderFooter(article)
                 }
@@ -126,90 +138,6 @@ export default class Article extends React.Component {
               this.renderLoading()
            }
         </div>
-      </div>
-    );
-  }
-
-  renderBackButton = () => {
-    return (
-      <Button bsStyle="link" className="blind-link" onClick={this.goBack}>
-        <FontAwesome name="chevron-left" /> {tr.goBack}
-      </Button>
-    );
-  }
-
-  renderSocialBanner = () => {
-    return (
-      <div>
-        <div className="pull-left" >
-          {this.renderBackButton()}
-        </div>
-        <div className="text-right">
-          <SocialShare styleName="social-share" link={location.href} overlayPlacement={"bottom"} />
-        </div>
-      </div>
-    );
-  }
-
-  renderHeaderToolbar = () => {
-    const {
-      nextRelatedEntry
-    } = this.props;
-    return (
-      <div styleName="header-toolbar" >
-        <div styleName="header-toolbar-actions" >
-          {this.renderBackButton()}
-          <SocialShare
-            styleName="header-social-share social-share"
-            link={location.href}
-            overlayPlacement={"bottom"}
-          />
-        </div>
-        <div styleName="header-toolbar-related-entry" >
-          {
-            nextRelatedEntry
-              && this.renderNextRelatedEntry()
-          }
-        </div>
-      </div>
-    );
-  }
-
-  renderNextRelatedEntry = () => {
-    const entry = this.props.nextRelatedEntry;
-    return (
-      <a className="blind-link" href={createLink(entry.title, entry._id)} >
-        <Panel styleName="next-related-entry" >
-          <Media>
-            {}
-            <Media.Left align="middle" >
-              {
-                entry.image
-                  ? <img width={32} height={32} src={entry.image} />
-                  : <CategoryImage name={entry.category} />
-              }
-            </Media.Left>
-            <Media.Body className="vertical-align-middle" >
-              <p className="w-m-0" >
-                {ellipsis(entry.title, 60)}
-              </p>
-            </Media.Body>
-            <Media.Right align="middle" >
-              <FontAwesome name="chevron-right" />
-            </Media.Right>
-          </Media>
-        </Panel>
-      </a>
-    );
-  }
-
-  renderLoading = () => {
-    return (
-      <div className="text-center">
-        <img className="w-is-logo-loading" src={mongooseIcon} styleName="logo-loading" />
-        <h4 className="w-text-loading" data-text={tr.loadingArticle}>
-          {tr.loadingArticle}
-        </h4>
       </div>
     );
   }
@@ -239,16 +167,72 @@ export default class Article extends React.Component {
     );
   }
 
+  renderHeaderToolbar = () => {
+    const {
+      nextRelatedEntry
+    } = this.props;
+    return (
+      <div styleName="header-toolbar" >
+        <div styleName="header-toolbar-actions" >
+          {this.renderBackButton()}
+          <SocialShare
+            styleName="header-social-share social-share"
+            link={location.href}
+            overlayPlacement={"bottom"}
+          />
+        </div>
+        <div styleName="header-toolbar-related-entry" >
+          <ArticleBoxSm entry={nextRelatedEntry} />
+        </div>
+      </div>
+    );
+  }
+
+  renderBackButton = () => {
+    return (
+      <Button bsStyle="link" className="blind-link" onClick={this.goBack}>
+        <FontAwesome name="chevron-left" /> {tr.goBack}
+      </Button>
+    );
+  }
+
+  renderRelatedArticles = () => {
+    const {relatedEntries} = this.props;
+    return (
+      <Row styleName="related-articles" >
+        {_.map(relatedEntries, entry => (
+          <Col sm={4} key={entry._id}>
+            <ArticleBoxMd entry={entry}/>
+          </Col>
+        ))}
+      </Row>
+    );
+
+  }
+
   renderFooter = (article) => {
     return (
       <footer>
-        <div className="text-center w-mb-7">
-          <a className="btn btn-default" href={article.link} role="button" target="_blank" styleName="article-control-btn" >
-            {tr.articleReadFromWebsite}
-          </a>
+        <div>
+          <div className="pull-left" >
+            {this.renderBackButton()}
+          </div>
+          <div className="text-right">
+            <SocialShare styleName="social-share" link={location.href} overlayPlacement={"bottom"} />
+          </div>
         </div>
-        {this.renderSocialBanner()}
       </footer>
+    );
+  }
+
+  renderLoading = () => {
+    return (
+      <div className="text-center">
+        <img className="w-is-logo-loading" src={mongooseIcon} styleName="logo-loading" />
+        <h4 className="w-text-loading" data-text={tr.loadingArticle}>
+          {tr.loadingArticle}
+        </h4>
+      </div>
     );
   }
 
