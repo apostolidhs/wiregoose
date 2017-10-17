@@ -151,26 +151,27 @@ export default class Timeline extends React.Component {
   }
 
   createCascadeFeedsView = (feeds) => {
+    const shuffle = true ? (f) => _.shuffle(f) : (f) => _.identity(f);
     const byBoxSize = _.groupBy(feeds, feed => feed.boxSize);
     const noImages = byBoxSize['ARTICLE_BOX_NO_IMAGE'];
     const noDescrs = byBoxSize['ARTICLE_BOX_NO_DESCRIPTION'];
     const fulls = byBoxSize['ARTICLE_BOX_FULL'];
     let cascadeFeeds;
     if (!noImages && !noDescrs) {
-      cascadeFeeds = /*_.shuffle*/(feeds);
+      cascadeFeeds = shuffle(feeds);
     } else if (!noImages) {
       cascadeFeeds = this.cascadeNoDescriptionFeedsView(fulls, noDescrs);
     } else if (!noDescrs) {
-      cascadeFeeds = /*_.shuffle*/(feeds);
+      cascadeFeeds = shuffle(feeds);
     } else {
       let view = [];
       while(noImages.length && noDescrs.length) {
         const noImage = noImages.pop();
         const noDescr = noDescrs.pop();
-        view.push(/*_.shuffle*/([noImage, noDescr]));
+        view.push(shuffle([noImage, noDescr]));
       }
       view = this.cascadeNoDescriptionFeedsView(view, noDescrs);
-      cascadeFeeds = /*_.shuffle*/(view.concat(noImages).concat(fulls));
+      cascadeFeeds = shuffle(view.concat(noImages).concat(fulls));
     }
     return cascadeFeeds;
   }

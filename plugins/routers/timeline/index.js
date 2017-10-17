@@ -58,16 +58,21 @@ KlarkModule(module, 'routesTimeline', (
   // Explore
   function middlewareExploreParameterValidator(req, res, next) {
     const now = new Date();
+    let hasCategoryParam = false;
     res.locals.params.timeline = _.map(config.CATEGORIES, (category) => {
       req.checkQuery(category).optional().isInt();
       const param = req.sanitizeQuery(category).toInt();
       const latest = _.isNumber(param) ? new Date(param) : now;
+      if (_.isNumber(param)) {
+        hasCategoryParam = true;
+      }
       return {
         latest,
         fieldName: 'category',
         fieldValue: category
       };
     });
+    res.locals.params.isInitialTimelineRequest = !hasCategoryParam;
     res.locals.params.limit = 1;
     checkLang(req, res);
 
@@ -162,12 +167,30 @@ KlarkModule(module, 'routesTimeline', (
   }
 
   function createMiddlewareTimelineController(name) {
+    let cachedTimeline;
+    let lastCachedUpdate = _.now();
+    const cacheUpdatePeriod = 15 * 60 * 1000;
     return (req, res, next) => {
+      const {limit, lang, isInitialTimelineRequest} = res.locals.params;
       const timelineParams = res.locals.params.timeline;
-      const limit = res.locals.params.limit;
-      const lang = res.locals.params.lang;
+
+      if (isInitialTimelineRequest && cachedTimeline) {
+        if (lastCachedUpdate + cacheUpdatePeriod > _.now()) {
+          res.locals.data = cachedTimeline;
+          return next();
+        } else {
+          cachedTimeline = undefined;
+        }
+      }
+
       timeline[name](timelineParams, lang, limit)
-        .then((feeds) => res.locals.data = feeds)
+        .then((feeds) => {
+          res.locals.data = feeds;
+          if (isInitialTimelineRequest) {
+            cachedTimeline = feeds;
+            lastCachedUpdate = _.now();
+          }
+        })
         .then(() => next())
         .catch(reason => {
           res.locals.errors.add('UNEXPECTED', reason);

@@ -94,55 +94,29 @@ export default class Article extends React.Component {
   }
 
   render() {
-    const { article, isLoading, relatedEntries } = this.props;
+    const { isLoading } = this.props;
+
+    if (isLoading) {
+      return this.renderLoading();
+    }
 
     return (
-      <div className="article-body" >
-         <div className="article-container font-size5 content-width4">
-           { article &&
-              <article className="line-height4">
-                { this.renderHeader(article) }
-                {(() => {
-                  if (article.error) {
-                    return this.renderError(article);
-                  } else {
-                    return (
-                      <section
-                        className="article-reader-content"
-                        ref={ this.setArticleContentEl }
-                        dangerouslySetInnerHTML={{__html: article.content}}>
-                      </section>
-                    )
-                  }
-                })()}
-                {
-                  !article.error && (
-                    <div className="text-center w-mb-7">
-                      <a className="btn btn-default" href={article.link} role="button" target="_blank" styleName="article-control-btn" >
-                        {tr.articleReadFromWebsite}
-                      </a>
-                    </div>
-                  )
-                }<hr/>
-                {
-                  this.renderRelatedArticles()
-                }
-                {
-                  !article.error &&
-                    this.renderFooter(article)
-                }
-              </article>
-           }
-           {
-             isLoading &&
-              this.renderLoading()
-           }
-        </div>
-      </div>
+      <Row>
+        <Col lg={10} lgOffset={1}>
+          <article styleName="article" >
+            { this.renderHeader() }
+            { this.renderError() }
+            { this.renderArticle() }
+            { this.renderRelatedArticles() }
+            { this.renderFooter() }
+          </article>
+        </Col>
+      </Row>
     );
   }
 
-  renderHeader = (article) => {
+  renderHeader = () => {
+    const { article } = this.props;
     const entry = article.entryId;
     const title = article.title || article.entryId.title;
 
@@ -158,19 +132,17 @@ export default class Article extends React.Component {
             date={entry.published}
           />
         </div>
-        { article.byline &&
-          <small className="text-muted">
+        { _.size(article.byline) > 2 &&
+          <div className="w-mt-14 text-muted" >
             {tr.by} {article.byline}
-          </small>
+          </div>
         }
       </header>
     );
   }
 
   renderHeaderToolbar = () => {
-    const {
-      nextRelatedEntry
-    } = this.props;
+    const { nextRelatedEntry } = this.props;
     return (
       <div styleName="header-toolbar" >
         <div styleName="header-toolbar-actions" >
@@ -196,6 +168,33 @@ export default class Article extends React.Component {
     );
   }
 
+  renderArticle = () => {
+    if (this.props.article && this.props.article.error) {
+      return;
+    }
+
+    const { article } = this.props;
+    return (
+      <div>
+        <div className="article-body" >
+          <div className="article-container font-size5 content-width4 line-height4">
+            <section
+              className="article-reader-content"
+              ref={ this.setArticleContentEl }
+              dangerouslySetInnerHTML={{__html: article.content}}>
+            </section>
+          </div>
+        </div>
+        <div className="text-center w-mb-7">
+            <a href={article.link} title={article.title} className="btn btn-default" role="button" target="_blank" styleName="article-control-btn">
+            <FontAwesome name="external-link" /> {' '}
+            {tr.articleReadFromWebsite}
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   renderRelatedArticles = () => {
     const {relatedEntries} = this.props;
     return (
@@ -210,9 +209,9 @@ export default class Article extends React.Component {
 
   }
 
-  renderFooter = (article) => {
+  renderFooter = () => {
     return (
-      <footer>
+      <footer styleName="footer">
         <div>
           <div className="pull-left" >
             {this.renderBackButton()}
@@ -236,14 +235,18 @@ export default class Article extends React.Component {
     );
   }
 
-  renderError = (article) => {
+  renderError = () => {
+    if (this.props.article && !this.props.article.error) {
+      return;
+    }
+    const { article } = this.props;
     return (
-      <div className="text-center">
+      <div className="text-center" styleName="error">
         <h1>
           <FontAwesome name="newspaper-o" />
         </h1>
         <p className="lead">{tr.articleRedirectTitle}</p>
-        <a href={article.link} className="btn btn-default" role="button" target="_blank" styleName="article-control-btn">
+        <a href={article.link} title={article.title} className="btn btn-default" role="button" target="_blank" styleName="article-control-btn">
           <FontAwesome name="external-link" /> {' '}
           {tr.articleReadFromWebsite}
         </a>

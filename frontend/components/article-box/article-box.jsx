@@ -145,7 +145,7 @@ export default class Entry extends React.Component {
             />
           </div>
           { this.hasDescription && (
-            <section styleName="summary">
+            <section styleName="summary" className="safe-wrap">
               {ellipsis(entry.description, this.isArticleFull ? 190 : 120)}
             </section>
           )}

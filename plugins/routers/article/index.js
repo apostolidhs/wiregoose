@@ -13,6 +13,8 @@ KlarkModule(module, 'routesArticle', (
   articleMiningExtractContent,
   modelsEntry
 ) => {
+  let lastCachedData;
+  let lastCachedArticleId;
 
   return {
     register
@@ -61,6 +63,11 @@ KlarkModule(module, 'routesArticle', (
   function middlewareCachedFetchController(req, res, next) {
     const {entryId, relatedArticles} = res.locals.params;
 
+    if (lastCachedArticleId === entryId) {
+      res.locals.data = lastCachedData;
+      return next();
+    }
+
     res.locals.data = {};
     const fetchAllPrms = [
       articleMining.cachedExtraction(entryId)
@@ -75,7 +82,11 @@ KlarkModule(module, 'routesArticle', (
     }
 
     q.all(fetchAllPrms)
-      .then(() => next())
+      .then(() => {
+        lastCachedData = res.locals.data;
+        lastCachedArticleId = entryId;
+        next();
+      })
       .catch(reason => {
         res.locals.errors.add('UNEXPECTED', reason);
         next(true);

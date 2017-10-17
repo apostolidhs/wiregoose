@@ -46,7 +46,7 @@ export default class Provider extends InfiniteScrollPage {
     publish('page-ready', {
       title: provider,
       keywords: provider,
-      description: tr.formatString(tr.timelineProviderDescription, provider)
+      description: tr.formatString(tr.timelineProviderDescription, provider).join('')
     });
   }
 

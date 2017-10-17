@@ -39,7 +39,7 @@ export default class ArticleBoxSm extends React.Component {
               }
             </Media.Left>
             <Media.Body className="vertical-align-middle" >
-              <p className="w-m-0" >
+              <p className="w-m-0 safe-wrap">
                 {ellipsis(title, 60)}
               </p>
             </Media.Body>

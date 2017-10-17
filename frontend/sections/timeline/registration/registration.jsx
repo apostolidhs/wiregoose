@@ -58,7 +58,7 @@ export default class Registration extends InfiniteScrollPage {
     publish('page-ready', {
       title,
       keywords,
-      description: tr.formatString(tr.timelineRegistrationDescription, title)
+      description: tr.formatString(tr.timelineRegistrationDescription, title).join('')
     });
   }
 

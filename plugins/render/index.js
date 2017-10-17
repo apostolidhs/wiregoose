@@ -51,6 +51,9 @@ KlarkModule(module, 'render', (
               if (content) {
                 return savePreRenderContent(content, req.url)
                   .then(preRenderEntry => responseContent(res, preRenderEntry.content));
+              } else {
+                res.locals.errors.add('UNEXPECTED', reason);
+                next(true);
               }
             });
         })
@@ -158,7 +161,6 @@ KlarkModule(module, 'render', (
   }
 
   function retrievePreRenderPageAndUpdateHitCounter(link) {
-    return Promise.resolve();
     const q = {
       $inc: { hits: 1 },
       lastHit: new Date()

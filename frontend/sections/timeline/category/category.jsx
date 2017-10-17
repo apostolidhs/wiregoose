@@ -83,7 +83,7 @@ export default class Category extends InfiniteScrollPage {
     publish('page-ready', {
       title: catName,
       keywords: catName,
-      description: tr.formatString(tr.timelineCategoryDescription, catName)
+      description: tr.formatString(tr.timelineCategoryDescription, catName).join('')
     });
   }
 

@@ -48,7 +48,7 @@ export default class ArticleBoxMd extends React.Component {
             }
           </a>
           <div className="caption">
-            <div styleName="dot-separator">
+            <div styleName="dot-separator dot-separator-md">
               <Link
                 className="btn btn-link-muted w-p-0"
                 to={`/provider/${provider}`}
@@ -64,7 +64,7 @@ export default class ArticleBoxMd extends React.Component {
               />
             </div>
             <a className="blind-link" href={link} title={title}>
-              <p>{ellipsis(title, 80)}</p>
+              <p className="safe-wrap">{ellipsis(title, 80)}</p>
             </a>
           </div>
         </div>

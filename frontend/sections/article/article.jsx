@@ -59,7 +59,7 @@ export default class Article extends React.Component {
     const { article } = this.state;
     publish('page-ready', {
       title: article.title || article.entryId.title,
-      description: tr.formatString(tr.articleDescription, article.entryId.description),
+      description: tr.formatString(tr.articleDescription, article.entryId.description).join(''),
       image: article.entryId.image,
       time: article.entryId.published,
       lang: article.entryId.lang,

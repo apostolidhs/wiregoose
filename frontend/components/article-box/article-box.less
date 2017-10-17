@@ -99,6 +99,8 @@
 .header h3 {
   margin: 0;
   font-size: 20px;
+  max-height: 67px;
+  overflow: hidden;
 }
 
 .summary {
@@ -109,6 +111,9 @@
 .dot-separator > *:not(:first-child)::before {
   content: '\002022';
   margin: 0px 4px;
+}
+.dot-separator {
+  .text-overflow();
 }
 
 .published {
@@ -164,13 +169,23 @@
 .article-box-md-panel {
   margin: 0;
   padding: 0;
-  height: 300px;
+  height: 320px;
   background-color: inherit;
   border: initial;
+  overflow: hidden;
   :global {
+    .caption {
+      padding: 10px 15px;
+    }
     img {
       height: @image-height-md !important;
       width: 100% !important;
     }
+  }
+}
+
+@media (max-width: @screen-xs-min) {
+  .dot-separator-md * {
+    font-size: 14px;
   }
 }
