@@ -121,7 +121,7 @@ export default class Article extends React.Component {
     const title = article.title || article.entryId.title;
 
     return (
-      <header className="w-mb-14" >
+      <header styleName="header" >
         {this.renderHeaderToolbar()}
         <h1>{title}</h1>
         <div className="w-mt-14" >
@@ -217,7 +217,7 @@ export default class Article extends React.Component {
             {this.renderBackButton()}
           </div>
           <div className="text-right">
-            <SocialShare styleName="social-share" link={location.href} overlayPlacement={"bottom"} />
+            <SocialShare styleName="social-share" link={location.href} overlayPlacement={"top"} />
           </div>
         </div>
       </footer>

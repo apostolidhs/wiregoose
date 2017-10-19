@@ -5,8 +5,10 @@ import CSSModules from 'react-css-modules';
 
 import styles from './timeline.less';
 import ArticleBox from '../article-box/article-box.jsx';
+import GoogleAdvBox from '../article-box/google-adv-box.jsx';
 import FBFollowBox from '../article-box/fb-follow-box.jsx';
 import tr from '../localization/localization.js';
+import { IS_DEV } from '../../../config-public.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -130,13 +132,7 @@ export default class Timeline extends React.Component {
   renderAdvertiseBox = () => {
     return (
       <div key={_.uniqueId('advertise-key-')} styleName="timeline-box"  style={{}} >
-        <ins className="adsbygoogle"
-          style={{display: 'block'}}
-          data-ad-format="fluid"
-          data-ad-layout-key="-8j+1w-dx+ec+gk"
-          data-ad-client="ca-pub-3571483150053473"
-          data-ad-slot="9953314902">
-        </ins>
+        <GoogleAdvBox />
       </div>
     );
   }
@@ -151,7 +147,7 @@ export default class Timeline extends React.Component {
   }
 
   createCascadeFeedsView = (feeds) => {
-    const shuffle = true ? (f) => _.shuffle(f) : (f) => _.identity(f);
+    const shuffle = IS_DEV ? (f => _.identity(f)) : (f => _.shuffle(f));
     const byBoxSize = _.groupBy(feeds, feed => feed.boxSize);
     const noImages = byBoxSize['ARTICLE_BOX_NO_IMAGE'];
     const noDescrs = byBoxSize['ARTICLE_BOX_NO_DESCRIPTION'];
