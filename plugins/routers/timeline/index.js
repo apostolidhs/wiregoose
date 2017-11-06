@@ -24,7 +24,7 @@ KlarkModule(module, 'routesTimeline', (
     app.get(`/${config.API_URL_PREFIX}/timeline/explore`, [
       krkMiddlewarePermissions.check('FREE'),
       middlewareExploreParameterValidator,
-      createMiddlewareTimelineController('explore'),
+      createMiddlewareTimelineController('explore', true),
       krkMiddlewareResponse.success,
       krkMiddlewareResponse.fail
     ]);
@@ -166,7 +166,7 @@ KlarkModule(module, 'routesTimeline', (
     krkParameterValidator.checkForErrors(res.locals.params, req, res, next);
   }
 
-  function createMiddlewareTimelineController(name) {
+  function createMiddlewareTimelineController(name, isExplore) {
     let cachedTimeline;
     let lastCachedUpdate = _.now();
     const cacheUpdatePeriod = 15 * 60 * 1000;
@@ -174,7 +174,7 @@ KlarkModule(module, 'routesTimeline', (
       const {limit, lang, isInitialTimelineRequest} = res.locals.params;
       const timelineParams = res.locals.params.timeline;
 
-      if (isInitialTimelineRequest && cachedTimeline) {
+      if (isInitialTimelineRequest && lang === 'gr' && isExplore && cachedTimeline) {
         if (lastCachedUpdate + cacheUpdatePeriod > _.now()) {
           res.locals.data = cachedTimeline;
           return next();
@@ -186,7 +186,7 @@ KlarkModule(module, 'routesTimeline', (
       timeline[name](timelineParams, lang, limit)
         .then((feeds) => {
           res.locals.data = feeds;
-          if (isInitialTimelineRequest) {
+          if (isInitialTimelineRequest && lang === 'gr' && isExplore) {
             cachedTimeline = feeds;
             lastCachedUpdate = _.now();
           }

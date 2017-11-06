@@ -77,7 +77,7 @@ export default class Header extends React.Component {
     const currentLanguage = BrowserLanguageDetection();
     const otherLanguages = _.without(SUPPORTED_LANGUAGES, currentLanguage);
     return (
-      <Navbar collapseOnSelect fixedTop>
+      <Navbar collapseOnSelect fixedTop styleName="navbar">
         <Navbar.Header>
           <Navbar.Brand>
             <Link to="/" styleName="logo">
