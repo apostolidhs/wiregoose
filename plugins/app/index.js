@@ -29,6 +29,7 @@ KlarkModule(module, 'app', (
   krkRoutesServerInfo,
   krkRoutesUsers,
   config,
+  proxy,
   rssRegistrationsFetcher,
   routesRssFeedFetchRssFeed,
   routesRssFeedFetchRssRegistrations,
@@ -38,6 +39,7 @@ KlarkModule(module, 'app', (
   routesMeasures,
   routesArticle,
   routesTimeline,
+  routesProxy,
   parameterValidatorsCustomExpressValidators,
   render
 ) => {
@@ -75,7 +77,8 @@ KlarkModule(module, 'app', (
         RSS_FEED_FETCH_FAIL: [3001, 'rss feed fetch failed'],
         RSS_REGISTRATIONS_FETCH_FAIL: [3002, 'rss registrations fetch failed'],
         ARTICLE_MINING_FAIL: [6001, 'article mining failed'],
-        MEASURES_FAILED: [7001, 'measures failed']
+        MEASURES_FAILED: [7001, 'measures failed'],
+        PROXY_FAILED: [8001, 'proxy failed']
       }
     }));
 
@@ -139,7 +142,8 @@ KlarkModule(module, 'app', (
       routesRssFeedFetchRssRegistrations,
       routesRssFeedFetchRssFeed,
       routesCrud,
-      routesStatics
+      routesStatics,
+      routesProxy
     ], route => route.register(app));
   }
 
@@ -147,6 +151,7 @@ KlarkModule(module, 'app', (
     if (config.ENABLE_RSS_REGISTRATIONS_FETCH) {
       rssRegistrationsFetcher.startPeriodicalFetchProcess();
     }
+    proxy.startPeriodicalCacheInvalidation();
   }
 
   function allowCrossDomain(req, res, next) {

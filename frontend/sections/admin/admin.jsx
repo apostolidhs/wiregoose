@@ -50,6 +50,11 @@ export default class Admin extends React.Component {
                 <FontAwesome name="picture-o" /> Pre Render
               </NavItem>
             </LinkContainer>
+            <LinkContainer to="/proxy">
+              <NavItem eventKey={6} title="Proxy">
+                <FontAwesome name="exchange" /> Proxy
+              </NavItem>
+            </LinkContainer>
           </Nav>
         </Col>
         <Col md={10}>

@@ -7,9 +7,9 @@ import ArticlePlaceholderImage from './article-placeholder-image.jsx';
 import FromNow from '../utilities/from-now.jsx';
 import styles from './article-box.less';
 import SocialShare from './social-share.jsx';
-import { ellipsis } from '../utilities/text-utilities.js';
 import ArticleBoxProps from './entry-prop-type.js';
-import { createLink, createAbsoluteLink } from '../utilities/text-utilities.js';
+import { createLink, createAbsoluteLink, ellipsis } from '../utilities/text-utilities.js';
+import {toArticleBox} from '../utilities/images-source.js';
 import tr from '../localization/localization.js';
 
 @CSSModules(styles, {
@@ -70,7 +70,7 @@ export default class Entry extends React.Component {
 
     if (!this.hasDescription) {
       this.style = {
-        backgroundImage: `url(${entry.image})`
+        backgroundImage: `url(${toArticleBox(entry.image)})`
       };
     }
   }
@@ -102,7 +102,7 @@ export default class Entry extends React.Component {
                   />
                 );
               } else {
-                return (<img src={entry.image} alt="" />);
+                return (<img src={toArticleBox(entry.image)} alt="" />);
               }
             })()}
           </Link>

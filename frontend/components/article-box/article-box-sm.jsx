@@ -8,6 +8,7 @@ import CategoryImage from '../category/images.jsx';
 import styles from './article-box.less';
 import entryPropType from './entry-prop-type.js';
 import { createLink, ellipsis } from '../utilities/text-utilities.js';
+import {toArticleBox} from '../utilities/images-source.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -34,7 +35,7 @@ export default class ArticleBoxSm extends React.Component {
             <Media.Left align="middle" >
               {
                 image
-                  ? <Image width={42} height={42} src={image} circle />
+                  ? <Image width={42} height={42} src={toArticleBox(image)} circle />
                   : <CategoryImage name={category} />
               }
             </Media.Left>

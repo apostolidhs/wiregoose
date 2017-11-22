@@ -12,6 +12,7 @@ import ArticlePlaceholderImage from './article-placeholder-image.jsx';
 import styles from './article-box.less';
 import entryPropType from './entry-prop-type.js';
 import { createLink, ellipsis } from '../utilities/text-utilities.js';
+import {toArticleBox} from '../utilities/images-source.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -40,7 +41,7 @@ export default class ArticleBoxMd extends React.Component {
           <a className="blind-link" href={link} title={title}>
             {
               image
-                ? <Image src={image} />
+                ? <Image src={toArticleBox(image)} />
                 : <ArticlePlaceholderImage
                     category={category}
                     provider={provider}

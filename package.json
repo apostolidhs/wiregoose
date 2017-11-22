@@ -89,6 +89,7 @@
     "request": "^2.81.0",
     "run-sequence": "^1.2.2",
     "serve-favicon": "^2.3.0",
+    "sharp": "^0.18.4",
     "single-line-log": "^1.1.2",
     "supertest": "^2.0.1",
     "valid-url": "^1.0.9",

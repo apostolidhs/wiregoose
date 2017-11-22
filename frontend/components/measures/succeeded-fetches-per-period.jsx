@@ -67,7 +67,6 @@ export default class SucceededFetchesPerPeriod extends React.Component {
     const prms = Promise.all(
       ['categories', 'supportedLanguages'].map(getStatic)
     ).then(() => this.fetchMeasures());
-    this.refs.load.promise = prms;
   }
 
   fetchMeasures = (e) => {
