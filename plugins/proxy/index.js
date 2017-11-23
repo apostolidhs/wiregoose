@@ -22,7 +22,7 @@ KlarkModule(module, 'proxy', (
     'image/png': true,
     'image/svg+xml': true
   };
-  const maxFileSize = 400 * 1024;
+  const maxFileSize = 512 * 1024;
   const debugLog = false;
 
   if (!$fs.existsSync(cacheDir)){
@@ -120,15 +120,15 @@ KlarkModule(module, 'proxy', (
       const request = $request(img);
 
       request.on('response', function (imgResponse) {
-        const contentType = imgResponse.headers['content-type'];
-        if (!supportedTypes[contentType]) {
-          return onError('invalid file type');
-        }
+        // const contentType = imgResponse.headers['content-type'];
+        // if (!supportedTypes[contentType]) {
+        //   return onError('invalid file type');
+        // }
 
-        const contentLength = +imgResponse.headers['content-length'];
-        if (_.isNaN(contentLength) || contentLength > maxFileSize) {
-          return onError(`invalid content length: ${imgResponse.headers['content-length']}`);
-        }
+        // const contentLength = +imgResponse.headers['content-length'];
+        // if (_.isNaN(contentLength) || contentLength > maxFileSize) {
+        //   return onError(`invalid content length: ${imgResponse.headers['content-length']}`);
+        // }
 
         const writeStream = $fs.createWriteStream(outPath);
 

@@ -42,7 +42,8 @@ KlarkModule(module, 'routesProxy', (
       res.locals.params.resizeImage = {h, w};
     }
 
-    res.locals.params.q = krkParameterValidator.validations.paramUrlQuery(req);
+    const q = req.sanitizeQuery('q').toString();
+    res.locals.params.q = decodeURIComponent(q);
     krkParameterValidator.checkForErrors(res.locals.params, req, res, next);
   }
 
