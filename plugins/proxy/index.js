@@ -37,8 +37,12 @@ KlarkModule(module, 'proxy', (
 
   function image(src, resize) {
     const path = toPath(src, resize);
-    if (isCached(path)) {
-      return Promise.resolve(path);
+    const fileInfo = getFileInfo(path);
+    if (fileInfo && fileInfo.isFile()) {
+      return Promise.resolve({
+        path,
+        isValid: !!fileInfo.size
+      });
     }
     return fetchImgAndCache(src, path, resize);
   }
@@ -95,9 +99,9 @@ KlarkModule(module, 'proxy', (
     return resize ? `${path}-${resize.w}-${resize.h}` : path;;
   }
 
-  function isCached(path) {
+  function getFileInfo(path) {
     try {
-      return $fs.statSync(path).isFile();
+      return $fs.statSync(path);
     }
     catch (err) {
       return false;
@@ -117,20 +121,25 @@ KlarkModule(module, 'proxy', (
   function fetchImgAndCache(img, outPath, resize) {
     let hasError = false;
     return new Promise((resolve, reject) => {
-      const request = $request(img);
+      const writeStream = $fs.createWriteStream(outPath);
+
+      const request = $request(img, {timeout: 100000});
+      request.setHeader('user-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36');
+      request.setHeader('accept', 'text/html,application/xhtml+xml');
 
       request.on('response', function (imgResponse) {
-        // const contentType = imgResponse.headers['content-type'];
-        // if (!supportedTypes[contentType]) {
-        //   return onError('invalid file type');
-        // }
 
-        // const contentLength = +imgResponse.headers['content-length'];
-        // if (_.isNaN(contentLength) || contentLength > maxFileSize) {
-        //   return onError(`invalid content length: ${imgResponse.headers['content-length']}`);
-        // }
+        const contentType = imgResponse.headers['content-type'];
+        if (!supportedTypes[contentType]) {
+          writeStream.end();
+          return onError('invalid file type');
+        }
 
-        const writeStream = $fs.createWriteStream(outPath);
+        const contentLength = +imgResponse.headers['content-length'];
+        if (_.isNaN(contentLength) || contentLength > maxFileSize) {
+          writeStream.end();
+          return onError(`invalid content length: ${imgResponse.headers['content-length']}`);
+        }
 
         if (resize) {
           const {w, h} = resize;
@@ -145,7 +154,10 @@ KlarkModule(module, 'proxy', (
 
         writeStream.on('finish', () => {
           if (!hasError) {
-            resolve(outPath);
+            resolve({
+              path: outPath,
+              isValid: true
+            });
           }
         });
       });
@@ -157,10 +169,11 @@ KlarkModule(module, 'proxy', (
           return;
         }
         hasError = true;
-        if (isCached(outPath)) {
-          invalidateCache(outPath);
-        }
-        reject(error);
+        writeStream.end();
+        resolve({
+          path: outPath,
+          isValid: false
+        });
       }
     });
   }
