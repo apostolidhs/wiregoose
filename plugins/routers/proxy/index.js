@@ -53,11 +53,9 @@ KlarkModule(module, 'routesProxy', (
     proxy.image(url, resize)
       .then(({path, isValid}) => {
         if (isValid) {
-          res.sendFile(path);
-        } else {
-          res.status(204);
-          res.send();
+          return res.sendFile(path);
         }
+        res.status(204).send();
       })
       .catch(reason => {
         res.locals.errors.add('PROXY_FAILED', reason);

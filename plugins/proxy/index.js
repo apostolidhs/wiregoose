@@ -7,10 +7,10 @@ KlarkModule(module, 'proxy', (
   q,
   $path,
   $fs,
-  $request,
   $crypto,
   $sharp,
-  krkLogger
+  krkLogger,
+  requestBuilder
 ) => {
 
   const cacheDir = $path.resolve(__dirname, '../..', 'cache');
@@ -39,10 +39,7 @@ KlarkModule(module, 'proxy', (
     const path = toPath(src, resize);
     const fileInfo = getFileInfo(path);
     if (fileInfo && fileInfo.isFile()) {
-      return Promise.resolve({
-        path,
-        isValid: !!fileInfo.size
-      });
+      return Promise.resolve(createPathInfo(path, !!fileInfo.size));
     }
     return fetchImgAndCache(src, path, resize);
   }
@@ -123,21 +120,17 @@ KlarkModule(module, 'proxy', (
     return new Promise((resolve, reject) => {
       const writeStream = $fs.createWriteStream(outPath);
 
-      const request = $request(img, {timeout: 100000});
-      request.setHeader('user-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36');
-      request.setHeader('accept', 'text/html,application/xhtml+xml');
+      const request = requestBuilder.create(img);
 
       request.on('response', function (imgResponse) {
 
         const contentType = imgResponse.headers['content-type'];
         if (!supportedTypes[contentType]) {
-          writeStream.end();
           return onError('invalid file type');
         }
 
         const contentLength = +imgResponse.headers['content-length'];
         if (_.isNaN(contentLength) || contentLength > maxFileSize) {
-          writeStream.end();
           return onError(`invalid content length: ${imgResponse.headers['content-length']}`);
         }
 
@@ -154,10 +147,7 @@ KlarkModule(module, 'proxy', (
 
         writeStream.on('finish', () => {
           if (!hasError) {
-            resolve({
-              path: outPath,
-              isValid: true
-            });
+            resolve(createPathInfo(outPath));
           }
         });
       });
@@ -169,13 +159,15 @@ KlarkModule(module, 'proxy', (
           return;
         }
         hasError = true;
+        request.abort();
         writeStream.end();
-        resolve({
-          path: outPath,
-          isValid: false
-        });
+        resolve(createPathInfo(outPath, false));
       }
     });
+  }
+
+  function createPathInfo(path, isValid = true) {
+    return {path, isValid};
   }
 
   function getCacheInfo() {

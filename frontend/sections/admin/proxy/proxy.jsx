@@ -5,7 +5,7 @@ import { Row, Col, Table, Panel, Alert}
 import FontAwesome from 'react-fontawesome';
 
 import Loader from '../../../components/loader/loader.jsx';
-import {toText, TIME_1_DAY} from '../../../components/utilities/dates.js';
+import {toText, TIME_1_DAY, TIME_1_HOUR} from '../../../components/utilities/dates.js';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 
 export default class Dashboard extends React.Component {
@@ -26,7 +26,7 @@ export default class Dashboard extends React.Component {
         const totalSize = _.sumBy(files, 'size');
         let hasOverDate = false;
         _.each(files, file => {
-          if (file.created.getTime() > TIME_1_DAY) {
+          if ((file.created.getTime() + (TIME_1_DAY + TIME_1_HOUR)) < _.now()) {
             file.overDate = true;
             hasOverDate = true;
           }

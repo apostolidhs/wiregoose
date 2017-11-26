@@ -7,6 +7,7 @@ import { Media, Panel, Image } from 'react-bootstrap';
 import CategoryImage from '../category/images.jsx';
 import styles from './article-box.less';
 import entryPropType from './entry-prop-type.js';
+import ImageLoader from './article-image.jsx';
 import { createLink, ellipsis } from '../utilities/text-utilities.js';
 import {toArticleBox} from '../utilities/images-source.js';
 
@@ -33,11 +34,9 @@ export default class ArticleBoxSm extends React.Component {
         <Panel styleName="article-box-sm-panel" >
           <Media>
             <Media.Left align="middle" >
-              {
-                image
-                  ? <Image width={42} height={42} src={toArticleBox(image)} circle />
-                  : <CategoryImage name={category} />
-              }
+              <ImageLoader src={toArticleBox(image)} showOnlyPlaceholder={!image} width={42} height={42} circle>
+                <CategoryImage name={category} />
+              </ImageLoader>
             </Media.Left>
             <Media.Body className="vertical-align-middle" >
               <p className="w-m-0 safe-wrap">
