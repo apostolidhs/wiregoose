@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import CSSModules from 'react-css-modules';
 
+import ImageLoader from './article-image.jsx';
 import ArticlePlaceholderImage from './article-placeholder-image.jsx';
 import FromNow from '../utilities/from-now.jsx';
 import styles from './article-box.less';
 import SocialShare from './social-share.jsx';
-import { ellipsis } from '../utilities/text-utilities.js';
 import ArticleBoxProps from './entry-prop-type.js';
-import { createLink, createAbsoluteLink } from '../utilities/text-utilities.js';
+import { createLink, createAbsoluteLink, ellipsis } from '../utilities/text-utilities.js';
+import {toArticleBox} from '../utilities/images-source.js';
 import tr from '../localization/localization.js';
 
 @CSSModules(styles, {
@@ -70,7 +71,7 @@ export default class Entry extends React.Component {
 
     if (!this.hasDescription) {
       this.style = {
-        backgroundImage: `url(${entry.image})`
+        backgroundImage: `url(${toArticleBox(entry.image)})`
       };
     }
   }
@@ -93,18 +94,12 @@ export default class Entry extends React.Component {
       >
         { ((this.hasDescription && this.hasImage) || showMockImage) && (
           <Link to={this.articleLink} styleName="image">
-            {(() => {
-              if (showMockImage) {
-                return (
-                  <ArticlePlaceholderImage
-                    category={entry.category}
-                    provider={entry.provider}
-                  />
-                );
-              } else {
-                return (<img src={entry.image} alt="" />);
-              }
-            })()}
+            <ImageLoader src={toArticleBox(entry.image)} showOnlyPlaceholder={showMockImage}>
+              <ArticlePlaceholderImage
+                category={entry.category}
+                provider={entry.provider}
+              />
+            </ImageLoader>
           </Link>
         )}
 

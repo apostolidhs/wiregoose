@@ -86,6 +86,9 @@ export default class Page {
   }
 
   onScroll = _.throttle(() => {
+    if (!this.targetComponent) {
+      return;
+    }
     const absoluteFrom = Math.round(
       this.targetComponent.getScrollTop()
       / (Page.ARTICLE_BOX_HEIGHT + Page.TIMELINE_PADDING)

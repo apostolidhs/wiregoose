@@ -3,12 +3,12 @@ import axios from 'axios';
 import promiseFinally from 'promise.prototype.finally';
 promiseFinally.shim();
 
-import { API_URL, API_URL_PREFIX } from '../../../config-public.js';
+import { getApiUrl } from '../utilities/environment-detection';
 import ArticleResponseTransformation from '../article/response-transformation.js';
 import ArticleBoxResponseTransformation from '../article-box/response-transformation.js';
 import ServerErrorInterceptor from './server-error-interceptor.js';
 
-const API_ORIGIN = `${API_URL}/${API_URL_PREFIX}/`
+const API_ORIGIN = getApiUrl();
 
 // add this to set timeout
 //  .then(resp => new Promise(r => setTimeout(() =>r(resp), 4000000000000)));
@@ -94,6 +94,22 @@ export function getArticleStatistics() {
       'Content-Type': 'application/json',
       Authorization: credentialGetter(),
     },
+  });
+}
+
+export function getProxyCacheInfo() {
+  return httpRequest({
+    method: 'get',
+    url: `${API_ORIGIN}proxy/cacheInfo`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: credentialGetter(),
+    },
+  })
+  .then(resp => {
+    const {files} = resp.data.data;
+    _.each(files, f => f.created = new Date(f.created));
+    return resp;
   });
 }
 

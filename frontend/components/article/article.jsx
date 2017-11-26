@@ -28,6 +28,7 @@ export default class Article extends React.Component {
   static propTypes = {
     article: PropTypes.shape({
       content: PropTypes.string,
+      contentEl: PropTypes.any,
       contentLength: PropTypes.number,
       title: PropTypes.string,
       byline: PropTypes.string,
@@ -51,12 +52,14 @@ export default class Article extends React.Component {
   setArticleContentEl = (el) => {
     if (!this.articleContentEl) {
       this.articleContentEl = el;
-      this.createAdvertiseIfIsPossible();
+      const {contentEl} = this.props.article;
+      this.createAdvertiseIfIsPossible(contentEl);
+      el.appendChild(contentEl);
     }
   }
 
-  createAdvertiseIfIsPossible = () => {
-    const pEls = this.articleContentEl.getElementsByTagName('p');
+  createAdvertiseIfIsPossible = (content) => {
+    const pEls = content.getElementsByTagName('p');
     const totalP = pEls.length;
     if (totalP > 2  && !window.wgLazyAddBlockerDetected) {
       const targetEl = pEls[Math.round(totalP * 0.7)];
@@ -180,8 +183,7 @@ export default class Article extends React.Component {
           <div className="article-container font-size5 content-width4 line-height4">
             <section
               className="article-reader-content"
-              ref={ this.setArticleContentEl }
-              dangerouslySetInnerHTML={{__html: article.content}}>
+              ref={ this.setArticleContentEl }>
             </section>
           </div>
         </div>

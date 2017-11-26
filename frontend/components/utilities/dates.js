@@ -2,11 +2,11 @@ import _ from 'lodash';
 
 import tr from '../localization/localization.js';
 
-const TIME_1_MIN = 60 * 1000;
-const TIME_10_MIN = 10 * TIME_1_MIN;
-const TIME_1_HOUR = 60 * TIME_1_MIN;
-const TIME_1_DAY = 24 * TIME_1_HOUR;
-const TIME_2_DAYS = 2 * TIME_1_DAY;
+export const TIME_1_MIN = 60 * 1000;
+export const TIME_10_MIN = 10 * TIME_1_MIN;
+export const TIME_1_HOUR = 60 * TIME_1_MIN;
+export const TIME_1_DAY = 24 * TIME_1_HOUR;
+export const TIME_2_DAYS = 2 * TIME_1_DAY;
 
 export function toText(val, showSeconds = false) {
   const date = getDate(val);

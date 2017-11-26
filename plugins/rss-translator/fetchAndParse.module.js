@@ -2,7 +2,7 @@
 
 'use strict';
 
-KlarkModule(module, 'rssTranslatorFetchAndParse', ($fs, q, $request, $feedparser, krkLogger) => {
+KlarkModule(module, 'rssTranslatorFetchAndParse', ($fs, q, $feedparser, krkLogger, requestBuilder) => {
   return {
     fromUrl: createStream('url'),
     fromFile: createStream('file')
@@ -31,7 +31,7 @@ KlarkModule(module, 'rssTranslatorFetchAndParse', ($fs, q, $request, $feedparser
 
       function fromUrl(url) {
         const decodedUrl = decodeURIComponent(url);
-        const req = createRequest(decodedUrl);
+        const req = requestBuilder.create(decodedUrl);
 
         req.on('error', onError);
         req.on('response', readRequestStream);
@@ -45,14 +45,6 @@ KlarkModule(module, 'rssTranslatorFetchAndParse', ($fs, q, $request, $feedparser
         });
 
         readStream.on('error', onError);
-      }
-
-      function createRequest(url) {
-        const req = $request(url, {timeout: 100000});
-        req.setHeader('user-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36');
-        req.setHeader('accept', 'text/html,application/xhtml+xml');
-
-        return req;
       }
 
       function readRequestStream(res) {

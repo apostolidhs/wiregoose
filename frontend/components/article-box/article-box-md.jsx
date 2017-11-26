@@ -9,9 +9,11 @@ import tr from '../localization/localization.js';
 import FromNow from '../utilities/from-now.jsx';
 import CategoryImage from '../category/images.jsx';
 import ArticlePlaceholderImage from './article-placeholder-image.jsx';
+import ImageLoader from './article-image.jsx';
 import styles from './article-box.less';
 import entryPropType from './entry-prop-type.js';
 import { createLink, ellipsis } from '../utilities/text-utilities.js';
+import {toArticleBox} from '../utilities/images-source.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -38,14 +40,9 @@ export default class ArticleBoxMd extends React.Component {
       <div className="panel panel-default">
         <div className="thumbnail" styleName="article-box-md-panel">
           <a className="blind-link" href={link} title={title}>
-            {
-              image
-                ? <Image src={image} />
-                : <ArticlePlaceholderImage
-                    category={category}
-                    provider={provider}
-                  />
-            }
+            <ImageLoader src={toArticleBox(image)} showOnlyPlaceholder={!image}>
+              <ArticlePlaceholderImage category={category} provider={provider} />
+            </ImageLoader>
           </a>
           <div className="caption">
             <div styleName="dot-separator dot-separator-md">

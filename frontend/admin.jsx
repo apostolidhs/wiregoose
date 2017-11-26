@@ -21,6 +21,7 @@ import ArticleEntries from './sections/admin/article-entries/article-entries.jsx
 import Dashboard from './sections/admin/dashboard/dashboard.jsx';
 import Article from './sections/admin/article/article.jsx';
 import PreRender from './sections/admin/pre-render/pre-render.jsx';
+import Proxy from './sections/admin/proxy/proxy.jsx';
 
 if (Auth.isAuthenticated()) {
   WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
@@ -74,6 +75,7 @@ class App extends React.Component {
             <Route path="articleentries" component={ArticleEntries} />
             <Route path="article" component={Article} />
             <Route path="prerender" component={PreRender} />
+            <Route path="proxy" component={Proxy} />
           </Route>
           <Route path='*' component={Dashboard} />
         </Route>
