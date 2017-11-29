@@ -13,7 +13,7 @@ export default class Body extends React.Component {
   render() {
     return (
       <div>
-        <Header enableAuth={false} />
+        <Header />
         <Notifications />
         <div className="container">
           {this.props.children}

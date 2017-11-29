@@ -23,17 +23,22 @@ export default class Login extends React.Component {
         <Col className="w-mt-14" >
           <Image className="center-block" width="80" src={mongooseIcon} />
           <h1 className="text-center w-m-0">
-            <small>Sign in</small>
+            <small>Forgotten your password?</small>
           </h1>
-          <span className="text-center center-block text-muted">
-            or <Link to="/auth/signup">create an account</Link>
-          </span>
+          <p className="text-center text-muted">
+            Enter your email address to reset your password.<br/>
+            You may need to check your spam folder.
+          </p>
         </Col>
         <Col className="w-mt-14" md={4} mdOffset={4} xs={10} xsOffset={1}>
           <Panel>
-            <CredentialForm onCredentialSubmit={this.performLogin} submitTitle="Sign in" />
-            <Link to="/auth/forgot">
-              <small>Forgot your password?</small>
+            <CredentialForm
+              onCredentialSubmit={this.performLogin}
+              submitTitle="Send verification email"
+              hidePassword
+            />
+            <Link to="/auth/login">
+              <small>Back to login</small>
             </Link>
           </Panel>
         </Col>

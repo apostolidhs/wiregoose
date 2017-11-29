@@ -76,13 +76,14 @@ export default class Header extends React.Component {
     const { isLeftSidebarEnabled, isLeftSidebarOpen } = this.state.sidebar;
     const currentLanguage = BrowserLanguageDetection();
     const otherLanguages = _.without(SUPPORTED_LANGUAGES, currentLanguage);
+
     return (
       <Navbar collapseOnSelect fixedTop styleName="navbar">
         <Navbar.Header>
           <Navbar.Brand>
             <Link to="/" styleName="logo">
               <img src={logoImage} />
-              <span>Wiregoose{/*<small className="text-muted">beta</small>*/}</span>
+              <span>Wiregoose</span>
             </Link>
           </Navbar.Brand>
         </Navbar.Header>
@@ -159,10 +160,10 @@ export default class Header extends React.Component {
                   </MenuItem>
                 </LinkContainer>
               }
-              { Auth.isAdmin() &&
+              { Auth.isAuthenticated() &&
                 <MenuItem divider />
               }
-              { Auth.isAdmin() &&
+              { Auth.isAuthenticated() &&
                 <MenuItem onClick={this.logout}>
                   Logout
                 </MenuItem>

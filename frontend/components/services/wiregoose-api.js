@@ -67,7 +67,18 @@ export function login(email, password) {
   return httpRequest({
     method: 'post',
     url: `${API_ORIGIN}authorize/login`,
-    data: { name: email, password },
+    data: { email, password },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export function signup(email, password) {
+  return httpRequest({
+    method: 'post',
+    url: `${API_ORIGIN}authorize/signup`,
+    data: { email, password },
     headers: {
       'Content-Type': 'application/json',
     },

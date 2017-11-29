@@ -16,6 +16,8 @@ config.USER_ACCOUNT_VALIDATION_PERIOD = 10; // seconds, after signup of the acco
 config.JWT_SECRET = ''; // secret key for jwt encode
 config.JWT_EXPIRATION_PERIOD = 4 * 24 * 60 * 60 * 1000; // ms, jwt expiration period
 
+config.FACEBOOK_APP_SECRET = '';
+
 config.ADMIN_NAME = ''; // initial admin name
 config.ADMIN_EMAIL = ''; // initial admin email address
 config.ADMIN_PASSWORD = ''; // initial admin password

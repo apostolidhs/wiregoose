@@ -29,7 +29,7 @@ export default function ServerErrorsInterceptor (error, friendly = false) {
     if (friendly) {
       browserHistory.push({ pathname: '/500' });
     } else {
-      const msg = this.getStatusError(response);
+      const msg = getStatusError(response);
       Notifications.create.warning(msg);
     }
 

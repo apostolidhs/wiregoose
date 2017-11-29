@@ -9,6 +9,11 @@ export function login(email, password) {
     .then(resp => onLoginSuccess(resp));
 }
 
+export function signup(email, password) {
+  return WiregooseApi.signup(email, password)
+  .then(resp => login(email, password));
+}
+
 export function logout() {
   this.destroySession();
   WiregooseApi.setCredentialGetter(_.noop);
@@ -22,6 +27,11 @@ export function isAuthenticated() {
 export function isAdmin() {
   const { user } = getSession();
   return !!(user && user.role === 'ADMIN');
+}
+
+export function isUser() {
+  const { user } = getSession();
+  return !!(user && user.role === 'USER');
 }
 
 function onLoginSuccess(resp) {
