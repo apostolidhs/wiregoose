@@ -28,6 +28,8 @@ KlarkModule(module, 'app', (
   krkRoutesUsers,
   config,
   proxy,
+  emailVerifyAccountTmpl,
+  emailResetPasswordTmpl,
   authorizationFacebookStrategy,
   rssRegistrationsFetcher,
   routesRssFeedFetchRssFeed,
@@ -114,9 +116,14 @@ KlarkModule(module, 'app', (
     krkRoutesAuthorize.register(app, {
       appUrl: config.APP_URL,
       adminValidationOnSignup: false,
+      verifyAccountEmailTmpl: opts => emailVerifyAccountTmpl.template(opts),
+      resetPasswordEmailTmpl: opts => emailResetPasswordTmpl.template(opts),
       ...routesConfig
     });
-    krkRoutesUsers.register(app, routesConfig);
+    krkRoutesUsers.register(app, {
+      verifyAccountEmailTmpl: opts => emailVerifyAccountTmpl.template(opts),
+      ...routesConfig
+    });
     registerRoutes(app);
 
     app.get('*', middlewarePreRender);

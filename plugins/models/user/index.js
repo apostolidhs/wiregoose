@@ -1,6 +1,7 @@
 'use strict';
 
 KlarkModule(module, 'krkModelsUser', (
+  _,
   config,
   krkModelsUserExtension
 ) => {
@@ -8,6 +9,7 @@ KlarkModule(module, 'krkModelsUser', (
   return krkModelsUserExtension.createSchema({
     validatedByAdmin: false,
     userAccountValidationPeriod: config.USER_ACCOUNT_VALIDATION_PERIOD,
+    supportedLanguages: config.SUPPORTED_LANGUAGES,
     onSchemaOptions,
     onSchemaMethods
   });
