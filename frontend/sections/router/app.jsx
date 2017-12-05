@@ -1,9 +1,9 @@
 import React from 'react';
-import { Route, Router, IndexRoute, browserHistory } from 'react-router';
+import { Route, Router, IndexRoute, browserHistory, Redirect } from 'react-router';
 import ReactGA from 'react-ga';
 
 import Body from '../../components/body/body.jsx';
-import { GOOGLE_TRACKING_ID, IS_DEV } from '../../../config-public.js';
+import { GOOGLE_TRACKING_ID, IS_DEV, APP_URL } from '../../../config-public.js';
 
 import Timeline from '../timeline/timeline.jsx';
 import TimelineExplore from '../timeline/explore/explore.jsx';
@@ -38,6 +38,9 @@ export default class AppRouter extends React.Component {
     return (
       <Router history={browserHistory} onUpdate={this.logPageView} >
         <Route path="/" component={Body}>
+          <Route path="admin" >
+            <Route path="*" component={() => window.location = `${APP_URL}/admin.html`} />
+          </Route>
           <Route path="article/:id" component={Article} />
           <Route component={Timeline} >
             <IndexRoute component={TimelineExplore} />

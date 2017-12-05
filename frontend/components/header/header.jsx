@@ -105,7 +105,7 @@ export default class Header extends React.Component {
                 );
               } else {
                 return (
-                  <LinkContainer to="/login">
+                  <LinkContainer to="/auth/login">
                     <NavItem eventKey={1} >
                       login
                     </NavItem>

@@ -16,8 +16,9 @@ import ArticleBoxMd from '../article-box/article-box-md.jsx';
 import CategoryTag from '../category/tag.jsx';
 import ProviderTag from '../rss-provider/tag.jsx';
 import tr from '../localization/localization.js';
-import styles from './article.less';
 import { createLink } from '../utilities/text-utilities.js';
+
+import styles from './article.less';
 
 import mongooseIcon from '../../assets/img/logo-170-nologo.png';
 

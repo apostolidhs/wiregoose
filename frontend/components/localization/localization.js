@@ -34,6 +34,7 @@ const strings = new LocalizedStrings({
     loadingArticle: 'Loading Article...',
 
     goBack: 'Back',
+    backToLogin: 'Back to login',
 
     promptReading: 'Continue Reading News',
 
@@ -95,7 +96,22 @@ const strings = new LocalizedStrings({
 
     timelineRegistrationDescription: 'Read the latest news from {0}',
 
-    articleDescription: '{0}. By Wiregoose.com.'
+    articleDescription: '{0}. By Wiregoose.com.',
+
+    invalidEmail: 'Invalid email',
+    invalidPassword: 'Too short, at least {0} characters',
+    emailAlreadyExist: 'Email already exist',
+    invalidCredentials: 'Please check your email or password.',
+
+    signIn: 'Sign in',
+    signUp: 'Sign up',
+    createAccountPrompt: 'create an account',
+    signInPrompt: 'sign in to your account',
+    forgotPasswordPrompt: 'Forgot your password?',
+    forgotPasswordInfo: ['Enter your email address to reset your password.',
+      'We will sent you a temporary password',
+      'You may need to check your spam folder.'],
+    resetPasswordCta: 'Send verification email'
   },
   gr: {
     infoAboutTitle: 'About',
@@ -130,6 +146,7 @@ const strings = new LocalizedStrings({
     loadingArticle: 'Φόρτωση Άρθρου...',
 
     goBack: 'Πίσω',
+    backToLogin: 'Πίσω στην είσοδο χρήστη',
 
     promptReading: 'Συνεχίσετε να Διαβάζετε Νέα',
 
@@ -191,7 +208,22 @@ const strings = new LocalizedStrings({
 
     timelineRegistrationDescription: 'Πλοηγηθείτε στα πιο πρόσφατα από {0}',
 
-    articleDescription: '{0}. Απο το Wiregoose.com.'
+    articleDescription: '{0}. Απο το Wiregoose.com.',
+
+    invalidEmail: 'Μη έγκυρο email',
+    invalidPassword: 'Πολύ μικρό, τουλάχιστον {0} χαρακτήρες',
+    emailAlreadyExist: 'To email υπάρχει ήδη',
+    invalidCredentials: 'Ελέγξτε το email ή το password σας',
+
+    signIn: 'Είσοδος',
+    signUp: 'Εγγραφή',
+    createAccountPrompt: 'δημιουργήστε λογαριασμό',
+    signInPrompt: 'κάνετε είσοδο στον λογαριασμό σας',
+    forgotPasswordPrompt: 'Ξέχασες τον κωδικό σου?',
+    forgotPasswordInfo: ['Πληκτρολογίστε το email σας για να επαναφέρουμε τον κωδικό σας.',
+      'Θα σας αποστήλουμε έναν προσωρινό κωδικό.',
+      'Ίσος χρειαστεί αν κοιτάξετε στα spam του email σας.'],
+    resetPasswordCta: 'Αποστολή email επαναφοράς'
   }
 });
 

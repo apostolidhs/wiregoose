@@ -11,7 +11,8 @@ import ServerErrorInterceptor from './server-error-interceptor.js';
 const API_ORIGIN = getApiUrl();
 
 // add this to set timeout
-//  .then(resp => new Promise(r => setTimeout(() =>r(resp), 4000000000000)));
+//  .then(resp => new Promise(r => setTimeout(() => r(resp), 4000000000000)));
+// (new Promise(r => setTimeout(() => r(), 4000000000000))).then(() =>
 
 axios.interceptors.request.use(function (config) {
     // Do something before request is sent
@@ -68,17 +69,30 @@ export function login(email, password) {
     method: 'post',
     url: `${API_ORIGIN}authorize/login`,
     data: { email, password },
+    friendlyErrorInterceptor: true,
     headers: {
       'Content-Type': 'application/json',
     },
   });
 }
 
-export function signup(email, password) {
+export function signup(email, password, lang) {
   return httpRequest({
     method: 'post',
     url: `${API_ORIGIN}authorize/signup`,
-    data: { email, password },
+    data: { email, password, lang },
+    friendlyErrorInterceptor: true,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export function resetPassword(email) {
+  return httpRequest({
+    method: 'post',
+    url: `${API_ORIGIN}authorize/resetPassword`,
+    data: { email },
     headers: {
       'Content-Type': 'application/json',
     },

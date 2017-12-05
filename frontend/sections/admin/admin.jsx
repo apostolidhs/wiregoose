@@ -55,6 +55,11 @@ export default class Admin extends React.Component {
                 <FontAwesome name="exchange" /> Proxy
               </NavItem>
             </LinkContainer>
+            <LinkContainer to="/user">
+              <NavItem eventKey={6} title="User">
+                <FontAwesome name="user" /> User
+              </NavItem>
+            </LinkContainer>
           </Nav>
         </Col>
         <Col md={10}>

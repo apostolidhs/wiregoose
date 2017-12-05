@@ -22,6 +22,7 @@ import Dashboard from './sections/admin/dashboard/dashboard.jsx';
 import Article from './sections/admin/article/article.jsx';
 import PreRender from './sections/admin/pre-render/pre-render.jsx';
 import Proxy from './sections/admin/proxy/proxy.jsx';
+import User from './sections/admin/user/user.jsx';
 
 if (Auth.isAuthenticated()) {
   WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
@@ -64,10 +65,11 @@ class App extends React.Component {
       <Router history={browserHistory}>
         <Route path="/" component={Body}>
           <IndexRedirect to="dashboard" />
-          <Route path="login" component={Login} />
+          <Route path="auth" >
+            <Route path="login" component={Login} />
+          </Route>
           <Route component={Admin}>
             <Route path="componentsGallery" component={ComponentsGallery}/>
-
             <Route path="dashboard" component={Dashboard} />
             <Route path="rssprovider" component={RssProvider} />
             <Route path="rssregistration" component={RssRegistration} />
@@ -76,6 +78,7 @@ class App extends React.Component {
             <Route path="article" component={Article} />
             <Route path="prerender" component={PreRender} />
             <Route path="proxy" component={Proxy} />
+            <Route path="user" component={User} />
           </Route>
           <Route path='*' component={Dashboard} />
         </Route>

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 
 import styles from './loader.less';
+import mongooseIcon from '../../assets/img/logo-170-nologo.png';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -19,6 +20,11 @@ export default class Loader extends React.Component {
 
   static propTypes = {
     children: PropTypes.node,
+    title: PropTypes.string
+  }
+
+  static defaultProps = {
+    title: ''
   }
 
   componentWillMount(){
@@ -58,34 +64,27 @@ export default class Loader extends React.Component {
 
   render() {
     const {
-      ...passDownProps
+      children,
+      title,
+      ...props
     } = this.props;
 
     return (
-      <div styleName="wrapper" {...passDownProps}>
-        {this.props.children}
-        {this.state.isLoading && <div styleName="loader">
-          <div styleName="loader backdrop"></div>
-          <div styleName="loader message-wrapper">
-            <div styleName="message">
-              <div styleName="bar-spinner">
-                <div styleName="bar bar1"></div>
-                <div styleName="bar bar2"></div>
-                <div styleName="bar bar3"></div>
-                <div styleName="bar bar4"></div>
-                <div styleName="bar bar5"></div>
-                <div styleName="bar bar6"></div>
-                <div styleName="bar bar7"></div>
-                <div styleName="bar bar8"></div>
-                <div styleName="bar bar9"></div>
-                <div styleName="bar bar10"></div>
-                <div styleName="bar bar11"></div>
-                <div styleName="bar bar12"></div>
+      <div styleName="wrapper" {...props}>
+        {children}
+        {this.state.isLoading &&
+          <div styleName="loader">
+            <div styleName="loader backdrop"></div>
+            <div styleName="loader message-wrapper">
+              <div className="text-center">
+                <img className="w-is-logo-loading" src={mongooseIcon} styleName="logo-loading" />
+                <h4 className="w-text-loading" data-text={title}>
+                  {title}
+                </h4>
               </div>
-              <div styleName="text">Loading</div>
             </div>
           </div>
-        </div>}
+        }
       </div>
     );
   }

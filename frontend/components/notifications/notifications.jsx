@@ -9,6 +9,12 @@ export const create = {
   info: createNotification('info')
 }
 
+export const templates = {
+  unexpectedError: () => create.warning('we are experiencing some issues', {
+      title: 'Oups!'
+    })
+};
+
 const defaultOptions = {
   autoDismiss: 8,
   position: 'tc'
