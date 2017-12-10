@@ -16,6 +16,7 @@ const strings = new LocalizedStrings({
         We optimizing the readability of the article and we offer it to you.`,
     infoAboutCrawlerDescMozilla: `Internally, we use the <a href="https://github.com/mozilla/readability" target="_blank">Mozilla Firefox Reader View</a>.`,
 
+    profileTitle: 'Profile',
     infoProviderTitle: 'Providers',
 
     infoCreatorsTitle: 'Creators',
@@ -128,6 +129,7 @@ const strings = new LocalizedStrings({
             ευαναγνωστικότητα του, και σας το προσφέρουμε`,
     infoAboutCrawlerDescMozilla: `Εσωτερικά, χρησιμοποιούμε τον <a href="https://github.com/mozilla/readability" target="_blank">Mozilla Firefox Reader View</a>.`,
 
+    profileTitle: 'Προφίλ',
     infoProviderTitle: 'Πάροχοι',
 
     infoCreatorsTitle: 'Δημιουργοί',

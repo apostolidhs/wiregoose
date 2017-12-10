@@ -6,10 +6,10 @@ import CSSModules from 'react-css-modules';
 
 import styles from './form.less';
 import Select from '../select/select.jsx';
-import Loader from '../loader/loader.jsx';
 import * as WiregooseApi from '../services/wiregoose-api.js';
 import FetchPreview from './fetch-preview.jsx';
 import * as FormFactory from '../form/factory.jsx';
+import { SUPPORTED_LANGUAGES, CATEGORIES } from '../../../config-public.js';
 
 @CSSModules(styles, {
   allowMultiple: true
@@ -21,18 +21,7 @@ export default class FormGenerator extends React.Component {
 
   state = {
     record: this.props.record,
-    categories: [],
-    supportedLanguages: [],
     isRssFeedPreviewOpen: false
-  }
-
-  componentDidMount() {
-    const getStatic = (name) =>
-      WiregooseApi.statics[name]()
-        .then(resp => this.setState({ [name]: resp.data.data }));
-    this.refs.load.promise = Promise.all(
-      ['categories', 'supportedLanguages'].map(getStatic)
-    );
   }
 
   isInvalid = () => {
@@ -69,16 +58,8 @@ export default class FormGenerator extends React.Component {
   }
 
   render() {
-    const {
-      isNew,
-    } = this.props;
-
-    const {
-      record,
-      categories,
-      supportedLanguages,
-      isRssFeedPreviewOpen
-    } = this.state;
+    const {isNew} = this.props;
+    const {record, isRssFeedPreviewOpen} = this.state;
 
     return (
       <Loader ref="load">
@@ -114,7 +95,7 @@ export default class FormGenerator extends React.Component {
             name: 'category',
             value: record.category,
             onChange: FormFactory.handleInputChange(this),
-            enumeration: categories,
+            enumeration: CATEGORIES,
             required: true
           }) }
 
@@ -122,7 +103,7 @@ export default class FormGenerator extends React.Component {
             name: 'lang',
             value: record.lang,
             onChange: FormFactory.handleInputChange(this),
-            enumeration: supportedLanguages,
+            enumeration: SUPPORTED_LANGUAGES,
             required: true
           }) }
 

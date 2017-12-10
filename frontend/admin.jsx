@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { Route, Router, IndexRoute, browserHistory, IndexRedirect } from 'react-router';
+import { Route, Router, IndexRoute, browserHistory, IndexRedirect, Redirect } from 'react-router';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-select/dist/react-select.css';
@@ -63,7 +63,7 @@ class App extends React.Component {
   render () {
     return (
       <Router history={browserHistory}>
-        <Route path="/" component={Body}>
+        <Route path="/admin" component={Body}>
           <IndexRedirect to="dashboard" />
           <Route path="auth" >
             <Route path="login" component={Login} />
@@ -80,7 +80,9 @@ class App extends React.Component {
             <Route path="proxy" component={Proxy} />
             <Route path="user" component={User} />
           </Route>
-          <Route path='*' component={Dashboard} />
+        </Route>
+        <Route path="*">
+          <IndexRedirect to="/admin" />
         </Route>
       </Router>
     );

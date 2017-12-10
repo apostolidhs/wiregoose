@@ -94,9 +94,11 @@ KlarkModule(module, 'app', (
     app.use($cookieParser());
     app.use($expressDevice.capture());
 
+    const adminPagePath = $path.resolve(__dirname, '../../', 'public', 'admin.html');
     const indexPagePath = $path.resolve(__dirname, '../../', 'public', 'index.html');
     const middlewarePreRender = render.createMiddlewareCachedPreRender(indexPagePath);
 
+    app.get('/admin', (req, res) => res.sendFile(adminPagePath));
     app.get('/', middlewarePreRender);
     app.get('/index.html', middlewarePreRender);
 

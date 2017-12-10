@@ -122,6 +122,17 @@ export function getArticleStatistics() {
   });
 }
 
+export function getUserStatistics() {
+  return httpRequest({
+    method: 'get',
+    url: `${API_ORIGIN}measures/users`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: credentialGetter(),
+    },
+  });
+}
+
 export function getProxyCacheInfo() {
   return httpRequest({
     method: 'get',

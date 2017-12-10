@@ -93,87 +93,89 @@ export default class Header extends React.Component {
             <NavItem eventKey={1} href="#" active={isLeftSidebarOpen} onClick={this.toggleSidebarClicked}>sidebar</NavItem>
           </Nav>
         )}
-        {/* <Navbar.Collapse> */}
-          <Nav className="navigation-menu" pullRight>
+        <Nav className="navigation-menu" pullRight>
 
-            {enableAuth && (() => {
-              if (Auth.isAuthenticated()) {
-                return (
-                  <NavItem eventKey={1}>
-                    { Auth.getSession().user.email }
-                  </NavItem>
-                );
-              } else {
-                return (
-                  <LinkContainer to="/auth/login">
-                    <NavItem eventKey={1} >
-                      login
-                    </NavItem>
-                  </LinkContainer>
-                );
-              }
-            })()}
+          <NavDropdown
+            onSelect={this.changeLanguage}
+            eventKey={3}
+            title={currentLanguage}
+            id="w-menu-language"
+            noCaret
+          >
+          {_.map(otherLanguages, lang => (
+            <MenuItem eventKey={lang} key={lang} >{lang}</MenuItem>
+          ))}
+          </NavDropdown>
 
-            <NavDropdown
-              onSelect={this.changeLanguage}
-              eventKey={3}
-              title={currentLanguage}
-              id="w-menu-language"
-              noCaret
-            >
-            {_.map(otherLanguages, lang => (
-              <MenuItem eventKey={lang} key={lang} >{lang}</MenuItem>
-            ))}
-            </NavDropdown>
+          {enableAuth && !Auth.isAuthenticated() &&
+            <NavItem eventKey={1} onSelect={Auth.launchAuthModal()}>
+              login
+            </NavItem>
+          }
 
-            <NavDropdown
-                eventKey={4}
-                title={<FontAwesome name="bars" />}
-                id="w-menu-settings"
-                noCaret
-              >
-              { !Auth.isAdmin() &&
-               <LinkContainer to="/info/providers">
-                <MenuItem>
-                  {tr.infoProviderTitle}
+          <NavDropdown
+            eventKey={4}
+            title={
+              <FontAwesome name={Auth.isAuthenticated() ? "user-circle" : "bars"} />
+            }
+            id="w-menu-settings"
+            noCaret
+          >
+            { Auth.isAuthenticated() &&
+              <LinkContainer to="/profile">
+                <MenuItem styleName="profile-item">
+                  <FontAwesome styleName="profile-icon" name="user-circle" />
+                  <strong styleName="profile-content" >
+                    {Auth.getSession().user.email}
+                  </strong>
                 </MenuItem>
               </LinkContainer>
-              }
-              { !Auth.isAdmin() &&
-               <LinkContainer to="/info/about">
+            }
+            { Auth.isAuthenticated() &&
+              <MenuItem divider />
+            }
+            { Auth.isAuthenticated() &&
+              <LinkContainer to="/profile">
                 <MenuItem>
-                  {tr.infoAboutTitle}
+                  {tr.profileTitle}
                 </MenuItem>
               </LinkContainer>
-              }
-              { !Auth.isAdmin() &&
-               <LinkContainer to="/info/credits">
+            }
+            <LinkContainer to="/info/providers">
+              <MenuItem>
+                {tr.infoProviderTitle}
+              </MenuItem>
+            </LinkContainer>
+            <LinkContainer to="/info/about">
+              <MenuItem>
+                {tr.infoAboutTitle}
+              </MenuItem>
+            </LinkContainer>
+            <LinkContainer to="/info/credits">
+              <MenuItem>
+                {tr.infoCreatorsTitle}
+              </MenuItem>
+            </LinkContainer>
+            { Auth.isAdmin() &&
+              <MenuItem divider />
+            }
+            { Auth.isAdmin() &&
+              <LinkContainer to="/admin.html" target="_blank">
                 <MenuItem>
-                  {tr.infoCreatorsTitle}
+                  Admin
                 </MenuItem>
               </LinkContainer>
-              }
-              { Auth.isAdmin() &&
-                <LinkContainer to="/admin.html" target="_blank">
-                  <MenuItem>
-                    Admin
-                  </MenuItem>
-                </LinkContainer>
-              }
-              { Auth.isAuthenticated() &&
-                <MenuItem divider />
-              }
-              { Auth.isAuthenticated() &&
-                <MenuItem onClick={this.logout}>
-                  Logout
-                </MenuItem>
-              }
-            </NavDropdown>
-
-          </Nav>
-        {/* </Navbar.Collapse> */}
-
-
+            }
+            { Auth.isAuthenticated() &&
+              <MenuItem divider />
+            }
+            { Auth.isAuthenticated() &&
+              <MenuItem onClick={this.logout}>
+                Logout
+              </MenuItem>
+            }
+          </NavDropdown>
+        </Nav>
       </Navbar>
     );
   }

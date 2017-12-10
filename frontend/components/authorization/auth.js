@@ -19,6 +19,10 @@ export function logout() {
   WiregooseApi.setCredentialGetter(_.noop);
 }
 
+export function launchAuthModal() {
+
+}
+
 export function isAuthenticated() {
   const { token } = getSession();
   return !!token;

@@ -12,6 +12,7 @@ import Loader from '../loader/loader.jsx';
 import * as WiregooseApi from '../services/wiregoose-api.js';
 import * as Pallet from '../colors/pallet.js';
 import ShadeColor from '../colors/shade.js'
+import { SUPPORTED_LANGUAGES, CATEGORIES } from '../../../config-public.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -19,10 +20,8 @@ import ShadeColor from '../colors/shade.js'
 export default class SucceededFetchesPerPeriod extends React.Component {
 
   state = {
-    categories: [],
-    supportedLanguages: [],
     selectedLang: 'gr',
-    selectedPeriod: 30,
+    selectedPeriod: 15,
     entriesPerCategory: undefined,
     providers: undefined,
     charts: undefined
@@ -60,13 +59,7 @@ export default class SucceededFetchesPerPeriod extends React.Component {
   }
 
   componentDidMount() {
-    const getStatic = (name) =>
-      WiregooseApi.statics[name]()
-        .then(resp => this.setState({ [name]: resp.data.data }));
-
-    const prms = Promise.all(
-      ['categories', 'supportedLanguages'].map(getStatic)
-    ).then(() => this.fetchMeasures());
+    this.fetchMeasures();
   }
 
   fetchMeasures = (e) => {
@@ -101,7 +94,7 @@ export default class SucceededFetchesPerPeriod extends React.Component {
 
   calculateChartLegendPayload = (charts, providerInfo) => {
     const chartsByCategory = _.keyBy(charts, 'name');
-    return _.transform(this.state.categories, (payload, category) => {
+    return _.transform(CATEGORIES, (payload, category) => {
        const legends = _.map(providerInfo, provider => {
         const sum = _.sumBy(
           chartsByCategory[category].data,
@@ -119,7 +112,7 @@ export default class SucceededFetchesPerPeriod extends React.Component {
   }
 
   groupMeasuresByCategory = (chart) => {
-    return _.map(this.state.categories, category => {
+    return _.map(CATEGORIES, category => {
       const data = _.map(
         chart,
         (providersByCategory, period) => ({
@@ -129,10 +122,7 @@ export default class SucceededFetchesPerPeriod extends React.Component {
       );
       const sum = _.sumBy(
         data,
-        providers => _(providers)
-                      .omit('period')
-                      .values()
-                      .sum()
+        providers => _(providers).omit('period').values().sum()
       );
       return {
         data,
@@ -158,7 +148,7 @@ export default class SucceededFetchesPerPeriod extends React.Component {
                   value={this.state.selectedLang}
                   onChange={this.handleInputChange}
                   required>
-                  {_.map(this.state.supportedLanguages, supportedLanguage => (
+                  {_.map(SUPPORTED_LANGUAGES, supportedLanguage => (
                     <option key={supportedLanguage} value={supportedLanguage}>{supportedLanguage}</option>
                   ))}
                 </FormControl>
