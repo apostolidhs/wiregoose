@@ -10,7 +10,8 @@ KlarkModule(module, 'routesMeasures', (
   krkParameterValidator,
   measuresSucceededFetchesPerPeriod,
   measuresArticles,
-  measuresRssRegistrationsFetches
+  measuresRssRegistrationsFetches,
+  measuresUsers
 ) => {
 
   return {
@@ -37,6 +38,13 @@ KlarkModule(module, 'routesMeasures', (
     app.get(`/${config.API_URL_PREFIX}/measures/registrationFetches`, [
       krkMiddlewarePermissions.check('FREE'),
       middlewareRegistrationFetchesController,
+      krkMiddlewareResponse.success,
+      krkMiddlewareResponse.fail
+    ]);
+
+    app.get(`/${config.API_URL_PREFIX}/measures/users`, [
+      krkMiddlewarePermissions.check('FREE'),
+      middlewareUsersController,
       krkMiddlewareResponse.success,
       krkMiddlewareResponse.fail
     ]);
@@ -79,11 +87,21 @@ KlarkModule(module, 'routesMeasures', (
   function middlewareRegistrationFetchesController(req, res, next) {
     measuresRssRegistrationsFetches.measure()
       .then(data => res.locals.data = data)
-        .then(() => next())
-        .catch(reason => {
-          res.locals.errors.add('MEASURES_FAILED', reason);
-          next(true);
-        });
+      .then(() => next())
+      .catch(reason => {
+        res.locals.errors.add('MEASURES_FAILED', reason);
+        next(true);
+      });
+  }
+
+  function middlewareUsersController(req, res, next) {
+    measuresUsers.measure()
+      .then(data => res.locals.data = data)
+      .then(() => next())
+      .catch(reason => {
+        res.locals.errors.add('MEASURES_FAILED', reason);
+        next(true);
+      });
   }
 
 });

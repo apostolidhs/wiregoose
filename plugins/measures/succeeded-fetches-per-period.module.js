@@ -19,10 +19,7 @@ KlarkModule(module, 'measuresSucceededFetchesPerPeriod', (
       getMeasuredData(days, lang),
       getAllProviders(lang)
     ])
-    .then(result => ({
-      chart: result[0],
-      providers: result[1]
-    }));
+    .then(([chart, providers]) => ({chart, providers}));
   }
 
   function getAllProviders(lang) {
