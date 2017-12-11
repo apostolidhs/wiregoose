@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 
-import { publish } from '../../../components/events/events.js';
+import { publish } from '../../../components/events/events.jsx';
 import InfiniteScrollPage from '../../../components/infinite-scroll/page.jsx';;
 import Header from '../../../components/timeline/header.jsx';
 import getRegistrationFromLink from '../../../components/rss-registration/link-utilities.js';

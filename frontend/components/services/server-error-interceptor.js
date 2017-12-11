@@ -11,7 +11,7 @@ export default function ServerErrorsInterceptor (error, friendly = false) {
   // authentication error
   if (status === 401) {
     Auth.destroySession();
-    browserHistory.push({ pathname: 'admin/auth/login' });
+    //browserHistory.push({ pathname: 'admin/auth/login' });
 
     // rest authentication errors
   } else if (status >= 400 && status < 500) {

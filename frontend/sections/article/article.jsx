@@ -6,7 +6,7 @@ import CSSModules from 'react-css-modules';
 
 import styles from './article.less';
 import tr from '../../components/localization/localization.js';
-import { publish } from '../../components/events/events.js';
+import { publish } from '../../components/events/events.jsx';
 import ArticleComponent from '../../components/article/article.jsx';
 import { getIdFromLink } from '../../components/utilities/text-utilities.js';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';

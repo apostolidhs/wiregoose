@@ -38,10 +38,7 @@ KlarkModule(module, 'krkModelsUser', (
       'facebookProvider'
     ]);
 
-    if (!userObj.validationToken) {
-      safeUser.isEmailValid = true;
-    }
-
+    safeUser.isEmailValid = !!userObj.validationToken;
     return safeUser;
   }
 

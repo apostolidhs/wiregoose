@@ -1,26 +1,31 @@
 import _ from 'lodash';
 import jwtDecode from 'jwt-decode';
 
+import {publish} from '../events/events.jsx';
+import {launch} from './auth-modal.jsx';
 import { SUPPORTED_LANGUAGES } from '../../../config-public.js';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
 
 export function login(email, password) {
   return WiregooseApi.login(email, password)
-    .then(resp => onLoginSuccess(resp));
+    .then(resp => onLoginSuccess(resp))
+    .then(() => publish('credentials', {type: 'LOGIN'}));
 }
 
 export function signup(email, password) {
   return WiregooseApi.signup(email, password)
-  .then(resp => login(email, password));
+  .then(resp => login(email, password))
+  .then(() => publish('credentials', {type: 'SIGNUP'}));
 }
 
 export function logout() {
   this.destroySession();
   WiregooseApi.setCredentialGetter(_.noop);
+  publish('credentials', {type: 'LOGOUT'})
 }
 
 export function launchAuthModal() {
-
+  launch('LOGIN');
 }
 
 export function isAuthenticated() {

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 // import FontAwesome from 'react-fontawesome';
 import { Form, FormGroup, Col, FormControl, ControlLabel, Button, HelpBlock }
   from 'react-bootstrap';
+
 import tr from '../localization/localization.js';
 
 export default class CredentialForm extends React.Component {

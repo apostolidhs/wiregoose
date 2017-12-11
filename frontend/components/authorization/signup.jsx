@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory, Link } from 'react-router';
-import { Row, Col, Image, Panel } from 'react-bootstrap';
+import { browserHistory } from 'react-router';
+import { Image, Panel } from 'react-bootstrap';
+import CSSModules from 'react-css-modules';
 
 import CredentialForm from '../../components/authorization/credential-form.jsx';
 import * as Auth from '../../components/authorization/auth.js';
@@ -14,7 +15,17 @@ import Loader from '../../components/loader/loader.jsx';
 
 import mongooseIcon from '../../assets/img/logo-170-nologo.png';
 
+import styles from './authorization.less';
+
+@CSSModules(styles, {
+  allowMultiple: true,
+})
 export default class Login extends React.Component {
+
+  static propTypes = {
+    onSigninClicked: PropTypes.func.isRequired,
+    onSignup: PropTypes.func.isRequired
+  }
 
   state = {
     errors: {}
@@ -24,7 +35,7 @@ export default class Login extends React.Component {
     const lang = BrowserLanguageDetection();
     this.refs.load.promise = Auth.signup(email, password, lang)
       .then(() => {
-        browserHistory.push('/');
+        this.props.onSignup();
       })
       .catch(reason => {
         const errors = {};
@@ -42,28 +53,23 @@ export default class Login extends React.Component {
 
   render() {
     const {errors} = this.state;
+    const {onSigninClicked} = this.props;
     return (
-      <Loader ref="load" title={tr.signUp} >
-        <Row>
-          <Col className="w-mt-14" >
-            <Image className="center-block" width="80" src={mongooseIcon} />
-            <h1 className="text-center w-m-0">
-              <small>{tr.signUp}</small>
-            </h1>
-            <span className="text-center center-block text-muted">
-            {tr.or} <Link to="/auth/login">{tr.signInPrompt}</Link>
-            </span>
-          </Col>
-          <Col className="w-mt-14" md={4} mdOffset={4} xs={10} xsOffset={1}>
-            <Panel>
-              <CredentialForm
-                onCredentialSubmit={this.performSignup}
-                submitTitle={tr.signUp}
-                errors={errors}
-              />
-            </Panel>
-          </Col>
-        </Row>
+      <Loader ref="load" title={tr.signUp} styleName="credential-form" >
+        <Image className="center-block" width="80" src={mongooseIcon} />
+        <h1 className="text-center w-m-0">
+          <small>{tr.signUp}</small>
+        </h1>
+        <span className="text-center center-block text-muted">
+        {tr.or} <a href="#" onClick={onSigninClicked}>{tr.signInPrompt}</a>
+        </span>
+        <Panel className="w-mt-14">
+          <CredentialForm
+            onCredentialSubmit={this.performSignup}
+            submitTitle={tr.signUp}
+            errors={errors}
+          />
+        </Panel>
       </Loader>
     );
   }

@@ -8,7 +8,7 @@ import FontAwesome from 'react-fontawesome';
 import { Link, browserHistory } from 'react-router';
 
 import styles from './category.less';
-import { publish } from '../../../components/events/events.js';
+import { publish } from '../../../components/events/events.jsx';
 import Header from '../../../components/timeline/header.jsx';
 import CategoryTag from '../../../components/category/tag.jsx';
 import Timeline from '../../../components/timeline/timeline.jsx';

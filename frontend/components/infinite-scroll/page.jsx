@@ -7,15 +7,10 @@ export default class Page extends React.Component {
     throttledScrollDelay: 200 // ms
   };
 
-  sidebar = undefined
   target = undefined
 
   componentDidMount() {
-    // if (!_.isFunction(this.onBottomScrollReached)) {
-    //   throw new Error('Page should implement the \'onBottomScrollReached()\' method');
-    // }
-    this.sidebar = document.getElementsByClassName('w-left-sidebar').item(0);
-    this.target = this.sidebar || window;
+    this.target = window;
     this.target.addEventListener('scroll', this.handleOnScroll);
   }
 
@@ -24,19 +19,11 @@ export default class Page extends React.Component {
   }
 
   getScrollTop = () => {
-    if (this.sidebar) {
-      return this.sidebar.scrollTop;
-    } else {
-      return (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
-    }
+    return (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
   }
 
   getScrollHeight = () => {
-    if (this.sidebar) {
-      return this.sidebar.scrollHeight;
-    } else {
-      return (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
-    }
+    return (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
   }
 
   getClientHeight = () => {
@@ -44,15 +31,11 @@ export default class Page extends React.Component {
   }
 
   setScrollTop = (scrollTop) => {
-    if (this.sidebar) {
-      this.sidebar.scrollTop = scrollTop;
+    const docScrollTop = document.documentElement && document.documentElement.scrollTop;
+    if (_.isNumber(docScrollTop)) {
+      document.documentElement.scrollTop = scrollTop;
     } else {
-      const docScrollTop = document.documentElement && document.documentElement.scrollTop;
-      if (_.isNumber(docScrollTop)) {
-        document.documentElement.scrollTop = scrollTop;
-      } else {
-        document.body.scrollTop = scrollTop;
-      }
+      document.body.scrollTop = scrollTop;
     }
   }
 

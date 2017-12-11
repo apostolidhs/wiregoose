@@ -12,7 +12,7 @@ import BrowserLanguageDetection from './components/utilities/browser-language-de
 import * as Auth from './components/authorization/auth.js';
 import * as WiregooseApi from './components/services/wiregoose-api.js';
 import * as Meta from './components/meta/meta.js';
-import { subscribe } from './components/events/events.js';
+import { subscribe } from './components/events/events.jsx';
 
 import AppRouter from './sections/router/app.jsx';
 

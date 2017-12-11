@@ -10,17 +10,16 @@ import TimelineExplore from '../timeline/explore/explore.jsx';
 import TimelineCategory from '../timeline/category/category.jsx';
 import TimelineProvider from '../timeline/provider/provider.jsx';
 import TimelineRegistration from '../timeline/registration/registration.jsx';
-import Sidebar from '../timeline/sidebar/sidebar.jsx';
 import Article from '../article/article.jsx';
 import About from '../info/about.jsx';
 import Credits from '../info/credits.jsx';
 import Providers from '../info/providers.jsx';
 import Profile from '../user/profile.jsx';
-import Login from '../authorization/login.jsx';
-import Signup from '../authorization/signup.jsx';
-import Forgot from '../authorization/forgot.jsx';
+// import Login from '../authorization/login.jsx';
+// import Signup from '../authorization/signup.jsx';
+// import Forgot from '../authorization/forgot.jsx';
 import InternalServerError from '../errors/500.jsx';
-import notFoundError from '../errors/401.jsx';
+import NotFoundError from '../errors/401.jsx';
 
 if (!IS_DEV) {
   ReactGA.initialize(GOOGLE_TRACKING_ID);
@@ -54,15 +53,15 @@ export default class AppRouter extends React.Component {
             <Route path="credits" component={Credits} />
             <Route path="providers" component={Providers} />
           </Route>
-          <Route path="auth" >
+          {/* <Route path="auth" >
             <Route path="login" component={Login} />
             <Route path="signup" component={Signup} />
             <Route path="forgot" component={Forgot} />
-          </Route>
+          </Route> */}
           <Route path="profile" component={Profile}/>
           <Route path="500" component={InternalServerError} />
-          <Route path="401" component={notFoundError} />
-          <Route path='*' component={notFoundError} />
+          <Route path="401" component={NotFoundError} />
+          <Route path='*' component={NotFoundError} />
         </Route>
       </Router>
     );

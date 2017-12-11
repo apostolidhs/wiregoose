@@ -3,7 +3,7 @@ import FontAwesome from 'react-fontawesome';
 import { Link } from 'react-router';
 
 import tr from '../../components/localization/localization.js';
-import { publish } from '../../components/events/events.js';
+import { publish } from '../../components/events/events.jsx';
 
 export default class InternalServerError extends React.Component {
 

@@ -110,9 +110,9 @@ const strings = new LocalizedStrings({
     signInPrompt: 'sign in to your account',
     forgotPasswordPrompt: 'Forgot your password?',
     forgotPasswordInfo: ['Enter your email address to reset your password.',
-      'We will sent you a temporary password',
-      'You may need to check your spam folder.'],
-    resetPasswordCta: 'Send verification email'
+      'We will sent you a temporary password'],
+    resetPasswordCta: 'Send verification email',
+    resetPasswordSuccess: 'An email has been sent to <b>{0}</b>. Follow the directions in the email to reset your password.'
   },
   gr: {
     infoAboutTitle: 'About',
@@ -222,10 +222,10 @@ const strings = new LocalizedStrings({
     createAccountPrompt: 'δημιουργήστε λογαριασμό',
     signInPrompt: 'κάνετε είσοδο στον λογαριασμό σας',
     forgotPasswordPrompt: 'Ξέχασες τον κωδικό σου?',
-    forgotPasswordInfo: ['Πληκτρολογίστε το email σας για να επαναφέρουμε τον κωδικό σας.',
-      'Θα σας αποστήλουμε έναν προσωρινό κωδικό.',
-      'Ίσος χρειαστεί αν κοιτάξετε στα spam του email σας.'],
-    resetPasswordCta: 'Αποστολή email επαναφοράς'
+    forgotPasswordInfo: ['Πληκτρολογείστε το email σας για να επαναφέρουμε τον κωδικό σας.',
+      'Θα σας αποστείλουμε έναν προσωρινό κωδικό.'],
+    resetPasswordCta: 'Αποστολή email επαναφοράς',
+    resetPasswordSuccess: 'Ένα email στάλθηκε στο <b>{0}</b>. Ακολουθήστε τις οδηγίες στο email για να επαναφέρετε τον κωδικό σας.'
   }
 });
 

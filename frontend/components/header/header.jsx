@@ -10,7 +10,7 @@ import CSSModules from 'react-css-modules';
 import tr from '../localization/localization.js';
 import styles from './header.less';
 import { SUPPORTED_LANGUAGES } from '../../../config-public.js';
-import * as Events from '../events/events.js';
+import * as Events from '../events/events.jsx';
 import * as Auth from '../authorization/auth.js';
 import BrowserLanguageDetection from '../utilities/browser-language-detection.js';
 
@@ -19,7 +19,7 @@ import logoImage from '../../assets/img/logo.png';
 @CSSModules(styles, {
   allowMultiple: true,
 })
-export default class Header extends React.Component {
+class Header extends React.Component {
   static propTypes = {
     enableAuth: PropTypes.bool
   }
@@ -29,35 +29,19 @@ export default class Header extends React.Component {
   }
 
   state = {
-    sidebar: {
-      isLeftSidebarEnabled: false,
-      isLeftSidebarOpen: false,
-      openLeftSidebarClicked: _.noop
-    },
     lang: SUPPORTED_LANGUAGES[0]
   }
 
   componentWillMount() {
-    Events.subscribe('sidebar', this.updateSidebarState);
     Events.subscribe('language', this.updateLanguageState);
   }
 
   componentWillUnmount() {
-    Events.unsubscribe('sidebar', this.updateSidebarState);
     Events.unsubscribe('language', this.updateLanguageState);
-  }
-
-  updateSidebarState = (sidebar) => {
-    this.setState({ sidebar })
   }
 
   updateLanguageState = (lang) => {
     this.setState({ lang })
-  }
-
-  toggleSidebarClicked = (evt) => {
-    evt.preventDefault();
-    this.state.sidebar.openLeftSidebarClicked();
   }
 
   changeLanguage = (lang) => {
@@ -68,12 +52,10 @@ export default class Header extends React.Component {
   logout = (evt) => {
     evt.preventDefault();
     Auth.logout();
-    location.reload();
   }
 
   render() {
     const { enableAuth } = this.props;
-    const { isLeftSidebarEnabled, isLeftSidebarOpen } = this.state.sidebar;
     const currentLanguage = BrowserLanguageDetection();
     const otherLanguages = _.without(SUPPORTED_LANGUAGES, currentLanguage);
 
@@ -88,13 +70,7 @@ export default class Header extends React.Component {
           </Navbar.Brand>
         </Navbar.Header>
 
-        { isLeftSidebarEnabled && (
-          <Nav>
-            <NavItem eventKey={1} href="#" active={isLeftSidebarOpen} onClick={this.toggleSidebarClicked}>sidebar</NavItem>
-          </Nav>
-        )}
         <Nav className="navigation-menu" pullRight>
-
           <NavDropdown
             onSelect={this.changeLanguage}
             eventKey={3}
@@ -108,7 +84,7 @@ export default class Header extends React.Component {
           </NavDropdown>
 
           {enableAuth && !Auth.isAuthenticated() &&
-            <NavItem eventKey={1} onSelect={Auth.launchAuthModal()}>
+            <NavItem eventKey={1} onSelect={Auth.launchAuthModal}>
               login
             </NavItem>
           }
@@ -180,3 +156,5 @@ export default class Header extends React.Component {
     );
   }
 }
+
+export default Events.EventHOC(Header, ['credentials']);
