@@ -61,7 +61,7 @@ export default class Login extends React.Component {
           <small>{tr.signUp}</small>
         </h1>
         <span className="text-center center-block text-muted">
-        {tr.or} <a href="#" onClick={onSigninClicked}>{tr.signInPrompt}</a>
+        {tr.or} <a href="#" onClick={e => {e.preventDefault(); onSigninClicked();}}>{tr.signInPrompt}</a>
         </span>
         <Panel className="w-mt-14">
           <CredentialForm

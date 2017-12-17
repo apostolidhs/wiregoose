@@ -103,6 +103,8 @@ const strings = new LocalizedStrings({
     invalidPassword: 'Too short, at least {0} characters',
     emailAlreadyExist: 'Email already exist',
     invalidCredentials: 'Please check your email or password.',
+    validateUserAccount: 'To validate your account, we have sent you an email. Click the link in your email',
+    validateUserAccountSuccess: 'Your account has validated',
 
     signIn: 'Sign in',
     signUp: 'Sign up',
@@ -216,6 +218,8 @@ const strings = new LocalizedStrings({
     invalidPassword: 'Πολύ μικρό, τουλάχιστον {0} χαρακτήρες',
     emailAlreadyExist: 'To email υπάρχει ήδη',
     invalidCredentials: 'Ελέγξτε το email ή το password σας',
+    validateUserAccount: 'Για να επαληθεύσετε τον λογαριασμό σας, σας έχουμε στείλει ένα email. Κάντε κλικ στο σύνδεσμο που υπάρχει στο email',
+    validateUserAccountSuccess: 'Ο λογαριασμός σας έχει επικυρωθεί',
 
     signIn: 'Είσοδος',
     signUp: 'Εγγραφή',

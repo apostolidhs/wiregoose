@@ -3,10 +3,7 @@ import * as Auth from '../authorization/auth.js';
 
 export default function detect() {
   const sessionLang = Auth.getSessionLang();
-  if (sessionLang) {
-    return sessionLang;
-  }
-  return 'gr';
+  return sessionLang || 'gr';
   // const navLang = navigator.languages
   //   ? navigator.languages[0]
   //   : (navigator.language || navigator.userLanguage);

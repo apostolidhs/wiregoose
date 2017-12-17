@@ -59,14 +59,14 @@ export default class Login extends React.Component {
           <small>{tr.signIn}</small>
         </h1>
         <span className="text-center center-block text-muted">
-        {tr.or} <a href="#" onClick={onSignupClicked}>{tr.createAccountPrompt}</a>
+        {tr.or} <a href="#" onClick={e => {e.preventDefault(); onSignupClicked()}}>{tr.createAccountPrompt}</a>
         </span>
         <Panel className="w-mt-14">
           {errors.invalidCredentials &&
             <p className={'text-danger'}>{errors.invalidCredentials}</p>
           }
           <CredentialForm onCredentialSubmit={this.performLogin} submitTitle={tr.signIn} />
-          <a href="#" onClick={onForgotClicked}>
+          <a href="#" onClick={e => {e.preventDefault(); onForgotClicked();}}>
             <small>{tr.forgotPasswordPrompt}</small>
           </a>
         </Panel>

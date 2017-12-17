@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import FontAwesome from 'react-fontawesome';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
@@ -13,6 +13,7 @@ import { SUPPORTED_LANGUAGES } from '../../../config-public.js';
 import * as Events from '../events/events.jsx';
 import * as Auth from '../authorization/auth.js';
 import BrowserLanguageDetection from '../utilities/browser-language-detection.js';
+import UserAvatar from '../user/avatar.jsx';
 
 import logoImage from '../../assets/img/logo.png';
 
@@ -20,20 +21,21 @@ import logoImage from '../../assets/img/logo.png';
   allowMultiple: true,
 })
 class Header extends React.Component {
-  static propTypes = {
-    enableAuth: PropTypes.bool
-  }
-
-  static defaultProps = {
-    enableAuth: true
-  }
-
   state = {
-    lang: SUPPORTED_LANGUAGES[0]
+    lang: SUPPORTED_LANGUAGES[0],
+    showLogin: true
   }
 
   componentWillMount() {
     Events.subscribe('language', this.updateLanguageState);
+    const {pathname} = browserHistory.getCurrentLocation();
+    if (_.startsWith(pathname, '/auth')) {
+      this.setState({showLogin: false});
+    }
+  }
+
+  componentWillReceiveProps() {
+    console.log(arguments);
   }
 
   componentWillUnmount() {
@@ -55,9 +57,9 @@ class Header extends React.Component {
   }
 
   render() {
-    const { enableAuth } = this.props;
     const currentLanguage = BrowserLanguageDetection();
     const otherLanguages = _.without(SUPPORTED_LANGUAGES, currentLanguage);
+    const {showLogin} = this.state;
 
     return (
       <Navbar collapseOnSelect fixedTop styleName="navbar">
@@ -83,7 +85,7 @@ class Header extends React.Component {
           ))}
           </NavDropdown>
 
-          {enableAuth && !Auth.isAuthenticated() &&
+          {!Auth.isAuthenticated() && showLogin &&
             <NavItem eventKey={1} onSelect={Auth.launchAuthModal}>
               login
             </NavItem>
@@ -91,8 +93,9 @@ class Header extends React.Component {
 
           <NavDropdown
             eventKey={4}
-            title={
-              <FontAwesome name={Auth.isAuthenticated() ? "user-circle" : "bars"} />
+            title={Auth.isAuthenticated()
+              ? <UserAvatar type="HEADER" isUser />
+              : <FontAwesome name="bars" />
             }
             id="w-menu-settings"
             noCaret
@@ -100,7 +103,7 @@ class Header extends React.Component {
             { Auth.isAuthenticated() &&
               <LinkContainer to="/profile">
                 <MenuItem styleName="profile-item">
-                  <FontAwesome styleName="profile-icon" name="user-circle" />
+                  <UserAvatar type="HEADER_DROPDOWN" isUser />
                   <strong styleName="profile-content" >
                     {Auth.getSession().user.email}
                   </strong>

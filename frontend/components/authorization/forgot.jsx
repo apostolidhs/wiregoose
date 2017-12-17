@@ -30,7 +30,10 @@ export default class Forgot extends React.Component {
 
   performPasswordRecover = (email) => {
     this.refs.load.promise = WiregooseApi.resetPassword(email)
-      .then(() => this.setState({submitted: true, email}));
+      .then(() => this.setState({submitted: true, email}))
+      .then(() => {
+        this.props.onFinish();
+      });
   }
 
   render() {
@@ -66,7 +69,7 @@ export default class Forgot extends React.Component {
             </div>
           }
 
-          <a href="#" onClick={onSigninClicked}>
+          <a href="#" onClick={e => {e.preventDefault(); onSigninClicked();}}>
             <small>{tr.backToLogin}</small>
           </a>
         </Panel>

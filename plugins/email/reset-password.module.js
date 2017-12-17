@@ -16,11 +16,12 @@ KlarkModule(module, 'emailResetPasswordTmpl', (
 
     const to = user.email;
     const subject = tr('EMAIL_RESET_SUBJECT');
+    const ctaUrl = `${config.SECURE_APP_URL}/auth/login`;
 
     const content = emailBasicTmpl.template({
       contentTitle: tr('EMAIL_RESET_TITLE'),
       contentBody: tr('EMAIL_RESET_BODY')(password),
-      ctaUrl: config.SECURE_APP_URL,
+      ctaUrl,
       ctaTitle: tr('EMAIL_RESET_CTA')
     });
 

@@ -3,8 +3,8 @@ import FontAwesome from 'react-fontawesome';
 import CSSModules from 'react-css-modules';
 import { Panel } from 'react-bootstrap';
 
-  import * as Auth from '../../components/authorization/auth.js';
-
+import * as Auth from '../../components/authorization/auth.js';
+import UserAvatar from '../../components/user/avatar.jsx';
 import styles from './user.less';
 
 @CSSModules(styles, {
@@ -16,7 +16,7 @@ export default class Profile extends React.Component {
     return (
       <Panel>
         <div className="text-center">
-          <FontAwesome styleName="profile-icon" name="user-circle" />
+          <UserAvatar type="PROFILE" isUser />
           <h4>
             {Auth.getSession().user.email}
           </h4>

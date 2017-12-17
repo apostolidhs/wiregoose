@@ -43,6 +43,19 @@ export function isUser() {
   return !!(user && user.role === 'USER');
 }
 
+export function isEmailValid() {
+  const { user } = getSession();
+  return !!(user && user.isEmailValid);
+}
+
+export function validateUserEmail() {
+  if (isAuthenticated()) {
+    const { user } = getSession();
+    user.isEmailValid = true;
+    storeUser(user);
+  }
+}
+
 function onLoginSuccess(resp) {
   const jwt = resp.data.data;
   if (!jwt) {
@@ -53,9 +66,13 @@ function onLoginSuccess(resp) {
   createSession(jwt, user, session, SUPPORTED_LANGUAGES[0]);
 }
 
+function storeUser(user) {
+  window.localStorage.setItem('user', JSON.stringify(user));
+}
+
 export function createSession(token, user, session, lang) {
   window.localStorage.setItem('token', token);
-  window.localStorage.setItem('user', JSON.stringify(user));
+  storeUser(user);
   window.localStorage.setItem('session', JSON.stringify(session));
 }
 
