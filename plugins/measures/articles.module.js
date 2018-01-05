@@ -17,10 +17,7 @@ KlarkModule(module, 'measuresArticles', (
       topViewed(),
       failedArticles()
     ])
-    .then(result => ({
-      topViewed: result[0],
-      failed: result[1]
-    }));
+    .then(([topViewed, failed]) => ({topViewed, failed}));
   }
 
   function topViewed() {

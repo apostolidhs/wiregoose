@@ -1,7 +1,7 @@
 import React from 'react';
 
 import tr from '../../components/localization/localization.js';
-import { publish } from '../../components/events/events.js';
+import { publish } from '../../components/events/events.jsx';
 import Info from './info.jsx';
 import headerImage from '../../assets/img/option-menu-about-bg.png';
 import headerFooterImage from '../../assets/img/option-menu-about-bg-footer.png';

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 
 import tr from '../../components/localization/localization.js';
-import { publish } from '../../components/events/events.js';
+import { publish } from '../../components/events/events.jsx';
 import Loader from '../../components/loader/loader.jsx';
 import Info from './info.jsx';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import FontAwesome from 'react-fontawesome';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
@@ -10,54 +10,46 @@ import CSSModules from 'react-css-modules';
 import tr from '../localization/localization.js';
 import styles from './header.less';
 import { SUPPORTED_LANGUAGES } from '../../../config-public.js';
-import * as Events from '../events/events.js';
+import * as Events from '../events/events.jsx';
 import * as Auth from '../authorization/auth.js';
 import BrowserLanguageDetection from '../utilities/browser-language-detection.js';
+import UserAvatar from '../user/avatar.jsx';
 
 import logoImage from '../../assets/img/logo.png';
 
 @CSSModules(styles, {
   allowMultiple: true,
 })
-export default class Header extends React.Component {
-  static propTypes = {
-    enableAuth: PropTypes.bool
-  }
-
-  static defaultProps = {
-    enableAuth: true
-  }
-
+class Header extends React.Component {
   state = {
-    sidebar: {
-      isLeftSidebarEnabled: false,
-      isLeftSidebarOpen: false,
-      openLeftSidebarClicked: _.noop
-    },
-    lang: SUPPORTED_LANGUAGES[0]
+    lang: SUPPORTED_LANGUAGES[0],
+    showLogin: true
   }
 
   componentWillMount() {
-    Events.subscribe('sidebar', this.updateSidebarState);
     Events.subscribe('language', this.updateLanguageState);
+    this.shouldDisplayLogin();
   }
 
   componentWillUnmount() {
-    Events.unsubscribe('sidebar', this.updateSidebarState);
     Events.unsubscribe('language', this.updateLanguageState);
   }
 
-  updateSidebarState = (sidebar) => {
-    this.setState({ sidebar })
+  shouldDisplayLogin() {
+    const {pathname} = browserHistory.getCurrentLocation();
+    if (_.startsWith(pathname, '/auth')) {
+      this.setState({showLogin: false});
+    } else if (!this.state.showLogin) {
+      this.setState({showLogin: true});
+    }
+  }
+
+  componentWillReceiveProps() {
+    this.shouldDisplayLogin();
   }
 
   updateLanguageState = (lang) => {
     this.setState({ lang })
-  }
-
-  toggleSidebarClicked = (evt) => {
-    evt.preventDefault();
-    this.state.sidebar.openLeftSidebarClicked();
   }
 
   changeLanguage = (lang) => {
@@ -68,112 +60,110 @@ export default class Header extends React.Component {
   logout = (evt) => {
     evt.preventDefault();
     Auth.logout();
-    location.reload();
   }
 
   render() {
-    const { enableAuth } = this.props;
-    const { isLeftSidebarEnabled, isLeftSidebarOpen } = this.state.sidebar;
     const currentLanguage = BrowserLanguageDetection();
     const otherLanguages = _.without(SUPPORTED_LANGUAGES, currentLanguage);
+    const {showLogin} = this.state;
+
     return (
       <Navbar collapseOnSelect fixedTop styleName="navbar">
         <Navbar.Header>
           <Navbar.Brand>
             <Link to="/" styleName="logo">
               <img src={logoImage} />
-              <span>Wiregoose{/*<small className="text-muted">beta</small>*/}</span>
+              <span>Wiregoose</span>
             </Link>
           </Navbar.Brand>
         </Navbar.Header>
 
-        { isLeftSidebarEnabled && (
-          <Nav>
-            <NavItem eventKey={1} href="#" active={isLeftSidebarOpen} onClick={this.toggleSidebarClicked}>sidebar</NavItem>
-          </Nav>
-        )}
-        {/* <Navbar.Collapse> */}
-          <Nav className="navigation-menu" pullRight>
+        <Nav className="navigation-menu" pullRight>
+          <NavDropdown
+            onSelect={this.changeLanguage}
+            eventKey={3}
+            title={currentLanguage}
+            id="w-menu-language"
+            noCaret
+          >
+          {_.map(otherLanguages, lang => (
+            <MenuItem eventKey={lang} key={lang} >{lang}</MenuItem>
+          ))}
+          </NavDropdown>
 
-            {enableAuth && (() => {
-              if (Auth.isAuthenticated()) {
-                return (
-                  <NavItem eventKey={1}>
-                    { Auth.getSession().user.email }
-                  </NavItem>
-                );
-              } else {
-                return (
-                  <LinkContainer to="/login">
-                    <NavItem eventKey={1} >
-                      login
-                    </NavItem>
-                  </LinkContainer>
-                );
-              }
-            })()}
+          {!Auth.isAuthenticated() && showLogin &&
+            <NavItem eventKey={1} onSelect={Auth.launchAuthModal}>
+              login
+            </NavItem>
+          }
 
-            <NavDropdown
-              onSelect={this.changeLanguage}
-              eventKey={3}
-              title={currentLanguage}
-              id="w-menu-language"
-              noCaret
-            >
-            {_.map(otherLanguages, lang => (
-              <MenuItem eventKey={lang} key={lang} >{lang}</MenuItem>
-            ))}
-            </NavDropdown>
-
-            <NavDropdown
-                eventKey={4}
-                title={<FontAwesome name="bars" />}
-                id="w-menu-settings"
-                noCaret
-              >
-              { !Auth.isAdmin() &&
-               <LinkContainer to="/info/providers">
-                <MenuItem>
-                  {tr.infoProviderTitle}
+          <NavDropdown
+            eventKey={4}
+            title={Auth.isAuthenticated()
+              ? <UserAvatar type="HEADER" isUser />
+              : <FontAwesome name="bars" />
+            }
+            id="w-menu-settings"
+            noCaret
+          >
+            { Auth.isAuthenticated() &&
+              <LinkContainer to="/profile">
+                <MenuItem styleName="profile-item">
+                  <UserAvatar type="HEADER_DROPDOWN" isUser />
+                  <strong styleName="profile-content" >
+                    {Auth.getSession().user.email}
+                  </strong>
                 </MenuItem>
               </LinkContainer>
-              }
-              { !Auth.isAdmin() &&
-               <LinkContainer to="/info/about">
+            }
+            { Auth.isAuthenticated() &&
+              <MenuItem divider />
+            }
+            { Auth.isAuthenticated() &&
+              <LinkContainer to="/profile">
                 <MenuItem>
-                  {tr.infoAboutTitle}
+                  {tr.profileTitle}
                 </MenuItem>
               </LinkContainer>
-              }
-              { !Auth.isAdmin() &&
-               <LinkContainer to="/info/credits">
+            }
+            <LinkContainer to="/info/providers">
+              <MenuItem>
+                {tr.infoProviderTitle}
+              </MenuItem>
+            </LinkContainer>
+            <LinkContainer to="/info/about">
+              <MenuItem>
+                {tr.infoAboutTitle}
+              </MenuItem>
+            </LinkContainer>
+            <LinkContainer to="/info/credits">
+              <MenuItem>
+                {tr.infoCreatorsTitle}
+              </MenuItem>
+            </LinkContainer>
+            { Auth.isAdmin() &&
+              <MenuItem divider />
+            }
+            { Auth.isAdmin() &&
+              <LinkContainer to="/admin.html" target="_blank">
                 <MenuItem>
-                  {tr.infoCreatorsTitle}
+                  Admin
                 </MenuItem>
               </LinkContainer>
-              }
-              { Auth.isAdmin() &&
-                <LinkContainer to="/admin.html" target="_blank">
-                  <MenuItem>
-                    Admin
-                  </MenuItem>
-                </LinkContainer>
-              }
-              { Auth.isAdmin() &&
-                <MenuItem divider />
-              }
-              { Auth.isAdmin() &&
-                <MenuItem onClick={this.logout}>
-                  Logout
-                </MenuItem>
-              }
-            </NavDropdown>
-
-          </Nav>
-        {/* </Navbar.Collapse> */}
-
-
+            }
+            { Auth.isAuthenticated() &&
+              <MenuItem divider />
+            }
+            { Auth.isAuthenticated() &&
+              <MenuItem onClick={this.logout}>
+                Logout
+              </MenuItem>
+            }
+          </NavDropdown>
+        </Nav>
       </Navbar>
     );
   }
 }
+
+export default Events.EventHOC(Header, ['credentials']);

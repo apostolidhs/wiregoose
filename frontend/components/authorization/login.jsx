@@ -1,68 +1,86 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import FontAwesome from 'react-fontawesome';
-import { Form, FormGroup, Col, FormControl, ControlLabel, Button }
-  from 'react-bootstrap';
+import { browserHistory } from 'react-router';
+import { Image, Panel } from 'react-bootstrap';
+import CSSModules from 'react-css-modules';
 
+import FacebookLogin from './facebook';
+import CredentialForm from '../authorization/credential-form.jsx';
+import * as Auth from '../authorization/auth.js';
+import tr from '../localization/localization.js';
+import {getError} from '../services/error-handler.js';
+import {templates} from '../notifications/notifications.jsx';
+import Loader from '../loader/loader.jsx';
+import {login as fbLogin} from '../services/facebook.js';
+
+import mongooseIcon from '../../assets/img/logo-170-nologo.png';
+
+import styles from './authorization.less';
+
+@CSSModules(styles, {
+  allowMultiple: true,
+})
 export default class Login extends React.Component {
 
   static propTypes = {
-    onLoginClicked: PropTypes.func.isRequired,
+    onSignupClicked: PropTypes.func.isRequired,
+    onForgotClicked: PropTypes.func.isRequired,
+    onLogin: PropTypes.func.isRequired
   }
 
   state = {
-    email: '',
-    password: '',
-  };
-
-  onValueChanged = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+    errors: {}
   }
 
-  handleLoginClicked = (e) => {
-    e.preventDefault();
-    this.props.onLoginClicked(this.state.email, this.state.password);
+  onFacebookAuth = () => {
+    this.refs.load.promise = fbLogin()
+      .then(() => this.props.onLogin());
+  }
+
+  performLogin = (email, password) => {
+    this.refs.load.promise = Auth.login(email, password)
+      .then(() => this.props.onLogin())
+      .catch(reason => {
+        const errors = {};
+        if (getError(reason, 4001)) {
+          errors.invalidCredentials = tr.invalidCredentials;
+        }
+
+        if (_.isEmpty(errors) && reason.status === 400) {
+          templates.unexpectedError();
+        }
+
+        this.setState({errors});
+      });
   }
 
   render() {
+    const {errors} = this.state;
+    const {onSignupClicked, onForgotClicked} = this.props;
     return (
-      <Form horizontal onSubmit={this.handleLoginClicked}>
-        <FormGroup controlId="formHorizontalEmail">
-          <Col componentClass={ControlLabel} sm={2}>
-            Email
-          </Col>
-          <Col sm={10}>
-            <FormControl
-              type="text"
-              name="email"
-              placeholder="Email"
-              onChange={this.onValueChanged}
-            />
-          </Col>
-        </FormGroup>
-
-        <FormGroup controlId="formHorizontalPassword">
-          <Col componentClass={ControlLabel} sm={2}>
-            Password
-          </Col>
-          <Col sm={10}>
-            <FormControl
-              type="password"
-              name="password"
-              placeholder="Password"
-              onChange={this.onValueChanged}
-            />
-          </Col>
-        </FormGroup>
-
-        <FormGroup>
-          <Col smOffset={2} sm={10}>
-            <Button type="submit">
-              Sign in
-            </Button>
-          </Col>
-        </FormGroup>
-      </Form>
+      <Loader ref="load" title={tr.signIn} styleName="credential-form" >
+        <Image className="center-block" width="80" src={mongooseIcon} />
+        <h1 className="text-center w-m-0">
+          <small>{tr.signIn}</small>
+        </h1>
+        <span className="text-center center-block text-muted">
+        {tr.or} <a href="#" onClick={e => {e.preventDefault(); onSignupClicked()}}>{tr.createAccountPrompt}</a>
+        </span>
+        <FacebookLogin className="w-mt-14" type="SIGNIN" onFacebookAuth={this.onFacebookAuth} />
+        <div className="text-center text-muted w-mt-7">{tr.trFl('or')}</div>
+        <Panel className="w-mt-7">
+          {errors.invalidCredentials &&
+            <p className={'text-danger'}>{errors.invalidCredentials}</p>
+          }
+          <CredentialForm
+            onCredentialSubmit={this.performLogin}
+            submitTitle={tr.signIn}
+          />
+          <a href="#" onClick={e => {e.preventDefault(); onForgotClicked();}}>
+            <small>{tr.forgotPasswordPrompt}</small>
+          </a>
+        </Panel>
+      </Loader>
     );
   }
 }

@@ -12,6 +12,7 @@ import FetchReportForm from '../../../components/fetch-report/form.jsx';
 import FetchReportResponseTransformation from '../../../components/fetch-report/response-transformation.js';
 import SucceededFetchesPerPeriod from '../../../components/measures/succeeded-fetches-per-period.jsx';
 import ArticleStatistics from '../../../components/measures/article-statistics.jsx';
+import UserStatistics from '../../../components/user/user-statistics.jsx';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 
 export default class Dashboard extends React.Component {
@@ -28,6 +29,7 @@ export default class Dashboard extends React.Component {
     this.retrieveAppInfo();
     this.retrieveLastFetchReport();
     this.retrieveArticleStatistics();
+    this.retrieveUserStatistics();
   }
 
   retrieveAppInfo = () => {
@@ -41,9 +43,12 @@ export default class Dashboard extends React.Component {
 
   retrieveArticleStatistics = () => {
     this.refs.articleStatistics.promise = WiregooseApi.getArticleStatistics()
-      .then(resp => {
-        this.setState({ articleStatistics: resp.data.data });
-      });
+      .then(resp => this.setState({ articleStatistics: resp.data.data }));
+  }
+
+  retrieveUserStatistics = () => {
+    this.refs.userStatistics.promise = WiregooseApi.getUserStatistics()
+    .then(resp => this.setState({ userStatistics: resp.data.data }));
   }
 
   retrieveLastFetchReport = () => {
@@ -105,7 +110,7 @@ export default class Dashboard extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={12}>
+          <Col xs={8}>
             <Loader ref="articleStatistics">
               <Panel>
                 <h3>Articles</h3>
@@ -113,6 +118,16 @@ export default class Dashboard extends React.Component {
                   <ArticleStatistics statistics={this.state.articleStatistics} />
                 }
               </Panel>
+            </Loader>
+          </Col>
+          <Col xs={4}>
+            <Loader ref="userStatistics">
+              { this.state.userStatistics &&
+                <Panel>
+                  <h3>Users</h3>
+                  <UserStatistics record={this.state.userStatistics} />
+                </Panel>
+              }
             </Loader>
           </Col>
         </Row>

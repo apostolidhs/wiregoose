@@ -8,7 +8,7 @@ import FontAwesome from 'react-fontawesome';
 import { Link, browserHistory } from 'react-router';
 
 import styles from './category.less';
-import { publish } from '../../../components/events/events.js';
+import { publish } from '../../../components/events/events.jsx';
 import Header from '../../../components/timeline/header.jsx';
 import CategoryTag from '../../../components/category/tag.jsx';
 import Timeline from '../../../components/timeline/timeline.jsx';
@@ -18,6 +18,7 @@ import InfiniteScrollPage from '../../../components/infinite-scroll/page.jsx';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 import BrowserLanguageDetection from '../../../components/utilities/browser-language-detection.js';
 import tr from '../../../components/localization/localization.js';
+import { CATEGORIES } from '../../../../config-public.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -28,20 +29,16 @@ export default class Category extends InfiniteScrollPage {
 
   timeline = undefined // ref
 
-  state = {
-    categories: undefined
-  }
-
   componentDidMount() {
     const category = this.props.routeParams.id;
     if (Category.page.lastFeeds && Category.page.lastFeeds[category] === undefined) {
       Category.page.invalidateCache();
     }
 
-    this.retrieveCategories()
-      .then(this.checkCategoryExistence)
-      .then(() => Category.page.componentDidMount(this))
-      .then(() => super.componentDidMount())
+    if (this.checkCategoryExistence()) {
+      Category.page.componentDidMount(this);
+      super.componentDidMount();
+    }
   }
 
   componentWillUnmount() {
@@ -49,20 +46,13 @@ export default class Category extends InfiniteScrollPage {
     Category.page.componentWillUnmount();
   }
 
-  retrieveCategories = () => {
-    return WiregooseApi.statics.categories()
-      .then(resp => {
-        const categories = resp.data.data;
-        this.setState({ categories });
-      });
-  }
-
   checkCategoryExistence = () => {
     const category = this.props.routeParams.id;
-    if (!_.includes(this.state.categories, category)) {
+    if (!_.includes(CATEGORIES, category)) {
       browserHistory.replace('/401');
-      throw new Error();
+      return false;
     }
+    return true;
   }
 
   retrieveTimeline = () => {

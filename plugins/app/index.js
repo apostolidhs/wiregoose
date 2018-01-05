@@ -12,11 +12,9 @@ KlarkModule(module, 'app', (
   $bodyParser,
   $cookieParser,
   $morgan,
-  $mongoose,
   $moment,
   $helmet,
   $passport,
-  $reactRouter,
   $expressDevice,
   krkPromiseExtension,
   krkRouter,
@@ -30,6 +28,9 @@ KlarkModule(module, 'app', (
   krkRoutesUsers,
   config,
   proxy,
+  emailVerifyAccountTmpl,
+  emailResetPasswordTmpl,
+  authorizationFacebookStrategy,
   rssRegistrationsFetcher,
   routesRssFeedFetchRssFeed,
   routesRssFeedFetchRssRegistrations,
@@ -40,6 +41,7 @@ KlarkModule(module, 'app', (
   routesArticle,
   routesTimeline,
   routesProxy,
+  routesAuthorization,
   parameterValidatorsCustomExpressValidators,
   render
 ) => {
@@ -57,6 +59,7 @@ KlarkModule(module, 'app', (
       secret: config.JWT_SECRET
     });
     krkMiddlewarePermissionsAuthorizeStrategy.register($passport, config.JWT_SECRET);
+    authorizationFacebookStrategy.register($passport);
     krkMiddlewareResponse.setOptions({
       showStackError: config.IS_DEV
     });
@@ -91,9 +94,11 @@ KlarkModule(module, 'app', (
     app.use($cookieParser());
     app.use($expressDevice.capture());
 
+    const adminPagePath = $path.resolve(__dirname, '../../', 'public', 'admin.html');
     const indexPagePath = $path.resolve(__dirname, '../../', 'public', 'index.html');
     const middlewarePreRender = render.createMiddlewareCachedPreRender(indexPagePath);
 
+    app.get('/admin', (req, res) => res.sendFile(adminPagePath));
     app.get('/', middlewarePreRender);
     app.get('/index.html', middlewarePreRender);
 
@@ -102,23 +107,24 @@ KlarkModule(module, 'app', (
     krkRoutesServerInfo.register(app, {
       apiVersion: config.API_VERSION
     });
+    const routesConfig = {
+      apiUrlPrefix: config.API_URL_PREFIX,
+      apiUrl: config.API_URL,
+      name: config.NAME,
+      emailSmtp: config.EMAIL_SMTP,
+      emailName: config.EMAIL_NAME,
+      emailAddress: config.EMAIL_ADDRESS
+    };
     krkRoutesAuthorize.register(app, {
       appUrl: config.APP_URL,
-      apiUrlPrefix: config.API_URL_PREFIX,
-      apiUrl: config.API_URL,
-      name: config.NAME,
-      EMAIL_SMTP: config.EMAIL_SMTP,
-      EMAIL_NAME: config.EMAIL_NAME,
-      EMAIL_ADDRESS: config.EMAIL_ADDRESS,
-      adminValidationOnSignup: false
+      adminValidationOnSignup: false,
+      verifyAccountEmailTmpl: opts => emailVerifyAccountTmpl.template(opts),
+      resetPasswordEmailTmpl: opts => emailResetPasswordTmpl.template(opts),
+      ...routesConfig
     });
     krkRoutesUsers.register(app, {
-      apiUrlPrefix: config.API_URL_PREFIX,
-      apiUrl: config.API_URL,
-      name: config.NAME,
-      EMAIL_SMTP: config.EMAIL_SMTP,
-      EMAIL_NAME: config.EMAIL_NAME,
-      EMAIL_ADDRESS: config.EMAIL_ADDRESS
+      verifyAccountEmailTmpl: opts => emailVerifyAccountTmpl.template(opts),
+      ...routesConfig
     });
     registerRoutes(app);
 
@@ -143,7 +149,8 @@ KlarkModule(module, 'app', (
       routesRssFeedFetchRssFeed,
       routesCrud,
       routesStatics,
-      routesProxy
+      routesProxy,
+      routesAuthorization
     ], route => route.register(app));
   }
 

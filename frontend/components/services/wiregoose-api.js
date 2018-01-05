@@ -11,7 +11,8 @@ import ServerErrorInterceptor from './server-error-interceptor.js';
 const API_ORIGIN = getApiUrl();
 
 // add this to set timeout
-//  .then(resp => new Promise(r => setTimeout(() =>r(resp), 4000000000000)));
+//  .then(resp => new Promise(r => setTimeout(() => r(resp), 4000000000000)));
+// (new Promise(r => setTimeout(() => r(), 4000000000000))).then(() =>
 
 axios.interceptors.request.use(function (config) {
     // Do something before request is sent
@@ -63,11 +64,47 @@ export function setCredentialGetter(_credentialGetter) {
   credentialGetter = _credentialGetter;
 }
 
+export function facebookAuthorize(accessToken) {
+  return httpRequest({
+    method: 'post',
+    url: `${API_ORIGIN}authorize/facebook`,
+    data: { access_token: accessToken },
+    friendlyErrorInterceptor: true,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
 export function login(email, password) {
   return httpRequest({
     method: 'post',
     url: `${API_ORIGIN}authorize/login`,
-    data: { name: email, password },
+    data: { email, password },
+    friendlyErrorInterceptor: true,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export function signup(email, password, lang) {
+  return httpRequest({
+    method: 'post',
+    url: `${API_ORIGIN}authorize/signup`,
+    data: { email, password, lang },
+    friendlyErrorInterceptor: true,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export function resetPassword(email) {
+  return httpRequest({
+    method: 'post',
+    url: `${API_ORIGIN}authorize/resetPassword`,
+    data: { email },
     headers: {
       'Content-Type': 'application/json',
     },
@@ -90,6 +127,17 @@ export function getArticleStatistics() {
   return httpRequest({
     method: 'get',
     url: `${API_ORIGIN}measures/articles`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: credentialGetter(),
+    },
+  });
+}
+
+export function getUserStatistics() {
+  return httpRequest({
+    method: 'get',
+    url: `${API_ORIGIN}measures/users`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: credentialGetter(),

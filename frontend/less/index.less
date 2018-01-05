@@ -4,6 +4,7 @@
 @import './about-reader-content.less';
 @import './about-reader.less';
 @import './navbar.less';
+@import './forms.less';
 
 @border-radius-base:        0px;
 @border-radius-large:       0px;
@@ -21,6 +22,12 @@
 @font-size-base: 16px;
 
 @article-height: 500px;
+
+#w-menu-settings {
+  font-size: 30px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 
 .is-main-page-loading .w-text-loading {
   display: inline!important;
@@ -55,14 +62,14 @@ body {
   overflow-x: hidden;
 }
 
+.dropdown-menu > li > a {
+  padding: 5px 20px;
+}
+
 @media (max-width: @screen-xs-max) {
   .container {
     padding-left: 0;
     padding-right: 0;
-  }
-  .w-left-sidebar {
-    padding-left: 5px!important;
-    padding-right: 5px!important;
   }
 }
 
@@ -111,16 +118,21 @@ body {
   margin-top: 14px;
 }
 
+.w-pt-7 {
+  padding: 7px;
+}
 .w-p-0 {
   padding: 0px;
 }
-
 .w-m-0 {
   margin: 0;
 }
 
 .vertical-align-middle {
   vertical-align: middle;
+}
+.vertical-align-top {
+  vertical-align: top;
 }
 
 p {

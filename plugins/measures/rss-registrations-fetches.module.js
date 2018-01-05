@@ -34,9 +34,7 @@ KlarkModule(module, 'measuresRssRegistrationsFetches', (
     return Promise.all([
       modelsEntry.aggregate(agg),
       modelsRssRegistration.find()
-    ]).then(resp => {
-      const regsTotal = resp[0];
-      const regs = resp[1];
+    ]).then(([regsTotal, regs]) => {
       const regsById = _.keyBy(regs, reg => reg._id);
       const regByProvider = {};
       _.each(regsTotal, regTotal => {

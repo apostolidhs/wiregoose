@@ -11,14 +11,11 @@ import Localization from './components/localization/localization.js';
 import BrowserLanguageDetection from './components/utilities/browser-language-detection.js';
 import * as Auth from './components/authorization/auth.js';
 import * as WiregooseApi from './components/services/wiregoose-api.js';
+import * as Facebook from './components/services/facebook.js';
 import * as Meta from './components/meta/meta.js';
-import { subscribe } from './components/events/events.js';
+import { subscribe } from './components/events/events.jsx';
 
 import AppRouter from './sections/router/app.jsx';
-
-if (Auth.isAuthenticated()) {
-  WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
-}
 
 const lang = BrowserLanguageDetection();
 Localization.setLanguage(lang);
@@ -31,8 +28,19 @@ subscribe('page-ready', (options) => {
       command: 'page-ready',
       message:  options
     });
-
   }
 });
 
-ReactDOM.render(<AppRouter />, document.getElementById('root'));
+let authorizationPromise;
+if (Auth.isAuthenticated()) {
+  WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
+  authorizationPromise = Promise.resolve();
+} else if (Auth.hasFacebookAccount()) {
+  authorizationPromise = Auth.loginIfHasPermissions();
+} else {
+  authorizationPromise = Promise.resolve();
+}
+
+authorizationPromise.finally(() => {
+  ReactDOM.render(<AppRouter />, document.getElementById('root'));
+});

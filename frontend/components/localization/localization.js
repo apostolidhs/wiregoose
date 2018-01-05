@@ -16,6 +16,7 @@ const strings = new LocalizedStrings({
         We optimizing the readability of the article and we offer it to you.`,
     infoAboutCrawlerDescMozilla: `Internally, we use the <a href="https://github.com/mozilla/readability" target="_blank">Mozilla Firefox Reader View</a>.`,
 
+    profileTitle: 'Profile',
     infoProviderTitle: 'Providers',
 
     infoCreatorsTitle: 'Creators',
@@ -34,6 +35,7 @@ const strings = new LocalizedStrings({
     loadingArticle: 'Loading Article...',
 
     goBack: 'Back',
+    backToLogin: 'Back to login',
 
     promptReading: 'Continue Reading News',
 
@@ -95,7 +97,26 @@ const strings = new LocalizedStrings({
 
     timelineRegistrationDescription: 'Read the latest news from {0}',
 
-    articleDescription: '{0}. By Wiregoose.com.'
+    articleDescription: '{0}. By Wiregoose.com.',
+
+    invalidEmail: 'Invalid email',
+    invalidPassword: 'Too short, at least {0} characters',
+    emailAlreadyExist: 'Email already exist',
+    invalidCredentials: 'Please check your email or password.',
+    validateUserAccount: 'To validate your account, we have sent you an email. Click the link in your email',
+    validateUserAccountSuccess: 'Your account has validated',
+
+    signIn: 'Sign in',
+    signUp: 'Sign up',
+    loginViaFacebook: 'Sign in with Facebook',
+    signupViaFacebook: 'Sign up with Facebook',
+    createAccountPrompt: 'create an account',
+    signInPrompt: 'sign in to your account',
+    forgotPasswordPrompt: 'Forgot your password?',
+    forgotPasswordInfo: ['Enter your email address to reset your password.',
+      'We will sent you a temporary password'],
+    resetPasswordCta: 'Send verification email',
+    resetPasswordSuccess: 'An email has been sent to <b>{0}</b>. Follow the directions in the email to reset your password.'
   },
   gr: {
     infoAboutTitle: 'About',
@@ -112,6 +133,7 @@ const strings = new LocalizedStrings({
             ευαναγνωστικότητα του, και σας το προσφέρουμε`,
     infoAboutCrawlerDescMozilla: `Εσωτερικά, χρησιμοποιούμε τον <a href="https://github.com/mozilla/readability" target="_blank">Mozilla Firefox Reader View</a>.`,
 
+    profileTitle: 'Προφίλ',
     infoProviderTitle: 'Πάροχοι',
 
     infoCreatorsTitle: 'Δημιουργοί',
@@ -130,6 +152,7 @@ const strings = new LocalizedStrings({
     loadingArticle: 'Φόρτωση Άρθρου...',
 
     goBack: 'Πίσω',
+    backToLogin: 'Πίσω στην είσοδο χρήστη',
 
     promptReading: 'Συνεχίσετε να Διαβάζετε Νέα',
 
@@ -191,9 +214,32 @@ const strings = new LocalizedStrings({
 
     timelineRegistrationDescription: 'Πλοηγηθείτε στα πιο πρόσφατα από {0}',
 
-    articleDescription: '{0}. Απο το Wiregoose.com.'
+    articleDescription: '{0}. Απο το Wiregoose.com.',
+
+    invalidEmail: 'Μη έγκυρο email',
+    invalidPassword: 'Πολύ μικρό, τουλάχιστον {0} χαρακτήρες',
+    emailAlreadyExist: 'To email υπάρχει ήδη',
+    invalidCredentials: 'Ελέγξτε το email ή το password σας',
+    validateUserAccount: 'Για να επαληθεύσετε τον λογαριασμό σας, σας έχουμε στείλει ένα email. Κάντε κλικ στο σύνδεσμο που υπάρχει στο email',
+    validateUserAccountSuccess: 'Ο λογαριασμός σας έχει επικυρωθεί',
+
+    signIn: 'Είσοδος',
+    signUp: 'Εγγραφή',
+    loginViaFacebook: 'Είσοδος μέσω Facebook',
+    signupViaFacebook: 'Εγγραφή μέσω Facebook',
+    createAccountPrompt: 'δημιουργήστε λογαριασμό',
+    signInPrompt: 'κάνετε είσοδο στον λογαριασμό σας',
+    forgotPasswordPrompt: 'Ξέχασες τον κωδικό σου?',
+    forgotPasswordInfo: ['Πληκτρολογείστε το email σας για να επαναφέρουμε τον κωδικό σας.',
+      'Θα σας αποστείλουμε έναν προσωρινό κωδικό.'],
+    resetPasswordCta: 'Αποστολή email επαναφοράς',
+    resetPasswordSuccess: 'Ένα email στάλθηκε στο <b>{0}</b>. Ακολουθήστε τις οδηγίες στο email για να επαναφέρετε τον κωδικό σας.'
   }
 });
+
+strings.trFl = (id) => {
+  return _.upperCase(strings[id]);
+}
 
 strings.trFc = (id) => {
   return _.upperFirst(strings[id]);

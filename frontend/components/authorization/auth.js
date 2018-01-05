@@ -1,20 +1,45 @@
 import _ from 'lodash';
 import jwtDecode from 'jwt-decode';
 
+import {publish} from '../events/events.jsx';
+import {launch} from './auth-modal.jsx';
 import { SUPPORTED_LANGUAGES } from '../../../config-public.js';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
 
+export function loginViaFacebook(accessToken) {
+  return WiregooseApi.facebookAuthorize(accessToken)
+    .then(resp => onLoginSuccess(resp))
+    .then(() => publish('credentials', {type: 'LOGIN'}));
+}
+
 export function login(email, password) {
   return WiregooseApi.login(email, password)
-    .then(resp => onLoginSuccess(resp));
+    .then(resp => onLoginSuccess(resp))
+    .then(() => publish('credentials', {type: 'LOGIN'}));
+}
+
+export function signup(email, password) {
+  return WiregooseApi.signup(email, password)
+  .then(resp => login(email, password))
+  .then(() => publish('credentials', {type: 'SIGNUP'}));
 }
 
 export function logout() {
+  const fromFacebook = hasFacebookAccount();
   this.destroySession();
   WiregooseApi.setCredentialGetter(_.noop);
+  publish('credentials', {type: 'LOGOUT'});
+  if (fromFacebook && window.FB) {
+    FB.logout();
+  }
+}
+
+export function launchAuthModal() {
+  launch('LOGIN');
 }
 
 export function isAuthenticated() {
+  // todo: check expiration
   const { token } = getSession();
   return !!token;
 }
@@ -22,6 +47,29 @@ export function isAuthenticated() {
 export function isAdmin() {
   const { user } = getSession();
   return !!(user && user.role === 'ADMIN');
+}
+
+export function isUser() {
+  const { user } = getSession();
+  return !!(user && user.role === 'USER');
+}
+
+export function isEmailValid() {
+  const { user } = getSession();
+  return !!(user && user.isEmailValid);
+}
+
+export function hasFacebookAccount() {
+  const { user } = getSession();
+  return !!(user && user.hasFacebookAccount);
+}
+
+export function validateUserEmail() {
+  if (isAuthenticated()) {
+    const { user } = getSession();
+    user.isEmailValid = true;
+    storeUser(user);
+  }
 }
 
 function onLoginSuccess(resp) {
@@ -34,9 +82,13 @@ function onLoginSuccess(resp) {
   createSession(jwt, user, session, SUPPORTED_LANGUAGES[0]);
 }
 
+function storeUser(user) {
+  window.localStorage.setItem('user', JSON.stringify(user));
+}
+
 export function createSession(token, user, session, lang) {
   window.localStorage.setItem('token', token);
-  window.localStorage.setItem('user', JSON.stringify(user));
+  storeUser(user);
   window.localStorage.setItem('session', JSON.stringify(session));
 }
 

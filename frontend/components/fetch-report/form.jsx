@@ -17,9 +17,7 @@ export default class FetchReportForm extends React.Component {
   }
 
   render() {
-    const {
-      record
-    } = this.props;
+    const { record } = this.props;
 
     return (
       <Form horizontal>
