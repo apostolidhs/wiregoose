@@ -15,11 +15,9 @@ KlarkModule(module, 'krkModelsUser', (
   });
 
   function onSchemaOptions(options) {
-    options.facebookProvider = {
-      type: {
-        id: String,
-        token: String
-      }
+    options.facebook = {
+      id: { type: String },
+      token: { type: String }
     };
     return options;
   }
@@ -35,26 +33,27 @@ KlarkModule(module, 'krkModelsUser', (
     var safeUser = _.omit(userObj, [
       'password',
       'validationToken',
-      'facebookProvider'
+      'facebook'
     ]);
 
     safeUser.isEmailValid = !userObj.validationToken;
+    safeUser.hasFacebookAccount = !!userObj.facebook;
     return safeUser;
   }
 
   function findOrCreateFBUser(accessToken, refreshToken, profile) {
     return this.findOne({
-      'facebookProvider.id': profile.id
+      'facebook.id': profile.id
     })
     .then(user => {
       if (user) {
         return user;
       }
 
-      return this.save({
-        email: profile.mails[0].value,
+      return this.create({
+        email: profile.emails[0].value,
         role: 'USER',
-        facebookProvider: {
+        facebook: {
           id: profile.id,
           token: accessToken
         }

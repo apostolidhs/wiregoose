@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
-// import FontAwesome from 'react-fontawesome';
+import FontAwesome from 'react-fontawesome';
 import { Form, FormGroup, Col, FormControl, ControlLabel, Button, HelpBlock }
   from 'react-bootstrap';
 
@@ -12,13 +12,13 @@ export default class CredentialForm extends React.Component {
   static propTypes = {
     onCredentialSubmit: PropTypes.func.isRequired,
     submitTitle: PropTypes.string.isRequired,
-    hidePassword: PropTypes.bool,
+    onlyEmail: PropTypes.bool,
     errors: PropTypes.any
   }
 
   static defaultProps = {
     errors: {},
-    hidePassword: false
+    onlyEmail: false
   }
 
   state = {
@@ -42,13 +42,13 @@ export default class CredentialForm extends React.Component {
 
   handleSubmitClicked = (e) => {
     e.preventDefault();
-    const {hidePassword} = this.props;
+    const {onlyEmail} = this.props;
     const {email, password} = this.state;
     const errors = {};
     if (!email) {
       errors.email = tr.invalidEmail;
     }
-    if (!hidePassword && !(password && password.length >= 6)) {
+    if (!onlyEmail && !(password && password.length >= 6)) {
       errors.password = tr.formatString(tr.invalidPassword, 6).join('');
     }
 
@@ -62,30 +62,31 @@ export default class CredentialForm extends React.Component {
 
   render() {
     const {
-      hidePassword,
-      submitTitle
+      onlyEmail,
+      submitTitle,
+      onFacebookAuth
     } = this.props;
 
     const {errors} = this.state;
     return (
       <Form onSubmit={this.handleSubmitClicked}>
         <FormGroup className="w-mb-7" controlId="formHorizontalEmail" validationState={errors.email && 'error'}>
-          <FormControl
-            type="email"
-            name="email"
-            placeholder="Email"
-            className="w-minimal"
-            onChange={this.onValueChanged}
-            autoFocus
-            required
-          />
-          {errors.email &&
-            <HelpBlock>
-              <small>{errors.email}</small>
-            </HelpBlock>
-          }
+        <FormControl
+          type="email"
+          name="email"
+          placeholder="Email"
+          className="w-minimal"
+          onChange={this.onValueChanged}
+          autoFocus
+          required
+        />
+        {errors.email &&
+          <HelpBlock>
+            <small>{errors.email}</small>
+          </HelpBlock>
+        }
         </FormGroup>
-        {!hidePassword &&
+        {!onlyEmail &&
           <FormGroup className="w-mb-14" controlId="formHorizontalPassword" validationState={errors.password && 'error'}>
             <FormControl
               type="password"

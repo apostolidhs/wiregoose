@@ -108,6 +108,8 @@ const strings = new LocalizedStrings({
 
     signIn: 'Sign in',
     signUp: 'Sign up',
+    loginViaFacebook: 'Sign in with Facebook',
+    signupViaFacebook: 'Sign up with Facebook',
     createAccountPrompt: 'create an account',
     signInPrompt: 'sign in to your account',
     forgotPasswordPrompt: 'Forgot your password?',
@@ -223,6 +225,8 @@ const strings = new LocalizedStrings({
 
     signIn: 'Είσοδος',
     signUp: 'Εγγραφή',
+    loginViaFacebook: 'Είσοδος μέσω Facebook',
+    signupViaFacebook: 'Εγγραφή μέσω Facebook',
     createAccountPrompt: 'δημιουργήστε λογαριασμό',
     signInPrompt: 'κάνετε είσοδο στον λογαριασμό σας',
     forgotPasswordPrompt: 'Ξέχασες τον κωδικό σου?',
@@ -232,6 +236,10 @@ const strings = new LocalizedStrings({
     resetPasswordSuccess: 'Ένα email στάλθηκε στο <b>{0}</b>. Ακολουθήστε τις οδηγίες στο email για να επαναφέρετε τον κωδικό σας.'
   }
 });
+
+strings.trFl = (id) => {
+  return _.upperCase(strings[id]);
+}
 
 strings.trFc = (id) => {
   return _.upperFirst(strings[id]);

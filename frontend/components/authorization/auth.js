@@ -6,6 +6,12 @@ import {launch} from './auth-modal.jsx';
 import { SUPPORTED_LANGUAGES } from '../../../config-public.js';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
 
+export function loginViaFacebook(accessToken) {
+  return WiregooseApi.facebookAuthorize(accessToken)
+    .then(resp => onLoginSuccess(resp))
+    .then(() => publish('credentials', {type: 'LOGIN'}));
+}
+
 export function login(email, password) {
   return WiregooseApi.login(email, password)
     .then(resp => onLoginSuccess(resp))
@@ -19,9 +25,13 @@ export function signup(email, password) {
 }
 
 export function logout() {
+  const fromFacebook = hasFacebookAccount();
   this.destroySession();
   WiregooseApi.setCredentialGetter(_.noop);
-  publish('credentials', {type: 'LOGOUT'})
+  publish('credentials', {type: 'LOGOUT'});
+  if (fromFacebook && window.FB) {
+    FB.logout();
+  }
 }
 
 export function launchAuthModal() {
@@ -29,6 +39,7 @@ export function launchAuthModal() {
 }
 
 export function isAuthenticated() {
+  // todo: check expiration
   const { token } = getSession();
   return !!token;
 }
@@ -46,6 +57,11 @@ export function isUser() {
 export function isEmailValid() {
   const { user } = getSession();
   return !!(user && user.isEmailValid);
+}
+
+export function hasFacebookAccount() {
+  const { user } = getSession();
+  return !!(user && user.hasFacebookAccount);
 }
 
 export function validateUserEmail() {

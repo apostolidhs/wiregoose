@@ -21,8 +21,17 @@ export default class Profile extends React.Component {
             {Auth.getSession().user.email}
           </h4>
         </div>
+        {this.renderLoginInfo()}
       </Panel>
     );
+  }
+
+  renderLoginInfo() {
+    if (Auth.hasFacebookAccount()) {
+      return <span>Login via Facebook</span>;
+    } else {
+      return <span>Login via Wiregoose</span>;
+    }
   }
 
 }

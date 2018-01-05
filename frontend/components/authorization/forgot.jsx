@@ -53,7 +53,7 @@ export default class Forgot extends React.Component {
             <CredentialForm
               onCredentialSubmit={this.performPasswordRecover}
               submitTitle={tr.resetPasswordCta}
-              hidePassword
+              onlyEmail
             />
           }
 
@@ -63,7 +63,7 @@ export default class Forgot extends React.Component {
                 <FontAwesome name="check" className="text-success" />
               </h1>
               <p dangerouslySetInnerHTML={{
-                  __html: tr.formatString(tr.resetPasswordSuccess, email||'asdasdsss2ASDASDC.COM').join('')
+                  __html: tr.formatString(tr.resetPasswordSuccess, email).join('')
                 }}
               />
             </div>

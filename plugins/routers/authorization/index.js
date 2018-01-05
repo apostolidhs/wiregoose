@@ -15,7 +15,7 @@ KlarkModule(module, 'routesAuthorization', (
   };
 
   function register(app) {
-    app.post('/' + config.apiUrlPrefix + '/authorize/facebook', [
+    app.post(`/${config.API_URL_PREFIX}/authorize/facebook`, [
       middlewareFacebookPermissionsCheck(),
       middlewareFacebookLoginController,
       krkMiddlewareResponse.success
@@ -23,16 +23,12 @@ KlarkModule(module, 'routesAuthorization', (
   }
 
   function middlewareFacebookPermissionsCheck() {
-    const authOptions = {
-      session: false,
-      failWithError: true
-    };
-    return $passport.authenticate('jwt', authOptions);
+    return $passport.authenticate('facebook-token', { session: false });
   }
 
   function middlewareFacebookLoginController(req, res, next) {
     const user = req.user;
-    if (user) {
+    if (!user) {
       res.locals.errors.add('UNAUTHORIZED_USER');
       return next(true);
     }

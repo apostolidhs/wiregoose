@@ -4,12 +4,14 @@ import { browserHistory } from 'react-router';
 import { Image, Panel } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 
+import FacebookLogin from './facebook';
 import CredentialForm from '../authorization/credential-form.jsx';
 import * as Auth from '../authorization/auth.js';
 import tr from '../localization/localization.js';
 import {getError} from '../services/error-handler.js';
 import {templates} from '../notifications/notifications.jsx';
 import Loader from '../loader/loader.jsx';
+import {login as fbLogin} from '../services/facebook.js';
 
 import mongooseIcon from '../../assets/img/logo-170-nologo.png';
 
@@ -30,11 +32,14 @@ export default class Login extends React.Component {
     errors: {}
   }
 
+  onFacebookAuth = () => {
+    this.refs.load.promise = fbLogin()
+      .then(() => this.props.onLogin());
+  }
+
   performLogin = (email, password) => {
     this.refs.load.promise = Auth.login(email, password)
-      .then(() => {
-        this.props.onLogin();
-      })
+      .then(() => this.props.onLogin())
       .catch(reason => {
         const errors = {};
         if (getError(reason, 4001)) {
@@ -61,11 +66,16 @@ export default class Login extends React.Component {
         <span className="text-center center-block text-muted">
         {tr.or} <a href="#" onClick={e => {e.preventDefault(); onSignupClicked()}}>{tr.createAccountPrompt}</a>
         </span>
-        <Panel className="w-mt-14">
+        <FacebookLogin className="w-mt-14" type="SIGNIN" onFacebookAuth={this.onFacebookAuth} />
+        <div className="text-center text-muted w-mt-7">{tr.trFl('or')}</div>
+        <Panel className="w-mt-7">
           {errors.invalidCredentials &&
             <p className={'text-danger'}>{errors.invalidCredentials}</p>
           }
-          <CredentialForm onCredentialSubmit={this.performLogin} submitTitle={tr.signIn} />
+          <CredentialForm
+            onCredentialSubmit={this.performLogin}
+            submitTitle={tr.signIn}
+          />
           <a href="#" onClick={e => {e.preventDefault(); onForgotClicked();}}>
             <small>{tr.forgotPasswordPrompt}</small>
           </a>

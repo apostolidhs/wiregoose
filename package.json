@@ -7,7 +7,8 @@
     "postinstall": "NODE_ENV='production' webpack",
     "start": "node index.js",
     "test": "node node_modules/mocha/bin/mocha",
-    "initialize-db": "node index.js --script=initialize-db"
+    "initialize-db": "node index.js --script=initialize-db",
+    "rebuild-indexes": "node index.js --script=rebuild-indexes"
   },
   "repository": {
     "type": "git",

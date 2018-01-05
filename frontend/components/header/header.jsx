@@ -28,18 +28,24 @@ class Header extends React.Component {
 
   componentWillMount() {
     Events.subscribe('language', this.updateLanguageState);
-    const {pathname} = browserHistory.getCurrentLocation();
-    if (_.startsWith(pathname, '/auth')) {
-      this.setState({showLogin: false});
-    }
-  }
-
-  componentWillReceiveProps() {
-    console.log(arguments);
+    this.shouldDisplayLogin();
   }
 
   componentWillUnmount() {
     Events.unsubscribe('language', this.updateLanguageState);
+  }
+
+  shouldDisplayLogin() {
+    const {pathname} = browserHistory.getCurrentLocation();
+    if (_.startsWith(pathname, '/auth')) {
+      this.setState({showLogin: false});
+    } else if (!this.state.showLogin) {
+      this.setState({showLogin: true});
+    }
+  }
+
+  componentWillReceiveProps() {
+    this.shouldDisplayLogin();
   }
 
   updateLanguageState = (lang) => {

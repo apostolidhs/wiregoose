@@ -6,6 +6,7 @@ import classnames from 'classnames';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import tr from '../localization/localization.js';
+import * as Events from '../events/events.jsx';
 import * as Auth from '../authorization/auth.js';
 
 import styles from './user.less';
@@ -13,7 +14,7 @@ import styles from './user.less';
 @CSSModules(styles, {
   allowMultiple: true,
 })
-export default class Avatar extends React.Component {
+class Avatar extends React.Component {
   static propTypes = {
     type: PropTypes.oneOf(['HEADER', 'HEADER_DROPDOWN', 'PROFILE']),
     isUser: PropTypes.bool
@@ -26,6 +27,10 @@ export default class Avatar extends React.Component {
 
   componentWillMount() {
     this.updateAvatarClass();
+    this.hasUserVerifyAccount();
+  }
+
+  componentWillReceiveProps() {
     this.hasUserVerifyAccount();
   }
 
@@ -80,3 +85,5 @@ export default class Avatar extends React.Component {
     );
   }
 }
+
+export default Events.EventHOC(Avatar, ['credentials']);

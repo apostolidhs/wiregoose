@@ -18,6 +18,7 @@ const srcPaths = [
   // exceptModelsApp
 ];
 
+//const script = 'rebuild-indexes';
 const script = argv.script;
 const isTestEnv = process.env.UNIT_TEST;
 if (script) {

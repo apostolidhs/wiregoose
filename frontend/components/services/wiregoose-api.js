@@ -64,6 +64,18 @@ export function setCredentialGetter(_credentialGetter) {
   credentialGetter = _credentialGetter;
 }
 
+export function facebookAuthorize(accessToken) {
+  return httpRequest({
+    method: 'post',
+    url: `${API_ORIGIN}authorize/facebook`,
+    data: { access_token: accessToken },
+    friendlyErrorInterceptor: true,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
 export function login(email, password) {
   return httpRequest({
     method: 'post',

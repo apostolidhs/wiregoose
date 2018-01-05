@@ -5,6 +5,7 @@ import { browserHistory } from 'react-router';
 import { Image, Panel } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 
+import FacebookLogin from './facebook';
 import CredentialForm from '../../components/authorization/credential-form.jsx';
 import * as Auth from '../../components/authorization/auth.js';
 import BrowserLanguageDetection from '../../components/utilities/browser-language-detection.js';
@@ -12,6 +13,7 @@ import tr from '../../components/localization/localization.js';
 import {getError} from '../../components/services/error-handler.js';
 import {templates} from '../../components/notifications/notifications.jsx';
 import Loader from '../../components/loader/loader.jsx';
+import {login as fbLogin} from '../services/facebook.js';
 
 import mongooseIcon from '../../assets/img/logo-170-nologo.png';
 
@@ -29,6 +31,11 @@ export default class Login extends React.Component {
 
   state = {
     errors: {}
+  }
+
+  onFacebookAuth = () => {
+    this.refs.load.promise = fbLogin()
+      .then(() => this.props.onLogin());
   }
 
   performSignup = (email, password) => {
@@ -63,7 +70,9 @@ export default class Login extends React.Component {
         <span className="text-center center-block text-muted">
         {tr.or} <a href="#" onClick={e => {e.preventDefault(); onSigninClicked();}}>{tr.signInPrompt}</a>
         </span>
-        <Panel className="w-mt-14">
+        <FacebookLogin className="w-mt-14" type="SIGNUP" onFacebookAuth={this.onFacebookAuth} />
+        <div className="text-center text-muted w-mt-7">{tr.trFl('or')}</div>
+        <Panel className="w-mt-7">
           <CredentialForm
             onCredentialSubmit={this.performSignup}
             submitTitle={tr.signUp}
