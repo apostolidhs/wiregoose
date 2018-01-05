@@ -7,7 +7,7 @@ KlarkModule(module, 'modelsPreRender', ($mongoose, $mongooseIdValidator, config)
   const schema = new $mongoose.Schema({
     content: {type: String},
     link: {type: String, required: true, index: true},
-    createdAt: { type: Date, expires: config.PRE_RENDER_EXPIRATION },
+    createdAt: { type: Date, default: Date.now, expires: config.PRE_RENDER_EXPIRATION },
     lastHit: { type: Date },
     hits: {type: Number, default: 0},
   });
