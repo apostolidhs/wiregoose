@@ -6,8 +6,8 @@ const subModules = `plugins/**/*.module.js`;
 const testModules = `plugins/**/*-test.module.js`;
 const serverStartModule = `plugins/server/index.js`;
 const scriptModules = `plugins/scripts`;
-//const klarkPlugins = `node_modules/klark-js-plugins/plugins/**/*.js`;
-const klarkPlugins = `../Documents/klark-plugins/plugins/**/*.js`;
+const klarkPlugins = `node_modules/klark-js-plugins/plugins/**/*.js`;
+//const klarkPlugins = `../Documents/klark-plugins/plugins/**/*.js`;
 //const exceptModelsApp = `!node_modules/klark-js-plugins/plugins/models/app/**`;
 
 const srcPaths = [
