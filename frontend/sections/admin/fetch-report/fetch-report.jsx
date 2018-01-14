@@ -4,7 +4,6 @@ import { Link } from 'react-router';
 import ListView from '../../../components/list-view/list-view.jsx';
 import Form from '../../../components/fetch-report/form.jsx';
 
-import FromNow from '../../../components/utilities/from-now.jsx';
 import ResponseTransformation
   from '../../../components/fetch-report/response-transformation.js';
 import * as DateUtilities
@@ -40,7 +39,7 @@ export default class RssFetchReport extends ListView {
         return (
           <span>
             {DateUtilities.toText(started, true)}
-            (<FromNow date={_.now() - (duration * 1000)} />)
+            {' '}({duration}s)
           </span>
         )
       },
@@ -60,7 +59,11 @@ export default class RssFetchReport extends ListView {
       columns: RssFetchReport.columns,
       title: 'Rss Fetch Report',
       form: Form,
-      mutable: false
+      mutable: false,
+      defaultSort: {
+        defaultSortName: 'started',
+        defaultSortOrder: 'desc'
+      }
     });
   }
 }

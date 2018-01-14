@@ -24,7 +24,7 @@ KlarkModule(module, 'measuresUsers', (
   }
 
   function pendingValidation() {
-    return krkModelsUser.count({ validationToken: { $exists: false } });
+    return krkModelsUser.count({ validationToken: { $exists: true } });
   }
 
 });

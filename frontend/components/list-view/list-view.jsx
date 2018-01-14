@@ -27,7 +27,7 @@ export default class ListView extends React.Component {
     lastEffectedId: undefined
   };
 
-  constructor({ modelName, columns, title, form, mutable = true, transformation = _.identity }) {
+  constructor({ modelName, columns, title, form, defaultSort = {}, mutable = true, transformation = _.identity }) {
     super();
     this.modelName = modelName;
     this.columns = columns;
@@ -35,8 +35,8 @@ export default class ListView extends React.Component {
     this.form = form;
     this.transformation = transformation;
     this.mutable = mutable;
+    this.defaultSort = defaultSort;
   }
-
 
   onSizePerPageList = (count = 5) => this.retrieveAll({ count })
 
@@ -119,7 +119,14 @@ export default class ListView extends React.Component {
   }
 
   componentDidMount() {
-    this.retrieveAll();
+    let params;
+    if (this.defaultSort.defaultSortName) {
+      params = {
+        sortBy: this.defaultSort.defaultSortName,
+        asc: this.defaultSort.defaultSortOrder === 'asc'
+      };
+    }
+    this.retrieveAll(params);
   }
 
   expandComponent = (row) => {
@@ -223,10 +230,13 @@ export default class ListView extends React.Component {
                   onDeleteRow: this.onDeleteRow,
                   onFilterChange: this.onFilterChange,
                   onSortChange: this.onSortChange,
+                  ...this.defaultSort
                 }}
               >
                 {_.map(this.columns, col => {
-                  const filter = { type: 'TextFilter', defaultValue: this.state.params[col.id] || '' };
+                  const filter = col.disableFilter
+                    ? undefined
+                    : { type: 'TextFilter', defaultValue: this.state.params[col.id] || '' };
                   return (
                     <TableHeaderColumn dataField={col.id} key={col.id} filter={filter} dataSort {...col}>
                       {col.colName || toUppercasesWords(col.id)}

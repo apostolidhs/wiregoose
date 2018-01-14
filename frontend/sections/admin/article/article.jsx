@@ -9,11 +9,28 @@ import ResponseTransformation
   from '../../../components/article/response-transformation.js';
 import * as TextUtilities
   from '../../../components/utilities/text-utilities.js';
+import FromNow from '../../../components/utilities/from-now.jsx';
 
 export default class Articles extends ListView {
   static columns = [
     {
       id: 'title'
+    },
+    {
+      id: 'link'
+    },
+    {
+      id: 'createdAt',
+      dataFormat: cell => <FromNow date={cell} />,
+      width: '120px'
+    },
+    {
+      id: 'entryId.hits',
+      colName: 'Hits',
+      dataFormat: (cell, {entryId}) => entryId.hits,
+      width: '70px',
+      dataSort: false,
+      disableFilter: true
     },
     {
       id: 'error',
@@ -24,10 +41,7 @@ export default class Articles extends ListView {
           return (<FontAwesome name="times" />);
         }
       },
-      width: '80px'
-    },
-    {
-      id: 'link'
+      width: '70px'
     },
     {
       id: '_id',
@@ -42,7 +56,11 @@ export default class Articles extends ListView {
       transformation: r => ResponseTransformation(r),
       columns: Articles.columns,
       title: 'Articles',
-      form: Form
+      form: Form,
+      defaultSort: {
+        defaultSortName: 'createdAt',
+        defaultSortOrder: 'desc'
+      }
     });
   }
 }

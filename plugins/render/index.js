@@ -32,6 +32,7 @@ KlarkModule(module, 'render', (
         || _.endsWith(req.url, 'ico')
         || _.endsWith(req.url, 'png')
         || _.endsWith(req.url, 'jpeg')
+        || _.endsWith(req.url, 'jpg')
       ) {
         return res.sendFile(indexPagePath);
       }

@@ -62,74 +62,72 @@ export default class FormGenerator extends React.Component {
     const {record, isRssFeedPreviewOpen} = this.state;
 
     return (
-      <Loader ref="load">
-        <Form horizontal>
+      <Form horizontal>
 
-          { !isNew && FormFactory.createStaticText(record._id, 'ID') }
+        { !isNew && FormFactory.createStaticText(record._id, 'ID') }
 
-          { FormFactory.createInputLink({
-            name: 'link',
-            value: record.link,
-            onChange: FormFactory.handleInputChange(this),
-            validate: FormFactory.validateLink(this, 'link'),
-            required: true
-          }) }
+        { FormFactory.createInputLink({
+          name: 'link',
+          value: record.link,
+          onChange: FormFactory.handleInputChange(this),
+          validate: FormFactory.validateLink(this, 'link'),
+          required: true
+        }) }
 
-          <FormGroup controlId="formIdPreview" className="text-right">
-            <Col xs={12}>
-              <Button bsStyle="primary"
-                bsSize="small"
-                type="button"
-                onClick={this.performRssFeedPreview}
-                disabled={FormFactory.validateLink(this, 'link') !== 'success'}>
-                <FontAwesome name="picture-o" /> Preview Link Source
-              </Button>
-            </Col>
-          </FormGroup>
+        <FormGroup controlId="formIdPreview" className="text-right">
+          <Col xs={12}>
+            <Button bsStyle="primary"
+              bsSize="small"
+              type="button"
+              onClick={this.performRssFeedPreview}
+              disabled={FormFactory.validateLink(this, 'link') !== 'success'}>
+              <FontAwesome name="picture-o" /> Preview Link Source
+            </Button>
+          </Col>
+        </FormGroup>
 
-          <Collapse in={isRssFeedPreviewOpen} mountOnEnter={true} className="w-mb-7">
-            <FetchPreview link={record.link} styleName="preview" />
-          </Collapse>
+        <Collapse in={isRssFeedPreviewOpen} mountOnEnter={true} className="w-mb-7">
+          <FetchPreview link={record.link} styleName="preview" />
+        </Collapse>
 
-          { FormFactory.createSelection({
-            name: 'category',
-            value: record.category,
-            onChange: FormFactory.handleInputChange(this),
-            enumeration: CATEGORIES,
-            required: true
-          }) }
+        { FormFactory.createSelection({
+          name: 'category',
+          value: record.category,
+          onChange: FormFactory.handleInputChange(this),
+          enumeration: CATEGORIES,
+          required: true
+        }) }
 
-          { FormFactory.createSelection({
-            name: 'lang',
-            value: record.lang,
-            onChange: FormFactory.handleInputChange(this),
-            enumeration: SUPPORTED_LANGUAGES,
-            required: true
-          }) }
+        { FormFactory.createSelection({
+          name: 'lang',
+          value: record.lang,
+          onChange: FormFactory.handleInputChange(this),
+          enumeration: SUPPORTED_LANGUAGES,
+          required: true
+        }) }
 
-          <FormGroup controlId="formIdProvider">
-            <Col componentClass={ControlLabel} sm={2}>Provider</Col>
-            <Col sm={10}>
-              <Select
-                name="provider"
-                value={record.provider}
-                loadOptions={this.getProviderOptions}
-                onChange={this.handleProviderChange}
-                valueKey="_id"
-                labelKey="name"
-                required
-              />
-            </Col>
-          </FormGroup>
+        <FormGroup controlId="formIdProvider">
+          <Col componentClass={ControlLabel} sm={2}>Provider</Col>
+          <Col sm={10}>
+            <Select
+              name="provider"
+              value={record.provider}
+              loadOptions={this.getProviderOptions}
+              onChange={this.handleProviderChange}
+              valueKey="_id"
+              labelKey="name"
+              required
+            />
+          </Col>
+        </FormGroup>
 
-          { FormFactory.createFormOptionsPanel({
-            onDelete: !isNew && this.onDeleteClicked,
-            onSave: this.onSaveClicked,
-            isInvalid: this.isInvalid(),
-            isNew
-          }) }
-        </Form>
-      </Loader>
+        { FormFactory.createFormOptionsPanel({
+          onDelete: !isNew && this.onDeleteClicked,
+          onSave: this.onSaveClicked,
+          isInvalid: this.isInvalid(),
+          isNew
+        }) }
+      </Form>
     );
   }
 }

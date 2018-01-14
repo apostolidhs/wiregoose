@@ -12,7 +12,7 @@ KlarkModule(module, 'scriptsInitializeDb', (
   krkLogger.info('start');
   krkDbMongooseConnector.connect(config.MONGODB_URL)
     .then(() => q.all(_.map($mongoose.models, model =>
-        q.promisify(cb => model.collection.reIndex(cb)))))
+        q.promisify(cb => model.collection.dropAllIndexes(cb)))))
     .then(() => krkLogger.info('finish'))
     .catch(reason => {
       krkLogger.error('script failed', reason);

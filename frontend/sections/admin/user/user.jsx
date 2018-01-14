@@ -35,7 +35,7 @@ export default class User extends ListView {
       id: 'isEmailValid',
       colName: 'Valid',
       dataFormat: (cell, {isEmailValid}) =>
-        (<FontAwesome name={isEmailValid ? 'times' : 'check'} />),
+        (<FontAwesome name={isEmailValid ? 'check' : 'times' } />),
       width: '60'
     },
     {
@@ -56,7 +56,11 @@ export default class User extends ListView {
       columns: User.columns,
       transformation: r => ResponseTransformation(r),
       title: 'Users',
-      form: Form
+      form: Form,
+      defaultSort: {
+        defaultSortName: 'created',
+        defaultSortOrder: 'desc'
+      }
     });
   }
 }

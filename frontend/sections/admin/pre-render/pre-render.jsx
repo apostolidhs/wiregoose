@@ -13,7 +13,13 @@ import * as DateUtilities
 export default class PreRender extends ListView {
   static columns = [
     {
-      id: 'link'
+      id: 'link',
+      dataFormat: cell => (
+        <div>
+          <div>{cell}</div>
+          <div className=''>{decodeURIComponent(cell)}</div>
+        </div>
+      )
     },
     {
       id: 'createdAt',
@@ -43,7 +49,11 @@ export default class PreRender extends ListView {
       transformation: r => ResponseTransformation(r),
       columns: PreRender.columns,
       title: 'Pre Render',
-      form: Form
+      form: Form,
+      defaultSort: {
+        defaultSortName: 'createdAt',
+        defaultSortOrder: 'desc'
+      }
     });
   }
 }

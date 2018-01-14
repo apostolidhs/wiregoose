@@ -22,7 +22,7 @@ KlarkModule(module, 'measuresArticles', (
 
   function topViewed() {
     return modelsEntry.find({ article: { $exists: true } })
-      .sort({hits: 1})
+      .sort({hits: -1})
       .select({ 'link': 1, 'hits': 1})
       .limit(10);
   }
