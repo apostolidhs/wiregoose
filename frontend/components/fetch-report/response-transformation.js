@@ -11,6 +11,9 @@ export default function translate(fetchReport) {
     fetchReport.duration = Math.round((fetchReport.finished.getTime()
                       - fetchReport.started.getTime()) / (1000));
   }
+  if (fetchReport.failedFetches) {
+    fetchReport.failedFetches = _.map(fetchReport.failedFetches, f => _.omit(f, ['_id']));
+  }
   fetchReport.unsucceededFetches = fetchReport.totalFetches - fetchReport.succeededFetches;
   fetchReport.succeededFetchesPerc = Math.round((fetchReport.succeededFetches / fetchReport.totalFetches) * 100);
   fetchReport.entriesAborted = fetchReport.succeededFetches - fetchReport.entriesStored;

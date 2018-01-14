@@ -12,10 +12,10 @@ KlarkModule(module, 'modelsFetchReport', ($mongoose, $mongooseIdValidator, $mong
     finished: {type: Date, required: true},
     createdAt: { type: Date, default: Date.now, expires: config.FETCH_REPORT_EXPIRATION },
     log: {type: String},
-    failedFetches: [
-      {error: {type: $mongoose.Schema.Types.Mixed, required: true}},
-      {rssRegistration: {type: $mongoose.Schema.Types.ObjectId, ref: 'RssRegistration', required: true, autopopulate: true}}
-    ]
+    failedFetches: [{
+      error: {type: $mongoose.Schema.Types.Mixed, required: true},
+      rssRegistration: {type: $mongoose.Schema.Types.ObjectId, ref: 'RssRegistration', required: true, autopopulate: false}
+    }]
   });
 
   schema.plugin($mongooseAutopopulate);

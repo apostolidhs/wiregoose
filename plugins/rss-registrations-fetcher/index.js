@@ -79,7 +79,7 @@ KlarkModule(module, 'rssRegistrationsFetcher', (
 
         if (!_.isEmpty(error) || _.isError(error)) {
           const failedFetch = {
-            error,
+            error: _.isError(error) ? error.toString() : error,
             rssRegistration: rssRegistration.id
           };
           fetchReport.failedFetches.push(failedFetch);
