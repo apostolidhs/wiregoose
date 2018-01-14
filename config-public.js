@@ -2,7 +2,7 @@
 
 const config = {};
 
-config.RUN_MODE = 'dev'; // dev | dist
+config.RUN_MODE = 'dist'; // dev | dist
 
 config.IS_DEV = config.RUN_MODE === 'dev';
 
