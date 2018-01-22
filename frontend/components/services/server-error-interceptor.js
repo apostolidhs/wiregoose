@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { browserHistory } from 'react-router';
 
+import tr from '../localization/localization.js';
 import * as Auth from '../authorization/auth.js';
 import * as Notifications from '../notifications/notifications.jsx';
 
@@ -16,9 +17,9 @@ export default function ServerErrorsInterceptor (error, friendly = false) {
     // rest authentication errors
   } else if (status >= 400 && status < 500) {
     if (friendly) {
-      // Notifications.create.warning('we are experiencing some issues', {
-      //   title: 'Oups!'
-      // });
+      Notifications.create.warning(tr.promptServerError400, {
+        title: tr.promptServerError400Title
+      });
     } else {
       const msg = _.upperFirst(response.data.error)
         || getStatusError(response);
@@ -35,8 +36,8 @@ export default function ServerErrorsInterceptor (error, friendly = false) {
 
     // requests that cannot be sent
   } else if (status === -1) {
-    Notifications.create.warning('Check your internet connectivity and try again', {
-      title: 'Not connected'
+    Notifications.create.warning(tr.promptServerErrorNotConnected, {
+      title: tr.promptServerErrorNotConnectedTitle
     });
   }
 }

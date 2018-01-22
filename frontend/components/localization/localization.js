@@ -17,8 +17,8 @@ const strings = new LocalizedStrings({
     infoAboutCrawlerDescMozilla: `Internally, we use the <a href="https://github.com/mozilla/readability" target="_blank">Mozilla Firefox Reader View</a>.`,
 
     profileTitle: 'Profile',
+    bookmarksTitle: 'Bookmarks',
     infoProviderTitle: 'Providers',
-
     infoCreatorsTitle: 'Creators',
     infoCreatorsDesc: 'Inspired, Designed, Developed by <em>John Apostolidis</em>',
 
@@ -30,6 +30,12 @@ const strings = new LocalizedStrings({
     errors500Desc: 'We are experiencing an internal problem.',
     errors500Prompt: 'Please try again later.',
     errors500PromptFooter: 'That\'s all we know.',
+
+    promptServerError400Title: 'Oups!',
+    promptServerError400: 'We are experiencing some issues',
+
+    promptServerErrorNotConnected: 'Check your internet connectivity and try again',
+    promptServerErrorNotConnectedTitle: 'Not connected',
 
     loadingMore: 'Loading More...',
     loadingArticle: 'Loading Article...',
@@ -65,6 +71,10 @@ const strings = new LocalizedStrings({
     shareLink: 'Share Article Link',
     articleLink: 'Article Link',
 
+    bookmark: 'bookmark',
+    bookmarkMaxLengthDisabled: 'Too many saved articles, please remove some saved articles in order to proceed',
+    bookmarkLoginPrompt: 'Bookmark the article after you login',
+
     Country: 'UK',
     World: 'World',
     Politics: 'Politics',
@@ -90,6 +100,12 @@ const strings = new LocalizedStrings({
     timelineExploreDescription: 'Explore the latest news',
     timelineExploreKeywords: 'Explore',
     timelineExploreTitle: 'Explore News',
+
+    timelineBookmarksDescription: 'Articles you have saved',
+    timelineBookmarksKeywords: 'saved articles,bookmarks',
+    timelineBookmarksTitle: 'Saved Articles',
+    timelineBookmarksBlankSlateTitle: 'You have not bookmark articles yet',
+    timelineBookmarksBlankSlateDesc: 'and bookmark articles for reading',
 
     timelineCategoryDescription: 'Read the latest news on {0} category',
 
@@ -134,8 +150,8 @@ const strings = new LocalizedStrings({
     infoAboutCrawlerDescMozilla: `Εσωτερικά, χρησιμοποιούμε τον <a href="https://github.com/mozilla/readability" target="_blank">Mozilla Firefox Reader View</a>.`,
 
     profileTitle: 'Προφίλ',
+    bookmarksTitle: 'Αποθηκευμένα',
     infoProviderTitle: 'Πάροχοι',
-
     infoCreatorsTitle: 'Δημιουργοί',
     infoCreatorsDesc: 'Εμπνεύστηκε, Σχεδιάστηκε, Αναπτύχθηκε από τον <em>Γιάννη Αποστολίδη</em>',
 
@@ -147,6 +163,12 @@ const strings = new LocalizedStrings({
     errors500Desc: 'Έχει δημιουργηθεί ένα εσωτερικό πρόβλημα',
     errors500Prompt: 'Παρακαλώ προσπαθήστε ξανά.',
     errors500PromptFooter: 'Αυτό είναι το μόνο που ξέρουμε.',
+
+    promptServerError400Title: 'Όπα!',
+    promptServerError400: 'Αντιμετωπίζουμε κάποια προβλήματα',
+
+    promptServerErrorNotConnected: 'Ελέγξτε την σύνδεση σας και προσπαθήστε ξανά',
+    promptServerErrorNotConnectedTitle: 'Δεν υπάρχει σύνδεση',
 
     loadingMore: 'Φόρτωση...',
     loadingArticle: 'Φόρτωση Άρθρου...',
@@ -182,6 +204,10 @@ const strings = new LocalizedStrings({
     shareLink: 'Μοιράσου τον σύνδεσμο του άρθρου',
     articleLink: 'Σύνδεσμος Άρθρου',
 
+    bookmark: 'αποθήκευση',
+    bookmarkMaxLengthDisabled: 'Έχετε αποθηκεύσει πολλά άρθρα, μπορείτε να αφαιρέσετε κάποια αποθηκευμένα',
+    bookmarkLoginPrompt: 'Αποθήκευσε το άρθρο μόλις συνδεθείς',
+
     Country: 'Ελλάδα',
     World: 'Κόσμος',
     Politics: 'Πολιτικά',
@@ -207,6 +233,12 @@ const strings = new LocalizedStrings({
     timelineExploreDescription: 'Πλοηγήσου στα πιο πρόσφατα νέα',
     timelineExploreKeywords: 'Πλοηγήσου',
     timelineExploreTitle: 'Πλοηγήσου στα Νέα',
+
+    timelineBookmarksDescription: 'Άρθρα που έχεις αποθηκεύσει',
+    timelineBookmarksKeywords: 'αποθηκευμένα άρθρα,σελιδοδείκτης',
+    timelineBookmarksTitle: 'Αποθηκευμένα Άρθρα',
+    timelineBookmarksBlankSlateTitle: 'Δεν έχετε αποθηκεύσει άρθρα',
+    timelineBookmarksBlankSlateDesc: 'και αποθηκεύστε άρθρα για μελλοντική ανάγνωση',
 
     timelineCategoryDescription: 'Πλοηγηθείτε στα πιο πρόσφατα {0} νέα',
 

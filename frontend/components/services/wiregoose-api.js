@@ -52,8 +52,15 @@ export const timeline = {
   explore: timelineExplore,
   category: timelineCategory,
   provider: timelineProvider,
-  registration: timelineRegistration
+  registration: timelineRegistration,
+  bookmarks: timelineBookmarks
 }
+
+export const bookmarks = {
+  retrieveAllIds: bookmarksRetrieveAllIds,
+  pushId: bookmarksPushId,
+  removeId: bookmarksRemoveId
+};
 
 export const statics = {
   categories: _.throttle(getStaticCategories, 3000),
@@ -221,6 +228,43 @@ export function entryRelated(entryId) {
   });
 }
 
+function bookmarksRetrieveAllIds(userId, {populate = false} = {}) {
+  const q = populate ? '?populate=true' : '';
+  return httpRequest({
+    method: 'get',
+    url: `${API_ORIGIN}user/${userId}/bookmarks${q}`,
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+    friendlyErrorInterceptor: true
+  });
+}
+
+function bookmarksPushId(userId, entryId) {
+  return httpRequest({
+    method: 'post',
+    url: `${API_ORIGIN}user/${userId}/bookmarks/${entryId}`,
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+    friendlyErrorInterceptor: true
+  });
+}
+
+function bookmarksRemoveId(userId, entryId) {
+  return httpRequest({
+    method: 'delete',
+    url: `${API_ORIGIN}user/${userId}/bookmarks/${entryId}`,
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+    friendlyErrorInterceptor: true
+  });
+}
+
 function timelineExplore(categories, lang, friendlyErrorInterceptor = false) {
   return getTimeline('explore', categories, lang, friendlyErrorInterceptor);
 }
@@ -235,6 +279,14 @@ function timelineProvider(provider, lang, friendlyErrorInterceptor = false) {
 
 function timelineRegistration(registration, lang, friendlyErrorInterceptor = false) {
   return getTimeline('registration', registration, lang, friendlyErrorInterceptor);
+}
+
+function timelineBookmarks(userId) {
+  return bookmarksRetrieveAllIds(userId, {populate: true})
+    .then(resp => {
+      resp.data.data.bookmarks = _.map(resp.data.data.bookmarks, ArticleBoxResponseTransformation);
+      return resp;
+    });
 }
 
 function getTimeline(endpoint, params, lang, friendlyErrorInterceptor) {

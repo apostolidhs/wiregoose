@@ -145,7 +145,11 @@ export default class Entry extends React.Component {
             </section>
           )}
           <footer styleName="footer" className="text-right">
-            <SocialShare link={this.absoluteArticleLink}  selfContainer={true} />
+            <SocialShare
+              link={this.absoluteArticleLink}
+              entryId={entry._id}
+              selfContainer={true}
+            />
           </footer>
         </div>
       </article>

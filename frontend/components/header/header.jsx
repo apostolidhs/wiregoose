@@ -106,26 +106,35 @@ class Header extends React.Component {
             id="w-menu-settings"
             noCaret
           >
+          {/* <LinkContainer to="/profile"> */}
             { Auth.isAuthenticated() &&
-              <LinkContainer to="/profile">
-                <MenuItem styleName="profile-item">
-                  <UserAvatar type="HEADER_DROPDOWN" isUser />
-                  <strong styleName="profile-content" >
-                    {Auth.getSession().user.email}
-                  </strong>
+              <MenuItem styleName="profile-item">
+                <UserAvatar type="HEADER_DROPDOWN" isUser />
+                <strong styleName="profile-content" >
+                  {Auth.getSession().user.email}
+                </strong>
+              </MenuItem>
+            }
+            { Auth.isAuthenticated() &&
+              <MenuItem divider />
+            }
+            { Auth.isAuthenticated() &&
+              <LinkContainer to="/bookmarks">
+                <MenuItem>
+                  {tr.bookmarksTitle}
                 </MenuItem>
               </LinkContainer>
             }
             { Auth.isAuthenticated() &&
               <MenuItem divider />
             }
-            { Auth.isAuthenticated() &&
+            {/* { Auth.isAuthenticated() &&
               <LinkContainer to="/profile">
                 <MenuItem>
                   {tr.profileTitle}
                 </MenuItem>
               </LinkContainer>
-            }
+            } */}
             <LinkContainer to="/info/providers">
               <MenuItem>
                 {tr.infoProviderTitle}

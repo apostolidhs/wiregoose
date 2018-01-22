@@ -14,6 +14,7 @@ import TimelineExplore from '../timeline/explore/explore.jsx';
 import TimelineCategory from '../timeline/category/category.jsx';
 import TimelineProvider from '../timeline/provider/provider.jsx';
 import TimelineRegistration from '../timeline/registration/registration.jsx';
+import TimelineBookmarks from '../timeline/bookmarks/bookmarks.jsx';
 import Article from '../article/article.jsx';
 import About from '../info/about.jsx';
 import Credits from '../info/credits.jsx';
@@ -45,9 +46,10 @@ export default class AppRouter extends React.Component {
     }
   }
 
-  renderRedirectIfAuthorizedRoute(name, component) {
+  renderRedirectIfAuthorizedRoute(path, component, isAuthorized = true) {
     function onEnter(nextState, replaceState) {
-      if (Auth.isAuthenticated()) {
+      const isAuthenticated = Auth.isAuthenticated();
+      if (isAuthorized && isAuthenticated || !isAuthorized && !isAuthenticated) {
         replaceState({
           pathname: '/',
           state: { nextPathname: nextState.location.pathname }
@@ -55,7 +57,7 @@ export default class AppRouter extends React.Component {
       }
     }
 
-    return <Route path={name} onEnter={onEnter} component={component} />;
+    return <Route path={path} onEnter={onEnter} component={component} />;
   }
 
   render() {
@@ -71,6 +73,7 @@ export default class AppRouter extends React.Component {
             <Route path="category/:id" component={TimelineCategory} />
             <Route path="provider/:id" component={TimelineProvider} />
             <Route path="registration/:id" component={TimelineRegistration} />
+            {this.renderRedirectIfAuthorizedRoute('bookmarks', TimelineBookmarks, false)}
           </Route>
           <Route path="info" >
             <Route path="about" component={About} />
@@ -82,7 +85,7 @@ export default class AppRouter extends React.Component {
             {this.renderRedirectIfAuthorizedRoute('signup', Signup)}
             {this.renderRedirectIfAuthorizedRoute('forgot', Forgot)}
           </Route>
-          <Route path="profile" component={Profile}/>
+          {this.renderRedirectIfAuthorizedRoute('profile', Profile, false)}
           <Route path="500" component={InternalServerError} />
           <Route path="401" component={NotFoundError} />
           <Route path='*' component={NotFoundError} />

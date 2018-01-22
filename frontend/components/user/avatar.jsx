@@ -27,11 +27,6 @@ class Avatar extends React.Component {
 
   componentWillMount() {
     this.updateAvatarClass();
-    this.hasUserVerifyAccount();
-  }
-
-  componentWillReceiveProps() {
-    this.hasUserVerifyAccount();
   }
 
   updateAvatarClass() {
@@ -48,18 +43,16 @@ class Avatar extends React.Component {
     }
   }
 
-  hasUserVerifyAccount() {
-    if (Auth.isAuthenticated() && !Auth.isEmailValid()) {
-      this.setState({isEmailInvalid: true});
-    }
+  isUserEmailVerified() {
+    return Auth.isAuthenticated() && Auth.isEmailValid();
   }
 
-  renderAvatar() {
-    const {avatarClass, isEmailInvalid} = this.state;
+  renderAvatar(isEmailValid) {
+    const {avatarClass} = this.state;
     const className = classnames(
       'avatar',
       `avatar-${avatarClass}`,
-      {'avatar-invalid': isEmailInvalid}
+      {'avatar-invalid': !isEmailValid}
     );
 
     return (
@@ -71,16 +64,15 @@ class Avatar extends React.Component {
   }
 
   render() {
-    const {isEmailInvalid} = this.state;
-    if (!isEmailInvalid) {
-      return this.renderAvatar();
+    if (this.isUserEmailVerified()) {
+      return this.renderAvatar(true);
     }
 
     return (
       <OverlayTrigger placement="bottom" overlay={
         <Tooltip id="validate-user-account">{tr.validateUserAccount}</Tooltip>
       }>
-        {this.renderAvatar()}
+        {this.renderAvatar(false)}
       </OverlayTrigger>
     );
   }

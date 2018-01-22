@@ -10,7 +10,8 @@ import { attachModal, detachModal } from '../modals/modals.jsx';
 
 export default class AuthModal extends React.Component {
   static propTypes = {
-    type: PropTypes.oneOf(['LOGIN', 'SIGNUP', 'FORGOT'])
+    type: PropTypes.oneOf(['LOGIN', 'SIGNUP', 'FORGOT']),
+    prompt: PropTypes.any
   }
 
   static defaultProps = {
@@ -18,7 +19,7 @@ export default class AuthModal extends React.Component {
   }
 
   state = {
-    type: 'LOGIN'
+    type: this.props.type
   }
 
   openSignup = () => {
@@ -38,9 +39,12 @@ export default class AuthModal extends React.Component {
   }
 
   render() {
+    const {prompt} = this.props;
     const {type} = this.state;
+
     return (
       <Modal.Body>
+        {prompt}
         {(() => {
           if (type === 'FORGOT') {
             return <Forgot onSigninClicked={this.openSignin} onFinish={this.onSubmitionFinish} />;
@@ -55,6 +59,6 @@ export default class AuthModal extends React.Component {
   }
 }
 
-export function launch(type = 'LOGIN') {
-  return attachModal(<AuthModal type={type} />, {closable: true});
+export function launch({type, prompt}) {
+  return attachModal(<AuthModal type={type} prompt={prompt} />, {closable: true});
 }

@@ -14,6 +14,7 @@ import * as WiregooseApi from './components/services/wiregoose-api.js';
 import * as Facebook from './components/services/facebook.js';
 import * as Meta from './components/meta/meta.js';
 import { subscribe } from './components/events/events.jsx';
+import {syncBookmarks} from './components/bookmarks/bookmarks.js';
 
 import AppRouter from './sections/router/app.jsx';
 
@@ -34,7 +35,8 @@ subscribe('page-ready', (options) => {
 let authorizationPromise;
 if (Auth.isAuthenticated()) {
   WiregooseApi.setCredentialGetter(() => Auth.getSession().token);
-  authorizationPromise = Promise.resolve();
+  authorizationPromise = Promise.resolve()
+    .then(() => syncBookmarks());
 } else if (Auth.hasFacebookAccount()) {
   authorizationPromise = Auth.loginIfHasPermissions();
 } else {

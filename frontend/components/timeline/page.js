@@ -46,7 +46,7 @@ export default class Page {
 
   refreshVirtualList = () => {
     const scrollContainerHeight = Math.round(
-      (this.virtualList.length / this.columnsPerRow)
+      Math.max(this.virtualList.length / this.columnsPerRow, 1)
       * (Page.ARTICLE_BOX_HEIGHT + Page.TIMELINE_PADDING)
     );
     this.targetComponent.timeline.scrollContainerEl.style.height = `${scrollContainerHeight}px`;
@@ -107,7 +107,7 @@ export default class Page {
     const elements = this.virtualList.slice(from, to);
 
     if (_.first(timelineElements) === _.first(elements)
-      && _.last(timelineElements) === _.last(elements)){
+      && _.last(timelineElements) === _.last(elements)) {
       return;
     }
 
@@ -125,7 +125,7 @@ export default class Page {
   }
 
   retrieveNextTimeline = () => {
-    if (this.isLoading) {
+    if (this.isLoading || !this.hasMore) {
       return;
     }
     this.isLoading = true;
@@ -134,11 +134,16 @@ export default class Page {
       .then(resp => this.timelineRetrievedSuccessfully(resp))
       .finally(() => {
         this.isLoading = false;
-        this.targetComponent.timeline.setLoadingState(false);
+        this.targetComponent
+          && this.targetComponent.timeline.setLoadingState(false);
       })
   }
 
   timelineRetrievedSuccessfully = (resp) => {
+    if (!this.targetComponent) {
+      return;
+    }
+
     const { data } = resp.data;
     if (!data) {
       browserHistory.replace('/401');
@@ -159,6 +164,9 @@ export default class Page {
 
     if (_.isEmpty(feeds)) {
       this.hasMore = false;
+      if (this.isEmpty()) {
+        this.targetComponent.setState({showBlankSlate: true});
+      }
     } else {
       const feedElements = this.targetComponent.timeline.createElements(feeds);
       _.each(feedElements, feedElement => {
@@ -187,6 +195,10 @@ export default class Page {
     element.props.style.top = top;
     element.props.style.left = left;
     element.props.style.width = width;
+  }
+
+  isEmpty = () => {
+    return _.isEmpty(this.virtualList) && !this.hasMore;
   }
 
   invalidateCache = () => {

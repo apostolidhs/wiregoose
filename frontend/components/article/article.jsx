@@ -146,12 +146,13 @@ export default class Article extends React.Component {
   }
 
   renderHeaderToolbar = () => {
-    const { nextRelatedEntry } = this.props;
+    const { nextRelatedEntry, article } = this.props;
     return (
       <div styleName="header-toolbar" >
         <div styleName="header-toolbar-actions" >
           {this.renderBackButton()}
           <SocialShare
+            entryId={article.entryId._id}
             styleName="header-social-share social-share"
             link={location.href}
             overlayPlacement={"bottom"}
@@ -213,6 +214,8 @@ export default class Article extends React.Component {
   }
 
   renderFooter = () => {
+    const {article} = this.props;
+
     return (
       <footer styleName="footer">
         <div>
@@ -220,7 +223,12 @@ export default class Article extends React.Component {
             {this.renderBackButton()}
           </div>
           <div className="text-right">
-            <SocialShare styleName="social-share" link={location.href} overlayPlacement={"top"} />
+            <SocialShare
+              entryId={article.entryId._id}
+              styleName="social-share"
+              link={location.href}
+              overlayPlacement={"top"}
+            />
           </div>
         </div>
       </footer>

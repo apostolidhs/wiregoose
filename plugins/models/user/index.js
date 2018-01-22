@@ -2,6 +2,7 @@
 
 KlarkModule(module, 'krkModelsUser', (
   _,
+  $mongoose,
   config,
   krkModelsUserExtension
 ) => {
@@ -14,12 +15,18 @@ KlarkModule(module, 'krkModelsUser', (
     onSchemaMethods
   });
 
-  function onSchemaOptions(options) {
-    options.facebook = {
+  function onSchemaOptions(schemaOptions) {
+    schemaOptions.facebook = {
       id: { type: String },
       token: { type: String }
     };
-    return options;
+    schemaOptions.bookmarks = [{
+      type: $mongoose.Schema.Types.ObjectId,
+      ref: 'Entry',
+      index: true,
+      unique: true
+    }];
+    return schemaOptions;
   }
 
   function onSchemaMethods(schema) {
@@ -33,7 +40,8 @@ KlarkModule(module, 'krkModelsUser', (
     var safeUser = _.omit(userObj, [
       'password',
       'validationToken',
-      'facebook'
+      'facebook',
+      'bookmarks'
     ]);
 
     safeUser.isEmailValid = !userObj.validationToken;

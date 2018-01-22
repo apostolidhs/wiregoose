@@ -6,10 +6,12 @@ import { FacebookButton, TwitterButton } from 'react-social';
 
 import { FACEBOOK_APP_ID } from '../../../config-public.js';
 import tr from '../localization/localization.js';
+import Bookmark from '../bookmarks/button.jsx';
 
 export default class SocialShare extends React.Component {
 
   static propTypes = {
+    entryId: PropTypes.string.isRequired,
     link: PropTypes.string.isRequired,
     overlayPlacement: PropTypes.string,
     selfContainer: PropTypes.bool
@@ -37,6 +39,7 @@ export default class SocialShare extends React.Component {
 
   render() {
     const {
+      entryId,
       link,
       selfContainer,
       overlayPlacement,
@@ -45,6 +48,7 @@ export default class SocialShare extends React.Component {
 
     return (
       <div {...rest} >
+        <Bookmark className="pull-left" entryId={entryId} />
         <OverlayTrigger
           onEntered={this.focusOnShareArticlePopover}
           trigger="click"

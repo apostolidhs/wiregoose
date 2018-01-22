@@ -2,6 +2,7 @@ import _ from 'lodash';
 import jwtDecode from 'jwt-decode';
 
 import {publish} from '../events/events.jsx';
+import {syncBookmarks} from '../bookmarks/bookmarks.js';
 import {launch} from './auth-modal.jsx';
 import { SUPPORTED_LANGUAGES } from '../../../config-public.js';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
@@ -34,8 +35,8 @@ export function logout() {
   }
 }
 
-export function launchAuthModal() {
-  launch('LOGIN');
+export function launchAuthModal({type, prompt}) {
+  return launch({type, prompt});
 }
 
 export function isAuthenticated() {
@@ -80,6 +81,8 @@ function onLoginSuccess(resp) {
   WiregooseApi.setCredentialGetter(() => jwt);
   const { session, user } = jwtDecode(jwt);
   createSession(jwt, user, session, SUPPORTED_LANGUAGES[0]);
+
+  return syncBookmarks();
 }
 
 function storeUser(user) {
