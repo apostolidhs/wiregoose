@@ -4,6 +4,7 @@ import { browserHistory } from 'react-router';
 import tr from '../localization/localization.js';
 import * as Auth from '../authorization/auth.js';
 import * as Notifications from '../notifications/notifications.jsx';
+import {isAdmin} from '../utilities/environment-detection.js';
 
 export default function ServerErrorsInterceptor (error, friendly = false) {
   const response = _.get(error, 'response', {});
@@ -11,8 +12,8 @@ export default function ServerErrorsInterceptor (error, friendly = false) {
 
   // authentication error
   if (status === 401) {
-    Auth.destroySession();
-    //browserHistory.push({ pathname: 'admin/auth/login' });
+    Auth.logout();
+    browserHistory.push({ pathname: isAdmin() ? 'admin/auth/login' : 'auth/login' });
 
     // rest authentication errors
   } else if (status >= 400 && status < 500) {

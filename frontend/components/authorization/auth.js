@@ -4,7 +4,7 @@ import jwtDecode from 'jwt-decode';
 import {publish} from '../events/events.jsx';
 import {syncBookmarks} from '../bookmarks/bookmarks.js';
 import {launch} from './auth-modal.jsx';
-import { SUPPORTED_LANGUAGES } from '../../../config-public.js';
+import { SUPPORTED_LANGUAGES, JWT_EXPIRATION_PERIOD} from '../../../config-public.js';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
 
 export function loginViaFacebook(accessToken) {
@@ -40,9 +40,8 @@ export function launchAuthModal({type, prompt}) {
 }
 
 export function isAuthenticated() {
-  // todo: check expiration
-  const { token } = getSession();
-  return !!token;
+  const { token, session } = getSession();
+  return !!token && (session.expiresAt > _.now());
 }
 
 export function isAdmin() {

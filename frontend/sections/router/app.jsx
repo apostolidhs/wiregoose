@@ -6,7 +6,7 @@ import Body from '../../components/body/body.jsx';
 import * as Notifications from '../../components/notifications/notifications.jsx';
 import tr from '../../components/localization/localization.js';
 import * as Auth from '../../components/authorization/auth.js';
-import {publish} from '../../components/events/events.jsx';
+import {publish, EventHOC} from '../../components/events/events.jsx';
 import { GOOGLE_TRACKING_ID, IS_DEV, APP_URL } from '../../../config-public.js';
 
 import Timeline from '../timeline/timeline.jsx';
@@ -30,7 +30,7 @@ if (!IS_DEV) {
   ReactGA.initialize(GOOGLE_TRACKING_ID);
 }
 
-export default class AppRouter extends React.Component {
+class AppRouter extends React.Component {
 
   onPageChange = () => {
     if (!IS_DEV) {
@@ -94,3 +94,5 @@ export default class AppRouter extends React.Component {
     );
   }
 }
+
+export default EventHOC(AppRouter, ['credentials']);
