@@ -12,9 +12,11 @@ export default function ServerErrorsInterceptor (error, friendly = false) {
 
   // authentication error
   if (status === 401) {
-    Auth.logout();
-    browserHistory.push({ pathname: isAdmin() ? 'admin/auth/login' : 'auth/login' });
-
+    const pathname = isAdmin() ? '/admin/auth/login' : '/auth/login';
+    if (location.pathname !== pathname) {
+      Auth.logout();
+      browserHistory.push({pathname});
+    }
     // rest authentication errors
   } else if (status >= 400 && status < 500) {
     if (friendly) {

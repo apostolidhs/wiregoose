@@ -44,6 +44,7 @@ KlarkModule(module, 'krkModelsUser', (
       'bookmarks'
     ]);
 
+    safeUser.totalBookmarks = _.size(userObj.bookmarks);
     safeUser.isEmailValid = !userObj.validationToken;
     safeUser.hasFacebookAccount = !!userObj.facebook;
     return safeUser;

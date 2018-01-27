@@ -26,6 +26,12 @@ export default class UserStatistics extends React.Component {
           </Col>
         </FormGroup>
         <FormGroup>
+          <Col componentClass={ControlLabel} sm={6}>Facebook Users</Col>
+          <Col sm={6}>
+            <FormControl.Static>{record.facebookUsers}</FormControl.Static>
+          </Col>
+        </FormGroup>
+        <FormGroup>
           <Col componentClass={ControlLabel} sm={6}>Pending Validation</Col>
           <Col sm={6}>
             <FormControl.Static>{record.pendingValidation}</FormControl.Static>

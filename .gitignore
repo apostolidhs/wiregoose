@@ -8,3 +8,5 @@
 /frontend/app/**/*.map
 /tmp
 /cache
+
+.DS_Store

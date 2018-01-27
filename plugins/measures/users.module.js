@@ -14,9 +14,11 @@ KlarkModule(module, 'measuresUsers', (
   function measure() {
     return Promise.all([
       totalUsers(),
-      pendingValidation()
+      pendingValidation(),
+      facebookUsers()
     ])
-    .then(([total, pendingValidation]) => ({total, pendingValidation}));
+    .then(([total, pendingValidation, facebookUsers]) =>
+      ({total, pendingValidation, facebookUsers}));
   }
 
   function totalUsers() {
@@ -25,6 +27,10 @@ KlarkModule(module, 'measuresUsers', (
 
   function pendingValidation() {
     return krkModelsUser.count({ validationToken: { $exists: true } });
+  }
+
+  function facebookUsers() {
+    return krkModelsUser.count({ facebook: { $exists: true } });
   }
 
 });

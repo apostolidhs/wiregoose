@@ -73,6 +73,8 @@ export default class ArticleForm extends React.Component {
           required: true
         }) }
 
+        { !isNew && FormFactory.createStaticText(record.totalBookmarks, 'Bookmarks') }
+
         { !record.isEmailValid && FormFactory.createInputDate({
           name: 'validationExpiresAt',
           label: 'Account expires',
