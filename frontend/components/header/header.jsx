@@ -72,7 +72,7 @@ class Header extends React.Component {
         <Navbar.Header>
           <Navbar.Brand>
             <Link to="/" styleName="logo">
-              <img src={logoImage} />
+              <img alt="Wiregoose" src={logoImage} />
               <span>Wiregoose</span>
             </Link>
           </Navbar.Brand>
@@ -93,7 +93,7 @@ class Header extends React.Component {
 
           {!Auth.isAuthenticated() && showLogin &&
             <NavItem eventKey={1} onSelect={Auth.launchAuthModal}>
-              login
+              {tr.signIn}
             </NavItem>
           }
 
@@ -165,7 +165,7 @@ class Header extends React.Component {
             }
             { Auth.isAuthenticated() &&
               <MenuItem onClick={this.logout}>
-                Logout
+                {tr.logout}
               </MenuItem>
             }
           </NavDropdown>

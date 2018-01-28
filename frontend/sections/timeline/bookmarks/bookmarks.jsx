@@ -15,6 +15,7 @@ import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 import BrowserLanguageDetection from '../../../components/utilities/browser-language-detection.js';
 import tr from '../../../components/localization/localization.js';
 import FontAwesome from 'react-fontawesome';
+import Offline from '../../../components/offline-mode/offline.jsx';
 
 export default class Bookmarks extends InfiniteScrollPage {
 
@@ -40,11 +41,16 @@ export default class Bookmarks extends InfiniteScrollPage {
       return Promise.resolve({data: { data: {} }});
     }
     const userId = getSession().user._id;
-    const request = WiregooseApi.timeline.bookmarks(userId)
-      .then(resp => {
-        this.timelineHasRetrieved = true;
-        return resp;
-      });
+    const request = WiregooseApi.timeline.bookmarks(userId, {
+        onOffline: () => {
+          if (!this.timelineHasRetrieved) {
+            this.setState({isOffline: true});
+          }
+        }
+    }).then(resp => {
+      this.timelineHasRetrieved = true;
+      return resp;
+    });
 
     this.refs.bookmarkLoad.promise = request;
 
@@ -84,13 +90,16 @@ export default class Bookmarks extends InfiniteScrollPage {
   }
 
   render() {
-    const {showBlankSlate} = this.state;
+    const {showBlankSlate, isOffline} = this.state;
     return (
       <div>
         {!showBlankSlate &&
           <Header>
             <h3>{tr.timelineBookmarksDescription}</h3>
           </Header>
+        }
+        {isOffline &&
+          <Offline />
         }
         {showBlankSlate &&
           this.renderBlankSlate()

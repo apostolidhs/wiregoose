@@ -6,7 +6,7 @@ import * as Auth from '../authorization/auth.js';
 import * as Notifications from '../notifications/notifications.jsx';
 import {isAdmin} from '../utilities/environment-detection.js';
 
-export default function ServerErrorsInterceptor (error, friendly = false) {
+export default function ServerErrorsInterceptor (error, handler) {
   const response = _.get(error, 'response', {});
   const status = (response && response.status) || -1;
 
@@ -19,7 +19,7 @@ export default function ServerErrorsInterceptor (error, friendly = false) {
     }
     // rest authentication errors
   } else if (status >= 400 && status < 500) {
-    if (friendly) {
+    if (handler) {
       Notifications.create.warning(tr.promptServerError400, {
         title: tr.promptServerError400Title
       });
@@ -30,7 +30,7 @@ export default function ServerErrorsInterceptor (error, friendly = false) {
     }
     // server errors
   } else if (status >= 500) {
-    if (friendly) {
+    if (handler) {
       browserHistory.push({ pathname: '/500' });
     } else {
       const msg = getStatusError(response);
@@ -39,9 +39,13 @@ export default function ServerErrorsInterceptor (error, friendly = false) {
 
     // requests that cannot be sent
   } else if (status === -1) {
-    Notifications.create.warning(tr.promptServerErrorNotConnected, {
-      title: tr.promptServerErrorNotConnectedTitle
-    });
+    if (handler && _.isObject(handler) && handler.onOffline) {
+      return handler.onOffline();
+    } else {
+      Notifications.create.warning(tr.promptServerErrorNotConnected, {
+        title: tr.promptServerErrorNotConnectedTitle
+      });
+    }
   }
 }
 

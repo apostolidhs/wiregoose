@@ -18,6 +18,7 @@ import InfiniteScrollPage from '../../../components/infinite-scroll/page.jsx';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 import BrowserLanguageDetection from '../../../components/utilities/browser-language-detection.js';
 import tr from '../../../components/localization/localization.js';
+import Offline from '../../../components/offline-mode/offline.jsx';
 import { CATEGORIES } from '../../../../config-public.js';
 
 @CSSModules(styles, {
@@ -27,6 +28,7 @@ export default class Category extends InfiniteScrollPage {
 
   static page = new TimelinePage();
 
+  state = {}
   timeline = undefined // ref
 
   componentDidMount() {
@@ -63,7 +65,13 @@ export default class Category extends InfiniteScrollPage {
     return WiregooseApi.timeline.category(
       Category.page.lastFeeds,
       BrowserLanguageDetection(),
-      true
+      {
+        onOffline: () => {
+          if (_.isEmpty(Category.page.virtualList)) {
+            this.setState({isOffline: true});
+          }
+        }
+      }
     );
   }
 
@@ -87,6 +95,9 @@ export default class Category extends InfiniteScrollPage {
         <Header onClose={() => this.props.router.push('/')}>
           <CategoryTag name={this.props.routeParams.id} />
         </Header>
+        {this.state.isOffline &&
+          <Offline />
+        }
         <Timeline ref={(ref) => this.timeline = ref} hideCategory={true} />
       </div>
     );

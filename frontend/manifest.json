@@ -1,0 +1,30 @@
+{
+  "name": "Wiregoose",
+  "short_name": "Wiregoose",
+  "description": "Explore the latest news",
+  "icons": [{
+    "src": "public/assets/img/logo-170-nologo.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }, {
+      "src": "public/assets/img/logo-170-nologo.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }, {
+      "src": "public/assets/img/logo-170-nologo.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    }, {
+      "src": "public/assets/img/logo-170-nologo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }, {
+      "src": "public/assets/img/logo-170-nologo.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#eeeeee"
+}

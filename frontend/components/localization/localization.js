@@ -37,6 +37,10 @@ const strings = new LocalizedStrings({
     promptServerErrorNotConnected: 'Check your internet connectivity and try again',
     promptServerErrorNotConnectedTitle: 'Not connected',
 
+    offlineModeTitle: 'It seems that you have not internet connection',
+    offlineModeDescription: 'Don\'t worry, you can still explore some news',
+    offlineModeCta: 'Continue reading some stored articles',
+
     loadingMore: 'Loading More...',
     loadingArticle: 'Loading Article...',
 
@@ -48,6 +52,7 @@ const strings = new LocalizedStrings({
     exploreNews: 'Explore News',
     explore: 'Explore',
 
+    refresh: 'refresh',
     or: 'or',
     by: 'by',
     close: 'close',
@@ -122,6 +127,7 @@ const strings = new LocalizedStrings({
     validateUserAccount: 'To validate your account, we have sent you an email. Click the link in your email',
     validateUserAccountSuccess: 'Your account has validated',
 
+    logout: 'logout',
     signIn: 'Sign in',
     signUp: 'Sign up',
     loginViaFacebook: 'Sign in with Facebook',
@@ -170,6 +176,10 @@ const strings = new LocalizedStrings({
     promptServerErrorNotConnected: 'Ελέγξτε την σύνδεση σας και προσπαθήστε ξανά',
     promptServerErrorNotConnectedTitle: 'Δεν υπάρχει σύνδεση',
 
+    offlineModeTitle: 'Δεν υπάρχει σύνδεση στο internet',
+    offlineModeDescription: 'Όλα καλά, συνεχίσετε να διαβάζεται αποθηκευμένα άρθρα',
+    offlineModeCta: 'Συνεχίσετε να διαβάζεται αποθηκευμένα άρθρα',
+
     loadingMore: 'Φόρτωση...',
     loadingArticle: 'Φόρτωση Άρθρου...',
 
@@ -181,6 +191,7 @@ const strings = new LocalizedStrings({
     exploreNews: 'Πλοηγήσου στα Νέα',
     explore: 'Πλοηγήσου',
 
+    refresh: 'ανανεώστε',
     or: 'ή',
     by: 'από',
     close: 'κλείσιμο',
@@ -255,6 +266,7 @@ const strings = new LocalizedStrings({
     validateUserAccount: 'Για να επαληθεύσετε τον λογαριασμό σας, σας έχουμε στείλει ένα email. Κάντε κλικ στο σύνδεσμο που υπάρχει στο email',
     validateUserAccountSuccess: 'Ο λογαριασμός σας έχει επικυρωθεί',
 
+    logout: 'Αποσύνδεση',
     signIn: 'Είσοδος',
     signUp: 'Εγγραφή',
     loginViaFacebook: 'Είσοδος μέσω Facebook',
