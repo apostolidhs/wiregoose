@@ -4,10 +4,10 @@ import {getItem, setItem} from '../services/cache.js';
 const KEY = 'exploreTimeline';
 
 export function createResponseHandler() {
-  let cache = [];
+  const cache = [];
   return resp => {
     if (cache.length > 2) {
-      return;
+      return Promise.resolve(resp);
     }
     cache.push(resp.data);
     return setItem(KEY, cache)

@@ -259,14 +259,16 @@ function createWebpackConfig(name, entryName, outputName) {
     );
   }
 
-  plugins.push(new OfflinePlugin({
-    ServiceWorker: {
-      events: true
-    },
-    AppCache: {
-      events: true
-    }
-  }));
+  if (name === 'index') {
+    plugins.push(new OfflinePlugin({
+      ServiceWorker: {
+        events: true
+      },
+      AppCache: {
+        events: true
+      }
+    }));
+  }
 
   return {
     name: name,
