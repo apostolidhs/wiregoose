@@ -13,11 +13,11 @@ export default class GoogleAdvBox extends React.Component {
     return (
       <article styleName="article article-full" className="panel panel-default text-center">
         <ins className="adsbygoogle"
-          style={{display: 'block'}}
+          style={{display:'block'}}
           data-ad-format="fluid"
-          data-ad-layout-key="-8j+1w-dx+ec+gk"
+          data-ad-layout-key="-7b+3r-rg-5y+2o8"
           data-ad-client="ca-pub-3571483150053473"
-          data-ad-slot="9953314902">
+          data-ad-slot="9143901045">
         </ins>
       </article>
     );

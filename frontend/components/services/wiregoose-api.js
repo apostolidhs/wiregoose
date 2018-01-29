@@ -27,9 +27,9 @@ axios.interceptors.response.use(function (response) {
     // Do something with response data
     return response;
   }, function (error) {
-    ServerErrorInterceptor(error, !!error.config.friendlyErrorInterceptor);
+    const promise = ServerErrorInterceptor(error, error.config.friendlyErrorInterceptor);
     // Do something with response error
-    return Promise.reject(error);
+    return promise || Promise.reject(error);
   });
 
 let credentialGetter = _.noop;
@@ -228,7 +228,7 @@ export function entryRelated(entryId) {
   });
 }
 
-function bookmarksRetrieveAllIds(userId, {populate = false} = {}) {
+function bookmarksRetrieveAllIds(userId, {populate = false, friendlyErrorInterceptor = true} = {}) {
   const q = populate ? '?populate=true' : '';
   return httpRequest({
     method: 'get',
@@ -237,7 +237,7 @@ function bookmarksRetrieveAllIds(userId, {populate = false} = {}) {
       'Content-Type': 'application/json',
       authorization: credentialGetter(),
     },
-    friendlyErrorInterceptor: true
+    friendlyErrorInterceptor
   });
 }
 
@@ -281,8 +281,8 @@ function timelineRegistration(registration, lang, friendlyErrorInterceptor = fal
   return getTimeline('registration', registration, lang, friendlyErrorInterceptor);
 }
 
-function timelineBookmarks(userId) {
-  return bookmarksRetrieveAllIds(userId, {populate: true})
+function timelineBookmarks(userId, friendlyErrorInterceptor) {
+  return bookmarksRetrieveAllIds(userId, {populate: true, friendlyErrorInterceptor})
     .then(resp => {
       resp.data.data.bookmarks = _.map(resp.data.data.bookmarks, ArticleBoxResponseTransformation);
       return resp;

@@ -10,9 +10,12 @@ import TimelinePage from '../../../components/timeline/page.js';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 import BrowserLanguageDetection from '../../../components/utilities/browser-language-detection.js';
 import tr from '../../../components/localization/localization.js';
+import Offline from '../../../components/offline-mode/offline.jsx';
 
 export default class Provider extends InfiniteScrollPage {
   static page = new TimelinePage();
+
+  state = {}
 
   componentDidMount() {
     const provider = this.props.routeParams.id;
@@ -37,7 +40,13 @@ export default class Provider extends InfiniteScrollPage {
     return WiregooseApi.timeline.provider(
       Provider.page.lastFeeds,
       BrowserLanguageDetection(),
-      true
+      {
+        onOffline: () => {
+          if (_.isEmpty(Provider.page.virtualList)) {
+            this.setState({isOffline: true});
+          }
+        }
+      }
     );
   }
 
@@ -60,6 +69,9 @@ export default class Provider extends InfiniteScrollPage {
         <Header onClose={() => this.props.router.push('/')}>
           <ProviderTag name={this.props.routeParams.id} />
         </Header>
+        {this.state.isOffline &&
+          <Offline />
+        }
         <Timeline ref={(ref) => this.timeline = ref} hideProvider={true} />
       </div>
     );

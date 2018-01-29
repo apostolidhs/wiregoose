@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import { Form, FormGroup, Col, FormControl, ControlLabel, Button, HelpBlock }
   from 'react-bootstrap';
+import {isMobile} from '../utilities/environment-detection.js';
 
 import tr from '../localization/localization.js';
 
@@ -77,7 +78,7 @@ export default class CredentialForm extends React.Component {
           placeholder="Email"
           className="w-minimal"
           onChange={this.onValueChanged}
-          autoFocus
+          autoFocus={!isMobile()}
           required
         />
         {errors.email &&

@@ -9,6 +9,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const OfflinePlugin = require('offline-plugin');
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isProduction = nodeEnv === 'production';
@@ -28,7 +29,10 @@ function createWebpackConfig(name, entryName, outputName) {
   // Common plugins
   const plugins = [
     new CleanWebpackPlugin([buildPath + '/*.js*', buildPath + '/*.css*', buildPath + '/*.html*']),
-    new CopyWebpackPlugin([{from: imgPath + '/logo.ico', to: buildPath + '/logo.ico'}]),
+    new CopyWebpackPlugin([
+      {from: imgPath + '/logo.ico', to: buildPath + '/logo.ico'},
+      {from: jsSourcePath + '/manifest.json', to: buildPath + '/manifest.json'}
+    ]),
     //new SpritePlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
@@ -48,6 +52,15 @@ function createWebpackConfig(name, entryName, outputName) {
       template: path.join(sourcePath, 'index.html'),
       path: buildPath,
       filename: name + '.html',
+      minify: {
+        minifyCSS: true,
+        minifyJS: true,
+        collapseWhitespace: true,
+        collapseInlineTagWhitespace: true,
+        preserveLineBreaks: false,
+        removeAttributeQuotes: true,
+        removeComments: true
+      }
     }),
     new webpack.LoaderOptionsPlugin({
       options: {
@@ -61,7 +74,7 @@ function createWebpackConfig(name, entryName, outputName) {
         ],
         context: sourcePath,
       },
-    }),
+    })
   ];
 
   // Common rules
@@ -244,6 +257,17 @@ function createWebpackConfig(name, entryName, outputName) {
         ]
       }
     );
+  }
+
+  if (name === 'index') {
+    plugins.push(new OfflinePlugin({
+      ServiceWorker: {
+        events: true
+      },
+      AppCache: {
+        events: true
+      }
+    }));
   }
 
   return {

@@ -10,6 +10,7 @@ import { publish } from '../../components/events/events.jsx';
 import ArticleComponent from '../../components/article/article.jsx';
 import { getIdFromLink } from '../../components/utilities/text-utilities.js';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
+import Offline from '../../components/offline-mode/offline.jsx';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -19,7 +20,8 @@ export default class Article extends React.Component {
   state = {
     article: undefined,
     isLoading: false,
-    relatedEntries: undefined
+    relatedEntries: undefined,
+    isOffline: false
   }
 
   componentDidMount() {
@@ -38,21 +40,25 @@ export default class Article extends React.Component {
       article: undefined,
       relatedEntries: undefined
     });
-    WiregooseApi.fetchArticle(entryId, true)
-      .then(resp => {
-        const {article, relatedEntries} = resp.data.data;
-        if (!article) {
-          browserHistory.replace('/401');
-          return;
-        }
+    WiregooseApi.fetchArticle(entryId, true, {
+      onOffline: () => {
+        this.setState({isOffline: true});
+      }
+    })
+    .then(resp => {
+      const {article, relatedEntries} = resp.data.data;
+      if (!article) {
+        browserHistory.replace('/401');
+        return;
+      }
 
-        this.setState({
-          article,
-          relatedEntries,
-          isLoading: false
-        }, this.handleMetaData);
-      })
-      .catch(() => this.setState({ isLoading: false }));
+      this.setState({
+        article,
+        relatedEntries,
+        isLoading: false
+      }, this.handleMetaData);
+    })
+    .catch(() => this.setState({ isLoading: false }));
   }
 
   handleMetaData = () => {
@@ -71,10 +77,13 @@ export default class Article extends React.Component {
     const {
       article,
       isLoading,
-      relatedEntries
+      relatedEntries,
+      isOffline
     } = this.state;
 
-    if (isLoading || article) {
+    if (isOffline) {
+      return <Offline />;
+    } else if (isLoading || article) {
       return (
         <ArticleComponent
           article={article}

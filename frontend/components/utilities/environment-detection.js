@@ -12,3 +12,7 @@ export function getApiUrl() {
 export function isAdmin() {
   return location.pathname.startsWith('/admin');
 }
+
+export function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
