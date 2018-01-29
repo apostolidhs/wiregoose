@@ -92,7 +92,7 @@ export default class Article extends React.Component {
         data-ad-layout="in-article"
         data-ad-format="fluid"
         data-ad-client="ca-pub-3571483150053473"
-        data-ad-slot="7904245373">
+        data-ad-slot="9172176420">
       </ins>`
     );
   }
