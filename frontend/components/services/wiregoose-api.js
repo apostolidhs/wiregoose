@@ -9,6 +9,7 @@ import ArticleBoxResponseTransformation from '../article-box/response-transforma
 import ServerErrorInterceptor from './server-error-interceptor.js';
 
 const API_ORIGIN = getApiUrl();
+const responsesCache = {};
 
 // add this to set timeout
 //  .then(resp => new Promise(r => setTimeout(() => r(resp), 4000000000000)));
@@ -357,16 +358,19 @@ function fetchRssRegistrations() {
   });
 }
 
-function registrationFetches(lang) {
-  return httpRequest({
-    method: 'get',
-    url: `${API_ORIGIN}rssFeed/registrationFetches`,
-    params: {lang},
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: credentialGetter(),
-    },
-  });
+function registrationFetches(lang, {cache}) {
+  const key = `registrationFetches-${lang}`;
+  return responsesCache[key] || (responsesCache[key] =
+    httpRequest({
+      method: 'get',
+      url: `${API_ORIGIN}rssFeed/registrationFetches`,
+      params: {lang},
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: credentialGetter(),
+      },
+    })
+  );
 }
 
 function create(modelName, params) {

@@ -28,7 +28,7 @@ export default class ContentSelector extends React.Component {
 
   componentDidMount() {
     const lang = BrowserLanguageDetection();
-    this.refs.registrationFetches.promise = WiregooseApi.rssFeed.registrationFetches(lang)
+    this.refs.registrationFetches.promise = WiregooseApi.rssFeed.registrationFetches(lang, {cache: true})
       .then(resp => {
         const categoriesPerProviders = _.mapValues(
           resp.data.data, regs => _.uniqBy(regs, reg => reg.category)
