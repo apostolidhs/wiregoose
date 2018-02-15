@@ -45,7 +45,8 @@ export const crud = {
 
 export const rssFeed = {
   fetchRssFeed,
-  fetchRssRegistrations
+  fetchRssRegistrations,
+  registrationFetches
 }
 
 export const timeline = {
@@ -349,6 +350,18 @@ function fetchRssRegistrations() {
   return httpRequest({
     method: 'post',
     url: `${API_ORIGIN}rssFeed/fetchRegistrations`,
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+  });
+}
+
+function registrationFetches(lang) {
+  return httpRequest({
+    method: 'get',
+    url: `${API_ORIGIN}rssFeed/registrationFetches`,
+    params: {lang},
     headers: {
       'Content-Type': 'application/json',
       authorization: credentialGetter(),

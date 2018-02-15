@@ -14,6 +14,8 @@ import * as Events from '../events/events.jsx';
 import * as Auth from '../authorization/auth.js';
 import BrowserLanguageDetection from '../utilities/browser-language-detection.js';
 import UserAvatar from '../user/avatar.jsx';
+import componentSize from '../responsible/component-size.js';
+import {launch as launchContentSelectorModal} from '../content-selector/content-selector-modal.jsx';
 
 import logoImage from '../../assets/img/logo.png';
 
@@ -23,17 +25,29 @@ import logoImage from '../../assets/img/logo.png';
 class Header extends React.Component {
   state = {
     lang: SUPPORTED_LANGUAGES[0],
-    showLogin: true
+    showLogin: true,
+    categoriesButton: false
   }
 
   componentWillMount() {
     Events.subscribe('language', this.updateLanguageState);
+    window.addEventListener('resize', this.onResize);
     this.shouldDisplayLogin();
+    this.onResize();
   }
 
   componentWillUnmount() {
     Events.unsubscribe('language', this.updateLanguageState);
+    window.removeEventListener('resize', this.onResize);
   }
+
+  onResize = _.throttle(() => {
+    const displayCategoriesButton = componentSize.sizeFormatter({
+      xxs: true,
+      xs: true,
+    }, false)(window.innerWidth);
+    this.setState({displayCategoriesButton});
+  }, 200)
 
   shouldDisplayLogin() {
     const {pathname} = browserHistory.getCurrentLocation();
@@ -69,6 +83,15 @@ class Header extends React.Component {
 
     return (
       <Navbar collapseOnSelect fixedTop styleName="navbar">
+
+        {this.state.displayCategoriesButton &&
+          <Nav className="navigation-menu" pullLeft>
+            <NavItem styleName="header-categories-button" eventKey={1} onSelect={launchContentSelectorModal}>
+              <FontAwesome name="bars" />
+            </NavItem>
+          </Nav>
+        }
+
         <Navbar.Header>
           <Navbar.Brand>
             <Link to="/" styleName="logo">
@@ -101,7 +124,7 @@ class Header extends React.Component {
             eventKey={4}
             title={Auth.isAuthenticated()
               ? <UserAvatar type="HEADER" isUser />
-              : <FontAwesome name="bars" />
+              : <FontAwesome name="ellipsis-v" />
             }
             id="w-menu-settings"
             noCaret

@@ -5,6 +5,7 @@ import CSSModules from 'react-css-modules';
 
 import styles from './tag.less';
 import { createLink } from '../utilities/text-utilities.js';
+import tr from '../localization/localization.js';
 
 @CSSModules(styles, {
   allowMultiple: true
@@ -31,9 +32,9 @@ export default class Tag extends React.Component {
         className="btn btn-default"
         styleName="tag"
         role="button"
-        title={`${provider} ${category}`} >
-        <p>{ provider }</p>
-        <small className="text-muted">{ category }</small>
+        title={`${_.capitalize(provider)} ${tr.trFa('category')}`} >
+        <p>{ _.capitalize(provider) }</p>
+        <small className="text-muted">{ tr[category] }</small>
       </Link>
     );
   }

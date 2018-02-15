@@ -13,23 +13,28 @@ import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 import BrowserLanguageDetection from '../../../components/utilities/browser-language-detection.js';
 import tr from '../../../components/localization/localization.js';
 import Offline from '../../../components/offline-mode/offline.jsx';
+import withReload from '../../../components/utilities/reload-hoc.jsx';
 
-export default class Registration extends InfiniteScrollPage {
+class Registration extends InfiniteScrollPage {
 
-  static page = new TimelinePage();
+  static page = new TimelinePage({hideProvider: true, hideCategory: true});
 
   state = {
     registration: undefined
   }
 
   componentDidMount() {
-    const link = this.props.routeParams.id;
-    const registration = getRegistrationFromLink(link);
+    const registration = getRegistrationFromLink(this.props.routeParams.id);
     if (!registration) {
       browserHistory.replace('/401');
       return;
     }
-    this.setState({ registration }, () => {
+
+    if (Registration.page.lastFeeds && Registration.page.lastFeeds[registration._id] === undefined) {
+      Registration.page.invalidateCache();
+    }
+
+    this.setState({registration}, () => {
       Registration.page.componentDidMount(this);
       super.componentDidMount();
     });
@@ -42,8 +47,7 @@ export default class Registration extends InfiniteScrollPage {
 
   retrieveTimeline = () => {
     if (!Registration.page.lastFeeds) {
-      const registration = this.state.registration._id;
-      Registration.page.lastFeeds = { [registration]: _.now() };
+      Registration.page.lastFeeds = { [this.state.registration._id]: _.now() };
     }
     return WiregooseApi.timeline.registration(
       Registration.page.lastFeeds,
@@ -74,20 +78,21 @@ export default class Registration extends InfiniteScrollPage {
   }
 
   render() {
-    const { registration } = this.state;
     return (
       <div>
         <Header onClose={() => this.props.router.push('/')}>
-          { registration &&
-            <RegistrationTag registration={registration} />
+          { this.state.registration &&
+            <RegistrationTag registration={this.state.registration} />
           }
         </Header>
         {this.state.isOffline &&
           <Offline />
         }
-        <Timeline ref={(ref) => this.timeline = ref} hideProvider={true} hideCategory={true} />
+        <Timeline ref={(ref) => this.timeline = ref} />
       </div>
     );
   }
 
 }
+
+export default withReload(Registration);

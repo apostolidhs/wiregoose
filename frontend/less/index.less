@@ -5,6 +5,7 @@
 @import './about-reader.less';
 @import './navbar.less';
 @import './forms.less';
+@import './categories.less';
 
 @border-radius-base:        0px;
 @border-radius-large:       0px;
@@ -63,10 +64,6 @@
   vertical-align: top;
 }
 
-body {
-  padding-top: 50px;
-}
-
 .container {
   overflow-x: hidden;
 }
@@ -75,7 +72,14 @@ body {
   padding: 5px 20px;
 }
 
+body {
+  padding-top: 95px;
+}
+
 @media (max-width: @screen-xs-max) {
+  body {
+    padding-top: 40px;
+  }
   .container {
     padding-left: 0;
     padding-right: 0;

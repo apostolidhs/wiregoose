@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router';
 
 import componentSize from '../../components/responsible/component-size.js';
+import {generateFeedsLayout} from './fead-layout-generator.js';
 
 export default class Page {
   static TIMELINE_PADDING = 15;
@@ -19,6 +20,10 @@ export default class Page {
   columnsPerRow = 0;
   lastScrollTop = 0;
   advertiseElements = {};
+
+  constructor({hideCategory = false, hideProvider = false} = {}) {
+    this.feedGeneratorOptions = {hideCategory, hideProvider};
+  }
 
   componentDidMount(component) {
     this.targetComponent = component;
@@ -168,7 +173,7 @@ export default class Page {
         this.targetComponent.setState({showBlankSlate: true});
       }
     } else {
-      const feedElements = this.targetComponent.timeline.createElements(feeds);
+      const feedElements = generateFeedsLayout(feeds, this.feedGeneratorOptions);
       _.each(feedElements, feedElement => {
         this.calculateArticleBoxPosition(feedElement, this.virtualList.length);
         this.virtualList.push(feedElement);

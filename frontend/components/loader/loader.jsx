@@ -63,16 +63,13 @@ export default class Loader extends React.Component {
   }
 
   render() {
-    const {
-      children,
-      title,
-      ...props
-    } = this.props;
+    const {children, title, ...props} = this.props;
+    const {isLoading} = this.state;
 
     return (
-      <div styleName="wrapper" {...props}>
+      <div styleName={`wrapper ${isLoading ? '' : 'has-load'}`} {...props}>
         {children}
-        {this.state.isLoading &&
+        {isLoading &&
           <div styleName="loader">
             <div styleName="loader backdrop"></div>
             <div styleName="loader message-wrapper">

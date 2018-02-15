@@ -123,5 +123,4 @@ export default class Explore extends InfiniteScrollPage {
       </div>
     );
   }
-
 }

@@ -51,16 +51,7 @@ function createWebpackConfig(name, entryName, outputName) {
     new HtmlWebpackPlugin({
       template: path.join(sourcePath, 'index.html'),
       path: buildPath,
-      filename: name + '.html',
-      minify: {
-        minifyCSS: true,
-        minifyJS: true,
-        collapseWhitespace: true,
-        collapseInlineTagWhitespace: true,
-        preserveLineBreaks: false,
-        removeAttributeQuotes: true,
-        removeComments: true
-      }
+      filename: name + '.html'
     }),
     new webpack.LoaderOptionsPlugin({
       options: {

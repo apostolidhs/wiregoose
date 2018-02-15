@@ -60,18 +60,20 @@ export default class Article extends React.Component {
   }
 
   createAdvertiseIfIsPossible = (content) => {
-    const pEls = content.getElementsByTagName('p');
-    const totalP = pEls.length;
-    if (totalP > 2  && !window.wgLazyAddBlockerDetected) {
-      const targetEl = pEls[Math.round(totalP * 0.7)];
-      const pAdvEl = document.createElement('div');
-      pAdvEl.style.padding = '10px 0';
-      pAdvEl.innerHTML = this.getParagraphAdv();
-      targetEl.parentElement.insertBefore(pAdvEl, targetEl);
-      setTimeout(() => {
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      }, 0);
-    }
+    setTimeout(() => {
+      const pEls = content.getElementsByTagName('p');
+      const totalP = pEls.length;
+      if (totalP > 2  && !window.wgLazyAddBlockerDetected) {
+        const targetEl = pEls[Math.round(totalP * 0.7)];
+        const pAdvEl = document.createElement('div');
+        pAdvEl.style.padding = '10px 0';
+        pAdvEl.innerHTML = this.getParagraphAdv();
+        targetEl.parentElement.insertBefore(pAdvEl, targetEl);
+        setTimeout(() => {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }, 0);
+      }
+    }, 500);
   }
 
   goBack = () => {

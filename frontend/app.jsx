@@ -45,7 +45,7 @@ if (Auth.isAuthenticated()) {
   authorizationPromise = Promise.resolve()
     .then(() => syncBookmarks());
 } else if (Auth.hasFacebookAccount()) {
-  authorizationPromise = Auth.loginIfHasPermissions();
+  authorizationPromise = Facebook.loginIfHasPermissions();
 } else {
   authorizationPromise = Promise.resolve();
 }

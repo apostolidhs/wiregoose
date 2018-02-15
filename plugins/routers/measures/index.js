@@ -59,8 +59,7 @@ KlarkModule(module, 'routesMeasures', (
   }
 
   function middlewareFetcherController(req, res, next) {
-    const days = res.locals.params.days;
-    const lang = res.locals.params.lang;
+    const {days, lang} = res.locals.params;
     measuresSucceededFetchesPerPeriod.measure(days, lang)
       .then(data => res.locals.data = data)
       .then(() => next())
@@ -85,7 +84,7 @@ KlarkModule(module, 'routesMeasures', (
   }
 
   function middlewareRegistrationFetchesController(req, res, next) {
-    measuresRssRegistrationsFetches.measure()
+    measuresRssRegistrationsFetches.getCachedMeasures()
       .then(data => res.locals.data = data)
       .then(() => next())
       .catch(reason => {

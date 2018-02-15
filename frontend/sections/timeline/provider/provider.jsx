@@ -11,9 +11,10 @@ import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 import BrowserLanguageDetection from '../../../components/utilities/browser-language-detection.js';
 import tr from '../../../components/localization/localization.js';
 import Offline from '../../../components/offline-mode/offline.jsx';
+import withReload from '../../../components/utilities/reload-hoc.jsx';
 
-export default class Provider extends InfiniteScrollPage {
-  static page = new TimelinePage();
+class Provider extends InfiniteScrollPage {
+  static page = new TimelinePage({hideProvider: true});
 
   state = {}
 
@@ -72,8 +73,10 @@ export default class Provider extends InfiniteScrollPage {
         {this.state.isOffline &&
           <Offline />
         }
-        <Timeline ref={(ref) => this.timeline = ref} hideProvider={true} />
+        <Timeline ref={(ref) => this.timeline = ref} />
       </div>
     );
   }
 }
+
+export default withReload(Provider);

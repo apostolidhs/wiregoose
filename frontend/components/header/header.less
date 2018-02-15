@@ -5,15 +5,30 @@
     .container {
       overflow-x: initial;
     }
+    .navbar-left {
+      left: 0;
+      right: initial;
+    }
   }
 }
 .logo {
+  @media (max-width: @screen-xs-max) {
+    margin-left: 28px;
+  }
   img {
     display: inline-block;
   }
   span {
     vertical-align: middle;
     color: @gray-dark;
+  }
+}
+.header-categories-button {
+  font-size: 28px;
+  :global {
+    a {
+      padding: 8px 15px !important;
+    }
   }
 }
 .profile-item {

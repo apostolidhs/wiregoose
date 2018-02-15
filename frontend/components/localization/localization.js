@@ -100,7 +100,10 @@ const strings = new LocalizedStrings({
     Media: 'Media',
 
     category: 'category',
+    categories: 'Categories',
     provider: 'provider',
+    providers: 'Providers',
+    categoriesPerProvider: 'Categories per Provider',
 
     timelineExploreDescription: 'Explore the latest news',
     timelineExploreKeywords: 'Explore',
@@ -239,7 +242,10 @@ const strings = new LocalizedStrings({
     Media: 'Media',
 
     category: 'κατηγορία',
+    categories: 'Κατηγορίες',
     provider: 'πάροχος',
+    providers: 'Πάροχοι',
+    categoriesPerProvider: 'Κατηγορίες ανα Πάροχο',
 
     timelineExploreDescription: 'Πλοηγήσου στα πιο πρόσφατα νέα',
     timelineExploreKeywords: 'Πλοηγήσου',

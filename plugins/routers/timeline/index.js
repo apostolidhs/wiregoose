@@ -148,7 +148,7 @@ KlarkModule(module, 'routesTimeline', (
         return {
           latest,
           fieldName: 'registration',
-          fieldValue: key
+          fieldValue: new $mongoose.Types.ObjectId(key)
         };
       })
       .filter(timeline => timeline && timeline.latest !== undefined)

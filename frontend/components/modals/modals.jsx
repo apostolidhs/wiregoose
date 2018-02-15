@@ -7,12 +7,14 @@ import styles from './modals.less';
 
 let modalInstance;
 
-export function attachModal(modalComponent, {closable} = {}) {
+export function attachModal(modalComponent, {closable, modalProps, outsideClick} = {}) {
   return new Promise((resolve, reject) => {
     modalInstance.setState({
       modalComponent,
       closable,
-      onClose: resolve
+      onClose: resolve,
+      modalProps,
+      outsideClick
     });
   });
 }
@@ -33,7 +35,9 @@ function resetState() {
   modalInstance.setState({
     modalComponent: null,
     closable: false,
-    onClose: _.noop
+    onClose: _.noop,
+    modalProps: {},
+    outsideClick: false
   });
 }
 
@@ -49,18 +53,37 @@ export default class Modals extends React.Component {
     modalInstance = this;
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('click', this.onGlobalClick);
+  }
+
+  componentDidUpdate() {
+    const isOpen = !!this.state.modalComponent;
+    if (isOpen && this.state.outsideClick) {
+      document.addEventListener('click', this.onGlobalClick);
+    } else if (!isOpen) {
+      document.removeEventListener('click', this.onGlobalClick);
+    }
+  }
+
+  onGlobalClick = evt => {
+    if (!document.querySelector('.modal-content').contains(evt.target)) {
+      this.onClose();
+    }
+  }
+
   onClose = () => {
     this.state.onClose();
     resetState();
   }
 
   render() {
-    const {modalComponent, closable} = this.state;
+    const {modalComponent, closable, modalProps} = this.state;
     if (!modalComponent) {
       return null;
     }
     return (
-      <Modal show={true}>
+      <Modal ref={e => this.modelEl = e} show={true} {...(modalProps || {})} >
         {closable &&
           <button type="button" className="close" styleName="close" onClick={this.onClose}>
             <span aria-hidden="true">×</span>

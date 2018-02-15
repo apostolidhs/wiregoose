@@ -44,7 +44,8 @@ KlarkModule(module, 'app', (
   routesAuthorization,
   routesBookmarks,
   parameterValidatorsCustomExpressValidators,
-  render
+  render,
+  measuresRssRegistrationsFetches
 ) => {
 
   return {
@@ -99,6 +100,11 @@ KlarkModule(module, 'app', (
     const adminPagePath = $path.resolve(__dirname, '../../', 'public', 'admin.html');
     const indexPagePath = $path.resolve(__dirname, '../../', 'public', 'index.html');
     const middlewarePreRender = render.createMiddlewareCachedPreRender(indexPagePath);
+
+    if (config.VALIDATION_GOOGLE_FILE) {
+      const googlePagePath = $path.resolve(__dirname, '../../', 'public', config.VALIDATION_GOOGLE_FILE);
+      app.get(`/${config.VALIDATION_GOOGLE_FILE}`, (req, res) => res.sendFile(googlePagePath));
+    }
 
     app.get('/admin', (req, res) => res.sendFile(adminPagePath));
     app.get('/', middlewarePreRender);
@@ -162,6 +168,7 @@ KlarkModule(module, 'app', (
       rssRegistrationsFetcher.startPeriodicalFetchProcess();
     }
     proxy.startPeriodicalCacheInvalidation();
+    measuresRssRegistrationsFetches.startPeriodicalMeasureCaching();
   }
 
   function allowCrossDomain(req, res, next) {

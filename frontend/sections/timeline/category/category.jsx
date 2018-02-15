@@ -20,13 +20,16 @@ import BrowserLanguageDetection from '../../../components/utilities/browser-lang
 import tr from '../../../components/localization/localization.js';
 import Offline from '../../../components/offline-mode/offline.jsx';
 import { CATEGORIES } from '../../../../config-public.js';
+import withReload from '../../../components/utilities/reload-hoc.jsx';
 
 @CSSModules(styles, {
   allowMultiple: true,
 })
-export default class Category extends InfiniteScrollPage {
+class Category extends InfiniteScrollPage {
 
-  static page = new TimelinePage();
+  static page = new TimelinePage({
+    hideCategory: true
+  });
 
   state = {}
   timeline = undefined // ref
@@ -98,8 +101,10 @@ export default class Category extends InfiniteScrollPage {
         {this.state.isOffline &&
           <Offline />
         }
-        <Timeline ref={(ref) => this.timeline = ref} hideCategory={true} />
+        <Timeline ref={(ref) => this.timeline = ref} />
       </div>
     );
   }
 }
+
+export default withReload(Category);
