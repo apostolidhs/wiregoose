@@ -361,11 +361,15 @@ function fetchRssRegistrations() {
 function registrationFetches(lang, {cache}) {
   const key = `registrationFetches-${lang}`;
 
-  return localCache.getItem(key, {
-    maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
-    fetchOnMiss,
-    fetchOldOnError: true
-  });
+  if (cache) {
+    return localCache.getItem(key, {
+      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+      fetchOnMiss,
+      fetchOldOnError: true
+    });
+  } else {
+    return fetchOnMiss();
+  }
 
   function fetchOnMiss() {
     return httpRequest({
