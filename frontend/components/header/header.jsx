@@ -42,11 +42,11 @@ class Header extends React.Component {
   }
 
   onResize = _.throttle(() => {
-    const displayCategoriesButton = componentSize.sizeFormatter({
+    const displayMobile = componentSize.sizeFormatter({
       xxs: true,
       xs: true,
     }, false)(window.innerWidth);
-    this.setState({displayCategoriesButton});
+    this.setState({displayMobile});
   }, 200)
 
   shouldDisplayLogin() {
@@ -79,12 +79,13 @@ class Header extends React.Component {
   render() {
     const currentLanguage = BrowserLanguageDetection();
     const otherLanguages = _.without(SUPPORTED_LANGUAGES, currentLanguage);
+    const nextLang = otherLanguages[0]; // only en, gr :)
     const {showLogin} = this.state;
 
     return (
       <Navbar collapseOnSelect fixedTop styleName="navbar">
 
-        {this.state.displayCategoriesButton &&
+        {this.state.displayMobile &&
           <Nav className="navigation-menu" pullLeft>
             <NavItem styleName="header-categories-button" eventKey={1} onSelect={launchContentSelectorModal}>
               <FontAwesome name="bars" />
@@ -102,17 +103,6 @@ class Header extends React.Component {
         </Navbar.Header>
 
         <Nav className="navigation-menu" pullRight>
-          <NavDropdown
-            onSelect={this.changeLanguage}
-            eventKey={3}
-            title={currentLanguage}
-            id="w-menu-language"
-            noCaret
-          >
-          {_.map(otherLanguages, lang => (
-            <MenuItem eventKey={lang} key={lang} >{lang}</MenuItem>
-          ))}
-          </NavDropdown>
 
           {!Auth.isAuthenticated() && showLogin &&
             <NavItem eventKey={1} onSelect={Auth.launchAuthModal}>
@@ -129,7 +119,6 @@ class Header extends React.Component {
             id="w-menu-settings"
             noCaret
           >
-          {/* <LinkContainer to="/profile"> */}
             { Auth.isAuthenticated() &&
               <MenuItem styleName="profile-item">
                 <UserAvatar type="HEADER_DROPDOWN" isUser />
@@ -144,6 +133,7 @@ class Header extends React.Component {
             { Auth.isAuthenticated() &&
               <LinkContainer to="/bookmarks">
                 <MenuItem>
+                  <FontAwesome name="bookmark" />
                   {tr.bookmarksTitle}
                 </MenuItem>
               </LinkContainer>
@@ -151,25 +141,21 @@ class Header extends React.Component {
             { Auth.isAuthenticated() &&
               <MenuItem divider />
             }
-            {/* { Auth.isAuthenticated() &&
-              <LinkContainer to="/profile">
-                <MenuItem>
-                  {tr.profileTitle}
-                </MenuItem>
-              </LinkContainer>
-            } */}
             <LinkContainer to="/info/providers">
               <MenuItem>
+                <FontAwesome name="address-card" />
                 {tr.infoProviderTitle}
               </MenuItem>
             </LinkContainer>
             <LinkContainer to="/info/about">
               <MenuItem>
+                <FontAwesome name="info-circle" />
                 {tr.infoAboutTitle}
               </MenuItem>
             </LinkContainer>
             <LinkContainer to="/info/credits">
               <MenuItem>
+                <FontAwesome name="edit" />
                 {tr.infoCreatorsTitle}
               </MenuItem>
             </LinkContainer>
@@ -179,15 +165,28 @@ class Header extends React.Component {
             { Auth.isAdmin() &&
               <LinkContainer to="/admin.html" target="_blank">
                 <MenuItem>
+                  <FontAwesome name="cog" />
                   Admin
                 </MenuItem>
               </LinkContainer>
+            }
+            <MenuItem divider />
+            {
+              <MenuItem
+                eventKey={nextLang}
+                onSelect={this.changeLanguage}
+                title={currentLanguage}
+              >
+                <FontAwesome name="globe" />
+                {tr[nextLang]}
+              </MenuItem>
             }
             { Auth.isAuthenticated() &&
               <MenuItem divider />
             }
             { Auth.isAuthenticated() &&
               <MenuItem onClick={this.logout}>
+                <FontAwesome name="sign-out" />
                 {tr.logout}
               </MenuItem>
             }

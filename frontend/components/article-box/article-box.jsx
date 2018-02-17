@@ -76,6 +76,10 @@ export default class Entry extends React.Component {
     }
   }
 
+  shouldComponentUpdate(nextProps) {
+    return false;
+  }
+
   render() {
     const {
       entry,

@@ -18,18 +18,22 @@ export default class ContentSelectorModal extends React.Component {
   state = {headTitle: ''}
 
   componentDidMount() {
-    this.wrapperEl.addEventListener('scroll', this.handleOnScroll);
+    this.wrapperEl.addEventListener('scroll', this.handleOnScroll, true);
     this.handleOnScroll();
   }
 
   componentWillUnmount() {
-    this.wrapperEl.removeEventListener('scroll', this.handleOnScroll);
+    this.wrapperEl.removeEventListener('scroll', this.handleOnScroll, true);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.headTitle !== nextState.headTitle;
   }
 
   handleOnScroll = _.throttle(evt => {
     evt && evt.stopPropagation();
     const scrollTop = this.wrapperEl.scrollTop + 60;
-    const headEls = Array.from(this.wrapperEl.querySelectorAll('[data-sticky-head]'));
+    const headEls = Array.from(this.wrapperEl.querySelectorAll('h3[data-sticky-head]'));
     const stickyHeadEl = _.findLast(headEls, headEl => headEl.offsetTop < scrollTop) || headEls[0];
     _.each(headEls, headEl => headEl.style.visibility = 'initial');
     stickyHeadEl.style.visibility = 'hidden';

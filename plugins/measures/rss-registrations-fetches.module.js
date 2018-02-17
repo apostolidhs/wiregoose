@@ -9,7 +9,7 @@ KlarkModule(module, 'measuresRssRegistrationsFetches', (
   modelsApp
 ) => {
 
-  const oneMonth = 2 * 30 * 24 * 60 * 60 * 1000;
+  const oneMonth = 1 * 30 * 24 * 60 * 60 * 1000;
   const measureCachingPeriod = 24 * 60 * 60 * 1000; // 1 day
 
   return {

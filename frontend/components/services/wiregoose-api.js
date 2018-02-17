@@ -7,9 +7,9 @@ import { getApiUrl } from '../utilities/environment-detection';
 import ArticleResponseTransformation from '../article/response-transformation.js';
 import ArticleBoxResponseTransformation from '../article-box/response-transformation.js';
 import ServerErrorInterceptor from './server-error-interceptor.js';
+import * as localCache from './cache.js';
 
 const API_ORIGIN = getApiUrl();
-const responsesCache = {};
 
 // add this to set timeout
 //  .then(resp => new Promise(r => setTimeout(() => r(resp), 4000000000000)));
@@ -360,8 +360,15 @@ function fetchRssRegistrations() {
 
 function registrationFetches(lang, {cache}) {
   const key = `registrationFetches-${lang}`;
-  return responsesCache[key] || (responsesCache[key] =
-    httpRequest({
+
+  return localCache.getItem(key, {
+    maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+    fetchOnMiss,
+    fetchOldOnError: true
+  });
+
+  function fetchOnMiss() {
+    return httpRequest({
       method: 'get',
       url: `${API_ORIGIN}rssFeed/registrationFetches`,
       params: {lang},
@@ -369,8 +376,8 @@ function registrationFetches(lang, {cache}) {
         'Content-Type': 'application/json',
         authorization: credentialGetter(),
       },
-    })
-  );
+    });
+  }
 }
 
 function create(modelName, params) {

@@ -5,6 +5,9 @@
   padding: 2px 15px;
 }
 .navigation-menu {
+  .open .dropdown-menu > li > a > .fa {
+    width: 25px;
+  }
   @media (max-width: @screen-xs-max) {
     position: fixed;
     right: @navbar-padding-horizontal;
@@ -31,6 +34,9 @@
         padding: 3px 20px;
       }
       > li > a {
+        > .fa {
+          margin-right: 4px;
+        }
         line-height: @line-height-base!important;
         color: @gray-darker!important;
         &:hover,

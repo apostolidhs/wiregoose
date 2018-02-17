@@ -3,6 +3,9 @@ import LocalizedStrings from 'react-localization';
 
 const strings = new LocalizedStrings({
   en:{
+    gr: 'Ελληνικά', // this is exception
+    en: 'English',
+
     infoAboutTitle: 'About',
     infoAboutWiregoose: 'What is Wiregoose',
     infoAboutWiregooseDesc: 'Wiregoose is an online news transmitter, bringing news in your screen from all over the world, adapted in your country in allmost real time.',
@@ -144,6 +147,9 @@ const strings = new LocalizedStrings({
     resetPasswordSuccess: 'An email has been sent to <b>{0}</b>. Follow the directions in the email to reset your password.'
   },
   gr: {
+    en: 'English',
+    gr: 'Ελληνικά',
+
     infoAboutTitle: 'About',
     infoAboutWiregoose: 'Τι είναι το Wiregoose',
     infoAboutWiregooseDesc: 'Το Wiregoose είναι ένας αναμεταδότης νέων, φέρνοντας στην οθόνη σας καταχωρήσεις από όλον τον κόσμο, προσαρμοσμένο στην χώρα σας σε σχεδόν πραγματικό χρόνο.',
