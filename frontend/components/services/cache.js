@@ -10,7 +10,7 @@ export const getItem = (key, {maxAge = -1, fetchOnMiss, fetchOldOnError} = {}) =
   new Promise((resolve, reject) => {
     const datum = localStorage.getItem(key);
     const cell = deSerialize(datum);
-    if (isValidDatum(cell) && ((cell.created + maxAge) > _.now())) {
+    if (isValidDatum(cell) && (maxAge === -1 || ((cell.created + maxAge) > _.now()))) {
       return resolve(cell.item);
     }
 
@@ -27,9 +27,9 @@ export const getItem = (key, {maxAge = -1, fetchOnMiss, fetchOldOnError} = {}) =
       );
   });
 
-export const hasItem = key =>
-  new Promise(resolve =>
-    resolve(!!localStorage.getItem(key)));
+// export const hasItem = key =>
+//   new Promise(resolve =>
+//     resolve(!!localStorage.getItem(key)));
 
 export const removeItem = key =>
   new Promise(resolve =>
