@@ -20,7 +20,7 @@ import {launch as launchContentSelectorModal} from '../content-selector/content-
 import logoImage from '../../assets/img/logo.png';
 
 @CSSModules(styles, {
-  allowMultiple: true,
+  allowMultiple: true
 })
 class Header extends React.Component {
   state = {
@@ -83,7 +83,7 @@ class Header extends React.Component {
     const {showLogin} = this.state;
 
     return (
-      <Navbar collapseOnSelect fixedTop styleName="navbar">
+      <Navbar collapseOnSelect fixedTop>
 
         {this.state.displayMobile &&
           <Nav className="navigation-menu" pullLeft>
@@ -97,7 +97,7 @@ class Header extends React.Component {
           <Navbar.Brand>
             <Link to="/" styleName="logo">
               <img alt="Wiregoose" src={logoImage} />
-              <span>Wiregoose</span>
+              Wiregoose
             </Link>
           </Navbar.Brand>
         </Navbar.Header>
@@ -105,7 +105,7 @@ class Header extends React.Component {
         <Nav className="navigation-menu" pullRight>
 
           {!Auth.isAuthenticated() && showLogin &&
-            <NavItem eventKey={1} onSelect={Auth.launchAuthModal}>
+            <NavItem eventKey={1} onSelect={Auth.launchAuthModal} styleName="header-sign-in">
               {tr.signIn}
             </NavItem>
           }

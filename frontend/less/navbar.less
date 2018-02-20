@@ -1,51 +1,51 @@
-.navbar > .container {
-  position: relative;
-}
 .navbar-brand {
-  padding: 2px 15px;
+  padding: 3px 15px;
+  font-size: 22px;
+  line-height: 20px;
+  height: @navbar-height;
+  vertical-align: sub;
+}
+.navbar > .container {
+  overflow-x: initial;
 }
 .navigation-menu {
-  .open .dropdown-menu > li > a > .fa {
-    width: 25px;
+  .dropdown-menu > li > a > .fa {
+    width: 30px;
   }
-  @media (max-width: @screen-xs-max) {
-    position: fixed;
-    right: @navbar-padding-horizontal;
-    top: -6px;
-    text-align: right;
-    .clearfix();
-    > * {
-      float: left;
-    }
-    .dropdown-menu {
-      position: absolute!important;
-      left: auto;
-      right: 0;
-    }
-    .open .dropdown-menu {
-      float: left;
-      width: initial;
-      margin: 2px 0 0 !important;
-      background-color: #fff;
-      border: 1px solid rgba(0, 0, 0, 0.15);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-      > li > a,
-      .dropdown-header {
-        padding: 3px 20px;
-      }
-      > li > a {
-        > .fa {
-          margin-right: 4px;
-        }
-        line-height: @line-height-base!important;
-        color: @gray-darker!important;
-        &:hover,
-        &:focus {
-          background-image: none;
-          color: @gray-darker!important;
-          background-color: @dropdown-link-hover-bg!important;
-        }
-      }
+}
+@media (max-width: @screen-xs-max) {
+  .navbar > .container {
+    height: 50px;
+  }
+  .navbar-header {
+    margin-left: 0!important;
+  }
+  .navbar-brand {
+    padding: 6px 0;
+    height: 50px;
+  }
+  .navigation-menu.navbar-left, .navbar-header {
+    float: left;
+    margin: 0;
+  }
+  .navigation-menu.navbar-right {
+    float: right;
+    margin: 0;
+  }
+  .navigation-menu.navbar-right > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .navigation-menu .dropdown-menu {
+    position: fixed!important;
+    top: 50px;
+    left: 0;
+    right: 0;
+    background-color: #fff!important;
+    font-size: 20px;
+    > li > a {
+      padding-top: 8px!important;
+      padding-bottom: 8px!important;
     }
   }
 }

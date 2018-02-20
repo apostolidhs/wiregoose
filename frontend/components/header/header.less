@@ -1,34 +1,11 @@
 @import (reference) "../../less/index.less";
 
-.navbar {
-  :global {
-    .container {
-      overflow-x: initial;
-    }
-    .navbar-left {
-      left: 13px;
-      right: initial;
-    }
-  }
-}
 .logo {
-  @media (max-width: @screen-xs-max) {
-    margin-left: 45px;
-  }
   img {
+    height: 30px;
+    width: 30px;
     display: inline-block;
-  }
-  span {
-    vertical-align: middle;
-    color: @gray-dark;
-  }
-}
-.header-categories-button {
-  font-size: 28px;
-  :global {
-    a {
-      padding: 8px 15px !important;
-    }
+    vertical-align: sub;
   }
 }
 .profile-item {
@@ -45,4 +22,17 @@
 .profile-content {
   display: block;
 }
-
+.header-categories-button {
+  font-size: 30px;
+}
+@media (max-width: @screen-xs-max) {
+  .header-sign-in {
+    font-size: 18px;
+    :global {
+      a {
+        padding-left: 0 !important;
+        padding-right: 2px !important;
+      }
+    }
+  }
+}

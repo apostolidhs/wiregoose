@@ -7,9 +7,9 @@
 @import './forms.less';
 @import './categories.less';
 
-@border-radius-base:        0px;
-@border-radius-large:       0px;
-@border-radius-small:       0px;
+@border-radius-base: 0px;
+@border-radius-large: 0px;
+@border-radius-small: 0px;
 
 @panel-border-radius: 3px;
 @body-bg: #eee;
@@ -18,7 +18,7 @@
 
 // Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif
 @font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
-@font-family-serif:       Georgia, "Times New Roman", Times, serif;
+@font-family-serif: Georgia, "Times New Roman", Times, serif;
 
 @font-size-base: 16px;
 
@@ -28,6 +28,12 @@
   font-size: 30px;
   padding-top: 5px;
   padding-bottom: 5px;
+  text-align: center;
+  @media (max-width: @screen-xs-max) {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 60px;
+  }
 }
 
 .tooltip-button-disabled {

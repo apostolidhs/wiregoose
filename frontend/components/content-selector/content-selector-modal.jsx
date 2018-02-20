@@ -73,8 +73,8 @@ export function launch() {
     onEnter: modalEl => {
       modalEl.querySelector('.modal-dialog').className = 'container container-modal';
       modalEl.style.top = componentSize.sizeFormatter({
-        xxs: '40px',
-        xs: '40px',
+        xxs: '50px',
+        xs: '50px',
       }, '80px')(window.innerWidth);
     },
     keyboard: true

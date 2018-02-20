@@ -79,11 +79,8 @@ export default class Modals extends React.Component {
 
   render() {
     const {modalComponent, closable, modalProps} = this.state;
-    if (!modalComponent) {
-      return null;
-    }
     return (
-      <Modal ref={e => this.modelEl = e} show={true} {...(modalProps || {})} >
+      <Modal ref={e => this.modelEl = e} show={!!modalComponent} {...(modalProps || {})} >
         {closable &&
           <button type="button" className="close" styleName="close" onClick={this.onClose}>
             <span aria-hidden="true">×</span>
