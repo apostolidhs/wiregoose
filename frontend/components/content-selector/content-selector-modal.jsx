@@ -18,12 +18,14 @@ export default class ContentSelectorModal extends React.Component {
   state = {headTitle: ''}
 
   componentDidMount() {
+    this.headEls = Array.from(this.wrapperEl.querySelectorAll('h3[data-sticky-head]'));
     this.wrapperEl.addEventListener('scroll', this.handleOnScroll, true);
     this.handleOnScroll();
   }
 
   componentWillUnmount() {
     this.wrapperEl.removeEventListener('scroll', this.handleOnScroll, true);
+    this.handleOnScroll.cancel();
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -33,12 +35,15 @@ export default class ContentSelectorModal extends React.Component {
   handleOnScroll = _.throttle(evt => {
     evt && evt.stopPropagation();
     const scrollTop = this.wrapperEl.scrollTop + 60;
-    const headEls = Array.from(this.wrapperEl.querySelectorAll('h3[data-sticky-head]'));
-    const stickyHeadEl = _.findLast(headEls, headEl => headEl.offsetTop < scrollTop) || headEls[0];
-    _.each(headEls, headEl => headEl.className = '');
-    stickyHeadEl.className = 'w-minimize';
+    const stickyHeadEl = _.findLast(this.headEls, headEl => headEl.offsetTop < scrollTop) || this.headEls[0];
     const headTitle = stickyHeadEl.getAttribute('data-sticky-head');
-    this.setState({headTitle});
+    console.log(headTitle);
+    if (this.state.headTitle !== headTitle) {
+      _.each(this.headEls, headEl => headEl.style.visibility = 'initial');
+      this.headEls[0].style.display = 'none';
+      stickyHeadEl.style.visibility = 'hidden';
+      this.setState({headTitle});
+    }
   }, 250)
 
   render() {
@@ -49,7 +54,7 @@ export default class ContentSelectorModal extends React.Component {
           <h3>{headTitle}</h3>
         </header>
         <div styleName="modal-content-selector" ref={e => this.wrapperEl = e}>
-          <ContentSelector {...this.props} />
+          <ContentSelector {...this.props}/>
         </div>
       </Modal.Body>
     );

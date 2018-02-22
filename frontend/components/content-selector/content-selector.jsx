@@ -55,13 +55,13 @@ export default class ContentSelector extends React.Component {
               <Col key={cat} className={'w-mb-14'} xs={6} sm={4} md={3} lg={2} >
                 <a
                   href="#"
-                  styleName="link font-lg"
+                  styleName="link"
                   className="btn btn-default"
                   onClick={evt => {
                     evt.preventDefault();
                     onCategoryClick(cat);
                   }} >
-                  <h5>{<CategoryImages name={cat} />} {tr[cat]}</h5>
+                  <CategoryImages name={cat} /> {tr[cat]}
                 </a>
               </Col>
             )}
@@ -80,7 +80,7 @@ export default class ContentSelector extends React.Component {
                       evt.preventDefault();
                       onProviderClick(p);
                     }} >
-                    <h4>{_.capitalize(p)}</h4>
+                    {_.capitalize(p)}
                   </a>
                 </Col>
               )}
@@ -110,7 +110,7 @@ export default class ContentSelector extends React.Component {
                         const link = [provider, category, lang, _id].join('-');
                         onCategoryByProviderClick(link);
                       }} >
-                      <h5>{<CategoryImages name={category} />} {tr[category]}</h5>
+                      <CategoryImages name={category} /> {tr[category]}
                     </a>
                   </Col>
                 )}
