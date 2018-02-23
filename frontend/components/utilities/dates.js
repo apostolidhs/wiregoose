@@ -1,4 +1,7 @@
-import _ from 'lodash';
+import now from 'lodash/now';
+import isDate from 'lodash/isDate';
+import isNumber from 'lodash/isNumber';
+import isNaN from 'lodash/isNaN';
 
 import tr from '../localization/localization.js';
 
@@ -35,9 +38,9 @@ export function fromNow(val) {
     return;
   }
 
-  const now = _.now();
+  const current = now();
   const timestamp = date.getTime();
-  const diff = now - timestamp;
+  const diff = current - timestamp;
 
   if (diff < 0) {
     return tr.timeNotYet;
@@ -62,13 +65,13 @@ export function fromNow(val) {
 
 function getDate(val) {
   let date;
-  if (_.isDate(val)) {
+  if (isDate(val)) {
     date = val;
-  } else if (_.isNumber(val)) {
+  } else if (isNumber(val)) {
     date = new Date(val);
   }
 
-  if (!date || _.isNaN(date.getTime())) {
+  if (!date || isNaN(date.getTime())) {
     return;
   }
 

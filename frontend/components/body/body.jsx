@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import throttle from 'lodash/throttle';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -25,7 +25,7 @@ export default class Body extends React.Component {
     window.removeEventListener('resize', this.onResize);
   }
 
-  onResize = _.throttle(() => {
+  onResize = throttle(() => {
     const displaySubheader = componentSize.sizeFormatter({
       xxs: false,
       xs: false,

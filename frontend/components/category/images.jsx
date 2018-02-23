@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
@@ -40,7 +39,6 @@ export default class Images extends React.Component {
   }
 
   render() {
-    //const className = `category-${_.lowerCase(this.props.name)}`;
     return (
       <FontAwesome name={ this.state.icon } />
     );

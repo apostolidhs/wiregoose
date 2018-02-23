@@ -1,4 +1,13 @@
-import _ from 'lodash';
+import map from 'lodash/map';
+import keys from 'lodash/keys';
+import mapValues from 'lodash/mapValues';
+import sortBy from 'lodash/sortBy';
+import pick from 'lodash/pick';
+import filter from 'lodash/filter';
+import pickBy from 'lodash/pickBy';
+import isEmpty from 'lodash/isEmpty';
+import flatten from 'lodash/flatten';
+import sumBy from 'lodash/sumBy';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ListGroup, ListGroupItem, Badge, Row, Col }
@@ -26,9 +35,9 @@ export default class RssRegistrationFetches extends React.Component {
   }
 
   componentWillReceiveProps = ({ registrationsFetches }) => {
-    const providers = _.map(_.keys(registrationsFetches), reg => ({ label: reg, value: reg }));
-    const categories = _.map(CATEGORIES, cat => ({ label: cat, value: cat }));
-    const activeRegistrations = _.mapValues(registrationsFetches, fetches => _.sortBy(fetches, f => -f.total));
+    const providers = map(keys(registrationsFetches), reg => ({ label: reg, value: reg }));
+    const categories = map(CATEGORIES, cat => ({ label: cat, value: cat }));
+    const activeRegistrations = mapValues(registrationsFetches, fetches => sortBy(fetches, f => -f.total));
     this.setState({
       providers,
       categories,
@@ -47,11 +56,11 @@ export default class RssRegistrationFetches extends React.Component {
   updateActiveRegistrations = () => {
     const { searchedProvider, searchedCategory } = this.state;
     const { registrationsFetches } = this.props;
-    const activeProviders = searchedProvider ? _.pick(registrationsFetches, searchedProvider.value) : registrationsFetches;
+    const activeProviders = searchedProvider ? pick(registrationsFetches, searchedProvider.value) : registrationsFetches;
     let activeCategories = searchedCategory
-      ? _.mapValues(activeProviders, registrations => _.filter(registrations, registration => registration.category === searchedCategory.value))
+      ? mapValues(activeProviders, registrations => filter(registrations, registration => registration.category === searchedCategory.value))
       : activeProviders;
-    activeCategories = _.pickBy(activeCategories, regs => !_.isEmpty(regs));
+    activeCategories = pickBy(activeCategories, regs => !isEmpty(regs));
     this.setState({ activeRegistrations: activeCategories });
   }
 
@@ -89,11 +98,11 @@ export default class RssRegistrationFetches extends React.Component {
   }
 
   renderListItems = () => {
-    return _.flatten(
-      _.map(this.state.activeRegistrations, (registrations, provider) => {
+    return flatten(
+      map(this.state.activeRegistrations, (registrations, provider) => {
 
-        const totalEntries = _.sumBy(registrations, 'total');
-        const content = _.map(registrations, (registration) => (
+        const totalEntries = sumBy(registrations, 'total');
+        const content = map(registrations, (registration) => (
           <ListGroupItem key={encodeURIComponent(registration.link)}>
             <span styleName="reg-fetches-content-title">{registration.category}</span>
             <Badge styleName="reg-fetches-content-badge">{registration.total}</Badge>

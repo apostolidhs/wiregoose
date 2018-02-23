@@ -1,3 +1,5 @@
+import isEmpty from 'lodash/isEmpty';
+import now from 'lodash/now';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
@@ -47,14 +49,14 @@ class Registration extends InfiniteScrollPage {
 
   retrieveTimeline = () => {
     if (!Registration.page.lastFeeds) {
-      Registration.page.lastFeeds = { [this.state.registration._id]: _.now() };
+      Registration.page.lastFeeds = { [this.state.registration._id]: now() };
     }
     return WiregooseApi.timeline.registration(
       Registration.page.lastFeeds,
       BrowserLanguageDetection(),
       {
         onOffline: () => {
-          if (_.isEmpty(Registration.page.virtualList)) {
+          if (isEmpty(Registration.page.virtualList)) {
             this.setState({isOffline: true});
           }
         }

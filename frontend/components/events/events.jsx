@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import remove from 'lodash/remove';
+import each from 'lodash/each';
+import isEmpty from 'lodash/isEmpty';
 import React from 'react';
 
 const events = {};
@@ -11,15 +13,15 @@ export function subscribe(name, func) {
 }
 
 export function unsubscribe(name, func) {
-  _.remove(events[name], queueFunc => queueFunc === func);
+  remove(events[name], queueFunc => queueFunc === func);
 }
 
 export function publish(name, data) {
-  _.each(events[name], queueFunc => queueFunc(data, name));
+  each(events[name], queueFunc => queueFunc(data, name));
 }
 
 export function EventHOC(WrappedComponent, events) {
-  if (_.isEmpty(events)) {
+  if (isEmpty(events)) {
     throw new Error('Should contain at least one event');
   }
 
@@ -29,11 +31,11 @@ export function EventHOC(WrappedComponent, events) {
     state = {events: {}}
 
     componentWillMount() {
-      _.each(events, event => subscribe(event, this.updateComponent));
+      each(events, event => subscribe(event, this.updateComponent));
     }
 
     componentWillUnmount() {
-      _.each(events, event => unsubscribe(event, this.updateComponent));
+      each(events, event => unsubscribe(event, this.updateComponent));
     }
 
     updateComponent = (data, eventName) => {

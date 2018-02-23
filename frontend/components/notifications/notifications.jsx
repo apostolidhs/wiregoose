@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import defaults from 'lodash/defaults';
 import React from 'react';
 import NotificationSystem  from 'react-notification-system';
 
@@ -24,7 +24,7 @@ let notificationSystem;
 
 function createNotification(level) {
   return (message, opts = {}) => {
-    const dopts = _.defaults({level, message}, opts, defaultOptions);
+    const dopts = defaults({level, message}, opts, defaultOptions);
     if (!notificationSystem) {
       console.warn('notifications have not instantiated');
       return;

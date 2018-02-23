@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import sampleSize from 'lodash/sampleSize';
 
 export const pallet = [
   {
@@ -548,5 +548,5 @@ export const pallet = [
 ];
 
 export function createSample(size) {
-  return _.sampleSize(pallet, size);
+  return sampleSize(pallet, size);
 }

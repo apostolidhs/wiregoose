@@ -1,4 +1,10 @@
-import _ from 'lodash';
+import noop from 'lodash/noop';
+import throttle from 'lodash/throttle';
+import each from 'lodash/each';
+import map from 'lodash/map';
+import mapValues from 'lodash/mapValues';
+import upperFirst from 'lodash/upperFirst';
+import delay from 'lodash/delay';
 import axios from 'axios';
 import promiseFinally from 'promise.prototype.finally';
 promiseFinally.shim();
@@ -33,7 +39,7 @@ axios.interceptors.response.use(function (response) {
     return promise || Promise.reject(error);
   });
 
-let credentialGetter = _.noop;
+let credentialGetter = noop;
 
 export const crud = {
   create,
@@ -65,8 +71,8 @@ export const bookmarks = {
 };
 
 export const statics = {
-  categories: _.throttle(getStaticCategories, 3000),
-  supportedLanguages: _.throttle(getStaticSupportedLanguage, 3000)
+  categories: throttle(getStaticCategories, 3000),
+  supportedLanguages: throttle(getStaticSupportedLanguage, 3000)
 };
 
 export function setCredentialGetter(_credentialGetter) {
@@ -165,7 +171,7 @@ export function getProxyCacheInfo() {
   })
   .then(resp => {
     const {files} = resp.data.data;
-    _.each(files, f => f.created = new Date(f.created));
+    each(files, f => f.created = new Date(f.created));
     return resp;
   });
 }
@@ -205,7 +211,7 @@ export function fetchArticle(entryId, relatedArticles = false, friendlyErrorInte
   .then(resp => {
     const {article, relatedEntries} = resp.data.data;
     resp.data.data.article = ArticleResponseTransformation(article);
-    resp.data.data.relatedEntries = _.map(
+    resp.data.data.relatedEntries = map(
       relatedEntries, ArticleBoxResponseTransformation
     );
     return resp;
@@ -223,7 +229,7 @@ export function entryRelated(entryId) {
     friendlyErrorInterceptor: true
   })
   .then(resp => {
-    resp.data.data = _.map(
+    resp.data.data = map(
       resp.data.data, ArticleBoxResponseTransformation
     );
     return resp;
@@ -286,7 +292,7 @@ function timelineRegistration(registration, lang, friendlyErrorInterceptor = fal
 function timelineBookmarks(userId, friendlyErrorInterceptor) {
   return bookmarksRetrieveAllIds(userId, {populate: true, friendlyErrorInterceptor})
     .then(resp => {
-      resp.data.data.bookmarks = _.map(resp.data.data.bookmarks, ArticleBoxResponseTransformation);
+      resp.data.data.bookmarks = map(resp.data.data.bookmarks, ArticleBoxResponseTransformation);
       return resp;
     });
 }
@@ -306,9 +312,9 @@ function getTimeline(endpoint, params, lang, friendlyErrorInterceptor) {
     friendlyErrorInterceptor
   })
   .then(resp => {
-    resp.data.data = _.mapValues(
+    resp.data.data = mapValues(
       resp.data.data,
-      records => _.map(records, ArticleBoxResponseTransformation)
+      records => map(records, ArticleBoxResponseTransformation)
     );
     return resp;
   });
@@ -342,7 +348,7 @@ function fetchRssFeed(link) {
   })
   .then(resp => {
     const data = resp.data.data;
-    data.entries = _.map(data.entries, ArticleBoxResponseTransformation);
+    data.entries = map(data.entries, ArticleBoxResponseTransformation);
     return resp;
   });
 }
@@ -386,7 +392,7 @@ function registrationFetches(lang, {cache}) {
 
 function create(modelName, params) {
   const payload = {
-    [_.upperFirst(modelName)]: params,
+    [upperFirst(modelName)]: params,
   };
   return httpRequest({
     method: 'post',
@@ -425,7 +431,7 @@ function retrieveAll(modelName, params) {
 
 function update(modelName, id, params) {
   const payload = {
-    [_.upperFirst(modelName)]: params,
+    [upperFirst(modelName)]: params,
   };
   return httpRequest({
     method: 'put',
@@ -440,7 +446,7 @@ function update(modelName, id, params) {
 
 function updateSingle(modelName, params) {
   const payload = {
-    [_.upperFirst(modelName)]: params,
+    [upperFirst(modelName)]: params,
   };
   return httpRequest({
     method: 'put',
@@ -468,7 +474,7 @@ function httpRequest(opts) {
   return axios(opts)
     .then((v) => {
       return new Promise((resolve) => {
-        _.delay(() => resolve(v), 0 && 2000);
+        delay(() => resolve(v), 0 && 2000);
       });
     });
 }

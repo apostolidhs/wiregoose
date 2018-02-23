@@ -1,4 +1,8 @@
-import _ from 'lodash';
+import mapValues from 'lodash/mapValues';
+import uniqBy from 'lodash/uniqBy';
+import keys from 'lodash/keys';
+import map from 'lodash/map';
+import capitalize from 'lodash/capitalize';
 import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
@@ -30,10 +34,10 @@ export default class ContentSelector extends React.Component {
     const lang = BrowserLanguageDetection();
     this.refs.registrationFetches.promise = WiregooseApi.rssFeed.registrationFetches(lang, {cache: true})
       .then(resp => {
-        const categoriesPerProviders = _.mapValues(
-          resp.data.data, regs => _.uniqBy(regs, reg => reg.category)
+        const categoriesPerProviders = mapValues(
+          resp.data.data, regs => uniqBy(regs, reg => reg.category)
         );
-        const providers = _.keys(categoriesPerProviders);
+        const providers = keys(categoriesPerProviders);
         this.setState({providers, categoriesPerProviders});
       });
   }
@@ -51,7 +55,7 @@ export default class ContentSelector extends React.Component {
 
           <h3 data-sticky-head={tr.categories}>{tr.categories}</h3>
           <Row>
-            {_.map(CATEGORIES, cat =>
+            {map(CATEGORIES, cat =>
               <Col key={cat} className={'w-mb-14'} xs={6} sm={4} md={3} lg={2} >
                 <a
                   href="#"
@@ -70,7 +74,7 @@ export default class ContentSelector extends React.Component {
           <h3 data-sticky-head={tr.providers}>{tr.providers}</h3>
           <Loader ref="registrationFetches">
             <Row>
-              {_.map(this.state.providers, p =>
+              {map(this.state.providers, p =>
                 <Col key={p} className={'w-mb-14'} xs={6} sm={4} md={3} lg={3} >
                   <a
                     href="#"
@@ -80,7 +84,7 @@ export default class ContentSelector extends React.Component {
                       evt.preventDefault();
                       onProviderClick(p);
                     }} >
-                    {_.capitalize(p)}
+                    {capitalize(p)}
                   </a>
                 </Col>
               )}
@@ -89,16 +93,16 @@ export default class ContentSelector extends React.Component {
 
           <h3 data-sticky-head={tr.categoriesPerProvider} >{tr.categoriesPerProvider}</h3>
           <Loader ref="registrationFetches">
-            {_.map(this.state.categoriesPerProviders, (cats, provider) =>
+            {map(this.state.categoriesPerProviders, (cats, provider) =>
             <div key={provider}>
               <a href="#" className="blind-link" onClick={evt => {
                   evt.preventDefault();
                   onProviderClick(provider);
                 }} >
-                <h4>{_.capitalize(provider)}</h4>
+                <h4>{capitalize(provider)}</h4>
               </a>
               <Row>
-                {_.map(cats, ({category, total, _id}, idx) =>
+                {map(cats, ({category, total, _id}, idx) =>
                   <Col key={idx} className={'w-mb-14'} xs={6} sm={4} md={3} lg={2} >
                     <a
                       href="#"

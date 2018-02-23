@@ -1,4 +1,8 @@
-import _ from 'lodash';
+import identity from 'lodash/identity';
+import map from 'lodash/map';
+import pick from 'lodash/pick';
+import mapValues from 'lodash/mapValues';
+import defaults from 'lodash/defaults';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory, Link } from 'react-router';
@@ -27,7 +31,7 @@ export default class ListView extends React.Component {
     lastEffectedId: undefined
   };
 
-  constructor({ modelName, columns, title, form, defaultSort = {}, mutable = true, transformation = _.identity }) {
+  constructor({ modelName, columns, title, form, defaultSort = {}, mutable = true, transformation = identity }) {
     super();
     this.modelName = modelName;
     this.columns = columns;
@@ -43,19 +47,19 @@ export default class ListView extends React.Component {
   onPageChange = (page = 1, count = 5) => this.retrieveAll({ page, count })
 
   onDeleteRow = ids => Promise.all(
-      _.map(ids, id => this.refs.load.promise = WiregooseApi.crud.remove(this.modelName, id)),
+      map(ids, id => this.refs.load.promise = WiregooseApi.crud.remove(this.modelName, id)),
     )
     .then(() => Notifications.create.info('Record(s) deleted successfully'))
     .then(() => this.retrieveAll())
 
   onFilterChange = (filterObj) => {
-    const stateParams = _.pick(this.state.params, [
+    const stateParams = pick(this.state.params, [
       'page',
       'count',
       'sortBy',
       'asc'
     ]);
-    const filters = _.mapValues(filterObj, 'value');
+    const filters = mapValues(filterObj, 'value');
     const params = {
       ...filters,
       ...stateParams
@@ -91,13 +95,13 @@ export default class ListView extends React.Component {
   };
 
   retrieveAll = (params = {}) => {
-    const defaultParams = _.defaults(params, this.state.params);
+    const defaultParams = defaults(params, this.state.params);
     this.setState({ params: defaultParams });
     this.addQuery(defaultParams);
     const prms = WiregooseApi.crud.retrieveAll(this.modelName, defaultParams)
       .then(resp => {
         const data = resp.data.data;
-        const records = _.map(
+        const records = map(
           data.content,
           this.transformation
         );
@@ -112,7 +116,7 @@ export default class ListView extends React.Component {
 
   componentWillMount() {
     const location = browserHistory.getCurrentLocation();
-    const params = _.defaults(location.query, this.state.params);
+    const params = defaults(location.query, this.state.params);
     params.page = +params.page;
     params.count = +params.count;
     this.setState({ params });
@@ -233,7 +237,7 @@ export default class ListView extends React.Component {
                   ...this.defaultSort
                 }}
               >
-                {_.map(this.columns, col => {
+                {map(this.columns, col => {
                   const filter = col.disableFilter
                     ? undefined
                     : { type: 'TextFilter', defaultValue: this.state.params[col.id] || '' };

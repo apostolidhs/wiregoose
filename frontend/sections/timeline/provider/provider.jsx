@@ -1,3 +1,5 @@
+import isEmpty from 'lodash/isEmpty';
+import now from 'lodash/now';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -36,14 +38,14 @@ class Provider extends InfiniteScrollPage {
   retrieveTimeline = () => {
     if (!Provider.page.lastFeeds) {
       const provider = this.props.routeParams.id;
-      Provider.page.lastFeeds = { [provider]: _.now() };
+      Provider.page.lastFeeds = { [provider]: now() };
     }
     return WiregooseApi.timeline.provider(
       Provider.page.lastFeeds,
       BrowserLanguageDetection(),
       {
         onOffline: () => {
-          if (_.isEmpty(Provider.page.virtualList)) {
+          if (isEmpty(Provider.page.virtualList)) {
             this.setState({isOffline: true});
           }
         }

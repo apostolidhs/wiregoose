@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import first from 'lodash/first';
+import isEmpty from 'lodash/isEmpty';
 import React from 'react';
 import { Row, Col, Panel, Button }
   from 'react-bootstrap';
@@ -58,8 +59,8 @@ export default class Dashboard extends React.Component {
       sortBy: 'finished'
     })
       .then(resp => {
-        const content = _.first(resp.data.data.content);
-        if (!_.isEmpty(content)) {
+        const content = first(resp.data.data.content);
+        if (!isEmpty(content)) {
           const fetchReport = FetchReportResponseTransformation(content);
           this.setState({ fetchReport });
         }

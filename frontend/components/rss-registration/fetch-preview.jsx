@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import size from 'lodash/size';
+import map from 'lodash/map';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormGroup, Col, Row, FormControl, Panel, Table }
@@ -67,11 +68,11 @@ export default class FetchPreview extends React.Component {
           <tbody>
             <tr>
               <td>Entries</td>
-              <td>{_.size(rssFeeds)}</td>
+              <td>{size(rssFeeds)}</td>
             </tr>
             <tr>
               <td>Errors</td>
-              <td>{_.size(errors)}</td>
+              <td>{size(errors)}</td>
             </tr>
           </tbody>
         </Table>
@@ -84,7 +85,7 @@ export default class FetchPreview extends React.Component {
 
         <h3>Preview</h3>
         <Panel>
-          {_.map(rssFeeds, (rssFeed) =>
+          {map(rssFeeds, (rssFeed) =>
             <ArticleBox entry={rssFeed} key={`${rssFeed.title}-${rssFeed.description}`} />
           )}
         </Panel>

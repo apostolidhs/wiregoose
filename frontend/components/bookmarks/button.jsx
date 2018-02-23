@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import throttle from 'lodash/throttle';
 import classnames from 'classnames';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -22,7 +22,7 @@ class Button extends React.Component {
 
   constructor() {
     super();
-    this.toggleBookmark = _.throttle(this.toggleBookmark.bind(this), 1000);
+    this.toggleBookmark = throttle(this.toggleBookmark.bind(this), 1000);
   }
 
   componentWillMount() {

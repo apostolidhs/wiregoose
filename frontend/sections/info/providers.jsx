@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import map from 'lodash/map';
+import upperCase from 'lodash/upperCase';
 import React from 'react';
 
 import tr from '../../components/localization/localization.js';
@@ -32,9 +33,9 @@ export default class About extends React.Component {
         <h1>{tr.infoProviderTitle}</h1>
         <Loader ref="providersLoad">
           <div className="clearfix" styleName="providers" >
-            {_.map(this.state.providers, p => (
+            {map(this.state.providers, p => (
               <a key={p._id} styleName="providers-item" href={p.link} target="_blank" >
-                {_.upperCase(p.name)}
+                {upperCase(p.name)}
               </a>
             ))}
           </div>

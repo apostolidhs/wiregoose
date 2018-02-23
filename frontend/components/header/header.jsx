@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import throttle from 'lodash/throttle';
+import startsWith from 'lodash/startsWith';
+import without from 'lodash/without';
 import React from 'react';
 import FontAwesome from 'react-fontawesome';
 import PropTypes from 'prop-types';
@@ -41,7 +43,7 @@ class Header extends React.Component {
     window.removeEventListener('resize', this.onResize);
   }
 
-  onResize = _.throttle(() => {
+  onResize = throttle(() => {
     const displayMobile = componentSize.sizeFormatter({
       xxs: true,
       xs: true,
@@ -51,7 +53,7 @@ class Header extends React.Component {
 
   shouldDisplayLogin() {
     const {pathname} = browserHistory.getCurrentLocation();
-    if (_.startsWith(pathname, '/auth')) {
+    if (startsWith(pathname, '/auth')) {
       this.setState({showLogin: false});
     } else if (!this.state.showLogin) {
       this.setState({showLogin: true});
@@ -78,7 +80,7 @@ class Header extends React.Component {
 
   render() {
     const currentLanguage = BrowserLanguageDetection();
-    const otherLanguages = _.without(SUPPORTED_LANGUAGES, currentLanguage);
+    const otherLanguages = without(SUPPORTED_LANGUAGES, currentLanguage);
     const nextLang = otherLanguages[0]; // only en, gr :)
     const {showLogin} = this.state;
 

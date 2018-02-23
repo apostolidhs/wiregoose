@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
@@ -53,7 +53,7 @@ export default class Explore extends InfiniteScrollPage {
       BrowserLanguageDetection(),
       {
         onOffline: () => {
-          if (_.isEmpty(Explore.page.virtualList)) {
+          if (isEmpty(Explore.page.virtualList)) {
             const cachedResp = composeCachedResponse();
             const cachedResponsePromise = cachedResp && Promise.resolve(cachedResp);
             this.setState({cachedResponsePromise});

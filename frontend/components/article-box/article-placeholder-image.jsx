@@ -1,3 +1,5 @@
+
+import upperFirst from 'lodash/upperFirst';
 import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
@@ -27,7 +29,7 @@ export default class ArticlePlaceholderImage extends React.Component {
           <CategoryImage name={category} />
         </div>
         <div styleName="mock-image-provider">
-          {_.upperFirst(provider)}
+          {upperFirst(provider)}
         </div>
       </div>
     );

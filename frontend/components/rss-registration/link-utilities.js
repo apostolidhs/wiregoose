@@ -1,9 +1,10 @@
-import _ from 'lodash';
+import split from 'lodash/split';
+import size from 'lodash/size';
 
 export default function getRegistrationFromLink(link) {
   const dashTitle = decodeURI(link);
-  const splitedTitle = _.split(dashTitle, '-');
-  if (_.size(splitedTitle) !== 4) {
+  const splitedTitle = split(dashTitle, '-');
+  if (size(splitedTitle) !== 4) {
     return;
   }
   return {

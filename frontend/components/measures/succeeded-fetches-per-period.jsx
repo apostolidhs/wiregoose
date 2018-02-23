@@ -1,4 +1,16 @@
-import _ from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import size from 'lodash/size';
+import keyBy from 'lodash/keyBy';
+import transform from 'lodash/transform';
+import sumBy from 'lodash/sumBy';
+import sortBy from 'lodash/sortBy';
+import map from 'lodash/map';
+
+import flow from 'lodash/fp/flow';
+import omit from 'lodash/fp/omit';
+import values from 'lodash/fp/values';
+import sum from 'lodash/fp/sum';
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Panel, Form, FormGroup, FormControl, ControlLabel, Button, Collapse }
@@ -75,10 +87,10 @@ export default class SucceededFetchesPerPeriod extends React.Component {
       selectedLang
     ).then(resp => {
       const { chart, providers } = resp.data.data;
-      if (!_.isEmpty(chart)) {
+      if (!isEmpty(chart)) {
         const charts = this.groupMeasuresByCategory(chart);
-        const colors = Pallet.createSample(_.size(providers));
-        const providerInfo = _.map(
+        const colors = Pallet.createSample(size(providers));
+        const providerInfo = map(
           providers,
           (name, idx) => ({ name, color: ShadeColor(colors[idx].color, -0.2) })
         );
@@ -93,10 +105,10 @@ export default class SucceededFetchesPerPeriod extends React.Component {
   }
 
   calculateChartLegendPayload = (charts, providerInfo) => {
-    const chartsByCategory = _.keyBy(charts, 'name');
-    return _.transform(CATEGORIES, (payload, category) => {
-       const legends = _.map(providerInfo, provider => {
-        const sum = _.sumBy(
+    const chartsByCategory = keyBy(charts, 'name');
+    return transform(CATEGORIES, (payload, category) => {
+       const legends = map(providerInfo, provider => {
+        const sum = sumBy(
           chartsByCategory[category].data,
           byProviders => byProviders[provider.name]
         );
@@ -107,22 +119,22 @@ export default class SucceededFetchesPerPeriod extends React.Component {
           type: 'circle', color: provider.color
         };
       });
-      payload[category] = _.sortBy(legends, legend => -legend.sum);
+      payload[category] = sortBy(legends, legend => -legend.sum);
     }, {});
   }
 
   groupMeasuresByCategory = (chart) => {
-    return _.map(CATEGORIES, category => {
-      const data = _.map(
+    return map(CATEGORIES, category => {
+      const data = map(
         chart,
         (providersByCategory, period) => ({
           period: +period,
           ...providersByCategory[category]
         })
       );
-      const sum = _.sumBy(
+      const sum = sumBy(
         data,
-        providers => _(providers).omit('period').values().sum()
+        providers => flow(omit('period'), values(), sum())(providers)
       );
       return {
         data,
@@ -148,7 +160,7 @@ export default class SucceededFetchesPerPeriod extends React.Component {
                   value={this.state.selectedLang}
                   onChange={this.handleInputChange}
                   required>
-                  {_.map(SUPPORTED_LANGUAGES, supportedLanguage => (
+                  {map(SUPPORTED_LANGUAGES, supportedLanguage => (
                     <option key={supportedLanguage} value={supportedLanguage}>{supportedLanguage}</option>
                   ))}
                 </FormControl>
@@ -164,7 +176,7 @@ export default class SucceededFetchesPerPeriod extends React.Component {
                   value={this.state.selectedPeriod}
                   onChange={this.handleInputChange}
                   required>
-                  {_.map(SucceededFetchesPerPeriod.periods, period => (
+                  {map(SucceededFetchesPerPeriod.periods, period => (
                     <option key={period.name} value={period.value}>{period.name}</option>
                   ))}
                 </FormControl>
@@ -178,14 +190,14 @@ export default class SucceededFetchesPerPeriod extends React.Component {
         </Row>
         <Row className="w-mt-7" styleName="provider-chart-container" >
           {(() => {
-            if (_.isEmpty(this.state.charts)) {
+            if (isEmpty(this.state.charts)) {
               return (
                 <Col xs={12}>
                   <p className="legent">No results.</p>
                 </Col>
               );
             } else {
-              return _.map(this.state.charts, chart => (
+              return map(this.state.charts, chart => (
                 <Col xs={12} key={chart.name} styleName="provider-chart" >
                   <h4>
                     {chart.name}, {' '}
@@ -213,7 +225,7 @@ export default class SucceededFetchesPerPeriod extends React.Component {
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip />
           <Legend verticalAlign="bottom" align="left" iconSize={12} payload={payload} />
-          {_.map(providers, provider => (
+          {map(providers, provider => (
             <Line key={provider.name} type="monotone" dataKey={provider.name} stroke={provider.color} />
           ))}
         </LineChart>

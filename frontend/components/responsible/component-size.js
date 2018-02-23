@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import has from 'lodash/has';
 
 const componentSize = {
   propType: createPropType(),
@@ -64,7 +64,7 @@ function sizeFormatter(breakpoints, defaultValue) {
   };
 
   function getValue(breakpoint) {
-    return _.has(breakpoints, breakpoint)
+    return has(breakpoints, breakpoint)
           ? breakpoints[breakpoint]
           : defaultValue;
   }

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+// import includes from 'lodash/includes';
 import * as Auth from '../authorization/auth.js';
 
 export default function detect() {
@@ -8,8 +8,8 @@ export default function detect() {
   //   ? navigator.languages[0]
   //   : (navigator.language || navigator.userLanguage);
 
-  // if (_.includes(navLang, 'el')
-  //   || _.includes(navLang, 'gr')) {
+  // if (includes(navLang, 'el')
+  //   || includes(navLang, 'gr')) {
   //     return 'gr';
   // }
   // return 'en';

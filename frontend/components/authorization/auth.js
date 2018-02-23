@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import noop from 'lodash/noop';
+import now from 'lodash/now';
 import jwtDecode from 'jwt-decode';
 
 import {publish} from '../events/events.jsx';
@@ -28,7 +29,7 @@ export function signup(email, password) {
 export function logout() {
   const fromFacebook = hasFacebookAccount();
   this.destroySession();
-  WiregooseApi.setCredentialGetter(_.noop);
+  WiregooseApi.setCredentialGetter(noop);
   publish('credentials', {type: 'LOGOUT'});
   if (fromFacebook && window.FB) {
     FB.logout();
@@ -41,7 +42,7 @@ export function launchAuthModal({type, prompt}) {
 
 export function isAuthenticated() {
   const { token, session } = getSession();
-  return !!token && (session.expiresAt > _.now());
+  return !!token && (session.expiresAt > now());
 }
 
 export function isAdmin() {

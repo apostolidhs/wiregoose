@@ -1,4 +1,8 @@
-import _ from 'lodash';
+import sumBy from 'lodash/sumBy';
+import each from 'lodash/each';
+import now from 'lodash/now';
+import sortBy from 'lodash/sortBy';
+import map from 'lodash/map';
 import React from 'react';
 import { Row, Col, Table, Panel, Alert}
   from 'react-bootstrap';
@@ -23,15 +27,15 @@ export default class Dashboard extends React.Component {
     this.refs.cacheInfoLoader.promise = WiregooseApi.getProxyCacheInfo()
       .then(resp => {
         const {files} = resp.data.data;
-        const totalSize = _.sumBy(files, 'size');
+        const totalSize = sumBy(files, 'size');
         let hasOverDate = false;
-        _.each(files, file => {
-          if ((file.created.getTime() + (TIME_1_DAY + TIME_1_HOUR)) < _.now()) {
+        each(files, file => {
+          if ((file.created.getTime() + (TIME_1_DAY + TIME_1_HOUR)) < now()) {
             file.overDate = true;
             hasOverDate = true;
           }
         });
-        const sortedFiles = _.sortBy(files, f => -f.size);
+        const sortedFiles = sortBy(files, f => -f.size);
         this.setState({ files: sortedFiles, totalSize, hasOverDate });
       });
   }
@@ -61,7 +65,7 @@ export default class Dashboard extends React.Component {
                 </thead>
                 <tbody>
                   {
-                    _.map(files, file => (
+                    map(files, file => (
                       <tr key={file.name} className={file.overDate && 'danger'}>
                         <td>{file.size}</td>
                         <td>{toText(file.created, true)}</td>

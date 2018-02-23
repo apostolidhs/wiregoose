@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import throttle from 'lodash/throttle';
+import findLast from 'lodash/findLast';
+import each from 'lodash/each';
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
@@ -32,14 +34,13 @@ export default class ContentSelectorModal extends React.Component {
     return this.state.headTitle !== nextState.headTitle;
   }
 
-  handleOnScroll = _.throttle(evt => {
+  handleOnScroll = throttle(evt => {
     evt && evt.stopPropagation();
     const scrollTop = this.wrapperEl.scrollTop + 60;
-    const stickyHeadEl = _.findLast(this.headEls, headEl => headEl.offsetTop < scrollTop) || this.headEls[0];
+    const stickyHeadEl = findLast(this.headEls, headEl => headEl.offsetTop < scrollTop) || this.headEls[0];
     const headTitle = stickyHeadEl.getAttribute('data-sticky-head');
-    console.log(headTitle);
     if (this.state.headTitle !== headTitle) {
-      _.each(this.headEls, headEl => headEl.style.visibility = 'initial');
+      each(this.headEls, headEl => headEl.style.visibility = 'initial');
       this.headEls[0].style.display = 'none';
       stickyHeadEl.style.visibility = 'hidden';
       this.setState({headTitle});

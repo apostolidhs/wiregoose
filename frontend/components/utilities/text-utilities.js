@@ -1,27 +1,41 @@
-import _ from 'lodash';
+import trimEnd from 'lodash/trimEnd';
+import upperFirst from 'lodash/trimEnd';
+
+import flow from 'lodash/fp/flow';
+import words from 'lodash/fp/words';
+import map from 'lodash/fp/map';
+import join from 'lodash/fp/join';
+
+import split from 'lodash/fp/split';
+import compact from 'lodash/fp/compact';
+import toLower from 'lodash/fp/toLower';
+
+import toPairs from 'lodash/fp/toPairs';
 
 export function ellipsis(text, size = 30, ellipsisSuffix = '...') {
   if (text.length > size) {
     let subtext = text.substring(0, size - 3);
-    subtext = _.trimEnd(subtext);
+    subtext = trimEnd(subtext);
     return `${subtext}${ellipsisSuffix}`;
   }
   return text;
 }
 
 export function toUppercasesWords(words) {
-  return _(words)
-    .words()
-    .map(w => _.upperFirst(w))
-    .join(' ');
+  return flow(
+    words,
+    map(w => upperFirst(w)),
+    join(' ')
+  )(words);
 }
 
 export function createLink(name, id) {
-  const dashTitle = _(name)
-    .split(/[^\wΆΈ-ϗἀ-῾]+/gi)//.split(/\W+/)
-    .compact()
-    .join('-')
-    .toLowerCase();
+  const dashTitle = flow(
+    split(/[^\wΆΈ-ϗἀ-῾]+/gi),//.split(/\W+/)
+    compact,
+    join('-'),
+    toLower,
+  )(name);
   const url = encodeURI(dashTitle);
   return `/article/${url}-${id}`;
 }
@@ -48,8 +62,9 @@ export function createAbsoluteLink(link) {
 }
 
 export function toParam(params) {
-  return _(params)
-    .toPairs()
-    .map(v => `${v[0]}=${encodeURIComponent(v[1])}`)
-    .join('&');
+  return flow(
+    toPairs,
+    map(v => `${v[0]}=${encodeURIComponent(v[1])}`),
+    join('&')
+  )(params);
 }

@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import map from 'lodash/map';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
@@ -23,11 +24,11 @@ export default class SucceededFetchesPerPeriod extends React.Component {
 
     return (
       <div>
-        { !_.isEmpty(stats.failed) && (
+        { !isEmpty(stats.failed) && (
           <section className="w-mt-7">
             <h4>Failed Articles</h4>
             <ListGroup styleName="scroll-list">
-              {_.map(stats.failed, item => (
+              {map(stats.failed, item => (
                 <ListGroupItem key={item._id}>
                   <Link to={{
                     pathname: '/admin/articleentries',
@@ -42,11 +43,11 @@ export default class SucceededFetchesPerPeriod extends React.Component {
           </section>
         )}
 
-        { !_.isEmpty(stats.topViewed) && (
+        { !isEmpty(stats.topViewed) && (
           <section className="w-mt-7">
             <h4>Most viewed Articles</h4>
             <ListGroup styleName="scroll-list">
-              {_.map(stats.topViewed, item => (
+              {map(stats.topViewed, item => (
                 <ListGroupItem className="w-text-overflow" key={item._id}>
                   <Link to={{
                     pathname: '/admin/articleentries',

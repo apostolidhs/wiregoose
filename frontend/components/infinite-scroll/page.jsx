@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import isNumber from 'lodash/isNumber';
+import throttle from 'lodash/throttle';
 import React from 'react';
 
 export default class Page extends React.Component {
@@ -32,14 +33,14 @@ export default class Page extends React.Component {
 
   setScrollTop = (scrollTop) => {
     const docScrollTop = document.documentElement && document.documentElement.scrollTop;
-    if (_.isNumber(docScrollTop)) {
+    if (isNumber(docScrollTop)) {
       document.documentElement.scrollTop = scrollTop;
     } else {
       document.body.scrollTop = scrollTop;
     }
   }
 
-  handleOnScroll = _.throttle(() => {
+  handleOnScroll = throttle(() => {
     this.onScroll();
   }, Page.defaultRegisterInfiniteScrollOpts.throttledScrollDelay)
 

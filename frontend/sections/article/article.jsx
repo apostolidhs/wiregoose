@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import first from 'lodash/first';
 import React from 'react';
 import { browserHistory } from 'react-router';
 import { Link } from 'react-router';
@@ -89,7 +89,7 @@ export default class Article extends React.Component {
           article={article}
           isLoading={isLoading}
           relatedEntries={relatedEntries}
-          nextRelatedEntry={_.first(relatedEntries)}
+          nextRelatedEntry={first(relatedEntries)}
         />
       );
     }

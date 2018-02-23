@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import upperCase from 'lodash/upperCase';
+import upperFirst from 'lodash/upperFirst';
+import startCase from 'lodash/startCase';
 import LocalizedStrings from 'react-localization';
 
 const strings = new LocalizedStrings({
@@ -294,15 +296,15 @@ const strings = new LocalizedStrings({
 });
 
 strings.trFl = (id) => {
-  return _.upperCase(strings[id]);
+  return upperCase(strings[id]);
 }
 
 strings.trFc = (id) => {
-  return _.upperFirst(strings[id]);
+  return upperFirst(strings[id]);
 }
 
 strings.trFa = (id) => {
-  return _.startCase(strings[id]);
+  return startCase(strings[id]);
 }
 
 export default strings;

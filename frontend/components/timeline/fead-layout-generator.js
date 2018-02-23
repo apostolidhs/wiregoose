@@ -1,4 +1,13 @@
-import _ from 'lodash';
+import map from 'lodash/map';
+import castArray from 'lodash/castArray';
+import uniqueId from 'lodash/uniqueId';
+import identity from 'lodash/identity';
+import shuffle from 'lodash/shuffle';
+import groupBy from 'lodash/groupBy';
+import compact from 'lodash/compact';
+import each from 'lodash/each';
+import isArray from 'lodash/isArray';
+import chunk from 'lodash/chunk';
 import React from 'react';
 
 import { IS_DEV } from '../../../config-public.js';
@@ -15,7 +24,7 @@ let googleAdsLaunched = 0;
 export function generateFeedsLayout(feeds, opts) {
   // changeFeedsToDebug(feeds);
   const cascadedFeeds = cascadeFeedsView(feeds);
-  const newElements = _.map(cascadedFeeds, (cascadedFeed) => {
+  const newElements = map(cascadedFeeds, (cascadedFeed) => {
     ++totalElementsFromAllTimelines;
 
     if (shouldRenderFBFollowBox()) {
@@ -27,10 +36,10 @@ export function generateFeedsLayout(feeds, opts) {
       return renderAdvertiseBox();
     }
 
-    const feeds = _.castArray(cascadedFeed);
+    const feeds = castArray(cascadedFeed);
     return (
       <div key={feeds[0]._id} styleName="timeline-box" style={{}} >
-        {_.map(feeds, feed => renderArticleBox(feed, opts))}
+        {map(feeds, feed => renderArticleBox(feed, opts))}
       </div>
     );
   });
@@ -71,7 +80,7 @@ function renderArticleBox(feed, opts) {
 
 function renderFBFollowBox() {
   return (
-    <div key={_.uniqueId('facebook-follow-Key-')} styleName="timeline-box" style={{}} >
+    <div key={uniqueId('facebook-follow-Key-')} styleName="timeline-box" style={{}} >
       <FBFollowBox />
     </div>
   );
@@ -79,7 +88,7 @@ function renderFBFollowBox() {
 
 function renderAdvertiseBox() {
   return (
-    <div key={_.uniqueId('advertise-key-')} styleName="timeline-box"  style={{}} >
+    <div key={uniqueId('advertise-key-')} styleName="timeline-box"  style={{}} >
       <GoogleAdvBox />
     </div>
   );
@@ -95,8 +104,8 @@ function cascadeFeedsView(feeds) {
 }
 
 function createCascadeFeedsView(feeds) {
-  const shuffle = IS_DEV ? (f => _.identity(f)) : (f => _.shuffle(f));
-  const byBoxSize = _.groupBy(feeds, feed => feed.boxSize);
+  const shuffle = IS_DEV ? (f => identity(f)) : (f => shuffle(f));
+  const byBoxSize = groupBy(feeds, feed => feed.boxSize);
   const noImages = byBoxSize['ARTICLE_BOX_NO_IMAGE'];
   const noDescrs = byBoxSize['ARTICLE_BOX_NO_DESCRIPTION'];
   const fulls = byBoxSize['ARTICLE_BOX_FULL'];
@@ -117,13 +126,13 @@ function createCascadeFeedsView(feeds) {
     view = cascadeNoDescriptionFeedsView(view, noDescrs);
     cascadeFeeds = shuffle(view.concat(noImages).concat(fulls));
   }
-  return _.compact(cascadeFeeds);
+  return compact(cascadeFeeds);
 }
 
 function createFullHeightOnSingleNoImageBoxes(cascadeFeeds) {
-  _.each(cascadeFeeds, cascadeFeed => {
+  each(cascadeFeeds, cascadeFeed => {
     if (
-      !_.isArray(cascadeFeed)
+      !isArray(cascadeFeed)
       && cascadeFeed.boxSize === 'ARTICLE_BOX_NO_IMAGE'
     ) {
       cascadeFeed.showMockImage = true;
@@ -133,7 +142,7 @@ function createFullHeightOnSingleNoImageBoxes(cascadeFeeds) {
 }
 
 function createPriorityOnFullBoxes(cascadeFeeds) {
-  const cascadeFeedsByBoxSize = _.groupBy(
+  const cascadeFeedsByBoxSize = groupBy(
     cascadeFeeds,
     cascadeFeed => cascadeFeed.boxSize === 'ARTICLE_BOX_FULL' ? 'full' : 'noFull'
   );
@@ -154,15 +163,15 @@ function createPriorityOnFullBoxes(cascadeFeeds) {
 }
 
 function cascadeNoDescriptionFeedsView(list, noDescrs) {
-  const noDescChunks = _.chunk(noDescrs, 3);
-  return _.shuffle(noDescChunks.concat(list));
+  const noDescChunks = chunk(noDescrs, 3);
+  return shuffle(noDescChunks.concat(list));
 }
 
 /////// debug
 // noImage = 0;
 // noDescription = 0;
 // function changeFeedsToDebug(feeds) {
-//   _.each(feeds, feed => {
+//   each(feeds, feed => {
 //     if (++noImage % 5 === 0) {
 //       feed.boxSize = 'ARTICLE_BOX_NO_IMAGE';
 //     } else if (++noDescription % 2 === 0) {

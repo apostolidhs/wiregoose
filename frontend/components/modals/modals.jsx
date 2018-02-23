@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import noop from 'lodash/noop';
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
@@ -35,7 +35,7 @@ function resetState() {
   modalInstance.setState({
     modalComponent: null,
     closable: false,
-    onClose: _.noop,
+    onClose: noop,
     modalProps: {},
     outsideClick: false
   });

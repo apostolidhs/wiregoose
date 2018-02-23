@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import isObject from 'lodash/isObject';
 
 import ArticleBoxResponseTransformation from '../article-box/response-transformation.js';
 import ImagesSources from '../utilities/images-source.js';
@@ -8,7 +8,7 @@ export default function translate(entry) {
   if (entry.createdAt) {
     entry.createdAt = new Date(entry.createdAt);
   }
-  if (_.isObject(entry.entryId)) {
+  if (isObject(entry.entryId)) {
     entry.entryId = ArticleBoxResponseTransformation(entry.entryId);
   }
   if (entry.link) {

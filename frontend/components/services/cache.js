@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import now from 'lodash/now';
+import isObject from 'lodash/isObject';
 
 export const setItem = (key, item) =>
   new Promise(resolve => {
@@ -10,7 +11,7 @@ export const getItem = (key, {maxAge = -1, fetchOnMiss, fetchOldOnError} = {}) =
   new Promise((resolve, reject) => {
     const datum = localStorage.getItem(key);
     const cell = deSerialize(datum);
-    if (isValidDatum(cell) && (maxAge === -1 || ((cell.created + maxAge) > _.now()))) {
+    if (isValidDatum(cell) && (maxAge === -1 || ((cell.created + maxAge) > now()))) {
       return resolve(cell.item);
     }
 
@@ -35,7 +36,7 @@ export const removeItem = key =>
   new Promise(resolve =>
     resolve(localStorage.removeItem(key)));
 
-function createDatum(item, created = _.now()) {
+function createDatum(item, created = now()) {
   return serialize({item, created});
 }
 
@@ -50,5 +51,5 @@ function serialize(cell) {
 }
 
 function isValidDatum(cell) {
-  return _.isObject(cell) && cell.created && cell.item;
+  return isObject(cell) && cell.created && cell.item;
 }

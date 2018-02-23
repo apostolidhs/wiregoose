@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router';
 import ListView from '../../../components/list-view/list-view.jsx';

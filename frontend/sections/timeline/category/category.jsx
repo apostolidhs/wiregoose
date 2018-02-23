@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import includes from 'lodash/includes';
+import now from 'lodash/now';
+import isEmpty from 'lodash/isEmpty';
 import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
@@ -53,7 +55,7 @@ class Category extends InfiniteScrollPage {
 
   checkCategoryExistence = () => {
     const category = this.props.routeParams.id;
-    if (!_.includes(CATEGORIES, category)) {
+    if (!includes(CATEGORIES, category)) {
       browserHistory.replace('/401');
       return false;
     }
@@ -63,14 +65,14 @@ class Category extends InfiniteScrollPage {
   retrieveTimeline = () => {
     if (!Category.page.lastFeeds) {
       const category = this.props.routeParams.id;
-      Category.page.lastFeeds = { [category]: _.now() };
+      Category.page.lastFeeds = { [category]: now() };
     }
     return WiregooseApi.timeline.category(
       Category.page.lastFeeds,
       BrowserLanguageDetection(),
       {
         onOffline: () => {
-          if (_.isEmpty(Category.page.virtualList)) {
+          if (isEmpty(Category.page.virtualList)) {
             this.setState({isOffline: true});
           }
         }

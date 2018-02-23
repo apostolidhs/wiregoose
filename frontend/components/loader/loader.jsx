@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import debounce from 'lodash/debounce';
 import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
@@ -45,7 +45,7 @@ export default class Loader extends React.Component {
   }
 
   set promise(prms) {
-    this.toggleLoading = _.debounce((isLoading = false) => {
+    this.toggleLoading = debounce((isLoading = false) => {
       if (this.hasMount) {
         this.setState({ isLoading });
       }

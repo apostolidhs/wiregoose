@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import startsWith from 'lodash/startsWith';
 import { getApiUrl, isHttps } from './environment-detection';
 
 const API_ORIGIN = getApiUrl();
@@ -9,7 +9,7 @@ export function toArticleBox(src) {
 }
 
 export default function(src) {
-  if (httpsMode && _.startsWith(src, 'http:')) {
+  if (httpsMode && startsWith(src, 'http:')) {
     return `${API_ORIGIN}proxy/image?q=${encodeURIComponent(src)}`;
   }
 

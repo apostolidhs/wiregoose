@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import isNumber from 'lodash/isNumber';
 import React from 'react';
 import { Form, FormGroup, Col, FormControl, ControlLabel, Button, Panel, Collapse }
   from 'react-bootstrap';
@@ -28,7 +28,7 @@ export default class PreRenderForm extends React.Component {
       && record.link
       && record.createdAt
       && record.lastHit
-      && _.isNumber(record.hits)
+      && isNumber(record.hits)
     );
   }
 

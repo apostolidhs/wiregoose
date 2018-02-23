@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
@@ -46,7 +47,7 @@ export default class Login extends React.Component {
           errors.invalidCredentials = tr.invalidCredentials;
         }
 
-        if (_.isEmpty(errors) && reason.status === 400) {
+        if (isEmpty(errors) && reason.status === 400) {
           templates.unexpectedError();
         }
 

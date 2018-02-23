@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import size from 'lodash/size';
+import keyBy from 'lodash/keyBy';
 
 import {subscribe, publish} from '../events/events.jsx';
 import {
@@ -26,7 +27,7 @@ export function setBookmark(entryId, toggle = false) {
 }
 
 export function getBookmarksLength() {
-  return _.size(bookmarkIds);
+  return size(bookmarkIds);
 }
 
 export function isMaximumBookmarksReached() {
@@ -44,7 +45,7 @@ subscribe('credentials', evt => {
 function retrieveAllIds() {
   const userId = getSession().user._id;
   return bookmarksAPI.retrieveAllIds(userId)
-    .then(resp => bookmarkIds = _.keyBy(resp.data.data.bookmarks))
+    .then(resp => bookmarkIds = keyBy(resp.data.data.bookmarks))
     .then(() => notifyIfMaximumBookmarksReached())
     .then(() => publish('bookmarks', {type: 'RETRIEVED'}));
 }

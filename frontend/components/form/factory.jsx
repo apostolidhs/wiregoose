@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import map from 'lodash/map';
+import startCase from 'lodash/startCase';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormGroup, Col, FormControl, ControlLabel, Button }
@@ -19,7 +20,7 @@ export function createStaticText(value, label) {
   );
 }
 
-export function createInput({type = 'text', name, value = '', onChange, label = _.startCase(name), required = false}) {
+export function createInput({type = 'text', name, value = '', onChange, label = startCase(name), required = false}) {
   return (
     <FormGroup controlId={`form${name}`}>
       <Col componentClass={ControlLabel} sm={2}>{label}</Col>
@@ -36,7 +37,7 @@ export function createInput({type = 'text', name, value = '', onChange, label = 
   )
 }
 
-export function createInputLink({name, value = '', onChange, label = _.startCase(name), validate, required = false}) {
+export function createInputLink({name, value = '', onChange, label = startCase(name), validate, required = false}) {
   return (
     <FormGroup controlId={`form${name}`} validationState={validate}>
       <Col componentClass={ControlLabel} sm={2}>{label}</Col>
@@ -53,7 +54,7 @@ export function createInputLink({name, value = '', onChange, label = _.startCase
   )
 }
 
-export function createSelection({name, value = '', onChange, label = _.startCase(name), required = false, enumeration}) {
+export function createSelection({name, value = '', onChange, label = startCase(name), required = false, enumeration}) {
   return (
     <FormGroup controlId={`form${name}`}>
       <Col componentClass={ControlLabel} sm={2}>{label}</Col>
@@ -66,7 +67,7 @@ export function createSelection({name, value = '', onChange, label = _.startCase
           onChange={onChange}
           required>
           <option value="">-</option>
-          {_.map(enumeration, value => (
+          {map(enumeration, value => (
             <option key={value} value={value}>{value}</option>
           ))}
         </FormControl>
@@ -75,7 +76,7 @@ export function createSelection({name, value = '', onChange, label = _.startCase
   );
 }
 
-export function createInputDate({name, value = new Date, onChange, label = _.startCase(name), required = false}) {
+export function createInputDate({name, value = new Date, onChange, label = startCase(name), required = false}) {
   return (
     <FormGroup controlId={`form${name}`}>
       <Col componentClass={ControlLabel} sm={2}>{label}</Col>

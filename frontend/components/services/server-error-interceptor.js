@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import get from 'lodash/get';
+import upperFirst from 'lodash/upperFirst';
+import isObject from 'lodash/isObject';
 import { browserHistory } from 'react-router';
 
 import tr from '../localization/localization.js';
@@ -7,7 +9,7 @@ import * as Notifications from '../notifications/notifications.jsx';
 import {isAdmin} from '../utilities/environment-detection.js';
 
 export default function ServerErrorsInterceptor (error, handler) {
-  const response = _.get(error, 'response', {});
+  const response = get(error, 'response', {});
   const status = (response && response.status) || -1;
 
   // authentication error
@@ -24,7 +26,7 @@ export default function ServerErrorsInterceptor (error, handler) {
         title: tr.promptServerError400Title
       });
     } else {
-      const msg = _.upperFirst(response.data.error)
+      const msg = upperFirst(response.data.error)
         || getStatusError(response);
       Notifications.create.warning(msg);
     }
@@ -39,7 +41,7 @@ export default function ServerErrorsInterceptor (error, handler) {
 
     // requests that cannot be sent
   } else if (status === -1) {
-    if (handler && _.isObject(handler) && handler.onOffline) {
+    if (handler && isObject(handler) && handler.onOffline) {
       return handler.onOffline();
     } else {
       Notifications.create.warning(tr.promptServerErrorNotConnected, {

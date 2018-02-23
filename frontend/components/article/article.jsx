@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import size from 'lodash/size';
+import map from 'lodash/map';
 import React from 'react';
 import PropTypes from 'prop-types';
 import validateURL from 'react-proptypes-url-validator';
@@ -138,7 +139,7 @@ export default class Article extends React.Component {
             date={entry.published}
           />
         </div>
-        { _.size(article.byline) > 2 &&
+        { size(article.byline) > 2 &&
           <div className="w-mt-14 text-muted" >
             {tr.by} {article.byline}
           </div>
@@ -205,7 +206,7 @@ export default class Article extends React.Component {
     const {relatedEntries} = this.props;
     return (
       <Row styleName="related-articles" >
-        {_.map(relatedEntries, entry => (
+        {map(relatedEntries, entry => (
           <Col sm={4} key={entry._id}>
             <ArticleBoxMd entry={entry}/>
           </Col>

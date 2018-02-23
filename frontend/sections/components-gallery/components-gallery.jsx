@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import omit from 'lodash/omit';
 import React from 'react';
 import CSSModules from 'react-css-modules';
 
@@ -14,7 +14,7 @@ export default class ComponentsGallery extends React.Component {
 
   render() {
     const entryData = entrySample();
-    const entryDataNoAuthor = _.omit(entrySample(), 'author');
+    const entryDataNoAuthor = omit(entrySample(), 'author');
     return (
       <div className="w-m">
         {/* <Article article={articleSample()} /> */}

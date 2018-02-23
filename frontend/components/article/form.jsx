@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import isObject from 'lodash/isObject';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormGroup, Col, FormControl, ControlLabel, Button, Panel, Collapse }
@@ -117,7 +117,7 @@ export default class ArticleForm extends React.Component {
           isNew
         }) }
 
-        { _.isObject(record.entryId) && (
+        {isObject(record.entryId) && (
           <div className="w-mt-7">
             <ArticleBox entry={record.entryId} />
           </div>

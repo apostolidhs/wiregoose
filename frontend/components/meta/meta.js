@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import each from 'lodash/each';
 import { FACEBOOK_APP_ID } from '../../../config-public.js';
 
 const metaTags = {
@@ -47,7 +47,7 @@ export function setOptions(opts = {}) {
 }
 //
 function createElementFromMetaCategory(rootEl, metaTagCategory, value) {
-  _.each(metaTags[metaTagCategory], (tags) => {
+  each(metaTags[metaTagCategory], (tags) => {
     const [tagName, attributeKey, attributeValue, content] = tags;
     let tagValue = value;
     if (metaTagCategory === 'title') {
@@ -73,14 +73,14 @@ function createElementFromMetaCategory(rootEl, metaTagCategory, value) {
 }
 
 function createElements(rootEl, opts) {
-  _.each(opts, (value, metaTagCategory) => {
+  each(opts, (value, metaTagCategory) => {
     createElementFromMetaCategory(rootEl, metaTagCategory, value);
   });
 }
 
 function clearElements(rootEl) {
-  _.each(metaTags, (tags) => {
-    _.each(tags, tag => {
+  each(metaTags, (tags) => {
+    each(tags, tag => {
       const el = queryElement(rootEl, tag[0], tag[1], tag[2]);
       if (el) {
         rootEl.removeChild(el);

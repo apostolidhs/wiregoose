@@ -1,4 +1,16 @@
-import _ from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import throttle from 'lodash/throttle';
+import first from 'lodash/first';
+import last from 'lodash/last';
+import find from 'lodash/find';
+import each from 'lodash/each';
+import mapValues from 'lodash/mapValues';
+import size from 'lodash/size';
+
+import flow from 'lodash/fp/flow';
+import values from 'lodash/fp/values';
+import flatten from 'lodash/fp/flatten';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router';
@@ -30,7 +42,7 @@ export default class Page {
 
     this.recalculateComponentPositions();
 
-    if (_.isEmpty(this.virtualList)) {
+    if (isEmpty(this.virtualList)) {
       this.retrieveNextTimeline();
     } else {
       if (this.lastScrollTop) {
@@ -57,7 +69,7 @@ export default class Page {
     this.targetComponent.timeline.scrollContainerEl.style.height = `${scrollContainerHeight}px`;
   }
 
-  onResize = _.throttle(() => {
+  onResize = throttle(() => {
     this.recalculateComponentPositions();
     this.onScroll();
   }, 200)
@@ -90,7 +102,7 @@ export default class Page {
     this.updateVirtualListPositions();
   }
 
-  onScroll = _.throttle(() => {
+  onScroll = throttle(() => {
     if (!this.targetComponent) {
       return;
     }
@@ -111,13 +123,13 @@ export default class Page {
     const timelineElements = this.targetComponent.timeline.state.elements;
     const elements = this.virtualList.slice(from, to);
 
-    if (_.first(timelineElements) === _.first(elements)
-      && _.last(timelineElements) === _.last(elements)) {
+    if (first(timelineElements) === first(elements)
+      && last(timelineElements) === last(elements)) {
       return;
     }
 
     this.targetComponent.timeline.setState({elements}, () => {
-      const advertiseElement = _.find(elements, element => element.key.includes('advertise'));
+      const advertiseElement = find(elements, element => element.key.includes('advertise'));
       if (advertiseElement && !this.advertiseElements[advertiseElement.key]) {
         (adsbygoogle = window.adsbygoogle || []).push({});
         this.advertiseElements[advertiseElement.key] = true;
@@ -126,7 +138,7 @@ export default class Page {
   }, 200)
 
   updateVirtualListPositions = () => {
-    _.each(this.virtualList, this.calculateArticleBoxPosition);
+    each(this.virtualList, this.calculateArticleBoxPosition);
   }
 
   retrieveNextTimeline = () => {
@@ -157,24 +169,21 @@ export default class Page {
 
     this.targetComponent.handleMetaData();
 
-    this.lastFeeds = _.mapValues(
+    this.lastFeeds = mapValues(
       data,
-      feeds => (_.size(feeds) > 0 ? _.last(feeds).published.getTime() : undefined)
+      feeds => (size(feeds) > 0 ? last(feeds).published.getTime() : undefined)
     );
 
-    const feeds = _(data)
-      .values()
-      .flatten()
-      .value();
+    const feeds = flow(values, flatten)(data);
 
-    if (_.isEmpty(feeds)) {
+    if (isEmpty(feeds)) {
       this.hasMore = false;
       if (this.isEmpty()) {
         this.targetComponent.setState({showBlankSlate: true});
       }
     } else {
       const feedElements = generateFeedsLayout(feeds, this.feedGeneratorOptions);
-      _.each(feedElements, feedElement => {
+      each(feedElements, feedElement => {
         this.calculateArticleBoxPosition(feedElement, this.virtualList.length);
         this.virtualList.push(feedElement);
       });
@@ -203,7 +212,7 @@ export default class Page {
   }
 
   isEmpty = () => {
-    return _.isEmpty(this.virtualList) && !this.hasMore;
+    return isEmpty(this.virtualList) && !this.hasMore;
   }
 
   invalidateCache = () => {

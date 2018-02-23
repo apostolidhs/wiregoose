@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import map from 'lodash/map';
+import omit from 'lodash/omit';
 
 export default function translate(fetchReport) {
   if (fetchReport.started) {
@@ -12,7 +13,7 @@ export default function translate(fetchReport) {
                       - fetchReport.started.getTime()) / (1000));
   }
   if (fetchReport.failedFetches) {
-    fetchReport.failedFetches = _.map(fetchReport.failedFetches, f => _.omit(f, ['_id']));
+    fetchReport.failedFetches = map(fetchReport.failedFetches, f => omit(f, ['_id']));
   }
   fetchReport.unsucceededFetches = fetchReport.totalFetches - fetchReport.succeededFetches;
   fetchReport.succeededFetchesPerc = Math.round((fetchReport.succeededFetches / fetchReport.totalFetches) * 100);

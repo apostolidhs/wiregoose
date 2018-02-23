@@ -1,3 +1,4 @@
+import capitalize from 'lodash/capitalize';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
@@ -32,8 +33,8 @@ export default class Tag extends React.Component {
         className="btn btn-default"
         styleName="tag"
         role="button"
-        title={`${_.capitalize(provider)} ${tr.trFa('category')}`} >
-        <p>{ _.capitalize(provider) }</p>
+        title={`${capitalize(provider)} ${tr.trFa('category')}`} >
+        <p>{ capitalize(provider) }</p>
         <small className="text-muted">{ tr[category] }</small>
       </Link>
     );

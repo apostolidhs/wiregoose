@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import transform from 'lodash/transform';
+import each from 'lodash/each';
 import {getItem, setItem} from '../services/cache.js';
 
 const KEY = 'exploreTimeline';
@@ -17,12 +19,12 @@ export function createResponseHandler() {
 
 export function composeCachedResponse() {
   return getItem(KEY).then(cache => {
-    if (_.isEmpty(cache)) {
+    if (isEmpty(cache)) {
       return;
     }
 
-    const composedData = _.transform(cache, (result, data) => {
-      _.each(data.data, (records, catName) => {
+    const composedData = transform(cache, (result, data) => {
+      each(data.data, (records, catName) => {
         result[catName] = (result[catName] || []).concat(records);
       });
     }, {});

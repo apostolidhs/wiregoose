@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import map from 'lodash/map';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Navbar, Nav, NavItem} from 'react-bootstrap';
@@ -27,7 +27,7 @@ export default class SubHeader extends React.Component {
         <Navbar styleName="sub-header-nav">
           <div styleName="sub-header-nav-categories-wrapper">
             <Nav>
-            {_.map(CATEGORIES, (cat, idx) =>
+            {map(CATEGORIES, (cat, idx) =>
               <LinkContainer key={cat} to={`/category/${cat}`}>
                 <NavItem styleName="sub-header-nav-categories-item" eventKey={idx} href="#">
                   {<CategoryImages name={cat} />}

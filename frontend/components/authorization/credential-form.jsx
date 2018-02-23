@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import omit from 'lodash/omit';
+import isEmpty from 'lodash/isEmpty';
 import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
@@ -37,7 +38,7 @@ export default class CredentialForm extends React.Component {
     const {errors} = this.state;
     this.setState({
       [name]: e.target.value,
-      errors: _.omit(errors, [name])
+      errors: omit(errors, [name])
     });
   }
 
@@ -53,7 +54,7 @@ export default class CredentialForm extends React.Component {
       errors.password = tr.formatString(tr.invalidPassword, 6).join('');
     }
 
-    if (!_.isEmpty(errors)) {
+    if (!isEmpty(errors)) {
       this.setState({errors});
       return;
     }
