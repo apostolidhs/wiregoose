@@ -1,7 +1,10 @@
 import map from 'lodash/map';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Navbar, Nav, NavItem} from 'react-bootstrap';
+import Button from 'react-bootstrap/lib/Button';
+import Navbar from 'react-bootstrap/lib/Navbar';
+import Nav from 'react-bootstrap/lib/Nav';
+import NavItem from 'react-bootstrap/lib/NavItem';
 import { LinkContainer } from 'react-router-bootstrap';
 import FontAwesome from 'react-fontawesome';
 import CSSModules from 'react-css-modules';

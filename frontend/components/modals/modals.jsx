@@ -1,6 +1,6 @@
 import noop from 'lodash/noop';
 import React from 'react';
-import { Modal } from 'react-bootstrap';
+import Modal from 'react-bootstrap/lib/Modal';
 import CSSModules from 'react-css-modules';
 
 import styles from './modals.less';

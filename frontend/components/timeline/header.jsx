@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
-import { Button } from 'react-bootstrap';
+import Button from 'react-bootstrap/lib/Button';
 import FontAwesome from 'react-fontawesome';
 
 import styles from './header.less';

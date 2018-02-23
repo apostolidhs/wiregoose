@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col } from 'react-bootstrap';
+import Col from 'react-bootstrap/lib/Col';
 import CSSModules from 'react-css-modules';
 
 import styles from './info.less';

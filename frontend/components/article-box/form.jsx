@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Col, FormControl, ControlLabel, Button, Panel }
-  from 'react-bootstrap';
+import Form from 'react-bootstrap/lib/Form';
+import FormGroup from 'react-bootstrap/lib/FormGroup';
+import Col from 'react-bootstrap/lib/Col';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import ControlLabel from 'react-bootstrap/lib/ControlLabel';
+import Button from 'react-bootstrap/lib/Button';
+import Panel from 'react-bootstrap/lib/Panel';
 import FontAwesome from 'react-fontawesome';
 import { isUri } from 'valid-url';
 import CSSModules from 'react-css-modules';
 import DatePicker from 'react-datepicker';
-import moment from 'moment';
 
 import styles from './form.less';
 import Loader from '../loader/loader.jsx';

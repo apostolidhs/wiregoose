@@ -4,8 +4,11 @@ import now from 'lodash/now';
 import sortBy from 'lodash/sortBy';
 import map from 'lodash/map';
 import React from 'react';
-import { Row, Col, Table, Panel, Alert}
-  from 'react-bootstrap';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
+import Table from 'react-bootstrap/lib/Table';
+import Panel from 'react-bootstrap/lib/Panel';
+import Alert from 'react-bootstrap/lib/Alert';
 import FontAwesome from 'react-fontawesome';
 
 import Loader from '../../../components/loader/loader.jsx';

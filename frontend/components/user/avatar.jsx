@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import CSSModules from 'react-css-modules';
 import classnames from 'classnames';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 import tr from '../localization/localization.js';
 import * as Events from '../events/events.jsx';

@@ -3,8 +3,9 @@ import map from 'lodash/map';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import { ListGroup, ListGroupItem, Badge }
-  from 'react-bootstrap';
+import ListGroup from 'react-bootstrap/lib/ListGroup';
+import ListGroupItem from 'react-bootstrap/lib/ListGroupItem';
+import Badge from 'react-bootstrap/lib/Badge';
 import ReactJson from 'react-json-view';
 import CSSModules from 'react-css-modules';
 

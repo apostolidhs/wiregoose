@@ -3,8 +3,13 @@ import isEmpty from 'lodash/isEmpty';
 import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
-import { Form, FormGroup, Col, FormControl, ControlLabel, Button, HelpBlock }
-  from 'react-bootstrap';
+import Form from 'react-bootstrap/lib/Form';
+import FormGroup from 'react-bootstrap/lib/FormGroup';
+import Col from 'react-bootstrap/lib/Col';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import ControlLabel from 'react-bootstrap/lib/ControlLabel';
+import Button from 'react-bootstrap/lib/Button';
+import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import {isMobile} from '../utilities/environment-detection.js';
 
 import tr from '../localization/localization.js';

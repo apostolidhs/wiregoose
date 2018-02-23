@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import FontAwesome from 'react-fontawesome';
-import { Media, Panel, Image } from 'react-bootstrap';
+import Media from 'react-bootstrap/lib/Media';
+import Panel from 'react-bootstrap/lib/Panel';
+import Image from 'react-bootstrap/lib/Image';
 import { Link } from 'react-router';
 
 import tr from '../localization/localization.js';

@@ -3,7 +3,9 @@ import classnames from 'classnames';
 import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
-import {Button as BSButton, OverlayTrigger, Tooltip} from 'react-bootstrap';
+import BSButton from 'react-bootstrap/lib/Button';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 import tr from '../localization/localization.js';
 import {isAuthenticated, launchAuthModal} from '../authorization/auth.js';

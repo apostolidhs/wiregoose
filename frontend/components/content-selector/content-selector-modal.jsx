@@ -2,7 +2,7 @@ import throttle from 'lodash/throttle';
 import findLast from 'lodash/findLast';
 import each from 'lodash/each';
 import React from 'react';
-import { Modal } from 'react-bootstrap';
+import Modal from 'react-bootstrap/lib/Modal';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import { browserHistory } from 'react-router';

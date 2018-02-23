@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 import validateURL from 'react-proptypes-url-validator';
 import { Link } from 'react-router';
 import FontAwesome from 'react-fontawesome';
-import { Button, Row, Col } from 'react-bootstrap';
+import Button from 'react-bootstrap/lib/Button';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
 import { browserHistory } from 'react-router';
 import CSSModules from 'react-css-modules';
 

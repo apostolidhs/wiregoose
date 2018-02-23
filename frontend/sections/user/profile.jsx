@@ -1,7 +1,7 @@
 import React from 'react';
 import FontAwesome from 'react-fontawesome';
 import CSSModules from 'react-css-modules';
-import { Panel } from 'react-bootstrap';
+import Panel from 'react-bootstrap/lib/Panel';
 
 import * as Auth from '../../components/authorization/auth.js';
 import UserAvatar from '../../components/user/avatar.jsx';

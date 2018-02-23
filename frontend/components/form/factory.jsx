@@ -2,8 +2,12 @@ import map from 'lodash/map';
 import startCase from 'lodash/startCase';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Col, FormControl, ControlLabel, Button }
-  from 'react-bootstrap';
+import Form from 'react-bootstrap/lib/Form';
+import FormGroup from 'react-bootstrap/lib/FormGroup';
+import Col from 'react-bootstrap/lib/Col';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import ControlLabel from 'react-bootstrap/lib/ControlLabel';
+import Button from 'react-bootstrap/lib/Button';
 import { isUri } from 'valid-url';
 import FontAwesome from 'react-fontawesome';
 import DatePicker from 'react-datepicker';

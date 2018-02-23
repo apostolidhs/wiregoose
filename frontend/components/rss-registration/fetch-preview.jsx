@@ -2,8 +2,13 @@ import size from 'lodash/size';
 import map from 'lodash/map';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Col, Row, FormControl, Panel, Table }
-  from 'react-bootstrap';
+import Form from 'react-bootstrap/lib/Form';
+import FormGroup from 'react-bootstrap/lib/FormGroup';
+import Col from 'react-bootstrap/lib/Col';
+import Row from 'react-bootstrap/lib/Row';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import Panel from 'react-bootstrap/lib/Panel';
+import Table from 'react-bootstrap/lib/Table';
 import ReactJson from 'react-json-view';
 
 import ArticleBox from '../article-box/article-box.jsx';

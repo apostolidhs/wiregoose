@@ -1,8 +1,10 @@
 import first from 'lodash/first';
 import isEmpty from 'lodash/isEmpty';
 import React from 'react';
-import { Row, Col, Panel, Button }
-  from 'react-bootstrap';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
+import Panel from 'react-bootstrap/lib/Panel';
+import Button from 'react-bootstrap/lib/Button';
 import FontAwesome from 'react-fontawesome';
 
 import * as Notifications from '../../../components/notifications/notifications.jsx';

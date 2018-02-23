@@ -2,7 +2,8 @@ import isEmpty from 'lodash/isEmpty';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
-import { Image, Panel } from 'react-bootstrap';
+import Image from 'react-bootstrap/lib/Image';
+import Panel from 'react-bootstrap/lib/Panel';
 import CSSModules from 'react-css-modules';
 
 import FacebookLogin from './facebook';

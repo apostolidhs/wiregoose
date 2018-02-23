@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
-import { Image as BootstrapImage } from 'react-bootstrap';
+import BootstrapImage from 'react-bootstrap/lib/Image';
 import styles from './article-box.less';
 
 const imagesCacheState = {};

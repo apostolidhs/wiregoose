@@ -10,8 +10,11 @@ import flatten from 'lodash/flatten';
 import sumBy from 'lodash/sumBy';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ListGroup, ListGroupItem, Badge, Row, Col }
-  from 'react-bootstrap';
+import ListGroup from 'react-bootstrap/lib/ListGroup';
+import ListGroupItem from 'react-bootstrap/lib/ListGroupItem';
+import Badge from 'react-bootstrap/lib/Badge';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
 import CSSModules from 'react-css-modules';
 import Select from 'react-select';
 

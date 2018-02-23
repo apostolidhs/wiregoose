@@ -8,7 +8,10 @@ import PropTypes from 'prop-types';
 import { browserHistory, Link } from 'react-router';
 import { BootstrapTable, TableHeaderColumn }
   from 'react-bootstrap-table';
-import { Row, Col, Button, Collapse } from 'react-bootstrap';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
+import Button from 'react-bootstrap/lib/Button';
+import Collapse from 'react-bootstrap/lib/Collapse';
 import FontAwesome from 'react-fontawesome';
 
 import * as Notifications from '../notifications/notifications.jsx';

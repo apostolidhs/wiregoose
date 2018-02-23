@@ -3,7 +3,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Nav, NavItem, Panel, Row, Col } from 'react-bootstrap';
+import Nav from 'react-bootstrap/lib/Nav';
+import NavItem from 'react-bootstrap/lib/NavItem';
+import Panel from 'react-bootstrap/lib/Panel';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
 import FontAwesome from 'react-fontawesome';
 import { Link } from 'react-router';
 
