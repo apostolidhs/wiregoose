@@ -13,6 +13,8 @@ import 'react-select/dist/react-select.css';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 import './less/index.less';
 
+import './assets/img/logo.png';
+
 import 'core-js/shim';
 import Localization from './components/localization/localization.js';
 import BrowserLanguageDetection from './components/utilities/browser-language-detection.js';
