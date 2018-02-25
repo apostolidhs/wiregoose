@@ -18,6 +18,7 @@ export default class Facebook extends React.Component {
               to="/"
               role="button"
               title={tr.exploreNews}
+              aria-label={tr.offlineModeCta}
             >
               {tr.offlineModeCta}
             </Link>
@@ -26,7 +27,7 @@ export default class Facebook extends React.Component {
         <p>
           {tr.or}
           {' '}
-          <a href="#" onClick={evt => {evt.preventDefault(); location.reload()}}>
+          <a href="#" title={tr.refresh} onClick={evt => {evt.preventDefault(); location.reload()}}>
             {tr.refresh}
           </a>
         </p>

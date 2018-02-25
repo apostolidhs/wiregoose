@@ -70,7 +70,7 @@ export default class Forgot extends React.Component {
             </div>
           }
 
-          <a href="#" onClick={e => {e.preventDefault(); onSigninClicked();}}>
+          <a href="#" title={tr.backToLogin} onClick={e => {e.preventDefault(); onSigninClicked();}}>
             <small>{tr.backToLogin}</small>
           </a>
         </Panel>

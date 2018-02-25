@@ -21,6 +21,7 @@ export default class Tag extends React.Component {
         to={`/category/${name}`}
         role="button"
         title={`${friendlyName} ${tr.trFa('category')}`}
+        aria-label={friendlyName}
         {...passDownProps}
       >
         <Badge>{ friendlyName }</Badge>

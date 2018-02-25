@@ -66,7 +66,7 @@ export default class Login extends React.Component {
           <small>{tr.signIn}</small>
         </h1>
         <span className="text-center center-block text-muted">
-        {tr.or} <a href="#" onClick={e => {e.preventDefault(); onSignupClicked()}}>{tr.createAccountPrompt}</a>
+        {tr.or} <a href="#" title={tr.createAccountPrompt} onClick={e => {e.preventDefault(); onSignupClicked()}}>{tr.createAccountPrompt}</a>
         </span>
         <FacebookLogin className="w-mt-14" type="SIGNIN" onFacebookAuth={this.onFacebookAuth} />
         <div className="text-center text-muted w-mt-7">{tr.trFl('or')}</div>
@@ -78,7 +78,7 @@ export default class Login extends React.Component {
             onCredentialSubmit={this.performLogin}
             submitTitle={tr.signIn}
           />
-          <a href="#" onClick={e => {e.preventDefault(); onForgotClicked();}}>
+          <a href="#" title={tr.forgotPasswordPrompt} onClick={e => {e.preventDefault(); onForgotClicked();}}>
             <small>{tr.forgotPasswordPrompt}</small>
           </a>
         </Panel>

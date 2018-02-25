@@ -36,7 +36,7 @@ export default class ArticleBoxSm extends React.Component {
         <Panel styleName="article-box-sm-panel" >
           <Media>
             <Media.Left align="middle" >
-              <ImageLoader src={toArticleBox(image)} showOnlyPlaceholder={!image} width={42} height={42} circle>
+              <ImageLoader src={toArticleBox(image)} title={title} showOnlyPlaceholder={!image} width={42} height={42} circle>
                 <CategoryImage name={category} />
               </ImageLoader>
             </Media.Left>

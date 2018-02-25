@@ -101,7 +101,7 @@ class Header extends React.Component {
 
         <Navbar.Header>
           <Navbar.Brand>
-            <Link to="/" styleName="logo">
+            <Link to="/" title="Wiregoose" styleName="logo">
               <img alt="Wiregoose" src={logoImage} />
               Wiregoose
             </Link>
@@ -123,6 +123,7 @@ class Header extends React.Component {
               : <FontAwesome name="ellipsis-v" />
             }
             id="w-menu-settings"
+            aria-label="Menu"
             noCaret
           >
             { Auth.isAuthenticated() &&

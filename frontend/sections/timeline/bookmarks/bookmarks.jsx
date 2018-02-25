@@ -76,6 +76,7 @@ export default class Bookmarks extends InfiniteScrollPage {
           <Link
             to="/"
             role="button"
+            aria-label={tr.exploreNews}
             title={tr.exploreNews}
           >
             {tr.promptReading}

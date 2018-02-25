@@ -195,7 +195,15 @@ export default class Article extends React.Component {
           </div>
         </div>
         <div className="text-center w-mb-7">
-            <a href={article.link} title={article.title} className="btn btn-default" role="button" target="_blank" styleName="article-control-btn">
+            <a
+              href={article.link}
+              title={article.title}
+              className="btn btn-default"
+              role="button"
+              aria-label={tr.articleReadFromWebsite}
+              target="_blank"
+              styleName="article-control-btn"
+            >
             <FontAwesome name="external-link" /> {' '}
             {tr.articleReadFromWebsite}
           </a>
@@ -243,7 +251,7 @@ export default class Article extends React.Component {
   renderLoading = () => {
     return (
       <div className="text-center">
-        <img className="w-is-logo-loading" src={mongooseIcon} styleName="logo-loading" />
+        <img className="w-is-logo-loading" src={mongooseIcon} styleName="logo-loading" alt="Wiregoose" />
         <h4 className="w-text-loading" data-text={tr.loadingArticle}>
           {tr.loadingArticle}
         </h4>
@@ -262,7 +270,15 @@ export default class Article extends React.Component {
           <FontAwesome name="newspaper-o" />
         </h1>
         <p className="lead">{tr.articleRedirectTitle}</p>
-        <a href={article.link} title={article.title} className="btn btn-default" role="button" target="_blank" styleName="article-control-btn">
+        <a
+          href={article.link}
+          title={article.title}
+          className="btn btn-default"
+          role="button"
+          aria-label={tr.articleReadFromWebsite}
+          target="_blank"
+          styleName="article-control-btn"
+        >
           <FontAwesome name="external-link" /> {' '}
           {tr.articleReadFromWebsite}
         </a>

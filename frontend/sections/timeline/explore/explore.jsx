@@ -100,7 +100,7 @@ export default class Explore extends InfiniteScrollPage {
               {' '}
               {tr.or}
               {' '}
-              <a href="#" onClick={evt => {evt.preventDefault(); location.reload()}}>
+              <a href="#" title={tr.refresh} onClick={evt => {evt.preventDefault(); location.reload()}}>
                 {tr.refresh}
               </a>
             </p>

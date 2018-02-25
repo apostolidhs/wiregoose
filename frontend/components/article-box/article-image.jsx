@@ -14,6 +14,7 @@ export default class ArticleImage extends React.Component {
   static propTypes = {
     src: PropTypes.string,
     children: PropTypes.node.isRequired,
+    title: PropTypes.string.isRequired,
     showOnlyPlaceholder: PropTypes.bool
   }
 
@@ -85,15 +86,16 @@ export default class ArticleImage extends React.Component {
       src,
       showOnlyPlaceholder,
       children,
+      title,
       ...props
     } = this.props;
 
     if (isLoading) {
-      return <BootstrapImage styleName='is-image-loading' {...props}/>;
+      return <BootstrapImage styleName='is-image-loading' alt='Wiregoose' {...props}/>;
     }
 
     if (loadSuccess) {
-      return <BootstrapImage src={src} {...props}/>;
+      return <BootstrapImage src={src} alt={title} {...props}/>;
     }
 
     return children;

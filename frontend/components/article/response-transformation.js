@@ -18,13 +18,13 @@ export default function translate(entry) {
     var el = document.createElement('div');
     el.innerHTML = entry.content;
     entry.contentEl = el;
-    proxyImageLinks(el);
+    proxyImageLinks(el, entry.title);
   }
   return entry;
 }
 
 
-function proxyImageLinks(content) {
+function proxyImageLinks(content, title) {
   const imgs = content.getElementsByTagName('img');
   for(let i = 0; i < imgs.length; ++i) {
     const img = imgs[i];
@@ -33,5 +33,6 @@ function proxyImageLinks(content) {
       const proxiedSrc = ImagesSources(src);
       img.setAttribute('src', proxiedSrc);
     }
+    img.setAttribute('alt', title);
   }
 }

@@ -74,7 +74,7 @@ export default class Loader extends React.Component {
             <div styleName="loader backdrop"></div>
             <div styleName="loader message-wrapper">
               <div className="text-center">
-                <img className="w-is-logo-loading" src={mongooseIcon} styleName="logo-loading" />
+                <img className="w-is-logo-loading" src={mongooseIcon} styleName="logo-loading" alt="Wiregoose" />
                 <h4 className="w-text-loading" data-text={title}>
                   {title}
                 </h4>

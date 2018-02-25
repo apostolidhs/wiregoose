@@ -29,6 +29,7 @@ export default class InternalServerError extends React.Component {
           <Link
             to="/"
             role="button"
+            aria-label={tr.exploreNews}
             title={tr.exploreNews}
           >
             {tr.promptReading}

@@ -42,7 +42,7 @@ export default class ArticleBoxMd extends React.Component {
       <div className="panel panel-default">
         <div className="thumbnail" styleName="article-box-md-panel">
           <a className="blind-link" href={link} title={title}>
-            <ImageLoader src={toArticleBox(image)} showOnlyPlaceholder={!image}>
+            <ImageLoader src={toArticleBox(image)} title={title} showOnlyPlaceholder={!image}>
               <ArticlePlaceholderImage category={category} provider={provider} />
             </ImageLoader>
           </a>
@@ -53,6 +53,7 @@ export default class ArticleBoxMd extends React.Component {
                 to={`/provider/${provider}`}
                 role="button"
                 title={tr.trFa('provider')}
+                aria-label={tr.trFa('provider')}
               >
                 {provider}
               </Link>

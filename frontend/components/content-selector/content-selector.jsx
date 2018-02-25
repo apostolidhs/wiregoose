@@ -64,6 +64,7 @@ export default class ContentSelector extends React.Component {
                   href="#"
                   styleName="link"
                   className="btn btn-default"
+                  title={tr[cat]}
                   onClick={evt => {
                     evt.preventDefault();
                     onCategoryClick(cat);
@@ -81,6 +82,7 @@ export default class ContentSelector extends React.Component {
                 <Col key={p} className={'w-mb-14'} xs={6} sm={4} md={3} lg={3} >
                   <a
                     href="#"
+                    title={capitalize(p)}
                     styleName="link"
                     className="btn btn-default"
                     onClick={evt => {
@@ -98,7 +100,7 @@ export default class ContentSelector extends React.Component {
           <Loader ref="registrationFetches">
             {map(this.state.categoriesPerProviders, (cats, provider) =>
             <div key={provider}>
-              <a href="#" className="blind-link" onClick={evt => {
+              <a href="#" title={capitalize(provider)} className="blind-link" onClick={evt => {
                   evt.preventDefault();
                   onProviderClick(provider);
                 }} >
@@ -109,6 +111,7 @@ export default class ContentSelector extends React.Component {
                   <Col key={idx} className={'w-mb-14'} xs={6} sm={4} md={3} lg={2} >
                     <a
                       href="#"
+                      title={tr[category]}
                       styleName="link"
                       className="btn btn-default"
                       onClick={evt => {

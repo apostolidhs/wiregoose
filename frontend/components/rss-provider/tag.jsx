@@ -21,6 +21,7 @@ export default class Tag extends React.Component {
         className="btn btn-default"
         role="button"
         title={`${name} ${tr.trFa('provider')}`}
+        aria-label={`${name} ${tr.trFa('provider')}`}
         {...passDownProps}
       >
         <Badge>{ name }</Badge>

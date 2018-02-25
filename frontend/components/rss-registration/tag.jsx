@@ -33,6 +33,7 @@ export default class Tag extends React.Component {
         className="btn btn-default"
         styleName="tag"
         role="button"
+        aria-label={`${capitalize(provider)} ${tr.trFa('category')}`}
         title={`${capitalize(provider)} ${tr.trFa('category')}`} >
         <p>{ capitalize(provider) }</p>
         <small className="text-muted">{ tr[category] }</small>

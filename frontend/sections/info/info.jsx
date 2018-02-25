@@ -18,7 +18,7 @@ export default class Info extends React.Component {
   render() {
     return (
       <div styleName="info">
-        <img src={this.props.headerImg} />
+        <img src={this.props.headerImg} alt="Wiregoose" />
         <div>
           <Col md={8} mdOffset={2} xs={10} xsOffset={1} >
             <section>
@@ -26,7 +26,7 @@ export default class Info extends React.Component {
             </section>
           </Col>
         </div>
-        <img src={this.props.headerFooterImg} />
+        <img src={this.props.headerFooterImg} alt="Wiregoose" />
       </div>
     );
   }

@@ -69,7 +69,7 @@ export default class Login extends React.Component {
           <small>{tr.signUp}</small>
         </h1>
         <span className="text-center center-block text-muted">
-        {tr.or} <a href="#" onClick={e => {e.preventDefault(); onSigninClicked();}}>{tr.signInPrompt}</a>
+          {tr.or} <a href="#" title={tr.signInPrompt} onClick={e => {e.preventDefault(); onSigninClicked();}}>{tr.signInPrompt}</a>
         </span>
         <FacebookLogin className="w-mt-14" type="SIGNUP" onFacebookAuth={this.onFacebookAuth} />
         <div className="text-center text-muted w-mt-7">{tr.trFl('or')}</div>

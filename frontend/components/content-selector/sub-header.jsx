@@ -32,7 +32,7 @@ export default class SubHeader extends React.Component {
             <Nav>
             {map(CATEGORIES, (cat, idx) =>
               <LinkContainer key={cat} to={`/category/${cat}`}>
-                <NavItem styleName="sub-header-nav-categories-item" eventKey={idx} href="#">
+                <NavItem styleName="sub-header-nav-categories-item" title={tr[cat]} eventKey={idx} href="#">
                   {<CategoryImages name={cat} />}
                   {' '}
                   {tr[cat]}
@@ -42,7 +42,7 @@ export default class SubHeader extends React.Component {
             </Nav>
           </div>
           <Nav pullRight styleName="sub-header-nav-more">
-            <NavItem eventKey={20} onSelect={this.openContentSelectorModal} >
+            <NavItem eventKey={20} title={tr.categories} onSelect={this.openContentSelectorModal} >
               <FontAwesome name="bars" />
               {' '}
               {tr.categories}

@@ -98,7 +98,7 @@ export default class Entry extends React.Component {
       >
         { ((this.hasDescription && this.hasImage) || showMockImage) && (
           <Link to={this.articleLink} styleName="image">
-            <ImageLoader src={toArticleBox(entry.image)} showOnlyPlaceholder={showMockImage}>
+            <ImageLoader src={toArticleBox(entry.image)} title={entry.title} showOnlyPlaceholder={showMockImage}>
               <ArticlePlaceholderImage
                 category={entry.category}
                 provider={entry.provider}
@@ -114,13 +114,14 @@ export default class Entry extends React.Component {
             title={tr.trFa('category')}
             className="btn"
             styleName="category"
+            aria-label={tr.trFa('category')}
           >
             {tr[entry.category]}
           </Link>
         }
         <div className="panel-body">
           <header styleName="header">
-            <Link to={this.articleLink} className="blind-link">
+            <Link to={this.articleLink} title={entry.title} className="blind-link">
               <h3>
                 {ellipsis(entry.title, 70)}
               </h3>
@@ -133,6 +134,7 @@ export default class Entry extends React.Component {
                 to={`/provider/${entry.provider}`}
                 role="button"
                 title={tr.trFa('provider')}
+                aria-label={tr.trFa('provider')}
               >
                 {entry.provider}
               </Link>
