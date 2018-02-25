@@ -13,6 +13,7 @@ export function isReady() {
           xfbml: true,
           version: 'v2.12'
         });
+        resolve();
       };
 
       (function(d, s, id){
@@ -22,8 +23,6 @@ export function isReady() {
          js.src = "https://connect.facebook.net/en_US/sdk.js";
          fjs.parentNode.insertBefore(js, fjs);
        }(document, 'script', 'facebook-jssdk'));
-
-      resolve();
     });
   }
 

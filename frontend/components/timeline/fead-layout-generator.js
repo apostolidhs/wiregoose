@@ -15,6 +15,7 @@ import ArticleBox from '../article-box/article-box.jsx';
 import GoogleAdvBox from '../article-box/google-adv-box.jsx';
 import FBFollowBox from '../article-box/fb-follow-box.jsx';
 
+const shuffled = IS_DEV ? (f => identity(f)) : (f => shuffle(f));
 const FB_FOLLOW_WIDGET_POSITION = 14;
 const ADVERTISE_WIDGET_FREQUENCY = 19;
 const ADVERTISE_WIDGET_INITIAL_POSITION = 9;
@@ -104,27 +105,26 @@ function cascadeFeedsView(feeds) {
 }
 
 function createCascadeFeedsView(feeds) {
-  const shuffle = IS_DEV ? (f => identity(f)) : (f => shuffle(f));
   const byBoxSize = groupBy(feeds, feed => feed.boxSize);
   const noImages = byBoxSize['ARTICLE_BOX_NO_IMAGE'];
   const noDescrs = byBoxSize['ARTICLE_BOX_NO_DESCRIPTION'];
   const fulls = byBoxSize['ARTICLE_BOX_FULL'];
   let cascadeFeeds;
   if (!noImages && !noDescrs) {
-    cascadeFeeds = shuffle(feeds);
+    cascadeFeeds = shuffled(feeds);
   } else if (!noImages) {
     cascadeFeeds = cascadeNoDescriptionFeedsView(fulls, noDescrs);
   } else if (!noDescrs) {
-    cascadeFeeds = shuffle(feeds);
+    cascadeFeeds = shuffled(feeds);
   } else {
     let view = [];
     while(noImages.length && noDescrs.length) {
       const noImage = noImages.pop();
       const noDescr = noDescrs.pop();
-      view.push(shuffle([noImage, noDescr]));
+      view.push(shuffled([noImage, noDescr]));
     }
     view = cascadeNoDescriptionFeedsView(view, noDescrs);
-    cascadeFeeds = shuffle(view.concat(noImages).concat(fulls));
+    cascadeFeeds = shuffled(view.concat(noImages).concat(fulls));
   }
   return compact(cascadeFeeds);
 }
