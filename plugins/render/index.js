@@ -27,6 +27,7 @@ KlarkModule(module, 'render', (
     return (req, res, next) => {
       if (
         !_.includes(PRE_RENDER_ENABLED_DEVICES, req.device.type)
+        || req.url.includes('assets/')
         || _.endsWith(req.url, 'js')
         || _.endsWith(req.url, 'css')
         || _.endsWith(req.url, 'ico')

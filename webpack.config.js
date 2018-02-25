@@ -5,7 +5,7 @@ const os = require('os');
 const DashboardPlugin = require('webpack-dashboard/plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-//const SpritePlugin = require('svg-sprite-loader/plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const autoprefixer = require('autoprefixer');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -28,15 +28,15 @@ const globalLessPath = isWin
 function createWebpackConfig(name, entryName, outputName) {
   // Common plugins
   const plugins = [
-    new CleanWebpackPlugin([buildPath + '/*.js*', buildPath + '/*.css*', buildPath + '/*.html*']),
+    //new BundleAnalyzerPlugin(),
+    new CleanWebpackPlugin([buildPath]),
     new CopyWebpackPlugin([
       {from: imgPath + '/logo.ico', to: buildPath + '/logo.ico'},
       {from: jsSourcePath + '/manifest.json', to: buildPath + '/manifest.json'}
     ]),
-    //new SpritePlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      filename: 'vendor-[hash].js',
+      filename: 'assets/js/vendor-[hash].js',
       minChunks(module) {
         const context = module.context;
         return context && context.indexOf('node_modules') >= 0;
@@ -72,7 +72,6 @@ function createWebpackConfig(name, entryName, outputName) {
   const rules = [
     {
       test: /\.(js|jsx)$/,
-      // exclude: /node_modules\/(?!(url-regex|ANOTHER-ONE)\/).*/,
       include: [
         path.resolve(__dirname, './frontend'),
         path.resolve(__dirname, './node_modules/url-regex'),
@@ -85,28 +84,14 @@ function createWebpackConfig(name, entryName, outputName) {
         }
       }
     },
-    // {
-    //   test: /\.svg$/,
-    //   use: [
-    //     {
-    //       loader: 'svg-sprite-loader',
-    //       options: {
-    //         extract: true,
-    //         spriteFilename: 'icons-sprite.svg',
-    //       },
-    //     },
-    //     'svgo-loader',
-    //   ],
-      // include: iconPath,
-    //},
     {
       test: /\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-      loader: 'file-loader?name=public/assets/fonts/[name].[ext]'
+      loader: 'file-loader?name=assets/fonts/[name].[ext]'
     },
     {
       test: /\.(png|gif|jpg|svg)$/,
       // include: imgPath,
-      loader: 'file-loader?name=public/assets/img/[name].[ext]'
+      loader: 'file-loader?name=assets/img/[name].[ext]'
     }
   ];
 
@@ -250,7 +235,7 @@ function createWebpackConfig(name, entryName, outputName) {
     );
   }
 
-  if (name === 'index') {
+  if (isProduction && name === 'index') {
     plugins.push(new OfflinePlugin({
       ServiceWorker: {
         events: true
@@ -271,7 +256,7 @@ function createWebpackConfig(name, entryName, outputName) {
     output: {
       path: buildPath,
       publicPath: '/',
-      filename: outputName + '-[hash].js',
+      filename: `assets/js/${outputName}-[hash].js`,
     },
     module: {
       rules,
