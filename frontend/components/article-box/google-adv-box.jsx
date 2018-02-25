@@ -15,7 +15,7 @@ export default class GoogleAdvBox extends React.Component {
         <ins className="adsbygoogle"
           style={{display:'block'}}
           data-ad-format="fluid"
-          data-ad-layout-key="-7b+3r-rg-5y+2o8"
+          data-ad-layout-key="-7t-9-id+da+1er"
           data-ad-client="ca-pub-3571483150053473"
           data-ad-slot="9143901045">
         </ins>
