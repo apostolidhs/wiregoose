@@ -139,13 +139,13 @@ export default class SucceededFetchesPerPeriod extends React.Component {
           ...providersByCategory[category]
         })
       );
-      const sum = sumBy(
+      const sumData = sumBy(
         data,
-        providers => flow(omit('period'), values(), sum())(providers)
+        providers => flow(omit('period'), values, sum)(providers)
       );
       return {
         data,
-        sum,
+        sum: sumData,
         name: category
       };
     });
