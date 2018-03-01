@@ -91,7 +91,7 @@ export default class ArticleImage extends React.Component {
     } = this.props;
 
     if (isLoading) {
-      return <BootstrapImage styleName='is-image-loading' alt='Wiregoose' {...props}/>;
+      return <BootstrapImage styleName='is-image-loading' {...props}/>;
     }
 
     if (loadSuccess) {

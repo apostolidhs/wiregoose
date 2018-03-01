@@ -1,9 +1,9 @@
-import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+// import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 
-OfflinePluginRuntime.install({
-  onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
-  onUpdated: () => window.location.reload()
-});
+// OfflinePluginRuntime.install({
+//   onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
+//   onUpdated: () => window.location.reload()
+// });
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -15,7 +15,8 @@ import './less/index.less';
 
 import './assets/img/logo.png';
 
-import 'core-js/shim';
+import 'core-js/modules/es6.symbol';
+import 'core-js/modules/es6.promise';
 import Localization from './components/localization/localization.js';
 import BrowserLanguageDetection from './components/utilities/browser-language-detection.js';
 import * as Auth from './components/authorization/auth.js';

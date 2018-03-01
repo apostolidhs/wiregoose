@@ -31,10 +31,7 @@ export default class FBFollowBox extends React.Component {
             </h3>
           </header>
           <div styleName="follow-plugin">
-            <FBFollow
-              height={28}
-              width={200}
-            />
+            <FBFollow width={200} />
           </div>
         </div>
       </article>

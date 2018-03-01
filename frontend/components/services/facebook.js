@@ -3,7 +3,7 @@ import {loginViaFacebook} from '../authorization/auth';
 
 let FBSDKPromise;
 
-export function isReady() {
+export function initialize() {
   if (!FBSDKPromise) {
     FBSDKPromise = new Promise(resolve => {
       window.fbAsyncInit = function() {
@@ -30,7 +30,7 @@ export function isReady() {
 }
 
 export function loginIfHasPermissions() {
-  return isReady()
+  return initialize()
     .then(() => new Promise((resolve, reject) =>
       FB.getLoginStatus(resp => isAuthorized(resp) ? resolve(resp.authResponse) : reject())
     ))
@@ -38,7 +38,7 @@ export function loginIfHasPermissions() {
 }
 
 export function login() {
-  return isReady()
+  return initialize()
     .then(() => new Promise((resolve, reject) =>
       FB.login(
         resp => isAuthorized(resp) ? resolve(resp.authResponse) : reject(),
