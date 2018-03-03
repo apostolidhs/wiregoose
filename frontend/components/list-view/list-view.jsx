@@ -24,7 +24,7 @@ export default class ListView extends React.Component {
   state = {
     params: {
       page: 1,
-      count: 10,
+      count: 25,
       sortBy: undefined,
       asc: undefined
     },

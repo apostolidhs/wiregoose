@@ -21,12 +21,12 @@ export function ellipsis(text, size = 30, ellipsisSuffix = '...') {
   return text;
 }
 
-export function toUppercasesWords(words) {
+export function toUppercasesWords(strings) {
   return flow(
     words,
     map(w => upperFirst(w)),
     join(' ')
-  )(words);
+  )(strings);
 }
 
 export function createLink(name, id) {

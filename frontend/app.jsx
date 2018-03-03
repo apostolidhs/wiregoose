@@ -1,9 +1,12 @@
-// import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+import {IS_DEV} from '../config-public.js';
 
-// OfflinePluginRuntime.install({
-//   onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
-//   onUpdated: () => window.location.reload()
-// });
+if (!IS_DEV) {
+  OfflinePluginRuntime.install({
+    onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
+    onUpdated: () => window.location.reload()
+  });
+}
 
 import React from 'react';
 import ReactDOM from 'react-dom';
