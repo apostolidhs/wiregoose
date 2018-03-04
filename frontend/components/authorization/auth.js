@@ -2,9 +2,9 @@ import noop from 'lodash/noop';
 import now from 'lodash/now';
 import jwtDecode from 'jwt-decode';
 
-import {publish} from '../events/events.jsx';
+import {publish} from '../events/events.js';
 import {syncBookmarks} from '../bookmarks/bookmarks.js';
-import {launch} from './auth-modal.jsx';
+import {launch} from './auth-modal.js';
 import { SUPPORTED_LANGUAGES, JWT_EXPIRATION_PERIOD} from '../../../config-public.js';
 import * as WiregooseApi from '../../components/services/wiregoose-api.js';
 

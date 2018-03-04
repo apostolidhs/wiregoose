@@ -1,7 +1,7 @@
 import size from 'lodash/size';
 import keyBy from 'lodash/keyBy';
 
-import {subscribe, publish} from '../events/events.jsx';
+import {subscribe, publish} from '../events/events.js';
 import {
   bookmarks as bookmarksAPI
 } from '../../components/services/wiregoose-api.js';

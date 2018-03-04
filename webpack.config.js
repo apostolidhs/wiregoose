@@ -251,7 +251,7 @@ function createWebpackConfig(name, entryName, outputName) {
     devtool: isProduction ? false : 'source-map',
     context: jsSourcePath,
     entry: {
-      js: [entryName + '.jsx'],
+      js: [entryName + '.js'],
     },
     output: {
       path: buildPath,
@@ -262,7 +262,7 @@ function createWebpackConfig(name, entryName, outputName) {
       rules,
     },
     resolve: {
-      extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx'],
+      extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.js'],
       modules: [
         path.resolve(__dirname, 'node_modules'),
         jsSourcePath,
@@ -281,8 +281,8 @@ function createWebpackConfig(name, entryName, outputName) {
   };
 }
 
-//module.exports = createWebpackConfig('index', './admin', 'admin');
-//module.exports = createWebpackConfig('index', './app', 'app');
+// module.exports = createWebpackConfig('index', './admin', 'admin');
+// module.exports = createWebpackConfig('index', './app', 'app');
 
 module.exports = [
   createWebpackConfig('index', './app', 'app'),

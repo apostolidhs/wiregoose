@@ -5,7 +5,7 @@ import { browserHistory } from 'react-router';
 
 import tr from '../localization/localization.js';
 import * as Auth from '../authorization/auth.js';
-import * as Notifications from '../notifications/notifications.jsx';
+import * as Notifications from '../notifications/notifications.js';
 import {isAdmin} from '../utilities/environment-detection.js';
 
 export default function ServerErrorsInterceptor (error, handler) {

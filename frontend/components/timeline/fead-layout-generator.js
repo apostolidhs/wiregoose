@@ -11,9 +11,9 @@ import chunk from 'lodash/chunk';
 import React from 'react';
 
 import { IS_DEV } from '../../../config-public.js';
-import ArticleBox from '../article-box/article-box.jsx';
-import GoogleAdvBox from '../article-box/google-adv-box.jsx';
-import FBFollowBox from '../article-box/fb-follow-box.jsx';
+import ArticleBox from '../article-box/article-box.js';
+import GoogleAdvBox from '../article-box/google-adv-box.js';
+import FBFollowBox from '../article-box/fb-follow-box.js';
 
 const shuffled = IS_DEV ? (f => identity(f)) : (f => shuffle(f));
 const FB_FOLLOW_WIDGET_POSITION = 14;
