@@ -3,6 +3,7 @@ import throttle from 'lodash/throttle';
 import first from 'lodash/first';
 import last from 'lodash/last';
 import find from 'lodash/find';
+import filter from 'lodash/filter';
 import each from 'lodash/each';
 import mapValues from 'lodash/mapValues';
 import size from 'lodash/size';
@@ -102,6 +103,14 @@ export default class Page {
     this.updateVirtualListPositions();
   }
 
+  isGoogleElement = element => {
+    return element.key.includes('advertise');
+  }
+
+  isFbFollowElement = element => {
+    return element.key.includes('facebook-follow');
+  }
+
   onScroll = throttle(() => {
     if (!this.targetComponent) {
       return;
@@ -129,11 +138,24 @@ export default class Page {
     }
 
     this.targetComponent.timeline.setState({elements}, () => {
-      const advertiseElement = find(elements, element => element.key.includes('advertise'));
-      if (advertiseElement && !this.advertiseElements[advertiseElement.key]) {
-        (adsbygoogle = window.adsbygoogle || []).push({});
-        this.advertiseElements[advertiseElement.key] = true;
-      }
+      const advertiseElements = filter(elements, this.isGoogleElement);
+      each(advertiseElements, advertiseElement => {
+        if (this.advertiseElements[advertiseElement.key]) {
+          //this.advertiseElements[advertiseElement.key].display =
+        } else {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+          this.advertiseElements[advertiseElement.key] = advertiseElement;
+        }
+      });
+
+      // const fbFollowElements = filter(elements, this.isFbFollowElement);
+      // each(fbFollowElements, fbFollowElement => {
+      //   if (this.advertiseElements[fbFollowElement.key]) {
+
+      //   } else {
+      //     this.advertiseElements[fbFollowElement.key] = fbFollowElement;
+      //   }
+      // });
     });
   }, 200)
 
@@ -216,6 +238,7 @@ export default class Page {
   }
 
   invalidateCache = () => {
+    // todo: cleanup google-adv and fb-follow static elements
     this.lastFeeds = undefined
     this.hasMore = true
     this.virtualList = []

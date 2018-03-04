@@ -13,7 +13,33 @@ import FBFollow from '../social/fb-follow.js';
 })
 export default class FBFollowBox extends React.Component {
 
-  render() {
+  static boxies = {};
+
+  static propTypes = {
+    boxKey: PropTypes.string
+  }
+
+  componentDidMount() {
+    const {boxKey} = this.props;
+    const advertise = FBFollowBox.boxies[boxKey];
+    if (advertise) {
+      this.boxEl.appendChild(advertise);
+    } else {
+
+    }
+  }
+
+  componentWillUnmount() {
+    const {boxKey} = this.props;
+    const advertise = FBFollowBox.boxies[boxKey];
+    if (advertise) {
+
+    } else {
+      FBFollowBox.boxies[boxKey] = this.boxEl;
+    }
+  }
+
+  renderBox() {
     return (
       <article styleName="article article-full fb-follow" className="panel panel-default text-center">
         <div className="panel-body">
@@ -35,6 +61,19 @@ export default class FBFollowBox extends React.Component {
           </div>
         </div>
       </article>
+    );
+  }
+
+  render() {
+    const {boxKey} = this.props;
+    const box = FBFollowBox.boxies[boxKey];
+
+    return (
+      <div ref={el => this.boxEl = el} >
+        {!box &&
+          this.renderBox()
+        }
+      </div>
     );
   }
 }

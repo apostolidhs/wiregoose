@@ -80,17 +80,19 @@ function renderArticleBox(feed, opts) {
 }
 
 function renderFBFollowBox() {
+  const key = uniqueId('acebook-follow-key-');
   return (
-    <div key={uniqueId('facebook-follow-Key-')} styleName="timeline-box" style={{}} >
-      <FBFollowBox />
+    <div key={key} styleName="timeline-box" style={{}} >
+      <FBFollowBox boxKey={key} />
     </div>
   );
 }
 
 function renderAdvertiseBox() {
+  const key = uniqueId('advertise-key-');
   return (
-    <div key={uniqueId('advertise-key-')} styleName="timeline-box"  style={{}} >
-      <GoogleAdvBox />
+    <div key={key} styleName="timeline-box"  style={{}} >
+      <GoogleAdvBox advKey={key} />
     </div>
   );
 }

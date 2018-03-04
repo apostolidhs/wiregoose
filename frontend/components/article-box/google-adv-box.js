@@ -9,7 +9,33 @@ import styles from './article-box.less';
 })
 export default class GoogleAdvBox extends React.Component {
 
-  render() {
+  static advertises = {};
+
+  static propTypes = {
+    advKey: PropTypes.string
+  }
+
+  componentDidMount() {
+    const {advKey} = this.props;
+    const advertise = GoogleAdvBox.advertises[advKey];
+    if (advertise) {
+      this.advertiseEl.appendChild(advertise); // meybe add it to the body
+    } else {
+
+    }
+  }
+
+  componentWillUnmount() {
+    const {advKey} = this.props;
+    const advertise = GoogleAdvBox.advertises[advKey];
+    if (advertise) {
+
+    } else {
+      GoogleAdvBox.advertises[advKey] = this.advertiseEl;
+    }
+  }
+
+  renderAdvertise() {
     return (
       <article styleName="article article-full" className="panel panel-default text-center">
         <ins className="adsbygoogle"
@@ -20,6 +46,18 @@ export default class GoogleAdvBox extends React.Component {
           data-ad-slot="9143901045">
         </ins>
       </article>
+    );
+  }
+
+  render() {
+    const {advKey} = this.props;
+    const advertise = GoogleAdvBox.advertises[advKey];
+    return (
+      <div ref={el => this.advertiseEl = el} >
+        {!advertise &&
+          this.renderAdvertise()
+        }
+      </div>
     );
   }
 }
