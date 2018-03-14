@@ -11,6 +11,7 @@ import { GOOGLE_TRACKING_ID, IS_DEV, APP_URL } from '../../../config-public.js';
 
 import Timeline from '../timeline/timeline.js';
 import TimelineExplore from '../timeline/explore/explore.js';
+import TimelineUser from '../timeline/explore/user.js';
 import TimelineCategory from '../timeline/category/category.js';
 import TimelineProvider from '../timeline/provider/provider.js';
 import TimelineRegistration from '../timeline/registration/registration.js';
@@ -20,6 +21,7 @@ import About from '../info/about.js';
 import Credits from '../info/credits.js';
 import Providers from '../info/providers.js';
 import Profile from '../user/profile.js';
+import Interests from '../user/interests.js';
 import Login from '../authorization/login.js';
 import Signup from '../authorization/signup.js';
 import Forgot from '../authorization/forgot.js';
@@ -69,7 +71,8 @@ class AppRouter extends React.Component {
           </Route>
           <Route path="article/:id" component={Article} />
           <Route component={Timeline} >
-            <IndexRoute component={TimelineExplore} />
+            <IndexRoute component={TimelineUser} />
+            <Route path="explore" component={TimelineExplore} />
             <Route path="category/:id" component={TimelineCategory} />
             <Route path="provider/:id" component={TimelineProvider} />
             <Route path="registration/:id" component={TimelineRegistration} />
@@ -86,6 +89,7 @@ class AppRouter extends React.Component {
             {this.renderRedirectIfAuthorizedRoute('forgot', Forgot)}
           </Route>
           {this.renderRedirectIfAuthorizedRoute('profile', Profile, false)}
+          {this.renderRedirectIfAuthorizedRoute('interests', Interests, false)}
           <Route path="500" component={InternalServerError} />
           <Route path="401" component={NotFoundError} />
           <Route path='*' component={NotFoundError} />

@@ -51,6 +51,19 @@
     }
   }
 }
+.fixed-header {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  background: white;
+  padding: 15px;
+  :global {
+    header {
+      .row();
+    }
+  }
+}
 .header {
   :global {
     h3 {
@@ -59,8 +72,7 @@
     }
   }
 }
-.modal-content-selector {
-  height: 600px;
+.content-selector-wrapper {
   overflow-y: auto;
   overflow-x: hidden;
   :global {
@@ -72,6 +84,13 @@
     }
     h3 {
       margin-top: 15px;
+    }
+  }
+}
+:global {
+  .modal {
+    .content-selector-wrapper {
+      height: 600px;
     }
   }
 }

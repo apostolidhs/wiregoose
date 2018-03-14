@@ -2,9 +2,6 @@ import isEmpty from 'lodash/isEmpty';
 import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
-import { LinkContainer } from 'react-router-bootstrap';
-import Nav from 'react-bootstrap/lib/Nav';
-import NavItem from 'react-bootstrap/lib/NavItem';
 import Panel from 'react-bootstrap/lib/Panel';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
@@ -13,9 +10,9 @@ import { Link } from 'react-router';
 
 import styles from '../timeline.less';
 import { publish } from '../../../components/events/events.js';
-import Header from '../../../components/timeline/header.js';
 import Timeline from '../../../components/timeline/timeline.js';
 import TimelinePage from '../../../components/timeline/page.js';
+import ExploreHeader from './header';
 import InfiniteScrollPage from '../../../components/infinite-scroll/page.js';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 import {createResponseHandler, composeCachedResponse}
@@ -113,13 +110,7 @@ export default class Explore extends InfiniteScrollPage {
   render() {
     return (
       <div>
-        <Header>
-          <Nav bsStyle="pills" activeKey={1}>
-            <LinkContainer to="/">
-              <NavItem eventKey={1}>{tr.explore}</NavItem>
-            </LinkContainer>
-          </Nav>
-        </Header>
+        <ExploreHeader />
         {this.state.cachedResponsePromise &&
           this.renderCachedContentNotification()
         }

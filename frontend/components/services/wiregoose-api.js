@@ -58,6 +58,7 @@ export const rssFeed = {
 
 export const timeline = {
   explore: timelineExplore,
+  uset: timelineUser,
   category: timelineCategory,
   provider: timelineProvider,
   registration: timelineRegistration,
@@ -69,6 +70,12 @@ export const bookmarks = {
   pushId: bookmarksPushId,
   removeId: bookmarksRemoveId
 };
+
+export const interests = {
+  retrieveAll: interestRetrieveAll,
+  pushInterest: pushInterest,
+  removeInterest: removeInterest
+}
 
 export const statics = {
   categories: throttle(getStaticCategories, 3000),
@@ -273,6 +280,43 @@ function bookmarksRemoveId(userId, entryId) {
   });
 }
 
+function interestRetrieveAll(userId) {
+  return httpRequest({
+    method: 'get',
+    url: `${API_ORIGIN}user/${userId}/interests`,
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+    friendlyErrorInterceptor
+  });
+}
+
+function pushInterest({userId, type, value, lang}) {
+  return httpRequest({
+    method: 'post',
+    url: `${API_ORIGIN}user/${userId}/interests`,
+    data: {type, value, lang},
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+    friendlyErrorInterceptor: true
+  });
+}
+
+function removeInterest(userId, interestId) {
+  return httpRequest({
+    method: 'delete',
+    url: `${API_ORIGIN}user/${userId}/interests/${interestId}`,
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+    friendlyErrorInterceptor: true
+  });
+}
+
 function timelineExplore(categories, lang, friendlyErrorInterceptor = false) {
   return getTimeline('explore', categories, lang, friendlyErrorInterceptor);
 }
@@ -287,6 +331,28 @@ function timelineProvider(provider, lang, friendlyErrorInterceptor = false) {
 
 function timelineRegistration(registration, lang, friendlyErrorInterceptor = false) {
   return getTimeline('registration', registration, lang, friendlyErrorInterceptor);
+}
+
+function timelineUser(userId, page) {
+  return httpRequest({
+    method: 'get',
+    url: `${API_ORIGIN}timeline/user/${userId}`,
+    params: {
+      page
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: credentialGetter(),
+    },
+    friendlyErrorInterceptor
+  })
+  .then(resp => {
+    resp.data.data = map(
+      resp.data.data,
+      record => ArticleBoxResponseTransformation
+    );
+    return resp;
+  });
 }
 
 function timelineBookmarks(userId, friendlyErrorInterceptor) {

@@ -138,6 +138,14 @@ class Header extends React.Component {
               <MenuItem divider />
             }
             { Auth.isAuthenticated() &&
+              <LinkContainer to="/interests">
+                <MenuItem>
+                  <FontAwesome name="check-square-o" />
+                  Interests
+                </MenuItem>
+              </LinkContainer>
+            }
+            { Auth.isAuthenticated() &&
               <LinkContainer to="/bookmarks">
                 <MenuItem>
                   <FontAwesome name="bookmark" />

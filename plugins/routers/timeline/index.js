@@ -52,6 +52,14 @@ KlarkModule(module, 'routesTimeline', (
       krkMiddlewareResponse.success,
       krkMiddlewareResponse.fail
     ]);
+
+    app.get(`/${config.API_URL_PREFIX}/timeline/user/:id`, [
+      krkMiddlewarePermissions.check('USER', {onlyOwner: true}),
+      middlewareUserParameterValidator,
+      middlewareUserController,
+      krkMiddlewareResponse.success,
+      krkMiddlewareResponse.fail
+    ]);
   }
 
   ////////////////////////////////////////
@@ -197,6 +205,37 @@ KlarkModule(module, 'routesTimeline', (
           next(true);
         });
     }
+  }
+
+  function middlewareUserParameterValidator(req, res, next) {
+    req.checkQuery('page').isInt({min: 1, max: 1024});
+    res.locals.params.page = req.sanitizeQuery('page').toInt();
+    res.locals.params.id = krkParameterValidator.validations.paramId(req);
+
+    krkParameterValidator.checkForErrors(res.locals.params, req, res, next);
+  }
+
+  function middlewareUserController(req, res, next) {
+    const {interests} = res.locals.user;
+    throw new Error('todo: get interests from database');
+    const {page, id, lang} = res.locals.params;
+
+    const customTimeline = _.map(interests, interest => {
+      const {value, type, lang} = interest;
+      return {
+        fieldName: type,
+        fieldValue: type === 'registration' ? new $mongoose.Types.ObjectId(value) : value,
+        lang
+      };
+    });
+
+    timeline.custom(customTimeline, page)
+      .then(feeds => res.locals.data = feeds)
+      .then(() => next())
+      .catch(reason => {
+        res.locals.errors.add('UNEXPECTED', reason);
+        next(true);
+      });
   }
 
   function checkLang(req, res) {

@@ -43,6 +43,7 @@ KlarkModule(module, 'app', (
   routesProxy,
   routesAuthorization,
   routesBookmarks,
+  routesInterests,
   parameterValidatorsCustomExpressValidators,
   render,
   measuresRssRegistrationsFetches
@@ -84,7 +85,8 @@ KlarkModule(module, 'app', (
         ARTICLE_MINING_FAIL: [6001, 'article mining failed'],
         MEASURES_FAILED: [7001, 'measures failed'],
         PROXY_FAILED: [8001, 'proxy failed'],
-        MAX_BOOKMARKS_PER_USER: [4010, 'maximum bookmarks reached']
+        MAX_BOOKMARKS_PER_USER: [4010, 'maximum bookmarks reached'],
+        MAX_INTERESTS_PER_USER: [4011, 'maximum interests reached']
       }
     }));
 
@@ -159,7 +161,8 @@ KlarkModule(module, 'app', (
       routesStatics,
       routesProxy,
       routesAuthorization,
-      routesBookmarks
+      routesBookmarks,
+      routesInterests
     ], route => route.register(app));
   }
 

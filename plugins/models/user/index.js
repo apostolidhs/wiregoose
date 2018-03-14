@@ -4,6 +4,7 @@ KlarkModule(module, 'krkModelsUser', (
   _,
   $mongoose,
   config,
+  modelsUserInterestsTypes,
   krkModelsUserExtension
 ) => {
 
@@ -26,6 +27,11 @@ KlarkModule(module, 'krkModelsUser', (
       index: true,
       unique: true
     }];
+    schemaOptions.interests = [{
+      type: {type: String, enum: modelsUserInterestsTypes, required: true},
+      value: {type: $mongoose.Schema.Types.Mixed, required: true},
+      lang: {type: String, enum: config.SUPPORTED_LANGUAGES}
+    }];
     return schemaOptions;
   }
 
@@ -41,10 +47,12 @@ KlarkModule(module, 'krkModelsUser', (
       'password',
       'validationToken',
       'facebook',
-      'bookmarks'
+      'bookmarks',
+      'interests'
     ]);
 
     safeUser.totalBookmarks = _.size(userObj.bookmarks);
+    safeUser.totalInterests = _.size(userObj.interests);
     safeUser.isEmailValid = !userObj.validationToken;
     safeUser.hasFacebookAccount = !!userObj.facebook;
     return safeUser;

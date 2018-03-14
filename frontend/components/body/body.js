@@ -41,7 +41,7 @@ export default class Body extends React.Component {
           <SubHeader />
         }
         <Notifications />
-        <div className="container">
+        <div className="container routes-container">
           {this.props.children}
         </div>
         <Modals />

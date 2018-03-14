@@ -7,10 +7,13 @@ KlarkModule(module, 'timeline', (
   modelsEntry
 ) => {
 
+  const TIMELINE_CUSTOM = 3;
+
   return {
     explore: timelineExplore,
     provider: timelineProvider,
-    registration: timelineRegistration
+    registration: timelineRegistration,
+    custom: timelineCustom
   };
 
   ////////////////////////////////////////
@@ -37,8 +40,29 @@ KlarkModule(module, 'timeline', (
       .then(result => groupResultBy('registration', result));
   }
 
+  function timelineCustom(timeline, page) {
+     const queries = _.map(timeline, entry => {
+      q = {[entry.fieldName]: entry.fieldValue};
+      if (entry.lang) {
+        q.lang = lang;
+      }
+      return modelsEntry
+        .find(q)
+        .sort({published: -1})
+        .skip(TIMELINE_CUSTOM * (page - 1))
+        .limit(TIMELINE_CUSTOM * page);
+    });
+
+    return Promise.all(queries)
+      .then(results => _(results)
+        .flatten()
+        .compact()
+        .value()
+      );
+  }
+
   function createBatchQueryBy(timeline, lang, limit) {
-    return _.map(timeline, (entry) => {
+    return _.map(timeline, entry => {
       const q = {
         lang,
         published: {

@@ -1,0 +1,68 @@
+import isEmpty from 'lodash/isEmpty';
+import React from 'react';
+import PropTypes from 'prop-types';
+import CSSModules from 'react-css-modules';
+import Panel from 'react-bootstrap/lib/Panel';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
+import FontAwesome from 'react-fontawesome';
+import { Link } from 'react-router';
+
+import styles from '../timeline.less';
+import { publish } from '../../../components/events/events.js';
+import Timeline from '../../../components/timeline/timeline.js';
+import TimelinePage from '../../../components/timeline/page.js';
+import ExploreHeader from './header';
+import InfiniteScrollPage from '../../../components/infinite-scroll/page.js';
+import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
+import BrowserLanguageDetection from '../../../components/utilities/browser-language-detection.js';
+import tr from '../../../components/localization/localization.js';
+
+@CSSModules(styles, {
+  allowMultiple: true,
+})
+export default class User extends InfiniteScrollPage {
+
+  static page = new TimelinePage();
+
+  state = {}
+  timeline = undefined // ref
+
+  componentDidMount() {
+    User.page.componentDidMount(this);
+    super.componentDidMount();
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount();
+    User.page.componentWillUnmount();
+  }
+
+  retrieveTimeline = () => {
+
+  }
+
+  handleMetaData = () => {
+    publish('page-ready', {
+      // title: tr.timelineUserTitle,
+      // keywords: tr.timelineUserKeywords,
+      // description: tr.timelineUserDescription
+      // image:
+      // time:
+      // lang:
+    });
+  }
+
+  onScroll = () => {
+    User.page.onScroll(this);
+  }
+
+  render() {
+    return (
+      <div>
+        <ExploreHeader />
+        <Timeline ref={(ref) => this.timeline = ref} />
+      </div>
+    );
+  }
+}
