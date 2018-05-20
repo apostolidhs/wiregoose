@@ -58,7 +58,7 @@ export const rssFeed = {
 
 export const timeline = {
   explore: timelineExplore,
-  uset: timelineUser,
+  user: timelineUser,
   category: timelineCategory,
   provider: timelineProvider,
   registration: timelineRegistration,
@@ -280,16 +280,30 @@ function bookmarksRemoveId(userId, entryId) {
   });
 }
 
-function interestRetrieveAll(userId) {
-  return httpRequest({
-    method: 'get',
-    url: `${API_ORIGIN}user/${userId}/interests`,
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: credentialGetter(),
-    },
-    friendlyErrorInterceptor
-  });
+function interestRetrieveAll(userId, {cache}) {
+  const key = `interests-${userId}`;
+
+  if (false && cache) {
+    return localCache.getItem(key, {
+      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+      fetchOnMiss,
+      fetchOldOnError: true
+    });
+  } else {
+    return fetchOnMiss();
+  }
+
+  function fetchOnMiss() {
+    return httpRequest({
+      method: 'get',
+      url: `${API_ORIGIN}user/${userId}/interests`,
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: credentialGetter(),
+      },
+      friendlyErrorInterceptor: true
+    });
+  }
 }
 
 function pushInterest({userId, type, value, lang}) {
@@ -333,7 +347,7 @@ function timelineRegistration(registration, lang, friendlyErrorInterceptor = fal
   return getTimeline('registration', registration, lang, friendlyErrorInterceptor);
 }
 
-function timelineUser(userId, page) {
+function timelineUser(userId, page, friendlyErrorInterceptor = false) {
   return httpRequest({
     method: 'get',
     url: `${API_ORIGIN}timeline/user/${userId}`,
@@ -349,7 +363,7 @@ function timelineUser(userId, page) {
   .then(resp => {
     resp.data.data = map(
       resp.data.data,
-      record => ArticleBoxResponseTransformation
+      ArticleBoxResponseTransformation
     );
     return resp;
   });

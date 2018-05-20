@@ -28,8 +28,12 @@ class Button extends React.Component {
   }
 
   componentWillMount() {
-    const {entryId} = this.props;
-    const isBookmarked = isAuthenticated() && hasBookmark(entryId);
+    const isBookmarked = isAuthenticated() && hasBookmark(this.props.entryId);
+    this.setState({isBookmarked});
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const isBookmarked = isAuthenticated() && hasBookmark(nextProps.entryId);
     this.setState({isBookmarked});
   }
 

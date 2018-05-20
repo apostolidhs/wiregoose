@@ -1,4 +1,4 @@
-import groupBy from 'lodash/groupBy';
+import size from 'lodash/size';
 import keyBy from 'lodash/keyBy';
 import find from 'lodash/find';
 import remove from 'lodash/remove';
@@ -9,63 +9,66 @@ import {
 import {getSession} from '../authorization/auth.js';
 import {MAX_INTERESTS_PER_USER} from '../../../config-public.js';
 
-let interests = [];
+let interests = {};
 
 export function syncInterests() {
-  return retrieveAllIds();
+  return retrieveInterests();
 }
 
 export function getinterestsLength() {
-  return interests.length;
+  return size(interests);
 }
 
 export function isMaximumInterestsReached() {
   return getinterestsLength() >= MAX_INTERESTS_PER_USER;
 }
 
-export function getInterest({value, type, lang}) {
-  return find(
-    interests,
-    i => i.value === value && i.type === type && i.lang === lang
-  );
+export function getInterest(interest) {
+  return interests[getKey(interest)]
 }
 
-function removeInteralInterest({value, type, lang}) {
-  return remove(
-    interests,
-    i => i.value === value && i.type === type && i.lang === lang
-  );
+export function getKey({type, value, lang}) {
+  return `${type}-${value}-${lang}`;
+}
+
+function removeInteralInterest(interest) {
+  delete interests[getKey(interest)];
+}
+
+function addInternalInterest(interest) {
+  interests[getKey(interest)] = interest;
 }
 
 subscribe('credentials', evt => {
   const {type} = evt;
   if (type === 'LOGOUT') {
-    interests = [];
+    interests = {};
     publish('interests', {type: 'DESTROYED'})
   }
 });
 
 function retrieveInterests() {
   const userId = getSession().user._id;
-  return interestsAPI.retrieveAll(userId)
-    .then(resp => interests = resp.data.data.interests)
+  return interestsAPI.retrieveAll(userId, {cache: true})
+    .then(resp => interests = keyBy(resp.data.data.interests, getKey))
     .then(() => notifyIfMaximumInterestsReached())
     .then(() => publish('interests', {type: 'RETRIEVED'}));
 }
 
-function pushInterest(interest) {
+export function pushInterest(interest) {
   if (getInterest(interest)) {
     return;
   }
 
-  interests.push(interest);
+  addInternalInterest(interest);
   const userId = getSession().user._id;
   return interestsAPI.pushInterest({...interest, userId})
+    .then(resp => interest._id = resp.data.data._id)
     .then(() => notifyIfMaximumInterestsReached())
     .catch(() => removeInteralInterest(interest));
 }
 
-function removeInterest(interest) {
+export function removeInterest(interest) {
   const interestWithId = getInterest(interest);
   if (!interestWithId) {
     return;
@@ -74,7 +77,16 @@ function removeInterest(interest) {
   const userId = getSession().user._id;
   return interestsAPI.removeInterest(userId, interestWithId._id)
     .then(() => notifyIfMaximumInterestsUnreached())
-    .catch(() => interests.push(interest));
+    .catch(() => addInternalInterest(interest));
+}
+
+export function toggleInterest(interest, nextToggle) {
+  const hasInterest = nextToggle === undefined ? getInterest(interest) : nextToggle;
+  if (hasInterest) {
+    return removeInterest(interest);
+  } else {
+    return pushInterest(interest);
+  }
 }
 
 function notifyIfMaximumInterestsReached() {

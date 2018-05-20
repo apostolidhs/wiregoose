@@ -12,6 +12,43 @@
     }
   }
 }
+.interest-item {
+  content: '\f00c';
+  .fa();
+  position: absolute;
+  right: 8px;
+  bottom: -7px;
+  font-size: 18px;
+  padding-top: 4px;
+  background: @brand-primary;
+  color: #fff;
+  width: 25px;
+  border-radius: 50%;
+  text-align: center;
+  height: 25px;
+}
+.selected-interest {
+  border: 1px solid @brand-primary;
+  &:hover {
+    border: 1px solid @brand-primary;
+  }
+  &:after {
+    .interest-item();
+  }
+  &:hover:after {
+    border: 1px solid @brand-primary;
+    content: '\f00d';
+    padding-top: 2px;
+  }
+}
+.unselected-interest {
+  &:hover {
+    border: 1px solid @brand-primary;
+  }
+  &:hover:after {
+    .interest-item();
+  }
+}
 .sub-header-nav-more {
   position: absolute!important;
   left: 0;

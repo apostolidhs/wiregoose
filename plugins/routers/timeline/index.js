@@ -13,6 +13,7 @@ KlarkModule(module, 'routesTimeline', (
   krkMiddlewareParameterValidator,
   krkMiddlewareResponse,
   modelsEntry,
+  krkModelsUser,
   timeline
 ) => {
 
@@ -216,24 +217,33 @@ KlarkModule(module, 'routesTimeline', (
   }
 
   function middlewareUserController(req, res, next) {
-    const {interests} = res.locals.user;
-    throw new Error('todo: get interests from database');
-    const {page, id, lang} = res.locals.params;
 
-    const customTimeline = _.map(interests, interest => {
-      const {value, type, lang} = interest;
-      return {
-        fieldName: type,
-        fieldValue: type === 'registration' ? new $mongoose.Types.ObjectId(value) : value,
-        lang
-      };
-    });
+    const {page, id} = res.locals.params;
 
-    timeline.custom(customTimeline, page)
-      .then(feeds => res.locals.data = feeds)
-      .then(() => next())
+    return krkModelsUser.findOne({_id: id})
+      .select({'interests': 1, '_id': 0})
+      .then(data => {
+        const interests = data.interests || [];
+        const customTimeline = _.map(interests, interest => {
+          const {value, type, lang} = interest;
+          return {
+            fieldName: type,
+            fieldValue: type === 'registration'
+              ? new $mongoose.Types.ObjectId(value)
+              : value,
+            lang
+          };
+        });
+        return timeline.custom(customTimeline, page)
+          .then(feeds => res.locals.data = feeds)
+          .then(() => next())
+          .catch(reason => {
+            res.locals.errors.add('UNEXPECTED', reason);
+            next(true);
+          });
+      })
       .catch(reason => {
-        res.locals.errors.add('UNEXPECTED', reason);
+        res.locals.errors.add('DB_ERROR', reason);
         next(true);
       });
   }

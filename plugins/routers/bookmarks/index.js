@@ -77,14 +77,11 @@ KlarkModule(module, 'routesBookmarks', (
 
   function middlewarePushBookmarkIdController(req, res, next) {
     const {entryId, id} = res.locals.params;
-    krkModelsUser
-      .aggregate(
-        { $project: { bookmarks: 1 }},
-        { $unwind: "$bookmarks" },
-        { $group: { _id: "result", count: { $sum: 1 }}}
-      )
+
+    krkModelsUser.findOne({_id: id})
+      .select({'bookmarks': 1})
       .then(data => {
-        const count = _.get(data, '[0].count', 0);
+        const count = _.size(data.bookmarks);
         if (count >= config.MAX_BOOKMARKS_PER_USER) {
           res.locals.errors.add('MAX_BOOKMARKS_PER_USER');
           return next(true);

@@ -262,7 +262,7 @@ function createWebpackConfig(name, entryName, outputName) {
       rules,
     },
     resolve: {
-      extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.js'],
+      extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js'],
       modules: [
         path.resolve(__dirname, 'node_modules'),
         jsSourcePath,

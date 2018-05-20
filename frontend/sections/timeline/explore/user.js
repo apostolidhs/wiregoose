@@ -17,6 +17,7 @@ import InfiniteScrollPage from '../../../components/infinite-scroll/page.js';
 import * as WiregooseApi from '../../../components/services/wiregoose-api.js';
 import BrowserLanguageDetection from '../../../components/utilities/browser-language-detection.js';
 import tr from '../../../components/localization/localization.js';
+import {getSession} from '../../../components/authorization/auth.js';
 
 @CSSModules(styles, {
   allowMultiple: true,
@@ -26,6 +27,7 @@ export default class User extends InfiniteScrollPage {
   static page = new TimelinePage();
 
   state = {}
+  currentPage = 1;
   timeline = undefined // ref
 
   componentDidMount() {
@@ -39,7 +41,18 @@ export default class User extends InfiniteScrollPage {
   }
 
   retrieveTimeline = () => {
-
+    const userId = getSession().user._id;
+    return WiregooseApi.timeline.user(
+      userId,
+      this.currentPage
+    )
+    .then(resp => {
+      resp.data.data = {
+        [this.currentPage + '']: resp.data.data
+      };
+      ++this.currentPage;
+      return resp;
+    })
   }
 
   handleMetaData = () => {

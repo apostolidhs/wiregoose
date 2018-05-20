@@ -67,6 +67,7 @@ KlarkModule(module, 'measuresRssRegistrationsFetches', (
 
       const regsById = _.keyBy(regs, reg => reg._id);
       const regByProvider = _(regsTotal)
+        .filter(({_id}) => regsById[_id])
         .map(({total, _id}) => ({total, ...regsById[_id].toObject()}))
         .groupBy(reg => reg.provider.name)
         .map((regs, provider) => ({

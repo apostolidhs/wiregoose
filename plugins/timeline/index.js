@@ -42,9 +42,9 @@ KlarkModule(module, 'timeline', (
 
   function timelineCustom(timeline, page) {
      const queries = _.map(timeline, entry => {
-      q = {[entry.fieldName]: entry.fieldValue};
+      const q = {[entry.fieldName]: entry.fieldValue};
       if (entry.lang) {
-        q.lang = lang;
+        q.lang = entry.lang;
       }
       return modelsEntry
         .find(q)
@@ -57,6 +57,7 @@ KlarkModule(module, 'timeline', (
       .then(results => _(results)
         .flatten()
         .compact()
+        .uniqBy(entry => entry.id)
         .value()
       );
   }

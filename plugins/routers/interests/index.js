@@ -43,6 +43,7 @@ KlarkModule(module, 'routesInterests', (
   }
 
   function middlewareRetrieveInterestsParameterValidator(req, res, next) {
+    req.checkParams('id').isMongoId();
     res.locals.params.id = krkParameterValidator.validations.paramId(req);
     krkParameterValidator.checkForErrors(res.locals.params, req, res, next);
   }
@@ -67,6 +68,7 @@ KlarkModule(module, 'routesInterests', (
     req.checkBody('value').isLength({max: 64});
     req.checkBody('lang').optional().isLang();
 
+    req.checkParams('id').isMongoId();
     res.locals.params.type = req.sanitizeBody('type').toString();
     res.locals.params.value = req.sanitizeBody('value').toString();
     res.locals.params.lang = req.sanitizeBody('lang').toString();
@@ -77,14 +79,11 @@ KlarkModule(module, 'routesInterests', (
 
   function middlewarePushInterestController(req, res, next) {
     const {type, value, lang, id} = res.locals.params;
-    krkModelsUser
-      .aggregate(
-        { $project: { interests: 1 }},
-        { $unwind: "$interests" },
-        { $group: { _id: "result", count: { $sum: 1 }}}
-      )
+    krkModelsUser.findOne({_id: id})
+      .select({'interests': 1})
       .then(data => {
-        const count = _.get(data, '[0].count', 0);
+        const interests = data.interests && data.interests.toObject();
+        const count = _.size(interests);
         if (count >= config.MAX_INTERESTS_PER_USER) {
           res.locals.errors.add('MAX_INTERESTS_PER_USER');
           return next(true);
@@ -93,10 +92,19 @@ KlarkModule(module, 'routesInterests', (
         if (lang) {
           interest.lang = lang;
         }
+
+        if (_.some(interests, i => i.type === type && i.value === value && i.lang === lang)) {
+          res.locals.errors.add('ALREADY_EXIST');
+          return next(true);
+        }
+
         return krkModelsUser
-          .findByIdAndUpdate(id, {'$addToSet': { interest }})
+          .findByIdAndUpdate(id, {'$addToSet': { interests: interest }}, {new: true})
           .then(data => {
-            res.locals.data = true;
+            res.locals.data = _.find(
+              data.interests,
+              i => i.type === type && i.value === value && i.lang === lang
+            );
             next();
           })
       })
@@ -107,7 +115,7 @@ KlarkModule(module, 'routesInterests', (
   }
 
   function middlewareRemoveInterestParameterValidator(req, res, next) {
-    req.checkParams('entryId').isMongoId();
+    req.checkParams('id').isMongoId();
     res.locals.params.interestId = req.sanitizeParams('interestId').toString();
     res.locals.params.id = krkParameterValidator.validations.paramId(req);
     krkParameterValidator.checkForErrors(res.locals.params, req, res, next);
@@ -115,7 +123,7 @@ KlarkModule(module, 'routesInterests', (
 
   function middlewareRemoveInterestController(req, res, next) {
     const {interestId, id} = res.locals.params;
-    krkModelsUser.findByIdAndUpdate(id, {'$pull': { 'bookmarks': { _id: interestId }}})
+    krkModelsUser.findByIdAndUpdate(id, {'$pull': { 'interests': { _id: interestId }}})
       .then(data => {
         res.locals.data = true;
         next();
