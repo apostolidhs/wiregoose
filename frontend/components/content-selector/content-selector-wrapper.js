@@ -25,6 +25,7 @@ export default class ContentSelectorWrapper extends React.Component {
     this.headEls = Array.from(this.wrapperEl.querySelectorAll('h3[data-sticky-head]'));
     this.scrollTarget.addEventListener('scroll', this.handleOnScroll, true);
     this.handleOnScroll();
+    this.outModalHeaderStyle = {top: `${this.props.topPosition}px`};
   }
 
   componentWillUnmount() {
@@ -64,7 +65,9 @@ export default class ContentSelectorWrapper extends React.Component {
       <div>
         {inModal
           ? this.renderHeader()
-          : <div className="container" styleName="fixed-header" style={{top: `${topPosition}px`}}>{this.renderHeader()}</div>
+          : <div className="container" styleName="fixed-header" style={this.outModalHeaderStyle}>
+              {this.renderHeader()}
+            </div>
         }
         <div styleName="content-selector-wrapper" className="content-selector-wrapper" ref={e => this.wrapperEl = e}>
           <ContentSelector {...this.props}/>

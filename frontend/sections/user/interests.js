@@ -20,36 +20,6 @@ export default class Interests extends React.Component {
     const lang = BrowserLanguageDetection();
 
     const props = {
-      onCategoryClick: category => {
-        const interest = {
-          type: 'category',
-          value: category,
-          lang
-        };
-        // getInterest('category', category, lang)
-        //   ? removeInterest(interest)
-        //   : pushInterest(interest);
-      },
-      onProviderClick: provider => {
-        const interest = {
-          type: 'provider',
-          value: provider,
-          lang
-        };
-        // getInterest('provider', provider, lang)
-        //   ? removeInterest(interest)
-        //   : pushInterest(interest);
-      },
-      onCategoryByProviderClick: registration => {
-        const interest = {
-          type: 'registration',
-          value: registration,
-          lang
-        };
-        // getInterest('registration', registration, lang)
-        //   ? removeInterest(interest)
-        //   : pushInterest(interest);
-      },
       topPosition: 83,
       enableInterests: true
     };

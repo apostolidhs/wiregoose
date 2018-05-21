@@ -4,13 +4,16 @@
 
 KlarkModule(module, 'measuresRssRegistrationsFetches', (
   _,
+  config,
   modelsEntry,
   modelsRssRegistration,
   modelsApp
 ) => {
 
-  const oneMonth = 1 * 30 * 24 * 60 * 60 * 1000;
+  const Month1 = 100 * 30 * 24 * 60 * 60 * 1000;
+  const Month100 = 100 * 30 * 24 * 60 * 60 * 1000;
   const measureCachingPeriod = 24 * 60 * 60 * 1000; // 1 day
+  const measurePeriod = config.IS_DEV ? Month100 : Month1;
 
   return {
     getCachedMeasures,
@@ -42,7 +45,7 @@ KlarkModule(module, 'measuresRssRegistrationsFetches', (
 
   function measure() {
     const until = _.now();
-    const from = until - oneMonth;
+    const from = until - measurePeriod;
     const q = [
       {
         $match: {

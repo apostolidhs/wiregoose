@@ -3,6 +3,7 @@ import uniqBy from 'lodash/uniqBy';
 import keys from 'lodash/keys';
 import map from 'lodash/map';
 import capitalize from 'lodash/capitalize';
+import noop from 'lodash/noop';
 import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
@@ -151,10 +152,16 @@ const InterestRegistrationItem = interestProviderHOC(RegistrationItem);
 export default class ContentSelector extends React.Component {
 
   static propTypes = {
-    onCategoryClick: PropTypes.func.isRequired,
-    onProviderClick: PropTypes.func.isRequired,
-    onCategoryByProviderClick: PropTypes.func.isRequired,
+    onCategoryClick: PropTypes.func,
+    onProviderClick: PropTypes.func,
+    onCategoryByProviderClick: PropTypes.func,
     enableInterests: PropTypes.bool
+  }
+
+  static defaultProps = {
+    onCategoryClick: noop,
+    onProviderClick: noop,
+    onCategoryByProviderClick: noop,
   }
 
   state = {}
@@ -177,9 +184,9 @@ export default class ContentSelector extends React.Component {
       });
   }
 
-  shouldComponentUpdate() {
-    console.log('shouldComponentUpdate', this.state, this.props);
-    return true;
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.providers !== nextState.providers
+      || this.state.categoriesPerProviders !== nextState.categoriesPerProviders;
   }
 
   getStyleName(type, value, lang) {
