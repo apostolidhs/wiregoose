@@ -47,13 +47,27 @@
   border-right: 1px solid #eee;
   height: 41px;
 }
+.sub-header-nav-right {
+  position: absolute!important;
+  right: 0;
+  top: 0;
+  background-color: @navbar-default-bg;
+  height: 41px;
+}
+.sub-header-nav-left {
+  position: absolute!important;
+  left: 131px;
+  top: 0;
+  background-color: @navbar-default-bg;
+  height: 41px;
+}
 .sub-header-nav {
   position: fixed;
   top: @navbar-height;
   z-index: 1;
 }
 .sub-header-nav-categories-wrapper {
-  overflow: auto;
+  overflow: hidden;
   white-space: nowrap;
   height: 41px!important;
   padding: 0;
@@ -68,7 +82,10 @@
   float: none!important;
 }
 .sub-header-nav-categories-item:first-child {
-  margin-left: 115px;
+  margin-left: 135px;
+}
+.sub-header-nav-categories-item:last-child {
+  // margin-right: 40px;
 }
 .sub-header-nav-categories-item {
   :global {

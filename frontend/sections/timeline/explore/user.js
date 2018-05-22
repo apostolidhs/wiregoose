@@ -9,7 +9,7 @@ import FontAwesome from 'react-fontawesome';
 import { Link } from 'react-router';
 
 import styles from '../timeline.less';
-import { publish } from '../../../components/events/events.js';
+import { subscribe, unsubscribe, publish } from '../../../components/events/events.js';
 import Timeline from '../../../components/timeline/timeline.js';
 import TimelinePage from '../../../components/timeline/page.js';
 import ExploreHeader from './header';
@@ -33,11 +33,16 @@ export default class User extends InfiniteScrollPage {
   componentDidMount() {
     User.page.componentDidMount(this);
     super.componentDidMount();
+    // this.restartSubscription = subscribe(
+    //   'credentials',
+    //   () => document.location.reload()
+    // );
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
     User.page.componentWillUnmount();
+    //this.restartSubscription();
   }
 
   retrieveTimeline = () => {
@@ -73,8 +78,9 @@ export default class User extends InfiniteScrollPage {
   render() {
     return (
       <div>
-        <ExploreHeader />
-        <Timeline ref={(ref) => this.timeline = ref} />
+        <ExploreHeader>
+          <Timeline ref={(ref) => this.timeline = ref} />
+        </ExploreHeader>
       </div>
     );
   }

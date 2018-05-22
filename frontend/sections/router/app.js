@@ -63,6 +63,7 @@ class AppRouter extends React.Component {
   }
 
   render() {
+    const isAuthenticated = Auth.isAuthenticated();
     return (
       <Router history={browserHistory} onUpdate={this.onPageChange} >
         <Route path="/" component={Body}>
@@ -71,7 +72,11 @@ class AppRouter extends React.Component {
           </Route>
           <Route path="article/:id" component={Article} />
           <Route component={Timeline} >
-            <IndexRoute component={TimelineUser} />
+            <IndexRoute component={() =>
+              Auth.isAuthenticated()
+              ? <TimelineUser />
+              : <TimelineExplore />
+            } />
             <Route path="explore" component={TimelineExplore} />
             <Route path="category/:id" component={TimelineCategory} />
             <Route path="provider/:id" component={TimelineProvider} />
@@ -99,4 +104,4 @@ class AppRouter extends React.Component {
   }
 }
 
-export default EventHOC(AppRouter, ['credentials']);
+export default AppRouter;

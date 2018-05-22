@@ -9,7 +9,7 @@ import FontAwesome from 'react-fontawesome';
 import { Link } from 'react-router';
 
 import styles from '../timeline.less';
-import { publish } from '../../../components/events/events.js';
+import { subscribe, publish } from '../../../components/events/events.js';
 import Timeline from '../../../components/timeline/timeline.js';
 import TimelinePage from '../../../components/timeline/page.js';
 import ExploreHeader from './header';
@@ -34,6 +34,10 @@ export default class Explore extends InfiniteScrollPage {
     this.cachedResponseHandler = createResponseHandler();
     Explore.page.componentDidMount(this);
     super.componentDidMount();
+    // this.restartSubscription = subscribe(
+    //   'credentials',
+    //   () => document.location.reload()
+    // );
   }
 
   componentWillUnmount() {
@@ -42,6 +46,7 @@ export default class Explore extends InfiniteScrollPage {
     if (this.state.cachedResponsePromise) {
       Explore.page.invalidateCache();
     }
+    //this.restartSubscription();
   }
 
   retrieveTimeline = () => {
@@ -110,11 +115,14 @@ export default class Explore extends InfiniteScrollPage {
   render() {
     return (
       <div>
-        <ExploreHeader />
-        {this.state.cachedResponsePromise &&
-          this.renderCachedContentNotification()
-        }
-        <Timeline ref={(ref) => this.timeline = ref} />
+        <ExploreHeader>
+          <div>
+            {this.state.cachedResponsePromise &&
+              this.renderCachedContentNotification()
+            }
+            <Timeline ref={(ref) => this.timeline = ref} />
+          </div>
+        </ExploreHeader>
       </div>
     );
   }

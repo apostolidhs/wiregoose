@@ -10,6 +10,7 @@ export function subscribe(name, func) {
   events[name] = queue;
 
   queue.push(func);
+  return () => unsubscribe(name, func);
 }
 
 export function unsubscribe(name, func) {
